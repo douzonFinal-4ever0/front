@@ -41,8 +41,7 @@
 ## 커밋 규칙
  - 커밋 제목 : 날짜 이름이니셜 요약 <br/>
 <img width="310" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/d0d2be12-8f13-4a34-aea4-f4a6dc0a4db6">
-
-    <br/>
+<br/>
    
 ## pr규칙 (pull-request)
 - 양식 대로 진행
