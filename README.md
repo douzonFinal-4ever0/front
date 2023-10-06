@@ -1,51 +1,47 @@
-# 📖git 규칙📖
+# 📖git📖
 
-## 초기설정
-#### 1.<br/>
-   <img width="610" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/e6aa7990-dfca-46af-9993-29356d4c09c2">
+## fork 후 clone 받는 법
+   1.<br/>
+   <img width="603" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/b546de8e-3fa4-4677-ad15-7c285c34345f">
 <br/>
-
-#### 2.<br/>
-  <img width="564" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/b67f1a9d-f34f-4bd6-9b5d-04a9830fa2de">
-<br/>
-
-#### 3. fork한 후 내 레포지토리에서 <br/>
-  <img width="608" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/95d3fef9-e40f-4af3-bdba-ad5bb57e59b9">
-  <br/>
-  
-#### 4. 원하는 위치에서 clone<br/>
-   <img width="471" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/bf5a1319-575c-4cc5-80bc-07c497260731">
-<br/>
-
-## 수정 후 규칙
-#### 1. git add -> commit -> 자신의 레포지토리에 push <br/>
-   <img width="420" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/093e6d0b-f5f6-4308-91b4-a8640659986e">
+   2.<br/>
+   <img width="565" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/0250527c-a028-4224-9df5-1c854349362e">
    <br/>
-   
-#### 2. 이후 github에서 <br/>
-   <img width="712" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/c3dbd990-cc03-44f8-82a6-e89c32250fee">
+   3.<br/>
+   <img width="322" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/7f5e324b-40df-4d06-92c5-9beedce432c7">
    <br/>
-   
-#### 3. full request 진행<br/>
-   <img width="710" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/d4d01d13-184c-4867-8c40-db6ce2a01507">
+   3. 원하는 위치에 clone <br/>
+   <img width="397" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/56011d23-7266-4fab-ada5-c0f1f3f0a86c">
+   <br/>
    <br/>
 
-## pull 받는 법
-   1. 원격 레포지토리에 반영
-      오리진 레포지토리가 변경되면 fork한 레포지토리
-   <img width="701" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/f2bfac30-c780-4ffb-9fe0-102b25804b44">
-   <img width="613" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/7f3d7384-7e8d-4d3a-b83c-ae13fa58cf9a">
+## pull request 하는 법
+   <br/>
+   1. 로컬에서 자신의 레포지토리에 push<br/>
+<img width="392" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/73bf6e06-049e-4919-84e6-30f9ac5e8d98">
+   <br/>
+   2. 자신의 레포지토리를 팀 레포지토리에 pr 요청 <br/>
+   <img width="680" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/4dbdd6e9-6917-478c-9a17-ce90f57ae3b3"><br/>
+   <img width="716" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/d6ffb367-7be0-44f8-8e0f-0e284d1dba73">
+   <br/>
+   <br/>
 
+## fork sync 맞추기
+   1. 팀레포지토리 변경되면 자신의 레포지토리와 싱크를 맞춤
+      자신의 레포지토리에서<br/>
+      <img width="404" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/c6d47506-4cd1-4348-b1b3-621a9ebe8b59"><br/>
+      <img width="395" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/30d3649b-d774-4fac-84cb-80a4ea531750">
    <br/>
    2. 로컬 레포지토리에 반영
       로컬 위치에서 git pull
-      <img width="440" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/728806e0-d5f7-427a-876e-111f07c41762">
+<img width="359" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/969ac1c9-12cc-41ee-8574-6822e9c26261">
 
 <br/>
 
 ## 커밋 규칙
- - 커밋 제목 : 날짜 요약 <br/>
-    <img width="352" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/43227d43-3503-489d-97d5-41b2ce2cf984">
+ - 커밋 제목 : 날짜 이름이니셜 요약 <br/>
+<img width="310" alt="image" src="https://github.com/douzonFinal-4ever0/front/assets/90160639/d0d2be12-8f13-4a34-aea4-f4a6dc0a4db6">
+
     <br/>
    
 ## pr규칙 (pull-request)
