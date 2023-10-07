@@ -1,11 +1,14 @@
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
 
-function App() {
+// theme
+import ThemeProvider from './theme';
+
+const App = () => {
   return (
-    <div className="App">
-      hello
-    </div>
+    <BrowserRouter>
+      <ThemeProvider>hello</ThemeProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
