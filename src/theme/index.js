@@ -3,14 +3,17 @@ import { useMemo } from 'react';
 
 // @mui
 import { CssBaseline } from '@mui/material';
-import { ThemeProvider as MUIThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import {
+  ThemeProvider as MUIThemeProvider,
+  createTheme,
+  StyledEngineProvider
+} from '@mui/material/styles';
 //
-import palette from './palette';
+import { palette, darkPalette } from './palette';
 import shadows from './shadows';
 import typography from './typography';
 import GlobalStyles from './globalStyles';
 import customShadows from './customShadows';
-// import componentsOverride from './overrides';
 
 // ----------------------------------------------------------------------
 
@@ -18,20 +21,20 @@ ThemeProvider.propTypes = {
   children: PropTypes.node
 };
 
-export default function ThemeProvider({ children }) {
+export default function ThemeProvider({ children, adminMode }) {
   const themeOptions = useMemo(
     () => ({
-      palette,
+      palette: adminMode ? darkPalette : palette,
       shape: { borderRadius: 6 },
       typography,
       shadows: shadows(),
-      customShadows: customShadows()
+      customShadows: customShadows(),
+      type: adminMode ? 'dark' : 'light'
     }),
-    []
+    [adminMode]
   );
 
   const theme = createTheme(themeOptions);
-  // theme.components = componentsOverride(theme);
 
   return (
     <StyledEngineProvider injectFirst>
