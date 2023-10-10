@@ -119,7 +119,7 @@ const Header = (props) => {
                                     </StyledText>
                                   </Grid>
                                   <Grid item>
-                                    <Switch
+                                    <StyledSwitch
                                       color="primary"
                                       checked={isAdminMode}
                                       onChange={(e) =>
@@ -127,6 +127,7 @@ const Header = (props) => {
                                       }
                                       name="sdm"
                                       size="small"
+                                      
                                     />
                                   </Grid>
                                 </Grid>
@@ -229,4 +230,13 @@ const StyledAdminCard = styled(Card)(({ theme }) => ({
 const StyledText = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle1,
   color: theme.palette.mode.textMain
+}));
+
+const StyledSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-thumb': {
+    backgroundColor: theme.palette.primary.main
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: theme.palette.primary.dark
+  }
 }));
