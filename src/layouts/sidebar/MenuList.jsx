@@ -158,42 +158,42 @@ const StyledMenuButton = styled(Button)(({ theme, open }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   width: '100%',
-  backgroundColor: open ? theme.palette.background.neutral : 'initial',
+  backgroundColor: open ? theme.palette.mode.bgSub: 'initial',
   '&:hover, &:focus': {
-    backgroundColor: theme.palette.background.neutral
+    backgroundColor: theme.palette.mode.bgSub
   }
 }));
 
 const StyledRoomIcon = styled(MeetingRoomOutlined)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledCarIcon = styled(DirectionsCarFilledOutlined)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledArrowUpIcon = styled(KeyboardArrowUpOutlined)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledArrowDownIcon = styled(KeyboardArrowDownOutlined)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledSubMenuIcon = styled(ContentPaste)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledMenuButtonText = styled(ListItemText)(({ theme }) => ({
   '& span': {
     ...theme.typography.subtitle1,
-    color: theme.palette.primary.dark
+    color: theme.palette.mode.textMain
   }
 }));
 
 const StyledMenuLinkText = styled(ListItemText)(({ theme, isSelected }) => ({
   '& span': {
-    color: isSelected ? theme.palette.primary.dark : theme.palette.text.primary,
+    color: isSelected ? theme.palette.mode.textMain : theme.palette.mode.textSub,
     fontWeight: isSelected
       ? theme.typography.fontWeightBold
       : theme.typography.fontWeightRegular,
