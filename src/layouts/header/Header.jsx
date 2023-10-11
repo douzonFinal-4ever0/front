@@ -83,13 +83,12 @@ const Header = (props) => {
                     aria-haspopup="true"
                   />
                 }
-                label={<StyledSettingIcon stroke={1.5} size="1.5rem" />}
+                label={<StyledSettingIcon size="1.5rem" />}
                 variant="outlined"
                 ref={anchorRef}
                 aria-controls={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
                 onClick={handleClick('bottom-end')}
-                color="primary"
               />
               {/* Popover 영역 */}
               <Popper
@@ -115,12 +114,12 @@ const Header = (props) => {
                                   justifyContent="space-between"
                                 >
                                   <Grid item>
-                                    <Typography variant="subtitle1">
+                                    <StyledText>
                                       관리자 모드
-                                    </Typography>
+                                    </StyledText>
                                   </Grid>
                                   <Grid item>
-                                    <Switch
+                                    <StyledSwitch
                                       color="primary"
                                       checked={isAdminMode}
                                       onChange={(e) =>
@@ -128,6 +127,7 @@ const Header = (props) => {
                                       }
                                       name="sdm"
                                       size="small"
+                                      
                                     />
                                   </Grid>
                                 </Grid>
@@ -153,7 +153,7 @@ export default Header;
 // Custom Tags ------------------------------------------------------
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',
-  backgroundColor: theme.palette.background.paper
+  backgroundColor: theme.palette.mode.bgMain
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -167,7 +167,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 const StyledLogo = styled(Link)(({ theme }) => ({
   ...theme.typography.h4,
   textDecoration: 'none',
-  color: theme.palette.primary.dark
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -175,16 +174,16 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   width: '34px',
   height: '34px',
   borderRadius: '10px',
-  backgroundColor: theme.palette.background.neutral
+  backgroundColor: theme.palette.mode.bgSub
 }));
 
 const StyledMenuIcon = styled(MenuIcon)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledNotificationsIcon = styled(NotificationsOutlinedIcon)(
   ({ theme }) => ({
-    color: theme.palette.primary.dark
+    color: theme.palette.mode.textMain
   })
 );
 
@@ -193,14 +192,14 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   alignItems: 'center',
   borderRadius: '27px',
   transition: 'all .2s ease-in-out',
-  borderColor: theme.palette.background.default,
-  backgroundColor: theme.palette.background.default,
+  borderColor: theme.palette.mode.bgSub,
+  backgroundColor: theme.palette.mode.bgSub,
   '&[aria-controls="menu-list-grow"], &:hover': {
-    borderColor: theme.palette.primary.main,
-    background: `${theme.palette.primary.main}!important`,
-    color: theme.palette.background.default,
+    borderColor: theme.palette.mode.textSub,
+    background: `${theme.palette.mode.textSub}!important`,
+    color: theme.palette.mode.bgMain,
     '& svg': {
-      stroke: theme.palette.background.default
+      stroke: theme.palette.mode.bgMain
     }
   },
   '& .MuiChip-label': {
@@ -216,7 +215,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const StyledSettingIcon = styled(SettingsOutlinedIcon)(({ theme }) => ({
-  color: theme.palette.primary.dark
+  color: theme.palette.mode.textMain
 }));
 
 const StyledLogoImage = styled('img')({
@@ -226,4 +225,18 @@ const StyledLogoImage = styled('img')({
 
 const StyledAdminCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.grey[100]
+}));
+
+const StyledText = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle1,
+  color: theme.palette.mode.textMain
+}));
+
+const StyledSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-thumb': {
+    backgroundColor: theme.palette.primary.main
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: theme.palette.primary.dark
+  }
 }));

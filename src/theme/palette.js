@@ -99,6 +99,12 @@ export const palette = {
     focus: alpha(GREY[500], 0.24),
     hoverOpacity: 0.08,
     disabledOpacity: 0.48
+  },
+  mode: {
+    bgMain: '#fff',
+    bgSub: '#dce5f4',
+    textMain: '#093d80',
+    textSub: '#435770'
   }
 };
 
@@ -119,5 +125,21 @@ export const darkPalette = {
   },
   grey: {
     100: '#999'
+  },
+  action: {
+    active: GREY[600],
+    hover: alpha(GREY[500], 0.08),
+    selected: alpha(GREY[500], 0.16),
+    disabled: alpha(GREY[500], 0.8),
+    disabledBackground: alpha(GREY[500], 0.24),
+    focus: alpha(GREY[500], 0.24),
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48
+  },
+  mode: {
+    bgMain: '#2c2c33',
+    bgSub: '#424249',
+    textMain: '#fff',
+    textSub: '#c8d0dd'
   }
 };
