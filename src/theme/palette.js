@@ -101,10 +101,18 @@ export const palette = {
     disabledOpacity: 0.48
   },
   mode: {
-    bgMain: '#fff',
-    bgSub: '#dce5f4',
-    textMain: '#093d80',
-    textSub: '#435770'
+    light: {
+      bgMain: '#fff',
+      bgSub: '#dce5f4',
+      textMain: '#093d80',
+      textSub: '#435770'
+    },
+    dark: {
+      bgMain: '#2c2c33',
+      bgSub: '#424249',
+      textMain: '#fff',
+      textSub: '#c8d0dd'
+    }
   }
 };
 
