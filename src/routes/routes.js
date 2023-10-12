@@ -25,6 +25,17 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     },
     {
+      path: '/mr/admin',
+      element: (
+        <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
+      ),
+      children: [
+        { element: <Navigate to="admin/mr/dashboard" />, index: true },
+        { path: 'dashboard', element: <MrAdminDashboardPage /> },
+        { path: 'reservation', element: <MrAdminRegisterPage /> }
+      ]
+    },
+    {
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
@@ -44,4 +55,11 @@ const MrUserDashboardPage = Loadable(
 
 const MrUserRegistherPage = Loadable(
   lazy(() => import('../pages/mr_user/Register'))
+);
+
+const MrAdminRegisterPage = Loadable(
+  lazy(() => import('../pages/mr_admin/Register'))
+);
+const MrAdminDashboardPage = Loadable(
+  lazy(() => import('../pages/mr_admin/DashBoard'))
 );

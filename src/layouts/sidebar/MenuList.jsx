@@ -57,8 +57,8 @@ const MenuList = (props) => {
       title: '회의실',
       icon: <StyledRoomIcon />,
       categories: [
-        { index: 1, title: '회의실 등록', url: '/mr/dashboard' },
-        { index: 2, title: '회의실 삭제', url: '/mr/reservation' }
+        { index: 1, title: '회의실 등록', url: '/mr/admin/dashboard' },
+        { index: 2, title: '회의실 삭제', url: '/mr/admin/reservation' }
       ]
     },
     {
@@ -158,7 +158,7 @@ const StyledMenuButton = styled(Button)(({ theme, open }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   width: '100%',
-  backgroundColor: open ? theme.palette.mode.bgSub: 'initial',
+  backgroundColor: open ? theme.palette.mode.bgSub : 'initial',
   '&:hover, &:focus': {
     backgroundColor: theme.palette.mode.bgSub
   }
@@ -193,7 +193,9 @@ const StyledMenuButtonText = styled(ListItemText)(({ theme }) => ({
 
 const StyledMenuLinkText = styled(ListItemText)(({ theme, isSelected }) => ({
   '& span': {
-    color: isSelected ? theme.palette.mode.textMain : theme.palette.mode.textSub,
+    color: isSelected
+      ? theme.palette.mode.textMain
+      : theme.palette.mode.textSub,
     fontWeight: isSelected
       ? theme.typography.fontWeightBold
       : theme.typography.fontWeightRegular,
