@@ -9,7 +9,7 @@ import {
   StyledEngineProvider
 } from '@mui/material/styles';
 //
-import { palette, darkPalette } from './palette';
+import { palette } from './palette';
 import shadows from './shadows';
 import typography from './typography';
 import GlobalStyles from './globalStyles';
@@ -21,17 +21,16 @@ ThemeProvider.propTypes = {
   children: PropTypes.node
 };
 
-export default function ThemeProvider({ children, adminMode }) {
+export default function ThemeProvider({ children }) {
   const themeOptions = useMemo(
     () => ({
-      palette: adminMode ? darkPalette : palette,
+      palette: palette,
       shape: { borderRadius: 6 },
       typography,
       shadows: shadows(),
-      customShadows: customShadows(),
-      type: adminMode ? 'dark' : 'light'
+      customShadows: customShadows()
     }),
-    [adminMode]
+    []
   );
 
   const theme = createTheme(themeOptions);
