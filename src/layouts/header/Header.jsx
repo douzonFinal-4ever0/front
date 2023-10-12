@@ -163,7 +163,7 @@ export default Header;
 
 // Custom Tags ------------------------------------------------------
 const StyledAppBar = styled(AppBar)(({ theme, isAdminMode }) => ({
-  border: `1px solid ${theme.palette.grey[300]}`,
+  borderBottom: `1px solid ${theme.palette.grey[300]}`,
   boxShadow: 'none',
   backgroundColor: isAdminMode
     ? theme.palette.mode.dark.bgMain
