@@ -1,0 +1,221 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "carRez" :[
+    {
+      "id":"REZ001",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원1",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ002",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원2",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ003",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원3",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ004",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원4",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ005",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원5",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ006",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원6",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ007",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원7",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ008",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원8",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ009",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원9",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ010",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기원10",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ011",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기1",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ012",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기2",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ013",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기3",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ0014",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기4",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ015",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기5",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ016",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기6",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ017",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기7",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ018",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기8",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ019",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기9",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    },
+    {
+      "id":"REZ020",
+      "status":"확정",
+      "start_at": "2023.10.12",
+      "mem_name":"이기10",
+      "dept_name":"개발",
+      "car_code":"27라7062",
+      "car_name":"소나타",
+      "detail":"출퇴근"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
