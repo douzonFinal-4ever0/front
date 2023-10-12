@@ -11,7 +11,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <ThemeProvider adminMode={isAdminMode}>
+      <ThemeProvider>
         <Router isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       </ThemeProvider>
     </BrowserRouter>
