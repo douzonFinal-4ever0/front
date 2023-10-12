@@ -5,6 +5,7 @@ import { Drawer, Box } from '@mui/material';
 // -------------------------------------------------
 import MenuList from './MenuList';
 import { DRAWER_WIDTH } from '../../config';
+import styled from '@emotion/styled';
 
 const Sidebar = (props) => {
   const { isOpen, isAdminMode, setIsAdminMode } = props;
@@ -38,20 +39,12 @@ const Sidebar = (props) => {
   };
 
   return (
-    <Drawer
-      sx={{
-        width: DRAWER_WIDTH,
-        flexShrink: 0,
-        display: drawerDisplay,
-        '& .MuiDrawer-paper': {
-          width: DRAWER_WIDTH,
-          boxSizing: 'border-box',
-          zIndex: '1000'
-        }
-      }}
+    <StyledDrawer
       variant="persistent"
       anchor="left"
       open={isOpen}
+      drawerDisplay={drawerDisplay}
+      isAdminMode={isAdminMode}
     >
       <Box sx={{ pt: 10 }}>
         <MenuList
@@ -62,8 +55,24 @@ const Sidebar = (props) => {
           isAdminMode={isAdminMode}
         />
       </Box>
-    </Drawer>
+    </StyledDrawer>
   );
 };
 
 export default Sidebar;
+
+const StyledDrawer = styled(Drawer)(
+  ({ theme, isAdminMode, drawerDisplay }) => ({
+    width: DRAWER_WIDTH,
+    flexShrink: 0,
+    display: drawerDisplay,
+    '& .MuiDrawer-paper': {
+      width: DRAWER_WIDTH,
+      boxSizing: 'border-box',
+      zIndex: '1000',
+      backgroundColor: isAdminMode
+        ? theme.palette.mode.dark.bgMain
+        : theme.palette.mode.light.bgMain
+    }
+  })
+);

@@ -55,7 +55,7 @@ const MenuList = (props) => {
     {
       index: 1,
       title: '회의실',
-      icon: <StyledRoomIcon />,
+      icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '회의실 등록', url: '/mr/admin/dashboard' },
         { index: 2, title: '회의실 삭제', url: '/mr/admin/reservation' }
@@ -64,7 +64,7 @@ const MenuList = (props) => {
     {
       index: 2,
       title: '차량',
-      icon: <StyledCarIcon />,
+      icon: <StyledCarIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 3, title: '차량 관리', url: '/car/admin/carList' },
         { index: 4, title: '차량 삭제', url: '/car/admin/' }
@@ -81,6 +81,7 @@ const MenuList = (props) => {
           {/* 대메뉴 아이템 */}
           <ListItem>
             <StyledMenuButton
+              isAdminMode={isAdminMode}
               open={openMenu === menuItem.index}
               onClick={() => handleMenuCollapseClick(menuItem.index)}
             >
@@ -96,13 +97,16 @@ const MenuList = (props) => {
                 >
                   {menuItem.icon}
                 </ListItemIcon>
-                <StyledMenuButtonText primary={menuItem.title} />
+                <StyledMenuButtonText
+                  primary={menuItem.title}
+                  isAdminMode={isAdminMode}
+                />
               </Stack>
               <ListItemIcon sx={{ minWidth: '0' }}>
                 {openMenu === menuItem.index ? (
-                  <StyledArrowUpIcon />
+                  <StyledArrowUpIcon isAdminMode={isAdminMode} />
                 ) : (
-                  <StyledArrowDownIcon />
+                  <StyledArrowDownIcon isAdminMode={isAdminMode} />
                 )}
               </ListItemIcon>
             </StyledMenuButton>
@@ -134,11 +138,12 @@ const MenuList = (props) => {
                     <ListItemIcon
                       sx={{ marginRight: '14px', minWidth: 'auto' }}
                     >
-                      <StyledSubMenuIcon />
+                      <StyledSubMenuIcon isAdminMode={isAdminMode} />
                     </ListItemIcon>
                     <StyledMenuLinkText
                       isSelected={selectMenuItem === item.index}
                       primary={item.title}
+                      isAdminMode={isAdminMode}
                     />
                   </Link>
                 </ListItem>
@@ -154,51 +159,79 @@ const MenuList = (props) => {
 export default MenuList;
 
 // Custom Tags ------------------------------------------------------
-const StyledMenuButton = styled(Button)(({ theme, open }) => ({
+const StyledMenuButton = styled(Button)(({ theme, open, isAdminMode }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   width: '100%',
-  backgroundColor: open ? theme.palette.mode.bgSub : 'initial',
+  backgroundColor: open
+    ? isAdminMode
+      ? theme.palette.mode.dark.bgSub
+      : theme.palette.mode.light.bgSub
+    : 'initial',
   '&:hover, &:focus': {
-    backgroundColor: theme.palette.mode.bgSub
+    backgroundColor: isAdminMode
+      ? theme.palette.mode.dark.bgSub
+      : theme.palette.mode.light.bgSub
   }
 }));
 
-const StyledRoomIcon = styled(MeetingRoomOutlined)(({ theme }) => ({
-  color: theme.palette.mode.textMain
+const StyledRoomIcon = styled(MeetingRoomOutlined)(
+  ({ theme, isAdminMode }) => ({
+    color: isAdminMode
+      ? theme.palette.mode.dark.textMain
+      : theme.palette.mode.light.textMain
+  })
+);
+
+const StyledCarIcon = styled(DirectionsCarFilledOutlined)(
+  ({ theme, isAdminMode }) => ({
+    color: isAdminMode
+      ? theme.palette.mode.dark.textMain
+      : theme.palette.mode.light.textMain
+  })
+);
+
+const StyledArrowUpIcon = styled(KeyboardArrowUpOutlined)(
+  ({ theme, isAdminMode }) => ({
+    color: isAdminMode
+      ? theme.palette.mode.dark.textMain
+      : theme.palette.mode.light.textMain
+  })
+);
+
+const StyledArrowDownIcon = styled(KeyboardArrowDownOutlined)(
+  ({ theme, isAdminMode }) => ({
+    color: isAdminMode
+      ? theme.palette.mode.dark.textMain
+      : theme.palette.mode.light.textMain
+  })
+);
+
+const StyledSubMenuIcon = styled(ContentPaste)(({ theme, isAdminMode }) => ({
+  color: isAdminMode
+    ? theme.palette.mode.dark.textMain
+    : theme.palette.mode.light.textMain
 }));
 
-const StyledCarIcon = styled(DirectionsCarFilledOutlined)(({ theme }) => ({
-  color: theme.palette.mode.textMain
-}));
-
-const StyledArrowUpIcon = styled(KeyboardArrowUpOutlined)(({ theme }) => ({
-  color: theme.palette.mode.textMain
-}));
-
-const StyledArrowDownIcon = styled(KeyboardArrowDownOutlined)(({ theme }) => ({
-  color: theme.palette.mode.textMain
-}));
-
-const StyledSubMenuIcon = styled(ContentPaste)(({ theme }) => ({
-  color: theme.palette.mode.textMain
-}));
-
-const StyledMenuButtonText = styled(ListItemText)(({ theme }) => ({
+const StyledMenuButtonText = styled(ListItemText)(({ theme, isAdminMode }) => ({
   '& span': {
     ...theme.typography.subtitle1,
-    color: theme.palette.mode.textMain
+    color: isAdminMode
+      ? theme.palette.mode.dark.textMain
+      : theme.palette.mode.light.textMain
   }
 }));
 
-const StyledMenuLinkText = styled(ListItemText)(({ theme, isSelected }) => ({
-  '& span': {
-    color: isSelected
-      ? theme.palette.mode.textMain
-      : theme.palette.mode.textSub,
-    fontWeight: isSelected
-      ? theme.typography.fontWeightBold
-      : theme.typography.fontWeightRegular,
-    fontSize: '14px'
-  }
-}));
+const StyledMenuLinkText = styled(ListItemText)(
+  ({ theme, isSelected, isAdminMode }) => ({
+    '& span': {
+      color: isAdminMode
+        ? theme.palette.mode.dark.textSub
+        : theme.palette.mode.light.textSub,
+      fontWeight: isSelected
+        ? theme.typography.fontWeightBold
+        : theme.typography.fontWeightRegular,
+      fontSize: '14px'
+    }
+  })
+);
