@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import SubSidebar from "../../components/common/SubSidebar";
 import Button from '@mui/material/Button';
 import * as React from 'react';
+import { useState } from 'react';
+import Test from "../../components/car_admin/Test"
 
 const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
     // Drawer의 탭에 따른 컴포넌트를 배열로 선언하여 전달
@@ -32,14 +34,29 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
         setDrawerState({ ...drawerState, ['right']: open });
     };
 
-    const tabData = [
+    const tabData1 = [
         {
-            "title" : "예약 현황",
-            "content" : "내용222"
+            "title": "예약 현황",
+            "content": "내용222"
         },
         {
-            "title" : "탭2",
-            "content" : "내용222"
+            "title": "탭2",
+            "content": "내용222"
+        }
+    ]
+
+    // Drawer안에 들어갈 컴포넌트 내용
+    const [component1, setComponent1] = useState({});
+    const [component2, setComponent2] = useState({});
+
+    const tabData2 = [
+        {
+            "title": "예약 현황",
+            "content": <Test contents={component1} />
+        },
+        {
+            "title": "탭2",
+            "content": <Test contents={component2} />
         }
     ]
 
@@ -66,9 +83,10 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
                         title: 'event3',
                         start: '2023-10-16T12:30:00',
                         allDay: false // will make the time show
-                    }]} />
+                    }]}
+                    tabData={tabData2} setComponent1={setComponent1} setComponent2={setComponent2}/>
                     <Button onClick={toggleDrawer('right', true)}>right</Button>
-                    <Drawer width={1000} drawerState={drawerState} toggleDrawer={toggleDrawer} tabData={tabData}/>
+                    <Drawer width={1000} drawerState={drawerState} toggleDrawer={toggleDrawer} tabData={tabData1} />
                 </Box>
             </Box>
 

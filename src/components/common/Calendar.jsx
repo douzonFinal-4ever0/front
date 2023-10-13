@@ -6,31 +6,13 @@ import FullCalendar from '@fullcalendar/react';
 import '../../theme/css/Calendar.css';
 import Drawer from './Drawer';
 import { useState } from 'react';
-import Test from '../car_admin/Test';
 
-const Calendar = ({ events }) => {
+
+const Calendar = ({ events, tabData, setComponent1, setComponent2 }) => {
 
     const [drawerState, setDrawerState] = useState({
         right: false
     });
-
-    // Drawer안에 들어갈 컴포넌트 내용
-    const [component1, setComponent1] = useState({});
-    const [component2, setComponent2] = useState({});
-
-    const tabData = [
-        {
-            "title" : "예약 현황",
-            "content" : <Test contents={component1}/>
-        },
-        {
-            "title" : "탭2",
-            "content" : <Test contents={component2}/>
-        }
-    ]
-
-    
-
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -44,8 +26,7 @@ const Calendar = ({ events }) => {
         toggleDrawer('right', true)(info.jsEvent); // Drawer 열기
         
     };
-
-    
+ 
 
     return (
         <>
