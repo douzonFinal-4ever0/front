@@ -31,7 +31,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ),
       children: [
         { element: <Navigate to="/car/carList" />, index: true },
-        { path: 'carList', element: <CarAdminRegisterPage /> }
+        { path: 'carList', element: <CarAdminRegisterPage isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode}/> }
       ]
     },
     {

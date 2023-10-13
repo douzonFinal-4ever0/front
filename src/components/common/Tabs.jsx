@@ -31,9 +31,9 @@ CustomTabPanel.propTypes = {
 };
 
 
-const Tabs = ({tabTitles, tabIndex, tabContents}) => {
-  const [value, setValue] = React.useState(0);
+const Tabs = ({tabData}) => {
 
+  const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -42,11 +42,11 @@ const Tabs = ({tabTitles, tabIndex, tabContents}) => {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <MuiTabs value={value} onChange={handleChange}>
-          {tabTitles.map((title) => <Tab label={title}/>)}
+          {tabData.map((tab, index) => <Tab key={index} label={tab.title}/>)}
         </MuiTabs>
       </Box>
-      {tabContents.map((content, index) => <CustomTabPanel value={value} index={index}>
-        {content}
+      {tabData.map((tab, index) => <CustomTabPanel key={index} value={value} index={index}>
+        {tab.content}
       </CustomTabPanel>)}
     </Box>
   );
