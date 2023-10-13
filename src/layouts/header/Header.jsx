@@ -150,7 +150,10 @@ const Header = (props) => {
                       <Box sx={{ p: 2 }}>
                         <StyledAdminCard isAdminMode={isAdminMode}>
                           <CardContent>
-                            <StyledText isAdminMode={isAdminMode} alignItems="center">
+                            <StyledText
+                              isAdminMode={isAdminMode}
+                              alignItems="center"
+                            >
                               마이페이지
                             </StyledText>
                           </CardContent>
@@ -285,7 +288,7 @@ const StyledAdminCard = styled(Card)(({ theme, isAdminMode }) => ({
 
 const StyledText = styled(Typography)(({ theme, isAdminMode, alignItems }) => ({
   ...theme.typography.subtitle1,
-  textAlign : alignItems,
+  textAlign: alignItems,
   color: isAdminMode
     ? theme.palette.mode.dark.textMain
     : theme.palette.mode.light.textMain

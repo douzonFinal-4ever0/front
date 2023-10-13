@@ -1,41 +1,40 @@
 import React from 'react';
 import Pagination from '../../components/common/Pagination';
 import { useState } from 'react';
+import TimeField from '../../components/common/TimeField';
+import { Box, Stack, display } from '@mui/system';
+import { Container, Grid, Paper, styled } from '@mui/material';
+import Calendar from '../../components/common/Calendar';
+import SubSidebar from '../../components/common/SubSidebar';
+import SubHeader from '../../components/common/SubHeader';
 
 function Register() {
-  const [page, setPage] = useState(1);
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
-  // const itemsPerPage = 5; // 각 페이지에 표시할 항목 수
-  // const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  // const [data, setData] = useState([
-  //   // 여기에 표시할 데이터 배열을 설정합니다.
-  // ]);
-
-  // // 현재 페이지의 항목을 계산하는 함수
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
-  // // 페이지 변경 핸들러
-  // const handlePageChange = (event, newPage) => {
-  //   setCurrentPage(newPage);
-  // };
-  // const pageCount = Math.ceil(data.length / itemsPerPage);
   return (
-    <div>
-      {/* {currentItems.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))} */}
-      mr_Register
-      <Pagination
-        count={10} // 전체 페이지 수 계산
-        page={page}
-        handleChange={handleChange}
-      />
-    </div>
+    <Item>
+      <SubHeader title={'회의실 예약 상황'} />
+      <Box sx={{ display: 'flex' }}>
+        <SubSidebar />
+        <Container>
+          <Grid spacing={2}>
+            <TimeField withMonth={false} label={'start-time'} />
+            <TimeField withMonth={false} label={'end-time'} />
+          </Grid>
+          <Calendar />
+        </Container>
+      </Box>
+    </Item>
   );
 }
 
 export default Register;
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: '100%',
+  width: '100%',
+  padding: '10px'
+}));
