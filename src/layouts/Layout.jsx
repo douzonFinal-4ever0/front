@@ -50,13 +50,13 @@ const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
   overflow: 'auto',
   minHeight: '100%',
   paddingBottom: 0,
+  // overflowX: 'hidden',
   [theme.breakpoints.up('lg')]: {
     paddingLeft: 0,
     paddingRight: 0
   },
   width: isSidebarOpen ? 'calc(100% - 240px)' : '100%',
   transition: 'width 0.3s ease',
-
   [theme.breakpoints.down('md')]: {
     width: '100%' // 사이드바가 닫혀있을 때 작은 화면에 맞게 조정
   }
