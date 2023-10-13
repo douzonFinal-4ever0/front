@@ -11,11 +11,11 @@ import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 // --------------------------------------------------------------------
-import { BORDER_RADIUS, PAGE_INNER_PADDING } from '../../../config';
-import SectionTitle from '../../../components/mr_user/SectionTitle';
-import ImageBtn from '../../../components/mr_user/ImageBtn';
-import { convertDayToText } from '../../../utils/convertDayToText';
-import Tag from '../../../components/mr_user/Tag';
+import { BORDER_RADIUS, PAGE_INNER_PADDING } from '../../../../config';
+import SectionTitle from '../../../../components/mr_user/SectionTitle';
+import ImageBtn from '../../../../components/mr_user/ImageBtn';
+import { convertDayToText } from '../../../../utils/convertDayToText';
+import Tag from '../../../../components/mr_user/Tag';
 
 const MrInfo = ({ data }) => {
   const {

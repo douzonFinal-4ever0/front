@@ -5,7 +5,7 @@ import { Grid } from '@mui/material';
 // --------------------------------------------------------------------
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
-import MrInfo from './MrInfo';
+import MrInfo from './section/MrInfo';
 // --------------------------------------------------------------------
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
