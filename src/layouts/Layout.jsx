@@ -45,18 +45,18 @@ const StyledRoot = styled('div')({
 });
 
 const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
-  paddingTop: HEADER_HIEGHT + 20,
+  paddingTop: HEADER_HIEGHT,
   flexGrow: 1,
   overflow: 'auto',
   minHeight: '100%',
-  paddingBottom: '20px',
+  paddingBottom: 0,
+  // overflowX: 'hidden',
   [theme.breakpoints.up('lg')]: {
-    paddingLeft: isSidebarOpen ? '20px' : 0,
-    paddingRight: isSidebarOpen ? '20px' : 0
+    paddingLeft: 0,
+    paddingRight: 0
   },
   width: isSidebarOpen ? 'calc(100% - 240px)' : '100%',
   transition: 'width 0.3s ease',
-
   [theme.breakpoints.down('md')]: {
     width: '100%' // 사이드바가 닫혀있을 때 작은 화면에 맞게 조정
   }
