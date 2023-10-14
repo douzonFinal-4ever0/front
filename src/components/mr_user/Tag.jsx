@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { Chip } from '@mui/material';
 
-const Tag = ({ text }) => {
-  return <StyledChip label={`#${text}`} sx={{}} />;
+const Tag = ({ text, isHashTag }) => {
+  const label = (isHashTag ? '#' : '') + text;
+  return <StyledChip label={label} sx={{}} />;
 };
 
 export default Tag;
