@@ -39,7 +39,9 @@ const MrRegister = () => {
     <Item>
       <SubHeader title={'회의실 등록'} />
       <Box sx={{ display: 'flex' }}>
-        <SubSidebar />
+        <SubSidebar>
+          <Button variant="text">회의실 등록</Button>
+        </SubSidebar>
         <Item2>
           <Calendar events={events} tabData={tabData} />
         </Item2>

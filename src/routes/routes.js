@@ -52,7 +52,8 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { element: <Navigate to="admin/mr/dashboard" />, index: true },
         { path: 'MrList', element: <MrAdminMrListPage /> },
         { path: 'MrRegister', element: <MrAdminRegisterPage /> },
-        { path: 'Notice', element: <MrAdminNoticePage /> }
+        { path: 'Notice', element: <MrAdminNoticePage /> },
+        { path: 'Test', element: <MrAdminTestPage /> }
       ]
     },
     {
@@ -107,4 +108,7 @@ const MrAdminMrListPage = Loadable(
 );
 const MrAdminNoticePage = Loadable(
   lazy(() => import('../pages/mr_admin/MrNotice'))
+);
+const MrAdminTestPage = Loadable(
+  lazy(() => import('../pages/mr_admin/DashBoard'))
 );

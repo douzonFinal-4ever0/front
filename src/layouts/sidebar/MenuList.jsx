@@ -75,7 +75,8 @@ const MenuList = (props) => {
       title: '공지사항',
       icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
       categories: [
-        { index: 1, title: '공지사항 작성', url: '/mr/admin/Notice' }
+        { index: 1, title: '공지사항 작성', url: '/mr/admin/Notice' },
+        { index: 2, title: '테스트페이지', url: '/mr/admin/Test' }
       ]
     }
   ];
