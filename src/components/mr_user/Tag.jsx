@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import { Chip } from '@mui/material';
 
-const Tag = ({ text, isHashTag }) => {
+const Tag = ({ text, isHashTag, bgColor }) => {
   const label = (isHashTag ? '#' : '') + text;
-  return <StyledChip label={label} sx={{}} />;
+  return <StyledChip label={label} bgColor={bgColor} />;
 };
 
 export default Tag;
 
-const StyledChip = styled(Chip)(({ theme }) => ({
+const StyledChip = styled(Chip)(({ theme, bgColor }) => ({
   borderRadius: '8px',
-  backgroundColor: theme.palette.grey['800'],
+  backgroundColor: bgColor,
   color: theme.palette.common.white
 }));
