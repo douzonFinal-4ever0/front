@@ -11,6 +11,7 @@ import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
 import MrRezDashboard from './section/MrRezDashboard';
 import MrSubInfo from './section/MrSubInfo';
+import RezCard from './form/RezCard';
 
 const MrDetailPage = () => {
   const { id } = useParams();
@@ -181,14 +182,14 @@ const MrDetailPage = () => {
       <WrapContainer bgColor={'#fff'}>
         <Grid container spacing={3}>
           <Grid item xs={7}>
-            <Stack rowGap={8}>
+            <Stack rowGap={8} sx={{ height: '2000px' }}>
               <MrInfo data={data} />
               <MrRezDashboard schedule={schedule} />
               <MrSubInfo data={data.mrSupplies} />
             </Stack>
           </Grid>
           <Grid item xs={5}>
-            <div style={{ background: '#f0f0f0', height: '100%' }}>gogo</div>
+            <RezCard />
           </Grid>
         </Grid>
       </WrapContainer>
