@@ -1,11 +1,11 @@
 import React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-const MultiTimePicker = ({ shouldDisableTime, value }) => {
+const MultiTimePicker = ({ shouldDisableTime, value, label }) => {
   return (
     <>
       <DateTimePicker
-        label="달력 + 시간"
+        label={label}
         format="YYYY-MM-DD HH:mm"
         defaultValue={value}
         showDaysOutsideCurrentMonth
