@@ -16,6 +16,7 @@ import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import ImageBtn from '../../../../components/mr_user/ImageBtn';
 import { convertDayToText } from '../../../../utils/convertDayToText';
 import Tag from '../../../../components/mr_user/Tag';
+import { palette } from '../../../../theme/palette';
 
 const MrInfo = ({ data }) => {
   const {
@@ -139,7 +140,11 @@ const MrInfo = ({ data }) => {
             <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
               <StyledRoomTagsWrap>
                 {tags.map((tag) => (
-                  <Tag text={tag.value} />
+                  <Tag
+                    text={tag.value}
+                    isHashTag={true}
+                    bgColor={palette.grey['800']}
+                  />
                 ))}
               </StyledRoomTagsWrap>
             </Stack>
