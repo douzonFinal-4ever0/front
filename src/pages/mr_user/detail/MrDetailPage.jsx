@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
-import styled from '@emotion/styled';
 // @MUI--------------------------------------------------------------------
-import { Grid } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 // --------------------------------------------------------------------
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
@@ -10,6 +9,7 @@ import MrInfo from './section/MrInfo';
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
+import MrRezDashboard from './section/MrRezDashboard';
 
 const MrDetailPage = () => {
   const { id } = useParams();
@@ -82,15 +82,80 @@ const MrDetailPage = () => {
       }
     ]
   };
+  const schedule = [
+    {
+      index: 0,
+      hour: 9,
+      firstHalf: true,
+      secondHalf: false
+    },
+    {
+      index: 1,
+      hour: 10,
+      firstHalf: true,
+      secondHalf: true
+    },
+    {
+      index: 2,
+      hour: 11,
+      firstHalf: false,
+      secondHalf: false
+    },
+    {
+      index: 3,
+      hour: 12,
+      firstHalf: true,
+      secondHalf: false
+    },
+    {
+      index: 4,
+      hour: 13,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 5,
+      hour: 14,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 6,
+      hour: 15,
+      firstHalf: false,
+      secondHalf: false
+    },
+    {
+      index: 7,
+      hour: 16,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 8,
+      hour: 17,
+      firstHalf: true,
+      secondHalf: true
+    },
+    {
+      index: 9,
+      hour: 18,
+      firstHalf: true,
+      secondHalf: true
+    }
+  ];
 
   return (
     <MainContainer>
-      <WrapContainer>
+      <WrapContainer bgColor={'#fff'}>
         <Grid container spacing={3}>
-          <Grid item xs={8}>
-            <MrInfo data={data} />
+          <Grid item xs={7}>
+            <Stack rowGap={8}>
+              <MrInfo data={data} />
+              <MrRezDashboard schedule={schedule} />
+            </Stack>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <div style={{ background: '#f0f0f0', height: '100%' }}>gogo</div>
           </Grid>
         </Grid>
