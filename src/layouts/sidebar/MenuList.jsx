@@ -58,7 +58,8 @@ const MenuList = (props) => {
       icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '회의실 등록', url: '/mr/admin/MrRegister' },
-        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' }
+        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' },
+        { index: 3, title: '공지사항 작성', url: '/mr/admin/Notice' }
       ]
     },
     {

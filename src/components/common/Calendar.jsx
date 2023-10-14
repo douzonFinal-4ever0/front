@@ -8,7 +8,11 @@ import Drawer from './Drawer';
 import { useState } from 'react';
 import Test from '../car_admin/Test';
 
-const Calendar = ({ events, tabData, setComponent1, setComponent2 }) => {
+const Calendar = ({
+  events,
+  tabData
+  // setComponent1, setComponent2
+}) => {
   const [drawerState, setDrawerState] = useState({
     right: false
   });
@@ -24,7 +28,7 @@ const Calendar = ({ events, tabData, setComponent1, setComponent2 }) => {
   };
 
   const handleEventClick = (info) => {
-    setComponent1(info.event);
+    // setComponent1(info.event);
     toggleDrawer('right', true)(info.jsEvent); // Drawer 열기
   };
 
