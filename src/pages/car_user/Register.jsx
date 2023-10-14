@@ -9,9 +9,12 @@ import MenuItem from '@mui/material/MenuItem';
 import TimeField from '../../components/common/TimeField';
 import SubHeader from '../../components/common/SubHeader';
 import DaumPost from '../../components/car_user/DaumPost';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../../components/common/Modal';
 import Typography from '@mui/material/Typography';
+import CarList from '../../components/car_user/CarList';
+import CarAlert from '../../components/car_user/CarAlert';
+import axios from 'axios';
 
 const Register = () => {
   const [addressObj, setAddressObj] = useState({
@@ -19,6 +22,17 @@ const Register = () => {
     townAddress: ''
   });
   const [open, setOpen] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [carDetail, setCarDetail] = useState({
+    id: '',
+    car_name: '',
+    accum_mileage: 0,
+    authority: '',
+    fuel_type: '',
+    fuel_effciency: 0,
+    car_address: ''
+  });
+
   const handleOpenModal = () => {
     setOpen(true);
   };
@@ -29,6 +43,20 @@ const Register = () => {
     }
     setOpen(false);
   };
+  const carSelect = () => {
+    console.log(selectedRows);
+    if (selectedRows.length !== 0) {
+      setOpen(false);
+    } else {
+      alert('차량을 선택해주세요');
+    }
+  };
+  useEffect(() => {
+    axios.get('http://localhost:3001/carDetail').then((res) => {
+      console.log(res.data);
+      setCarDetail(res.data);
+    });
+  }, [selectedRows]);
   return (
     <Box>
       {/* <script type='text/javascript' src=''></script> */}
@@ -73,8 +101,9 @@ const Register = () => {
                 <Modal
                   open={open}
                   handleModal={(e, reason) => handleCloseModal(reason)}
-                  modalTitl={'차량 검색'}
-                  content={'asdasdasd'}
+                  modalTitle={'차량 찾기'}
+                  content={<CarList setSelectedRows={setSelectedRows} />}
+                  buttons={<Button onClick={carSelect}>선택</Button>}
                 />
               </NewFormControl>
               <NewFormControl>
@@ -94,32 +123,63 @@ const Register = () => {
               차량 정보
             </Typography>
             <NewFormControl>
-              <InputLabel htmlFor="dest">차종</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="car_name">차종</InputLabel>
+              <Input
+                id="car_name"
+                type="text"
+                value={carDetail.car_name}
+                readOnly
+              />
             </NewFormControl>
             <NewFormControl>
-              <InputLabel htmlFor="dest">차량 번호</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="car_code">차량 번호</InputLabel>
+              <Input id="car_code" type="text" value={carDetail.id} readOnly />
             </NewFormControl>
             <NewFormControl>
-              <InputLabel htmlFor="dest">누적 주행 거리</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="accum_mileage">누적 주행 거리</InputLabel>
+              <Input
+                id="accum_mileage"
+                type="text"
+                value={carDetail.accum_mileage}
+                readOnly
+              />
             </NewFormControl>
             <NewFormControl>
-              <InputLabel htmlFor="dest">권한</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="authority">권한</InputLabel>
+              <Input
+                id="authority"
+                type="text"
+                value={carDetail.authority}
+                readOnly
+              />
             </NewFormControl>
             <NewFormControl>
-              <InputLabel htmlFor="dest">유종</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="fuel_type">유종</InputLabel>
+              <Input
+                id="fuel_type"
+                type="text"
+                value={carDetail.fuel_type}
+                readOnly
+              />
             </NewFormControl>
             <NewFormControl>
-              <InputLabel htmlFor="dest">연비</InputLabel>
-              <Input id="dest" type="text" readOnly />
+              <InputLabel htmlFor="fuel_effciency">연비</InputLabel>
+              <Input
+                id="fuel_effciency"
+                type="text"
+                value={carDetail.fuel_effciency}
+                readOnly
+              />
             </NewFormControl>
 
             <NewFormControl>
-              <TextField label="인수지" variant="outlined" type="text" />
+              <InputLabel htmlFor="pickup">인수지</InputLabel>
+              <Input
+                id="pickup"
+                type="text"
+                value={carDetail.car_address}
+                readOnly
+              />
             </NewFormControl>
             <NewFormControl sx={{ minWidth: 240 }}>
               <InputLabel id="demo-simple-select-label">반납지</InputLabel>
