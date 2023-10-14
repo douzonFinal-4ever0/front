@@ -10,6 +10,7 @@ import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
 import MrRezDashboard from './section/MrRezDashboard';
+import MrSubInfo from './section/MrSubInfo';
 
 const MrDetailPage = () => {
   const { id } = useParams();
@@ -79,6 +80,36 @@ const MrDetailPage = () => {
       {
         index: 4,
         value: '컨퍼런스'
+      }
+    ],
+    mrSupplies: [
+      {
+        index: 0,
+        name: '빔프로젝터'
+      },
+      {
+        index: 1,
+        name: '화상회의장비'
+      },
+      {
+        index: 2,
+        name: '마이크'
+      },
+      {
+        index: 3,
+        name: '스피커'
+      },
+      {
+        index: 4,
+        name: '화이트보드'
+      },
+      {
+        index: 5,
+        name: '포인터'
+      },
+      {
+        index: 6,
+        name: '강연대'
       }
     ]
   };
@@ -153,6 +184,7 @@ const MrDetailPage = () => {
             <Stack rowGap={8}>
               <MrInfo data={data} />
               <MrRezDashboard schedule={schedule} />
+              <MrSubInfo data={data.mrSupplies} />
             </Stack>
           </Grid>
           <Grid item xs={5}>
