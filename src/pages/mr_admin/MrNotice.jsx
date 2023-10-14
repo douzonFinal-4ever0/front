@@ -8,9 +8,8 @@ import axios from 'axios';
 const MrNotice = () => {
   const [editorData, setEditorData] = useState('');
   const [isPublic, setIsPublic] = useState(true); // OnOff 스위치의 상태를 관리
-
   const handleSwitchChange = (event) => {
-    setIsPublic(event.target.value);
+    setIsPublic(event.target.checked);
   };
   const FormtoData = {
     contents: editorData,

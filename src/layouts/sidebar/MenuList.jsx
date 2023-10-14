@@ -58,8 +58,7 @@ const MenuList = (props) => {
       icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '회의실 등록', url: '/mr/admin/MrRegister' },
-        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' },
-        { index: 3, title: '공지사항 작성', url: '/mr/admin/Notice' }
+        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' }
       ]
     },
     {
@@ -69,6 +68,14 @@ const MenuList = (props) => {
       categories: [
         { index: 3, title: '차량 관리', url: '/car/admin/carList' },
         { index: 4, title: '차량 삭제', url: '/car/admin/' }
+      ]
+    },
+    {
+      index: 3,
+      title: '공지사항',
+      icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
+      categories: [
+        { index: 1, title: '공지사항 작성', url: '/mr/admin/Notice' }
       ]
     }
   ];

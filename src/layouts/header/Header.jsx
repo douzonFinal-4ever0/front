@@ -16,7 +16,8 @@ import {
   Card,
   CardContent,
   Grid,
-  Switch
+  Switch,
+  Badge
 } from '@mui/material';
 // @icons -------------------------------------------
 import MenuIcon from '@mui/icons-material/Menu';
@@ -80,7 +81,9 @@ const Header = (props) => {
                 aria-label="check notifications"
                 isAdminMode={isAdminMode}
               >
-                <StyledNotificationsIcon isAdminMode={isAdminMode} />
+                <Badge badgeContent={1} color="error">
+                  <StyledNotificationsIcon isAdminMode={isAdminMode} />
+                </Badge>
               </StyledIconButton>
               <StyledChip
                 isAdminMode={isAdminMode}
