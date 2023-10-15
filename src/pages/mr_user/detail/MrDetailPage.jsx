@@ -12,11 +12,21 @@ import RoomImage3 from '../../../assets/images/room/room3.jpeg';
 import MrRezDashboard from './section/MrRezDashboard';
 import MrSubInfo from './section/MrSubInfo';
 import RezCard from './form/RezCard';
+import { useState } from 'react';
 
 const MrDetailPage = () => {
-  const { id } = useParams();
-  console.log(id);
+  // 사용자 빠른 예약 정보 더미 데이터
+  // 초기값은 사용자 빠른 예약에서 받아온 데이터
+  const [rezData, setRezData] = useState({
+    type: '',
+    purpose: '',
+    date: '',
+    startTime: '',
+    endTitme: '',
+    totalCtn: ''
+  });
 
+  // 회의실 더미 데이터
   const data = {
     mrCode: 'R001',
     mrName: '더존 스카이 라운지',
@@ -114,6 +124,7 @@ const MrDetailPage = () => {
       }
     ]
   };
+  // 회의실 예약 현황 더미 데이터
   const schedule = [
     {
       index: 0,
@@ -176,6 +187,24 @@ const MrDetailPage = () => {
       secondHalf: true
     }
   ];
+  // 회의실 종류 더미 데이터
+  const mrCategory = [
+    {
+      index: 0,
+      value: '미팅룸',
+      name: '미팅룸'
+    },
+    {
+      index: 1,
+      value: '화상회의룸',
+      name: '화상회의룸'
+    },
+    {
+      index: 2,
+      value: '컨퍼런스룸',
+      name: '컨퍼런스룸'
+    }
+  ];
 
   return (
     <MainContainer>
@@ -189,7 +218,11 @@ const MrDetailPage = () => {
             </Stack>
           </Grid>
           <Grid item xs={5}>
-            <RezCard />
+            <RezCard
+              rezData={rezData}
+              setRezData={setRezData}
+              mrCategory={mrCategory}
+            />
           </Grid>
         </Grid>
       </WrapContainer>
