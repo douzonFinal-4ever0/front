@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   Collapse,
+  FormControl,
   FormControlLabel,
   IconButton,
   Paper,
@@ -21,6 +22,7 @@ import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 import TimeField from '../../components/common/TimeField';
+import MrTag from './MrTag';
 
 const MrRegistForm = () => {
   const [selectedDays, setSelectedDays] = useState([
@@ -129,6 +131,7 @@ const MrRegistForm = () => {
             </Grid>
           </Collapse>
         </Grid>
+        <MrTag />
         <Button
           component="label"
           variant="outlined"
@@ -196,8 +199,7 @@ const Item = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   color: theme.palette.text.secondary,
   height: '100%',
-  width: '100%',
-  margin: '1%'
+  width: '100%'
 }));
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',

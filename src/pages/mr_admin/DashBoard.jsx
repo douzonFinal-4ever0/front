@@ -2,9 +2,14 @@ import * as React from 'react';
 
 import { Button, Checkbox, Paper, styled } from '@mui/material';
 import { useState } from 'react';
+import MrTag from '../../components/mr_admin/MrTag';
 
 const DashBoard = () => {
-  return <Item></Item>;
+  return (
+    <Item>
+      <MrTag />
+    </Item>
+  );
 };
 
 export default DashBoard;
