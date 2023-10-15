@@ -1,21 +1,20 @@
 import React from 'react';
 import { useState } from 'react';
-import { Paper, styled, Box, Button, Typography } from '@mui/material';
+import { Paper, styled, Box, Button } from '@mui/material';
 import Calendar from '../../components/common/Calendar';
 import SubSidebar from '../../components/common/SubSidebar';
 import SubHeader from '../../components/common/SubHeader';
 import Modal from '../../components/common/Modal';
-import MrNotice from './MrNotice';
+import MrRegistForm from '../../components/mr_admin/MrRegistForm';
 
 const ModalContentExample = () => {
   return (
-    <Box sx={{ maxWidth: 600 }}>
-      <Typography variant="body2" color="text.secondary">
-        몰?루는건가... 그래.. 그런일이 있었지.. 하지만 알려주지 않겠다
-      </Typography>
+    <Box sx={{ maxWidth: 800 }}>
+      <MrRegistForm />
     </Box>
   );
 };
+
 const MrRegister = () => {
   // 모달창------------------------------------------------------
   // 모달창 열림 여부 값
@@ -34,7 +33,8 @@ const MrRegister = () => {
             open={open}
             modalTitle={'회의실 항목'}
             handleModal={handleModal}
-            content={<MrNotice />}
+            content={<ModalContentExample />}
+            buttons={<ModalActionBtns />}
           />
         </SubSidebar>
         <Item2>
@@ -46,6 +46,7 @@ const MrRegister = () => {
 };
 
 export default MrRegister;
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -55,6 +56,7 @@ const Item = styled(Paper)(({ theme }) => ({
   width: '100%',
   margin: '1%'
 }));
+
 const Item2 = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body,
@@ -65,3 +67,20 @@ const Item2 = styled(Paper)(({ theme }) => ({
   width: '100%',
   margin: '1%'
 }));
+
+const ModalActionBtns = () => {
+  const handleBtn = () => {
+    console.log('clicked');
+  };
+
+  return (
+    <Box>
+      <Button color="primary" onClick={handleBtn}>
+        Save
+      </Button>
+      <Button color="secondary" onClick={handleBtn}>
+        Cancel
+      </Button>
+    </Box>
+  );
+};
