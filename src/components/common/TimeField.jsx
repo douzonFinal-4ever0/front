@@ -8,7 +8,7 @@ import 'dayjs/locale/ko';
 import TimePickerClock from './TimePickerClock';
 import MultiTimePicker from './MultiTimePicker';
 
-const TimeField = ({ withMonth, label }) => {
+const TimeField = ({ withMonth, label, onChange, name }) => {
   /**date time picker 써야할때 쓰는거 */
   const [value, setValue] = useState(dayjs('2023-10-13T15:30'));
   /*-----------------------------------------------------------------------*/
@@ -30,7 +30,12 @@ const TimeField = ({ withMonth, label }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
       {withMonth ? (
-        <MultiTimePicker shouldDisableTime={shouldDisableTime} label={label} />
+        <MultiTimePicker
+          shouldDisableTime={shouldDisableTime}
+          label={label}
+          onChange={onChange}
+          name={name}
+        />
       ) : (
         <TimePickerClock shouldDisableTime={shouldDisableTime} label={label} />
       )}

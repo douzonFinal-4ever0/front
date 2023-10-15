@@ -33,6 +33,7 @@ function DaumPost({ setAddressObj }) {
         townAddress: (fullAddress +=
           extraAddress !== '' ? `(${extraAddress})` : '')
       });
+
       // 주소 검색이 완료된 후 결과를 매개변수로 전달
       // 다음에 수행할 작업을 명시
     }

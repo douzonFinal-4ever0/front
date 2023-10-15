@@ -218,23 +218,28 @@
   "carNameCode": [
     {
       "id": "12가1234",
-      "car_name": "소나타"
+      "car_name": "소나타",
+      "car_address": "강원특별자치도 춘천시 남산면 버들1길 130"
     },
     {
       "id": "12가2345",
-      "car_name": "아반떼"
+      "car_name": "아반떼",
+      "car_address": "서울특별시 중구 을지로1가 을지로 29"
     },
     {
       "id": "12가3456",
-      "car_name": "g80"
+      "car_name": "g80",
+      "car_address": "부산 해운대구 센텀중앙로 79"
     },
     {
       "id": "12가4567",
-      "car_name": "레이"
+      "car_name": "레이",
+      "car_address": "서울특별시 중구 을지로1가 을지로 29"
     },
     {
       "id": "12가5678",
-      "car_name": "스파크"
+      "car_name": "스파크",
+      "car_address": "강원특별자치도 춘천시 남산면 버들1길 130"
     }
   ],
   "carDetail": [
