@@ -5,7 +5,7 @@ import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded';
 import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import TimeTable from '../../../../components/mr_user/TimeTable';
 import WrapContainer from '../../../../components/mr_user/WrapContainer';
-import { BORDER_RADIUS, PAGE_INNER_PADDING } from '../../../../config';
+import { PAGE_INNER_PADDING } from '../../../../config';
 import { palette } from '../../../../theme/palette';
 
 const MrRezDashboard = ({ schedule }) => {

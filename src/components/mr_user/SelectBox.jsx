@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import styled from '@emotion/styled';
-import { Box, MenuItem, Select } from '@mui/material';
+import { Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const SelectBox = ({ list }) => {

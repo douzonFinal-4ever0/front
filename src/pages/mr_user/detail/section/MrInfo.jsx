@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 // @MUI--------------------------------------------------------------------
-import { Badge, Box, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import AccessTimeFilledRoundedIcon from '@mui/icons-material/AccessTimeFilledRounded';

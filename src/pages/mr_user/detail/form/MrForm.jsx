@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { Button, Grid, Typography } from '@mui/material';
-import { Box, style } from '@mui/system';
+import { Grid, Box } from '@mui/material';
 import Input from '../../../../components/mr_user/Input';
 import Label from '../../../../components/mr_user/Label';
 import RectangleBtn from '../../../../components/mr_user/RectangleBtn';
