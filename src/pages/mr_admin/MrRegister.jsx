@@ -1,49 +1,44 @@
 import React from 'react';
 import { useState } from 'react';
-import TimeField from '../../components/common/TimeField';
-import { Stack, display } from '@mui/system';
-import { Container, Grid, Paper, styled, Box, Button } from '@mui/material';
+import { Paper, styled, Box, Button, Typography } from '@mui/material';
 import Calendar from '../../components/common/Calendar';
 import SubSidebar from '../../components/common/SubSidebar';
 import SubHeader from '../../components/common/SubHeader';
-import axios from 'axios';
+import Modal from '../../components/common/Modal';
+import MrNotice from './MrNotice';
 
+const ModalContentExample = () => {
+  return (
+    <Box sx={{ maxWidth: 600 }}>
+      <Typography variant="body2" color="text.secondary">
+        몰?루는건가... 그래.. 그런일이 있었지.. 하지만 알려주지 않겠다
+      </Typography>
+    </Box>
+  );
+};
 const MrRegister = () => {
-  const [rezList, setRezList] = useState([]);
-  const [events, setEvents] = useState([
-    {
-      title: '',
-      start: '',
-      end: ''
-    }
-  ]);
-  const handleClick = () => {
-    axios.get('http://localhost:8081/mr/mrRez').then((res) => {
-      console.log(res.data);
-      setRezList(res.data);
-      const newEvents = res.data.map((rez) => ({
-        title: rez.m_purpose,
-        start: rez.rez_start_time,
-        end: rez.rez_end_time
-      }));
-      setEvents(newEvents);
-    });
-  };
-  const tabData = [
-    {
-      title: '이름11111',
-      content: <TimeField contents={events} />
-    }
-  ];
+  // 모달창------------------------------------------------------
+  // 모달창 열림 여부 값
+  const [open, setOpen] = useState(false);
+  // 모달창 열림닫힘 이벤트
+  const handleModal = () => setOpen(!open);
   return (
     <Item>
       <SubHeader title={'회의실 등록'} />
       <Box sx={{ display: 'flex' }}>
         <SubSidebar>
-          <Button variant="text">회의실 등록</Button>
+          <Button variant="text" onClick={handleModal}>
+            회의실 등록
+          </Button>
+          <Modal
+            open={open}
+            modalTitle={'회의실 항목'}
+            handleModal={handleModal}
+            content={<MrNotice />}
+          />
         </SubSidebar>
         <Item2>
-          <Calendar events={events} tabData={tabData} />
+          <Calendar />
         </Item2>
       </Box>
     </Item>
