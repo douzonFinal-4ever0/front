@@ -11,7 +11,10 @@ const DatePicker = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DatePicker']}>
+      <DemoContainer
+        components={['DatePicker', 'DatePicker']}
+        sx={{ padding: '0' }}
+      >
         <StyledPicker defaultValue={value} />
       </DemoContainer>
     </LocalizationProvider>
