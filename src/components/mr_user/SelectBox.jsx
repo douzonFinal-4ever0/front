@@ -4,18 +4,19 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const SelectBox = ({ list }) => {
+const SelectBox = ({ list, handleSelectBox }) => {
   const [meetingType, setMeetingType] = useState('default');
 
-  const handleChange = (event) => {
-    setMeetingType(event.target.value);
-  };
   return (
-    <Box sx={{ position: 'relative' }}>
-      <StyledSelect id="category" value={meetingType} onChange={handleChange}>
-        <option value="">선택하세요</option>
+    <Box sx={{ position: 'relative', width: '100%' }}>
+      <StyledSelect
+        id="category"
+        value={meetingType}
+        onChange={handleSelectBox}
+      >
+        <option value="">선택</option>
         {list.map((item) => (
-          <option value="item.value">{item.name}</option>
+          <option value={item.value}>{item.name}</option>
         ))}
       </StyledSelect>
       <Box
@@ -38,10 +39,15 @@ const StyledSelect = styled('select')(({ theme }) => ({
   padding: '16px 14px',
   display: 'flex',
   width: '100%',
+  height: '56px',
+  flexGrow: 1,
   border: 'none',
   outline: 'none',
   borderRadius: '8px',
   backgroundColor: '#f5f5f5',
   appearance: 'none',
-  fontSize: '14px'
+  fontSize: '14px',
+  '&:hover': {
+    outline: `1px solid ${theme.palette.grey['900']}`
+  }
 }));
