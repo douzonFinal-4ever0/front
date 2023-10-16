@@ -4,11 +4,18 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { useState } from 'react';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const MrTag = () => {
+const MrTag = ({ onTagSelect }) => {
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const handleTagSelection = (event, value) => {
+    setSelectedTags(value);
+    onTagSelect(value.map((tag) => tag.tag));
+  };
   return (
     <Autocomplete
       multiple
@@ -30,6 +37,8 @@ const MrTag = () => {
       )}
       style={{ width: 'auto' }}
       renderInput={(params) => <TextField {...params} label="회의실 태그" />}
+      value={selectedTags}
+      onChange={handleTagSelection}
     />
   );
 };

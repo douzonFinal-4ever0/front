@@ -47,7 +47,7 @@ const MrNotice = () => {
                 id="outlined-basic"
                 label="제목"
                 variant="outlined"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', backgroundColor: '#f5f5f5' }}
                 placeholder="제목을 입력하세요"
                 onChange={(e) => {
                   setNotice_title(e.target.value);

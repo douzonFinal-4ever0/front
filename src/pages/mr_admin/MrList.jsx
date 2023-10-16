@@ -50,7 +50,16 @@ const MrList = () => {
   ];
   return (
     <>
-      <SubHeader title={'회의실 예약 상황'} />
+      <SubHeader
+        title={'회의실 예약 상황'}
+        sx={{
+          '& .MuiTextField-root': {
+            m: 1,
+            width: '100%',
+            backgroundColor: '#f5f5f5'
+          }
+        }}
+      />
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar />
         <MainContainer>
