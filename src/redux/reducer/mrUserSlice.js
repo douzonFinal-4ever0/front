@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import dayjs from 'dayjs';
+import { getFormattedDate } from '../../utils/formatDate';
 
 const initialState = {
-  mType: 'esther1', // 회의 종류
-  rezDate: 'esther2', // 예약 날짜
-  rezStartTime: 'esther3', // 예약 시작 시간
-  rezEndTime: 'esther4', // 예약 종료 시간
-  totPtCtn: 'esther5' // 총 인원수
+  mType: '', // 회의 종류,
+  mPurpose: '', // 회의 목적
+  rezDate: dayjs(getFormattedDate()), // 예약 날짜
+  rezStartTime: '', // 예약 시작 시간
+  rezEndTime: '', // 예약 종료 시간
+  totPtCtn: '' // 총 인원수
 };
 
 const mrUserSlice = createSlice({
@@ -14,6 +17,7 @@ const mrUserSlice = createSlice({
   reducers: {
     setRezData(state, action) {
       const { data } = action.payload;
+      console.log({ ...state, ...data });
       return { ...state, ...data };
     }
   }
