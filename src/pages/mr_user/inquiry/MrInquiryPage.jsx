@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { setRezData } from '../../../redux/reducer/mrUserSlice';
+import dayjs from 'dayjs';
 // @MUI--------------------------------------------------------------------
 import styled from '@emotion/styled';
 import { Box, Grid, Stack, Typography } from '@mui/material';
@@ -17,6 +19,7 @@ import DatePicker from '../../../components/mr_user/DatePicker';
 const MrInquiryPage = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
+  const navigation = useNavigate();
 
   // 회의실 종류 더미 데이터
   const mrCategory = [
@@ -39,14 +42,41 @@ const MrInquiryPage = () => {
 
   // 회의 종류 셀렉트박스 이벤트
   const handleSelectBox = (e) => {
-    const newRezDate = { ...rezData, mType: e.target.value };
-    dispatch(setRezData({ data: newRezDate }));
+    const newRezData = { ...rezData, mType: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 날짜 데이트피커 이벤트
+  const handleDatePick = (newValue) => {
+    const newRezData = {
+      ...rezData,
+      rezDate: dayjs(newValue).format('YYYY-MM-DD')
+    };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 시작 시간 이벤트
+  const handleSelectStartTime = (e) => {
+    const newRezData = { ...rezData, rezStartTime: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 종료 시간 이벤트
+  const handleSelectEndtTime = (e) => {
+    const newRezData = { ...rezData, rezEndTime: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 총인원수 이벤트
+  const handleTotCtn = (e) => {
+    const newRezData = { ...rezData, totPtCtn: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
   };
 
   // 조회 버튼 이벤트
   const handleInquiryBtn = (e) => {
     e.preventDefault();
-    console.log('clicked');
+    navigation('/mr/1');
   };
 
   return (
@@ -68,6 +98,7 @@ const MrInquiryPage = () => {
                   </Grid>
                   <Grid item xs={9}>
                     <SelectBox
+                      value={rezData.mType}
                       list={mrCategory}
                       handleSelectBox={handleSelectBox}
                     />
@@ -81,7 +112,10 @@ const MrInquiryPage = () => {
                     </StyledLabelWrap>
                   </Grid>
                   <Grid item xs={9}>
-                    <DatePicker />
+                    <DatePicker
+                      value={rezData.rezDate}
+                      handleDatePick={handleDatePick}
+                    />
                   </Grid>
                 </Grid>
                 {/* 예약 시간 */}
@@ -96,9 +130,15 @@ const MrInquiryPage = () => {
                       direction={'row'}
                       sx={{ width: '100%', justifyContent: 'space-between' }}
                     >
-                      <SelectTime />
+                      <SelectTime
+                        value={rezData.rezStartTime}
+                        handleSelectTime={handleSelectStartTime}
+                      />
                       <StyledDashText>~</StyledDashText>
-                      <SelectTime />
+                      <SelectTime
+                        value={rezData.rezEndTime}
+                        handleSelectTime={handleSelectEndtTime}
+                      />
                     </Stack>
                   </Grid>
                 </Grid>
@@ -114,6 +154,8 @@ const MrInquiryPage = () => {
                       type="number"
                       id="totCtn"
                       placeholder={'총 인원수'}
+                      value={rezData.totPtCtn}
+                      handleInputChange={handleTotCtn}
                     />
                   </Grid>
                 </Grid>
