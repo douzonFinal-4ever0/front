@@ -24,62 +24,42 @@ const MrRegister = () => {
   // 모달창 열림닫힘 이벤트
   const handleModal = () => setOpen(!open);
   return (
-    <MainContainer>
-      <WrapContainer bgColor={'#fff'}>
-        <SubHeader title={'회의실 등록'} />
-        <Box sx={{ display: 'flex' }}>
-          <SubSidebar
-            content={
-              <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-                <Button
-                  variant="outlined"
-                  sx={{ width: '100%' }}
-                  onClick={handleModal}
-                >
-                  회의실 등록
-                </Button>
-                <Modal
-                  open={open}
-                  modalTitle={'회의실 항목'}
-                  handleModal={handleModal}
-                  content={<ModalContentExample />}
-                  buttons={<ModalActionBtns />}
-                />
-              </Grid>
-            }
-          />
-          <Item2>
+    <>
+      <SubHeader title={'회의실 등록'} />
+      <Box sx={{ display: 'flex', height: '95%' }}>
+        <SubSidebar
+          widthP={20}
+          content={
+            <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
+              <Button
+                variant="outlined"
+                sx={{ width: '100%' }}
+                onClick={handleModal}
+              >
+                회의실 등록
+              </Button>
+              <Modal
+                open={open}
+                modalTitle={'회의실 항목'}
+                handleModal={handleModal}
+                content={<ModalContentExample />}
+                buttons={<ModalActionBtns />}
+              />
+            </Grid>
+          }
+        />
+        <MainContainer>
+          <WrapContainer bgColor={'#fff'}>
+            <Box sx={{ display: 'flex' }}></Box>
             <Calendar />
-          </Item2>
-        </Box>
-        <Item></Item>
-      </WrapContainer>
-    </MainContainer>
+          </WrapContainer>
+        </MainContainer>
+      </Box>
+    </>
   );
 };
 
 export default MrRegister;
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: '100%',
-  width: '100%',
-  margin: '1%'
-}));
-
-const Item2 = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: '100%',
-  width: '100%',
-  margin: '1%'
-}));
 
 const ModalActionBtns = () => {
   const handleBtn = () => {

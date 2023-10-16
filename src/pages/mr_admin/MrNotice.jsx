@@ -1,7 +1,15 @@
 import React from 'react';
 import Editor from '../../components/mr_admin/Editor';
 import SubHeader from '../../components/common/SubHeader';
-import { Paper, styled, Button, Stack, Box, TextField } from '@mui/material';
+import {
+  Paper,
+  styled,
+  Button,
+  Stack,
+  Box,
+  TextField,
+  Container
+} from '@mui/material';
 import { useState } from 'react';
 import OnOffSwitch from '../../components/mr_admin/OnOffSwitch';
 import axios from 'axios';
@@ -29,37 +37,40 @@ const MrNotice = () => {
     // console.log('공개 여부: ' + isPublic); // OnOff 스위치 상태 출력
   };
   return (
-    <MainContainer>
-      <WrapContainer bgColor={'#fff'}>
-        <SubHeader title={'공지사항'} />
-        <SubSidebar />
-        <Box>
-          <TextField
-            id="outlined-basic"
-            label="제목"
-            variant="outlined"
-            sx={{ width: '100%' }}
-            placeholder="제목을 입력하세요"
-            onChange={(e) => {
-              setNotice_title(e.target.value);
-            }}
-          />
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <OnOffSwitch checked={isPublic} onChange={handleSwitchChange} />
-            <Button variant="outlined" onClick={handleClick}>
-              작성 완료
-            </Button>
-          </Stack>
+    <>
+      <SubHeader title={'공지사항'} />
+      <Box sx={{ display: 'flex' }}>
+        <MainContainer>
+          <WrapContainer bgColor={'#fff'}>
+            <Container sx={{ width: 'auto' }}>
+              <TextField
+                id="outlined-basic"
+                label="제목"
+                variant="outlined"
+                sx={{ width: '100%' }}
+                placeholder="제목을 입력하세요"
+                onChange={(e) => {
+                  setNotice_title(e.target.value);
+                }}
+              />
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <OnOffSwitch checked={isPublic} onChange={handleSwitchChange} />
+                <Button variant="outlined" onClick={handleClick}>
+                  작성 완료
+                </Button>
+              </Stack>
 
-          <Editor onEditorChange={(data) => setEditorData(data)} />
-        </Box>
-      </WrapContainer>
-    </MainContainer>
+              <Editor onEditorChange={(data) => setEditorData(data)} />
+            </Container>
+          </WrapContainer>
+        </MainContainer>
+      </Box>
+    </>
   );
 };
 

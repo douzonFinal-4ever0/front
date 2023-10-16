@@ -7,6 +7,8 @@ import Calendar from '../../components/common/Calendar';
 import SubSidebar from '../../components/common/SubSidebar';
 import SubHeader from '../../components/common/SubHeader';
 import axios from 'axios';
+import MainContainer from '../../components/mr_user/MainContainer';
+import WrapContainer from '../../components/mr_user/WrapContainer';
 
 const MrList = () => {
   const [rezList, setRezList] = useState([]);
@@ -47,22 +49,24 @@ const MrList = () => {
     }
   ];
   return (
-    <Item>
+    <>
       <SubHeader title={'회의실 예약 상황'} />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar />
-        <Item2>
-          <Grid spacing={2}>
-            <TimeField withMonth={false} label={'start-time'} />
-            <TimeField withMonth={false} label={'end-time'} />
-            <Button variant="text" onClick={handleClick}>
-              조회
-            </Button>
-          </Grid>
-          <Calendar events={events} tabData={tabData} />
-        </Item2>
+        <MainContainer>
+          <WrapContainer bgColor={'#fff'}>
+            <Grid spacing={2}>
+              <TimeField withMonth={false} label={'start-time'} />
+              <TimeField withMonth={false} label={'end-time'} />
+              <Button variant="outlined" onClick={handleClick}>
+                조회
+              </Button>
+            </Grid>
+            <Calendar events={events} tabData={tabData} />
+          </WrapContainer>
+        </MainContainer>
       </Box>
-    </Item>
+    </>
   );
 };
 
