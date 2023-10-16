@@ -1,11 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import { Paper, styled, Box, Button } from '@mui/material';
+import { Paper, styled, Box, Button, Grid, Divider } from '@mui/material';
 import Calendar from '../../components/common/Calendar';
 import SubSidebar from '../../components/common/SubSidebar';
 import SubHeader from '../../components/common/SubHeader';
 import Modal from '../../components/common/Modal';
 import MrRegistForm from '../../components/mr_admin/MrRegistForm';
+import MainContainer from '../../components/mr_user/MainContainer';
+import WrapContainer from '../../components/mr_user/WrapContainer';
 
 const ModalContentExample = () => {
   return (
@@ -22,26 +24,37 @@ const MrRegister = () => {
   // 모달창 열림닫힘 이벤트
   const handleModal = () => setOpen(!open);
   return (
-    <Item>
-      <SubHeader title={'회의실 등록'} />
-      <Box sx={{ display: 'flex' }}>
-        <SubSidebar>
-          <Button variant="text" onClick={handleModal}>
-            회의실 등록
-          </Button>
-          <Modal
-            open={open}
-            modalTitle={'회의실 항목'}
-            handleModal={handleModal}
-            content={<ModalContentExample />}
-            buttons={<ModalActionBtns />}
+    <MainContainer>
+      <WrapContainer bgColor={'#fff'}>
+        <SubHeader title={'회의실 등록'} />
+        <Box sx={{ display: 'flex' }}>
+          <SubSidebar
+            content={
+              <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
+                <Button
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                  onClick={handleModal}
+                >
+                  회의실 등록
+                </Button>
+                <Modal
+                  open={open}
+                  modalTitle={'회의실 항목'}
+                  handleModal={handleModal}
+                  content={<ModalContentExample />}
+                  buttons={<ModalActionBtns />}
+                />
+              </Grid>
+            }
           />
-        </SubSidebar>
-        <Item2>
-          <Calendar />
-        </Item2>
-      </Box>
-    </Item>
+          <Item2>
+            <Calendar />
+          </Item2>
+        </Box>
+        <Item></Item>
+      </WrapContainer>
+    </MainContainer>
   );
 };
 
