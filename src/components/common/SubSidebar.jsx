@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import Box from '@mui/material/Box';
 
-const SubSidebar = ({}) => {
+const SubSidebar = ({ children }) => {
   return (
     <Box
       sx={{
@@ -17,7 +17,7 @@ const SubSidebar = ({}) => {
         boxShadow: '0px 3px 0px 0px rgba(145, 158, 171, 0.14) inset'
       }}
     >
-      서브사이드바 내용
+      {children}
     </Box>
   );
 };

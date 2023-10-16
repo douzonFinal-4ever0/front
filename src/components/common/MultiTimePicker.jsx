@@ -9,19 +9,18 @@ const MultiTimePicker = ({
   name
 }) => {
   return (
-    <>
-      <DateTimePicker
-        label={label}
-        format="YYYY-MM-DD HH:mm"
-        defaultValue={value}
-        showDaysOutsideCurrentMonth
-        skipDisabled
-        shouldDisableTime={shouldDisableTime}
-        ampm={false}
-        onChange={onChange}
-        name={name}
-      />
-    </>
+    <DateTimePicker
+      label={label}
+      format="YYYY-MM-DD HH:mm"
+      defaultValue={value}
+      showDaysOutsideCurrentMonth
+      skipDisabled
+      shouldDisableTime={shouldDisableTime}
+      ampm={false}
+      onChange={onChange}
+      name={name}
+      views={['year', 'month', 'day']} // 시와 분을 숨기는 설정
+    />
   );
 };
 

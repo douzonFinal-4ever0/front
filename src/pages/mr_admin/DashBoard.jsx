@@ -1,36 +1,51 @@
-import React from 'react';
-import { useEffect } from 'react';
+import * as React from 'react';
+
+import { Button, Checkbox, Paper, styled } from '@mui/material';
 import { useState } from 'react';
-import Spinner from '../../components/common/Spinner';
-import { Button } from '@mui/material';
-import axios from 'axios';
+import MrTag from '../../components/mr_admin/MrTag';
 
 const DashBoard = () => {
-  const [mrList, setMrList] = useState([]);
-
-  const handleClick = () => {
-    // alert('test');
-    axios.get('http://localhost:8081/mr/mrList').then((res) => {
-      console.log(res.data);
-      setMrList(res.data);
-    });
-  };
   return (
-    <div>
-      <Button variant="text" onClick={handleClick}>
-        테스트
-      </Button>
-      {mrList.map((mr) => {
-        return (
-          <table>
-            <tr key={mr.mr_code}>
-              <td>{mr.mr_name}</td>
-            </tr>
-          </table>
-        );
-      })}
-    </div>
+    <Item>
+      <MrTag />
+    </Item>
   );
 };
 
 export default DashBoard;
+
+const itemData = [
+  {
+    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+    title: 'Breakfast'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+    title: 'Burger'
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+    title: 'Camera'
+  }
+];
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: '100%',
+  width: '100%',
+  margin: '1%'
+}));
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1
+});
+const daysOfWeek = ['월', '화', '수', '목', '금', '토'];
