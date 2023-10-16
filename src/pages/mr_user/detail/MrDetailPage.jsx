@@ -1,20 +1,31 @@
-import { useParams } from 'react-router-dom';
-import styled from '@emotion/styled';
 // @MUI--------------------------------------------------------------------
-import { Grid } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 // --------------------------------------------------------------------
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
-import MrInfo from './MrInfo';
+import MrInfo from './section/MrInfo';
 // --------------------------------------------------------------------
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
+import MrRezDashboard from './section/MrRezDashboard';
+import MrSubInfo from './section/MrSubInfo';
+import RezCard from './form/RezCard';
+import { useState } from 'react';
 
 const MrDetailPage = () => {
-  const { id } = useParams();
-  console.log(id);
+  // 사용자 빠른 예약 정보 더미 데이터
+  // 초기값은 사용자 빠른 예약에서 받아온 데이터
+  const [rezData, setRezData] = useState({
+    type: '',
+    purpose: '',
+    date: '',
+    startTime: '',
+    endTitme: '',
+    totalCtn: ''
+  });
 
+  // 회의실 더미 데이터
   const data = {
     mrCode: 'R001',
     mrName: '더존 스카이 라운지',
@@ -80,18 +91,137 @@ const MrDetailPage = () => {
         index: 4,
         value: '컨퍼런스'
       }
+    ],
+    mrSupplies: [
+      {
+        index: 0,
+        name: '빔프로젝터'
+      },
+      {
+        index: 1,
+        name: '화상회의장비'
+      },
+      {
+        index: 2,
+        name: '마이크'
+      },
+      {
+        index: 3,
+        name: '스피커'
+      },
+      {
+        index: 4,
+        name: '화이트보드'
+      },
+      {
+        index: 5,
+        name: '포인터'
+      },
+      {
+        index: 6,
+        name: '강연대'
+      }
     ]
   };
+  // 회의실 예약 현황 더미 데이터
+  const schedule = [
+    {
+      index: 0,
+      hour: 9,
+      firstHalf: true,
+      secondHalf: false
+    },
+    {
+      index: 1,
+      hour: 10,
+      firstHalf: true,
+      secondHalf: true
+    },
+    {
+      index: 2,
+      hour: 11,
+      firstHalf: false,
+      secondHalf: false
+    },
+    {
+      index: 3,
+      hour: 12,
+      firstHalf: true,
+      secondHalf: false
+    },
+    {
+      index: 4,
+      hour: 13,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 5,
+      hour: 14,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 6,
+      hour: 15,
+      firstHalf: false,
+      secondHalf: false
+    },
+    {
+      index: 7,
+      hour: 16,
+      firstHalf: false,
+      secondHalf: true
+    },
+    {
+      index: 8,
+      hour: 17,
+      firstHalf: true,
+      secondHalf: true
+    },
+    {
+      index: 9,
+      hour: 18,
+      firstHalf: true,
+      secondHalf: true
+    }
+  ];
+  // 회의실 종류 더미 데이터
+  const mrCategory = [
+    {
+      index: 0,
+      value: '미팅룸',
+      name: '미팅룸'
+    },
+    {
+      index: 1,
+      value: '화상회의룸',
+      name: '화상회의룸'
+    },
+    {
+      index: 2,
+      value: '컨퍼런스룸',
+      name: '컨퍼런스룸'
+    }
+  ];
 
   return (
     <MainContainer>
-      <WrapContainer>
+      <WrapContainer bgColor={'#fff'}>
         <Grid container spacing={3}>
-          <Grid item xs={8}>
-            <MrInfo data={data} />
+          <Grid item xs={7}>
+            <Stack rowGap={8} sx={{ height: '2000px' }}>
+              <MrInfo data={data} />
+              <MrRezDashboard schedule={schedule} />
+              <MrSubInfo data={data.mrSupplies} />
+            </Stack>
           </Grid>
-          <Grid item xs={4}>
-            <div style={{ background: '#f0f0f0', height: '100%' }}>gogo</div>
+          <Grid item xs={5}>
+            <RezCard
+              rezData={rezData}
+              setRezData={setRezData}
+              mrCategory={mrCategory}
+            />
           </Grid>
         </Grid>
       </WrapContainer>

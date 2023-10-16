@@ -22,7 +22,8 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { element: <Navigate to="/mr/dashboard" />, index: true },
         { path: 'dashboard', element: <MrUserDashboardPage /> },
         { path: 'reservation', element: <MrUserRegistherPage /> },
-        { path: 'MrDetail/:id', element: <MrUserMrDetailPage /> }
+        { path: ':id', element: <MrUserMrDetailPage /> },
+        { path: 'inquiry', element: <MrUserMrInquiryPage /> }
       ]
     },
     {
@@ -32,7 +33,15 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ),
       children: [
         { element: <Navigate to="/car/carList" />, index: true },
-        { path: 'carList', element: <CarAdminRegisterPage isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode}/> }
+        {
+          path: 'carList',
+          element: (
+            <CarAdminRegisterPage
+              isAdminMode={isAdminMode}
+              setIsAdminMode={setIsAdminMode}
+            />
+          )
+        }
       ]
     },
     {
@@ -42,8 +51,10 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ),
       children: [
         { element: <Navigate to="admin/mr/dashboard" />, index: true },
-        { path: 'dashboard', element: <MrAdminDashboardPage /> },
-        { path: 'reservation', element: <MrAdminRegisterPage /> }
+        { path: 'MrList', element: <MrAdminMrListPage /> },
+        { path: 'MrRegister', element: <MrAdminRegisterPage /> },
+        { path: 'Notice', element: <MrAdminNoticePage /> },
+        { path: 'Test', element: <MrAdminTestPage /> }
       ]
     },
     {
@@ -56,15 +67,17 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     },
     {
-      path: '/car',
+      path: '/carRez',
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
       children: [
-        { element: <Navigate to="/car/dashboard" />, index: true },
-        { path: 'dashboard', element: <CarUserDashboardPage /> }
+        { element: <Navigate to="/carRez/dashboard" />, index: true },
+        { path: 'dashboard', element: <CarUserDashboardPage /> },
+        { path: 'reservation', element: <CarUserRegisterPage /> }
       ]
-    }
+    },
+
   ]);
 };
 
@@ -82,6 +95,10 @@ const MrUserMrDetailPage = Loadable(
   lazy(() => import('../pages/mr_user/detail/MrDetailPage'))
 );
 
+const MrUserMrInquiryPage = Loadable(
+  lazy(() => import('../pages/mr_user/inquiry/MrInquiryPage'))
+);
+
 const CarAdminRegisterPage = Loadable(
   lazy(() => import('../pages/car_admin/Register'))
 );
@@ -91,8 +108,17 @@ const CarUserDashboardPage = Loadable(
 );
 
 const MrAdminRegisterPage = Loadable(
-  lazy(() => import('../pages/mr_admin/Register'))
+  lazy(() => import('../pages/mr_admin/MrRegister'))
 );
-const MrAdminDashboardPage = Loadable(
+const MrAdminMrListPage = Loadable(
+  lazy(() => import('../pages/mr_admin/MrList'))
+);
+const MrAdminNoticePage = Loadable(
+  lazy(() => import('../pages/mr_admin/MrNotice'))
+);
+const MrAdminTestPage = Loadable(
   lazy(() => import('../pages/mr_admin/DashBoard'))
+);
+const CarUserRegisterPage = Loadable(
+  lazy(() => import('../pages/car_user/Register'))
 );
