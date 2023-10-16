@@ -3,7 +3,10 @@ import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import Tabs from './Tabs';
 
-// props로 넣어줘야 할 것들 : drawer 너비, drawer 내부의 tab 제목 배열과, tab에 해당하는 컴포넌트
+// props로 넣어줘야 할 것들 : 
+// width : drawer 너비
+// drawerState와 toggleDrawer : car_admin의 Example 페이지 참고 
+// tabData : title 과 content 를 key 값으로 가지는 객체의 배열을 생성
 const Drawer = ({width, drawerState, toggleDrawer, tabData}) => {
   
   const list = (anchor) => (
@@ -11,7 +14,6 @@ const Drawer = ({width, drawerState, toggleDrawer, tabData}) => {
       sx={{ width: width}}
       role="presentation"
       onClick={toggleDrawer(anchor, true)}
-      onKeyDown={toggleDrawer(anchor, false)}
     >
       {/* Drawer 내부 작성*/}
 
