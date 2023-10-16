@@ -45,8 +45,8 @@ const MenuList = (props) => {
       title: '차량',
       icon: <StyledCarIcon />,
       categories: [
-        { index: 3, title: '차량 조회', url: '/car/dashboard' },
-        { index: 4, title: '차량 예약', url: '/car/reservation' }
+        { index: 3, title: '차량 조회', url: '/carRez/dashboard' },
+        { index: 4, title: '차량 예약', url: '/carRez/reservation' }
       ]
     }
   ];

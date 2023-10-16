@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid as MuiDataGrid }  from '@mui/x-data-grid' ;
+import { DataGrid as MuiDataGrid } from '@mui/x-data-grid';
 
-
-// pageSize=한페이지에 보여줄 개수 
+// pageSize=한페이지에 보여줄 개수
 // pageSizeOptions=한페이지에 보여줄 개수 선택을 드롭다운으로 선택 가능 pageSize의 배수로만 했을때보임
 // checkbox=체크박스가 유무
 // disableRow= true : row를 선택해도 아무것도 없음, false: row를 선택하면 자동으로 checkbox가 클릭됨
@@ -17,7 +16,7 @@ import { DataGrid as MuiDataGrid }  from '@mui/x-data-grid' ;
 //     editable:true/false,                                     수정 가능 여부
 //     type:number,                                             타입(선택) dateTime 등
 //     description:"설명",                                      colum에 마우스를 가져다 댔을때 나오는 설명(선택)
-//     valueGetter:(params)=> 
+//     valueGetter:(params)=>
 //       `${params.row.mem_name} / ${params.row.dept_name}`,    value값 커스텀(선택)
 //     renderCell :                                             셀의 모양 변경
 //   },
@@ -77,21 +76,21 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   height: '100%',
   '& .ant-empty-img-1': {
-    fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626',
+    fill: theme.palette.mode === 'light' ? '#aeb8c2' : '#262626'
   },
   '& .ant-empty-img-2': {
-    fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959',
+    fill: theme.palette.mode === 'light' ? '#f5f5f7' : '#595959'
   },
   '& .ant-empty-img-3': {
-    fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343',
+    fill: theme.palette.mode === 'light' ? '#dce0e6' : '#434343'
   },
   '& .ant-empty-img-4': {
-    fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c',
+    fill: theme.palette.mode === 'light' ? '#fff' : '#1c1c1c'
   },
   '& .ant-empty-img-5': {
     fillOpacity: theme.palette.mode === 'light' ? '0.8' : '0.08',
-    fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff',
-  },
+    fill: theme.palette.mode === 'light' ? '#f5f5f5' : '#fff'
+  }
 }));
 
 function CustomNoRowsOverlay() {
@@ -141,25 +140,37 @@ function CustomNoRowsOverlay() {
     </StyledGridOverlay>
   );
 }
-const DataGrid = ({rows,columns,height,width,pageSize,pageSizeOptions,checkbox,disableRow}) =>{
-    return(
-        <Box sx={{ height: height, width: width }}>
-            <MuiDataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{
-                pagination: {
-                    paginationModel: {
-                    pageSize: pageSize,
-                    },
-                },
-                }}
-                pageSizeOptions={pageSizeOptions}
-                checkboxSelection={checkbox}
-                disableRowSelectionOnClick={disableRow}
-                slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-            />
-        </Box>
-    );
-}
+const DataGrid = ({
+  rows,
+  columns,
+  height,
+  width,
+  pageSize,
+  pageSizeOptions,
+  checkbox,
+  disableRow,
+  selectedRows,
+  clickEvent
+}) => {
+  return (
+    <Box sx={{ height: height, width: width }}>
+      <MuiDataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: pageSize
+            }
+          }
+        }}
+        pageSizeOptions={pageSizeOptions}
+        checkboxSelection={checkbox}
+        disableRowSelectionOnClick={disableRow}
+        onRowClick={clickEvent}
+        slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+      />
+    </Box>
+  );
+};
 export default DataGrid;
