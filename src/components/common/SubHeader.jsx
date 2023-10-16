@@ -6,17 +6,15 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
 const SubHeader = ({title}) => {
-    return (<>
-        <Box sx={{ flexGrow: 1 }}>
+    return (
             <StyledAppBar position="static">
-                <Toolbar sx={{ paddingLeft : '40px !important' }}>
+                <Toolbar sx={{ paddingLeft : '40px !important', width : "100%" }}>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, color : '#000'}}>
                         {title}
                     </Typography>
                 </Toolbar>
             </StyledAppBar>
-        </Box>
-    </>);
+    )
 }
 
 export default SubHeader;
