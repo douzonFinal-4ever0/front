@@ -1,4 +1,13 @@
-import { Box, Grid, InputLabel, TextField, Stack, Input } from '@mui/material';
+import React from 'react';
+import {
+  Box,
+  Grid,
+  InputLabel,
+  TextField,
+  Stack,
+  Input,
+  ButtonGroup
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
@@ -13,8 +22,13 @@ import Modal from '../../components/common/Modal';
 import Typography from '@mui/material/Typography';
 import CarList from '../../components/car_user/CarList';
 import axios from 'axios';
+import MainContainer from '../../components/mr_user/MainContainer';
+import WrapContainer from '../../components/mr_user/WrapContainer';
+import { useNavigate } from 'react-router-dom';
+import { formatDate } from '@fullcalendar/core';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [addressObj, setAddressObj] = useState({
     areaAddress: '',
     townAddress: ''
@@ -24,10 +38,10 @@ const Register = () => {
   const [carDetail, setCarDetail] = useState({
     id: '',
     car_name: '',
-    accum_mileage: 0,
+    accum_mileage: '',
     authority: '',
     fuel_type: '',
-    fuel_effciency: 0,
+    fuel_effciency: '',
     car_address: ''
   });
 
@@ -69,11 +83,27 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    axios
-      .post('http://localhost:8081/car_rez/rezSave', formData)
-      .then((res) => {
-        console.log('예약 완료 : ' + res.data);
-      });
+    var flag = 0;
+    if (formData.carDTO.car_code === '') {
+      alert('차량을 선택하세요');
+      flag++;
+    }
+    if (formData.start_at === '' || formData.return_at === '') {
+      alert('날짜를 선택하세요');
+      flag++;
+    }
+    if (formData.return_loc === '' || formData.dest_loc === '') {
+      alert('장소를 선택하세요');
+      flag++;
+    }
+    if (flag === 0) {
+      axios
+        .post('http://localhost:8081/car_rez/rezSave', formData)
+        .then((res) => {
+          console.log('예약 완료 : ' + res.data);
+          navigate('../carRezComplete', { state: res.data });
+        });
+    }
   };
 
   //modal여는 함수
@@ -126,12 +156,29 @@ const Register = () => {
     display: 'none'
   };
   return (
-    <Box>
-      {/* <script type='text/javascript' src=''></script> */}
+    <Box
+      sx={{
+        '& .MuiTextField-root': {
+          m: 1,
+          width: '100%',
+          backgroundColor: '#f5f5f5'
+        },
+        '& .MuiInput-root': {
+          m: 1,
+          width: '100%',
+          height: 50,
+          backgroundColor: '#f5f5f5'
+        }
+      }}
+    >
       <SubHeader title={'차량 예약'} />
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid
+          container
+          spacing={2}
+          style={{ paddingTop: 16, paddingLeft: 16, paddingRight: 16 }}
+        >
+          <Grid item xs={6} md={6}>
             <Item>
               <Stack>
                 <TextField
@@ -198,7 +245,12 @@ const Register = () => {
                     handleModal={(e, reason) => handleCloseModal(reason)}
                     modalTitle={'차량 찾기'}
                     content={<CarList setSelectedRows={setSelectedRows} />}
-                    buttons={<Button onClick={carSelect}>선택</Button>}
+                    buttons={
+                      <ButtonGroup>
+                        <Button onClick={carSelect}>선택</Button>{' '}
+                        <Button onClick={handleCloseModal}>취소</Button>
+                      </ButtonGroup>
+                    }
                   />
                 </NewFormControl>
                 <NewFormControl>
@@ -213,7 +265,7 @@ const Register = () => {
               </Stack>
             </Item>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} md={6}>
             <Item>
               <Typography
                 variant="h7"
@@ -298,6 +350,7 @@ const Register = () => {
                   name="return_loc"
                   label="반납지"
                   onChange={handleChange}
+                  style={{ backgroundColor: '#f5f5f5' }}
                 >
                   <MenuItem value={'강원특별자치도 춘천시 남산면 버들1길 130'}>
                     본사
@@ -320,7 +373,7 @@ const Register = () => {
             style={{ marginRight: '10px' }}
             type="submit"
           >
-            Success
+            예약
           </Button>
           <Button variant="outlined" color="error">
             Error
@@ -338,16 +391,17 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',
   color: theme.palette.text.secondary,
-  height: 750
+  height: 700
 }));
 
 const BottomBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
-  marginTop: 10
+  marginTop: 5,
+  marginRight: 16
 }));
 
 const NewFormControl = styled(FormControl)(({ theme }) => ({
   textAlign: 'left',
-  margin: 10
+  margin: 7
 }));

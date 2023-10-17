@@ -10,7 +10,15 @@ import SubHeader from '../../components/common/SubHeader';
 
 function Register() {
   return (
-    <Item>
+    <Item
+      sx={{
+        '& .MuiTextField-root': {
+          m: 1,
+          width: '100%',
+          backgroundColor: '#f5f5f5'
+        }
+      }}
+    >
       <SubHeader title={'회의실 예약 상황'} />
       <Box sx={{ display: 'flex' }}>
         <SubSidebar />
