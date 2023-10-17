@@ -7,6 +7,9 @@ import MrTag from '../../components/mr_admin/MrTag';
 const DashBoard = () => {
   return (
     <Item>
+      <Button variant="contained" sx={{ width: '100%' }}>
+        차량 등록
+      </Button>
       <MrTag />
     </Item>
   );
