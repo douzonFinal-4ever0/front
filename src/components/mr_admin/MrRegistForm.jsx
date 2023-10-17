@@ -10,9 +10,12 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -24,12 +27,31 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 import TimeField from '../../components/common/TimeField';
 import MrTag from './MrTag';
-import OnOffSwitch from './OnOffSwitch';
 import Modal from '../common/Modal';
-import Editor from './Editor';
 import DashBoard from '../../pages/mr_admin/DashBoard';
+import axios from 'axios';
 
 const MrRegistForm = () => {
+  /*-------------------------------입력폼 제어--------------------------------------------*/
+  const [mr_name, setMr_name] = useState('');
+  const [location, setLocation] = useState('');
+  const [maximum_capacity, setMaximum_capacity] = useState('');
+  const handleMrName = (event) => {
+    setMr_name(event.target.value);
+  };
+  const handleLocation = (event) => {
+    setLocation(event.target.value);
+  };
+  const handleMaximum_capacity = (event) => {
+    setMaximum_capacity(event.target.value);
+  };
+  /*-----------------------------------------------------------------------------------------*/
+  /*------------------------------회의실 분류-----------------------------*/
+  const [mrType, setMrType] = useState('');
+  const handleSelectChange = (event) => {
+    setMrType(event.target.value);
+  };
+  /*------------------------------------------------------------------------*/
   /*----------------------------회의실 키워드------------------------*/
   //회의실 키워드 선택 값
   const [selectedTags, setSelectedTags] = useState([]);
@@ -45,7 +67,15 @@ const MrRegistForm = () => {
   const handleModal = () => setOpen(!open);
   /*--------------------------------------------------------------------*/
   /*-------------------------요일 컨트롤--------------------------------------- */
-  /** 배열로 선택된 요일을 저장*/
+  /**요일 매핑 */
+  const dayMappings = {
+    월: 0,
+    화: 1,
+    수: 2,
+    목: 3,
+    금: 4,
+    토: 5
+  };
   const [selectedDays, setSelectedDays] = useState([
     '월',
     '화',
@@ -53,6 +83,10 @@ const MrRegistForm = () => {
     '목',
     '금'
   ]); // 배열로 선택된 요일을 저장
+
+  // 선택된 요일 배열을 숫자 값으로 변환하여 mr_op_day 배열 생성
+  const mr_op_day = selectedDays.map((day) => ({ day: dayMappings[day] }));
+  /** 배열로 선택된 요일을 저장*/
   const [showTimeField, setShowTimeField] = useState(false); // 기간 선택을 보여줄지 여부
   const [value, setValue] = useState('종일');
   const [checked, setChecked] = useState(false);
@@ -86,34 +120,57 @@ const MrRegistForm = () => {
       setShowTimeField(false);
     }
   };
-  /*-------------------------요일 컨트롤--------------------------------------- */
-
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
-    alert('회의실 등록 버튼임');
-    alert('선택된 사용일자 : ' + selectedDays);
-    alert('선택된 키워드 : ' + selectedTags);
+    axios.post('http://localhost:8081/mr/mrRegister', FormToData).then(() => {
+      alert('회의실이 등록되었습니다.');
+    });
   };
+  /*----------------------------------------------------------------------------- */
+  /*-------------------------------FormToData------------------------------------------- */
+  const FormToData = {
+    mr_name,
+    maximum_capacity,
+    location,
+    mr_type: mrType,
+    mr_keyword: selectedTags,
+    mr_op_day: mr_op_day // 변환된 요일 배열 사용
+  };
+  /*-------------------------------------------------------------------------------------- */
 
   return (
     <Item
       sx={{
         '& .MuiTextField-root': {
-          m: 1,
           width: '100%',
           backgroundColor: '#f5f5f5'
         }
       }}
     >
       <Stack spacing={1}>
-        <TextField id="outlined-basic" label="회의실명" variant="outlined" />
-        <TextField id="outlined-basic" label="위치" variant="outlined" />
+        <TextField
+          id="outlined-basic"
+          label="회의실명"
+          variant="outlined"
+          value={mr_name}
+          onChange={handleMrName}
+        />
+        <TextField
+          id="outlined-basic"
+          label="위치"
+          variant="outlined"
+          value={location}
+          onChange={handleLocation}
+        />
         <TextField
           id="outlined-basic"
           label="최대 수용 인원"
           variant="outlined"
+          value={maximum_capacity}
+          onChange={handleMaximum_capacity}
         />
-        <Grid container spacing={2}>
+        {/* 요일 영역 */}
+        <Grid container spacing={1}>
           {daysOfWeek.map((day, index) => (
             <Grid key={index} item xs>
               <label>
@@ -128,6 +185,21 @@ const MrRegistForm = () => {
             </Grid>
           ))}
         </Grid>
+        {/* 회의실 분류 영역 */}
+        <FormControl fullWidth sx={{ backgroundColor: '#f5f5f5' }}>
+          <InputLabel id="demo-simple-select-label">회의실 분류</InputLabel>
+          <Select
+            value={mrType}
+            label="회의실 분류"
+            onChange={handleSelectChange}
+          >
+            <MenuItem value="미팅룸">미팅룸</MenuItem>
+            <MenuItem value="소회의실">소회의실</MenuItem>
+            <MenuItem value="중회의실">중회의실</MenuItem>
+            <MenuItem value="대회의실">대회의실</MenuItem>
+          </Select>
+        </FormControl>
+        {/* 기간 선택 영역 */}
         <Grid spacing={2}>
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
@@ -158,6 +230,7 @@ const MrRegistForm = () => {
               </Grid>
             </Grid>
           </RadioGroup>
+          {/* 날짜 선택시 콜랩스 영역 */}
           <Collapse in={checked}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -169,7 +242,9 @@ const MrRegistForm = () => {
             </Grid>
           </Collapse>
         </Grid>
+        {/* 회의실 분류 영역 */}
         <MrTag onTagSelect={handleTagSelect} />
+        {/* 회의실 사진 업로드 */}
         <Button
           component="label"
           variant="outlined"
@@ -178,6 +253,7 @@ const MrRegistForm = () => {
           회의실 사진
           <VisuallyHiddenInput type="file" />
         </Button>
+        {/* 기본 비품 버튼 영역 */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={2}>
             <Typography>기본 비품</Typography>
@@ -201,6 +277,7 @@ const MrRegistForm = () => {
             />
           </Grid>
         </Grid>
+        {/* 회의실 사진들 */}
         <ImageList sx={2} cols={3} rowHeight={180}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
@@ -218,6 +295,7 @@ const MrRegistForm = () => {
             </ImageListItem>
           ))}
         </ImageList>
+        {/* 회의실 등록 버튼 */}
         <Button variant="outlined" onClick={handleSubmit}>
           회의실 등록
         </Button>

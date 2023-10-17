@@ -16,14 +16,17 @@ import axios from 'axios';
 import SubSidebar from '../../components/common/SubSidebar';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
+import { useNavigate } from 'react-router-dom';
 
 const MrNotice = () => {
+  const navigate = useNavigate();
   const [editorData, setEditorData] = useState('');
   const [isPublic, setIsPublic] = useState(true); // OnOff 스위치의 상태를 관리
   const [notice_title, setNotice_title] = useState('');
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
   };
+
   const FormtoData = {
     contents: editorData,
     is_opened: isPublic ? 0 : 1,
@@ -32,6 +35,7 @@ const MrNotice = () => {
   const handleClick = () => {
     axios.post('http://localhost:8081/mr/notice', FormtoData).then(() => {
       alert('공지사항이 등록되었습니다.');
+      navigate('../NoticeList');
     });
     // console.log('텍스트:' + editorData);
     // console.log('공개 여부: ' + isPublic); // OnOff 스위치 상태 출력

@@ -1,18 +1,19 @@
-import * as React from 'react';
-
-import { Button, Checkbox, Container, Paper, styled } from '@mui/material';
-import { useState } from 'react';
-import MrTag from '../../components/mr_admin/MrTag';
+import React, { useEffect } from 'react';
 import SubHeader from '../../components/common/SubHeader';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import { useEffect } from 'react';
-import CommonTable from '../../components/common/CommonTable';
+import { Button, Container, Stack, TextField } from '@mui/material';
+import axios from 'axios';
+import { useState } from 'react';
 import DataGrid from '../../components/common/DataGrid';
+import { useNavigate } from 'react-router-dom';
 
-const DashBoard = () => {
+const MrNoticeList = () => {
+  const navigate = useNavigate();
+  const handleWriteNotice = () => {
+    navigate('../Notice');
+  };
   const [noticeList, setNoticeList] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:8081/mr/notice').then((res) => {
@@ -26,29 +27,23 @@ const DashBoard = () => {
   }, []);
   return (
     <>
+      <SubHeader title={'공지사항 조회'} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              {/* {noticeList.map((notice) => {
-                return (
-                  // <>
-                  //   <div>공지사항 번호 : {notice.notice_code}</div>
-                  //   <div>공지사항 제목 : {notice.notice_title}</div>
-                  //   <div>공지사항 업로드일 : {notice.updated_at}</div>
-                  //   <div>공지사항 첨부파일 : {notice.notice_file}</div>
-                  // </>
-                );
-              })} */}
               <div style={{ height: 'auto', width: '100%' }}>
                 <DataGrid
                   columns={columns}
                   rows={noticeList}
                   pageSize={10}
                   pageSizeOptions={[5, 10]}
-                  disableRow={false}
+                  //   disableRow={false}
                 />
               </div>
+              <Button variant="outlined" onClick={handleWriteNotice}>
+                공지사항 작성
+              </Button>
             </Container>
           </WrapContainer>
         </MainContainer>
@@ -57,9 +52,9 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard;
+export default MrNoticeList;
 
-// car DataGrid 시작
+// DataGrid 시작
 const columns = [
   { field: 'notice_code', headerName: '번호', width: 170 },
   { field: 'notice_title', headerName: '제목', width: 600 },
