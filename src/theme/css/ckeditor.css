@@ -1,0 +1,3 @@
+.ck-editor__editable:not(.ck-editor__nested-editable) {
+  min-height: 400px; /* 원하는 높이로 변경 */
+}

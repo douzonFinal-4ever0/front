@@ -41,6 +41,12 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
               setIsAdminMode={setIsAdminMode}
             />
           )
+        },
+        {
+          path: 'example',
+          element: (
+            <CarAdminExamplePage />
+          )
         }
       ]
     },
@@ -74,10 +80,10 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       children: [
         { element: <Navigate to="/carRez/dashboard" />, index: true },
         { path: 'dashboard', element: <CarUserDashboardPage /> },
-        { path: 'reservation', element: <CarUserRegisterPage /> }
+        { path: 'reservation', element: <CarUserRegisterPage /> },
+        { path: 'carRezComplete', element: <CarRezCompletePage /> }
       ]
-    },
-
+    }
   ]);
 };
 
@@ -121,4 +127,11 @@ const MrAdminTestPage = Loadable(
 );
 const CarUserRegisterPage = Loadable(
   lazy(() => import('../pages/car_user/Register'))
+);
+
+const CarAdminExamplePage = Loadable(
+  lazy(() => import('../pages/car_admin/Example'))
+)
+const CarRezCompletePage = Loadable(
+  lazy(() => import('../pages/car_user/CarRezComplete'))
 );
