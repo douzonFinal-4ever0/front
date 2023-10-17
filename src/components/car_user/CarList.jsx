@@ -55,7 +55,7 @@ const CarList = ({ setSelectedRows }) => {
         rows={carList}
         columns={colums}
         height={400}
-        width={600}
+        width={'auto'}
         pageSize={5}
         pageSizeOptions={[5]}
         checkbox={false}
