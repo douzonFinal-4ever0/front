@@ -3,7 +3,7 @@ import SubSidebar from "../../components/common/SubSidebar";
 import Drawer from "../../components/common/Drawer";
 import { useState, useEffect } from "react";
 import Box from "@mui/system/Box";
-import { Button, Checkbox, Chip, Collapse, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, ListItem, ListItemIcon, MenuItem, Radio, RadioGroup, Select, TextField, Paper } from "@mui/material";
+import { Button, Checkbox, Chip, Collapse, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, ListItem, ListItemIcon, MenuItem, Radio, RadioGroup, Select, TextField, Paper, CardHeader, Typography, Alert } from "@mui/material";
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,7 +17,11 @@ import { DatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
 import CommonTable from "../../components/common/CommonTable";
 import Autocomplete from '@mui/material/Autocomplete';
-// import CarFuelData from "../../CarFuelData.json";
+import Card from '@mui/material/Card';
+import UserSearchBar from "../../components/car_admin/UserSearchBar";
+import cardata from "../../cardata.json";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 
 // transferList 관련 함수
 function not(a, b) {
@@ -28,9 +32,6 @@ function intersection(a, b) {
     return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-function union(a, b) {
-    return [...a, ...not(b, a)];
-}
 // transferList 관련 함수 끝
 
 
@@ -75,7 +76,7 @@ const SubSidebarContent = ({ toggleDrawer }) => {
                     <ListItemText primary={`삭제된 차량 (${totalCar})`} />
                 </ListItemButton>
             </List>
-            {/* </Box> */}
+            {/* </Box> */}map
         </Box>
     );
 }
@@ -83,24 +84,52 @@ const SubSidebarContent = ({ toggleDrawer }) => {
 // 차량 등록 Drawer 컴포넌트
 const CarRegisterFrom = () => {
 
-    const [fuel_type, setFuel_type] = useState('');
 
-    const handleChange = (event) => {
-        setFuel_type(event.target.value);
-    };
+    const dateNow = new Date();
+    const today = dateNow.toISOString().slice(0, 10);
 
-    const [carAuthority, setCarAuthority] = useState("1");
-    const [isShowSelectUser, setIsSelectUser] = useState(false);
-
-    const handleCarAuthority = (e) => {
-        setCarAuthority(e.target.value);
-        setIsSelectUser(e.target.value === "1" ? false : true);
-    }
-
+    // 차량 등록 데이터
     // transferList 관련 변수, 함수들
     const [checked, setChecked] = useState([]);
     const [left, setLeft] = useState([]);
-    const [right, setRight] = useState([0, 1, 2, 3]);
+    const [right, setRight] = useState([]);
+
+    const [registerData, setRegisterData] = useState({
+        car_code: '',
+        name: null,
+        type: '법인',
+        fuel_type: '',
+        authority: '1',
+        buy_at: dayjs(today),
+        memo: '',
+        carDetail : {fuel_effciency: '',accum_mileage: ''},
+        carUser: { mem_code: left[0] ? left[0] : null, car_code: '' }
+    });
+
+    // useEffect(() => {
+    //     console.log(registerData);
+    // }, [registerData]);
+
+    const handleChange = (event) => {
+        setRegisterData({ ...registerData, fuel_type: event.target.value });
+    };
+
+    const [isShowSelectUser, setIsSelectUser] = useState(false);
+
+    const handleCarAuthority = (e) => {
+        setRegisterData({ ...registerData, authority: e.target.value });
+        setIsSelectUser(e.target.value === "1" ? false : true);
+    }
+
+    // axios로 사용자 정보 불러오기
+    useEffect(() => {
+        axios.get('http://localhost:8081/admin/memList').then((res) => {
+            setRight(res.data);
+        })
+            .catch((error) => { // 에러 발생 시 코드 실행
+                console.log(error);
+            })
+    }, [])
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
@@ -130,15 +159,18 @@ const CarRegisterFrom = () => {
             setLeft(left.concat(rightChecked));
             setRight(not(right, rightChecked));
             setChecked(not(checked, rightChecked));
+            setRegisterData({ ...registerData, carUser: { ...registerData.carUser, mem_code: rightChecked[0].mem_code } });
         }
     };
 
-    const customList = (items) => (
-        <Paper sx={{ width: "100%", height: 230, overflow: 'auto' }}>
+
+    const customList = (items, header) => (
+        <Card sx={{ width: "100%", height: 230, overflow: 'auto', backgroundColor: '#f5f5f5' }}>
+            {header}
+            <Divider />
             <List dense component="div" role="list">
                 {items.map((value) => {
                     const labelId = `transfer-list-item-${value}-label`;
-
                     return (
                         <ListItem
                             key={value}
@@ -156,32 +188,82 @@ const CarRegisterFrom = () => {
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+                            <ListItemText id={labelId} primary={`${value['mem_code']} ${value['name']} ${value['dept_code']}_${value['position_name']}`} />
                         </ListItem>
                     );
                 })}
             </List>
-        </Paper>
+        </Card>
     );
 
     // transferList 관련 함수, 변수들 끝
 
     // autoComplete
     // const carData = CarFuelData;
-    const carData = [];
+
+    const carData = cardata;
+
+    const defaultProps = {
+        options: cardata,
+        getOptionLabel: (option) => {
+            return option.model
+        }
+    };
+
+    // 사용자 검색 기능
+    const [inputUser, setInputUser] = useState('');
+
+
+    // 사용자 검색할 때 
+    const handleInputUser = (e) => {
+        setInputUser(e.target.value);
+    }
+
+    // 검색어에 따라 데이터 필터링
+    const filterMemData = right.filter((item) =>
+        item['name'].includes(inputUser)
+    )
+
+    // 사용자 검색 기능 끝
+
+    // datePicker
+    const [cleared, setCleared] = useState(false);
+
+    useEffect(() => {
+        if (cleared) {
+            const timeout = setTimeout(() => {
+                setCleared(false);
+            }, 1500);
+
+            return () => clearTimeout(timeout);
+        }
+        return () => { };
+    }, [cleared]);
+
+    // datePicker 끝
+
+    // 차량 등록 버튼
+    const handleSubmitBtn = () => {
+        console.log(registerData);
+        // axios.post('http://localhost:8081/admin/memList', registerData).then((res) => {
+        //     console.log(res);
+        // }).catch((error) => { // 에러 발생 시 코드 실행
+        //     console.log(error);
+        // })
+    }
 
     return (
         <Box
             component="form"
             sx={{
-                '& .MuiTextField-root': { m: 1, width: '100%' },
+                '& .MuiTextField-root': { m: 1, width: '100%', backgroundColor: '#f5f5f5' },
                 '& .MuiGrid-item': { alignSelf: "center" }
             }}
             noValidate
             autoComplete="off"
         >
             <Stack direction="row" justifyContent="end">
-                <Button variant="contained" size="large" sx={{ width: "12%" }}>
+                <Button variant="contained" size="large" sx={{ width: "12%" }} onClick={handleSubmitBtn}>
                     차량 등록
                 </Button>
             </Stack>
@@ -192,6 +274,8 @@ const CarRegisterFrom = () => {
                         row
                         name="row-radio-buttons-group"
                         defaultValue="법인"
+                        value={registerData.type}
+                        onChange={(e) => { setRegisterData({ ...registerData, type: e.target.value }) }}
                     >
                         <FormLabel id="demo-row-radio-buttons-group-label" sx={{ display: "flex", alignItems: "center", width: "80px", fontWeight: "bold" }} >종류</FormLabel>
                         <FormControlLabel value="법인" control={<Radio />} label={<Chip label="법인" color="primary" />} />
@@ -206,12 +290,20 @@ const CarRegisterFrom = () => {
                         </Grid>
                         <Grid item xs={5}>
                             <Autocomplete
+                                freeSolo
+                                {...defaultProps}
                                 item
-                                disablePortal
-                                id="combo-box-demo"
-                                options={carData}
-                                sx={{ width: 300 }}
-                                renderInput={(params) => <TextField {...params} label="Movie" />}
+                                value={registerData.name}
+                                onChange={(e) => console.log(e)}
+                                // onChange={(event, newValue, clear) => {
+                                //     if (clear === "clear") {
+                                //         setRegisterData({ ...registerData, fuel_type: '', carDetail : {...registerData.carDetail, fuel_effciency : ''}});
+                                //     } else {
+                                //         setRegisterData({ ...registerData, name: newValue.model, fuel_type: newValue.fuel_type, carDetail : {...registerData.carDetail, fuel_effciency : newValue.fuel_effciency} });
+                                //     }
+                                // }}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} placeholder="차량명" />}
                             />
                         </Grid>
                         <Grid item xs={1}>
@@ -222,7 +314,9 @@ const CarRegisterFrom = () => {
                                 sx={{ m: 1 }}
                                 item
                                 id="outlined-multiline-flexible"
-                                label="Multiline"
+                                placeholder="차량번호"
+                                value={registerData.car_code}
+                                onChange={(e) => { setRegisterData({ ...registerData, car_code: e.target.value, carUser: { ...registerData.carUser, car_code: e.target.value } }) }}
                             />
                         </Grid>
                     </Grid>
@@ -239,16 +333,14 @@ const CarRegisterFrom = () => {
                                 <Select
                                     labelId="demo-simple-select-required-label"
                                     id="demo-simple-select-required"
-                                    value={fuel_type}
+                                    value={registerData.fuel_type}
                                     label="유종 *"
                                     onChange={handleChange}
+                                    sx={{ backgroundColor: '#f5f5f5' }}
                                 >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    <MenuItem value={"휘발유"}>휘발유</MenuItem>
+                                    <MenuItem value={"경유"}>경유</MenuItem>
+                                    <MenuItem value={"LPG"}>LPG</MenuItem>
                                 </Select>
                                 <FormHelperText>Required</FormHelperText>
                             </FormControl>
@@ -260,8 +352,10 @@ const CarRegisterFrom = () => {
                             <TextField
                                 item
                                 id="outlined-multiline-flexible"
-                                label="Multiline"
+                                placeholder="연비"
                                 sx={{ m: 1 }}
+                                value={registerData.carDetail.fuel_effciency}
+                                onChange={(e) => {setRegisterData({...registerData, carDetail : {...registerData.carDetail, fuel_effciency : e.target.value}})}}
                             />
                         </Grid>
                     </Grid>
@@ -269,14 +363,18 @@ const CarRegisterFrom = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
-                        <Grid item xs={2}>
-                            <FormLabel item id="demo-row-radio-buttons-group-label" sx={{ display: "flex", alignItems: "center", fontWeight: "bold" }} >{"누적 주행 거리"}</FormLabel>
+                        <Grid item xs={1}>
+                            <FormLabel item id="demo-row-radio-buttons-group-label" sx={{ display: "flex", alignItems: "center", fontWeight: "bold", whiteSpace: 'pre-line', fontSize: "15px" }} >{"누적" + "\n" + "주행 거리"}</FormLabel>
                         </Grid>
                         <Grid item xs={5}>
                             <TextField
                                 item
                                 id="outlined-multiline-flexible"
-                                label="Multiline"
+                                type="number"
+                                label="numberOnly"
+                                placeholder="누적 주행 거리"
+                                value={registerData.carDetail.accum_mileage}
+                                onChange={(e) => {setRegisterData({...registerData, carDetail : {...registerData.carDetail, accum_mileage : e.target.value}})}}
                                 sx={{ m: 1 }}
                             />
                         </Grid>
@@ -292,7 +390,23 @@ const CarRegisterFrom = () => {
                         </Grid>
                         <Grid item xs={5}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker />
+                                <Box
+                                    sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                >
+                                    <DemoItem>
+                                        <DatePicker
+                                            sx={{ width: 260 }}
+                                            slotProps={{
+                                                field: { clearable: true, onClear: () => setCleared(true) },
+                                            }}
+                                            value={registerData.buy_at}
+                                            onChange={(newValue) => { setRegisterData({ ...registerData, buy_at: newValue }) }}
+                                        />
+                                    </DemoItem>
+                                </Box>
                             </LocalizationProvider>
                         </Grid>
                     </Grid>
@@ -306,8 +420,10 @@ const CarRegisterFrom = () => {
                         <Grid item xs={11}>
                             <TextField
                                 id="outlined-multiline-static"
-                                label="Multiline"
+                                label="메모"
                                 multiline
+                                value={registerData.memo}
+                                onChange={(e) => { setRegisterData({ ...registerData, memo: e.target.value }) }}
                                 rows={3}
                             />
                         </Grid>
@@ -318,7 +434,7 @@ const CarRegisterFrom = () => {
                     <RadioGroup
                         row
                         name="row-radio-buttons-group"
-                        defaultValue={carAuthority}
+                        defaultValue={registerData.authority}
                         onChange={handleCarAuthority}
                     >
                         <FormLabel id="demo-row-radio-buttons-group-label" sx={{ display: "flex", alignItems: "center", fontWeight: "bold", mr: "15px" }} >차량 사용 권한</FormLabel>
@@ -329,7 +445,7 @@ const CarRegisterFrom = () => {
                 {
                     isShowSelectUser === true ?
                         <Grid container xs={12} spacing={2} justifyContent="center" alignItems="center">
-                            <Grid item xs={4}>{customList(left)}</Grid>
+                            <Grid item xs={5}>{customList(left, <Typography></Typography>)}</Grid>
                             <Grid item>
                                 <Grid container direction="column" alignItems="center">
                                     <Button
@@ -354,7 +470,12 @@ const CarRegisterFrom = () => {
                                     </Button>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={4}>{customList(right)}</Grid>
+                            <Grid item xs={5}>{customList(filterMemData,
+                                <CardHeader
+                                    sx={{ px: 2, py: 1 }}
+                                    title={<UserSearchBar placeholder={"사용자명 검색"} value={inputUser} handleInput={handleInputUser}></UserSearchBar>}
+                                />
+                            )}</Grid>
                         </Grid> : null
                 }
 
@@ -409,7 +530,6 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
 
     useEffect(() => {
         axios.get('http://localhost:8081/admin/car/carList').then((res) => {
-            console.log(res.data);
             setCarInfo(res.data);
         })
             .catch((error) => { // 에러 발생 시 코드 실행
@@ -417,58 +537,6 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
             })
     }, [])
 
-
-    // const colums = [
-    //     {
-    //         field: "type",
-    //         headerName: "종류",
-    //         width: 150,
-    //         description: "법인 / 개인 종류",
-    //         editable: false,
-    //         renderCell: (params) => (
-    //             createChip(params)
-    //         ),
-    //     },
-    //     {
-    //         field: "car_code",
-    //         headerName: "차량 번호",
-    //         width: 150,
-    //         description: "예약 기간",
-    //         editable: false,
-    //     },
-    //     {
-    //         field: "car_name",
-    //         headerName: "차량명",
-    //         width: 150,
-    //         description: "예약자 이름, 부서",
-    //         editable: false,
-    //         valueGetter: (params) =>
-    //             `${params.row.mem_name} / ${params.row.dept_name}`,
-    //     },
-    //     {
-    //         field: "latest_op",
-    //         headerName: "최근 운행",
-    //         width: 150,
-    //         description: "예약 차량 이름, 번호",
-    //         editable: false,
-    //         valueGetter: (params) =>
-    //             `${params.row.car_name} / ${params.row.car_code}`,
-    //     },
-    //     {
-    //         field: "accum_mileage",
-    //         headerName: "누적주행거리",
-    //         width: 150,
-    //         description: "사량 사용 목적",
-    //         editable: false,
-    //     },
-    //     {
-    //         field: "memo",
-    //         headerName: "메모",
-    //         width: 150,
-    //         description: "추가 메모",
-    //         editable: false,
-    //     },
-    // ]
 
     const columns = [
         { id: 'type', label: '종류', minWidth: 170 },
@@ -499,29 +567,6 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
         }
     ];
 
-    //   function createData(name, code, population, size) {
-    //     const density = population / size;
-    //     return { name, code, population, size, density };
-    //   }
-
-    //   const rows = [
-    // createData('India', 'IN', 1324171354, 3287263),
-    // createData('China', 'CN', 1403500365, 9596961),
-    // createData('Italy', 'IT', 60483973, 301340),
-    // createData('United States', 'US', 327167434, 9833520),
-    // createData('Canada', 'CA', 37602103, 9984670),
-    // createData('Australia', 'AU', 25475400, 7692024),
-    // createData('Germany', 'DE', 83019200, 357578),
-    // createData('Ireland', 'IE', 4857000, 70273),
-    // createData('Mexico', 'MX', 126577691, 1972550),
-    // createData('Japan', 'JP', 126317000, 377973),
-    // createData('France', 'FR', 67022000, 640679),
-    // createData('United Kingdom', 'GB', 67545757, 242495),
-    // createData('Russia', 'RU', 146793744, 17098246),
-    // createData('Nigeria', 'NG', 200962417, 923768),
-    // createData('Brazil', 'BR', 210147125, 8515767),
-    //   ];
-    // // car DataGrid 끝
 
     return (
         <>
