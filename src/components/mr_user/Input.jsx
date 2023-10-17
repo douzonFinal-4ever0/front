@@ -1,7 +1,16 @@
 import styled from '@emotion/styled';
 
-const Input = ({ id, type, placeholder, sx }) => {
-  return <StyledInput type={type} id={id} placeholder={placeholder} sx={sx} />;
+const Input = ({ id, type, placeholder, sx, value, handleInputChange }) => {
+  return (
+    <StyledInput
+      type={type}
+      id={id}
+      placeholder={placeholder}
+      sx={sx}
+      value={value}
+      onChange={handleInputChange}
+    />
+  );
 };
 
 export default Input;

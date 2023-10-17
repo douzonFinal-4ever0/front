@@ -4,16 +4,10 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const SelectBox = ({ list, handleSelectBox }) => {
-  const [meetingType, setMeetingType] = useState('default');
-
+const SelectBox = ({ value, list, handleSelectBox }) => {
   return (
     <Box sx={{ position: 'relative', width: '100%' }}>
-      <StyledSelect
-        id="category"
-        value={meetingType}
-        onChange={handleSelectBox}
-      >
+      <StyledSelect id="category" value={value} onChange={handleSelectBox}>
         <option value="">선택</option>
         {list.map((item) => (
           <option value={item.value}>{item.name}</option>
