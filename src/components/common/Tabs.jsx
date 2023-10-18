@@ -8,6 +8,11 @@ import Box from '@mui/material/Box';
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
+  // // children에 새로운 props인 toggleDrawer를 전달합니다.
+  // const childrenWithProps = React.Children.map(children, child => {
+  //   return React.cloneElement(child, { handleDrawer });
+  // });
+
   return (
     <div
       role="tabpanel"
@@ -42,10 +47,10 @@ const Tabs = ({tabData}) => {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <MuiTabs value={value} onChange={handleChange}>
-          {tabData.map((tab, index) => <Tab key={index} label={tab.title}/>)}
+          {tabData.map((tab, index) => <Tab key={index} label={tab.title} />)}
         </MuiTabs>
       </Box>
-      {tabData.map((tab, index) => <CustomTabPanel key={index} value={value} index={index}>
+      {tabData.map((tab, index) => <CustomTabPanel key={index} value={value} index={index} >
         {tab.content}
       </CustomTabPanel>)}
     </Box>
