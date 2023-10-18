@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Paper, styled, Box, Button, Grid, Divider } from '@mui/material';
 import Calendar from '../../components/common/Calendar';
@@ -8,63 +8,96 @@ import MrRegistForm from '../../components/mr_admin/MrRegistForm';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Drawer from '../../components/common/Drawer';
+import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import DataGrid from '../../components/common/DataGrid';
+import axios from 'axios';
 
 const MrRegister = () => {
-  /**오프캔버스 상태 관리*/
-  const [drawerState, setDrawerState] = useState({
-    right: false
-  });
-  /**오프캔버스 토글링 */
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return;
-    }
-    setDrawerState({ ...drawerState, ['right']: open });
-  };
-  /**오프캔버스 컨텐츠 지정 */
-  const tabData = [
-    {
-      title: '회의실 등록',
-      content: <MrRegistForm />
-    }
-  ];
-
+  /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
+  const [mrList, setMrList] = useState([]);
+  useEffect(() => {
+    axios.get('http://localhost:8081/mr/mrList').then((res) => {
+      const processedData = res.data.map((item) => ({
+        ...item,
+        id: item.mr_code
+      }));
+      setMrList(processedData);
+      console.log(res.data);
+    });
+  }, []);
+  /*---------------------------------------------------------------------------------------------------------*/
   return (
     <>
       <SubHeader title={'회의실 등록'} />
       <Box sx={{ display: 'flex', height: '95%' }}>
-        <SubSidebar
-          widthP={20}
-          content={
-            <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-              <Button
-                variant="outlined"
-                sx={{ width: '100%' }}
-                onClick={toggleDrawer('right', true)}
-              >
-                회의실 등록
-              </Button>
-              <Drawer
-                width={600}
-                drawerState={drawerState}
-                toggleDrawer={toggleDrawer}
-                tabData={tabData}
-              />
-            </Grid>
-          }
-        />
+        <SubSidebar widthP={20} content={<SubContent />} />
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
             <Box sx={{ display: 'flex' }}></Box>
-            <Calendar />
+            <DataGrid
+              columns={columns}
+              rows={mrList}
+              pageSize={10}
+              pageSizeOptions={[5, 10]}
+            />
           </WrapContainer>
         </MainContainer>
       </Box>
+      <Drawer width={600} tabData={tabData} />
     </>
   );
 };
 
 export default MrRegister;
+
+/**서브 사이드바에 들어가는 컨텐츠 */
+const SubContent = () => {
+  const isDrawerOpen = useSelector((state) => state.drawer.isDrawerOpen);
+
+  const dispatch = useDispatch();
+
+  /**오프캔버스 열기 */
+  const handleOpenDrawer = () => {
+    dispatch(openDrawer());
+  };
+  /**오프캔버스 닫기 */
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+  };
+
+  return (
+    <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
+      <Button
+        variant="outlined"
+        sx={{ width: '100%' }}
+        onClick={handleOpenDrawer}
+      >
+        회의실 등록
+      </Button>
+    </Grid>
+  );
+};
+
+/**데이터 그리드에 들어가는 헤더(열) 부분 */
+const columns = [
+  { field: 'mr_code', headerName: '번호', width: 130 },
+  { field: 'mr_name', headerName: '회의실 이름', width: 170 },
+  {
+    field: 'location',
+    headerName: '위치',
+    width: 170
+  },
+  { field: 'maximum_capacity', headerName: '최대 인원', width: 170 },
+  { field: 'is_opened', headerName: '개방 여부', width: 170 },
+  { field: 'is_used', headerName: '사용중', width: 170 },
+  { field: 'mr_type', headerName: '분류', width: 170 }
+];
+
+/**탭에 들어가는 데이터 */
+const tabData = [
+  {
+    title: '회의실 등록',
+    content: <MrRegistForm />
+  }
+];
