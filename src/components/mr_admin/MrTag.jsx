@@ -14,7 +14,7 @@ const MrTag = ({ onTagSelect }) => {
 
   const handleTagSelection = (event, value) => {
     setSelectedTags(value);
-    onTagSelect(value.map((tag) => tag.tag));
+    onTagSelect(value);
   };
   return (
     <Autocomplete
@@ -23,7 +23,7 @@ const MrTag = ({ onTagSelect }) => {
       id="checkboxes"
       options={tags}
       disableCloseOnSelect
-      getOptionLabel={(option) => option.tag}
+      getOptionLabel={(option) => option.keyword_name}
       renderOption={(props, option, { selected }) => (
         <li {...props}>
           <Checkbox
@@ -32,7 +32,7 @@ const MrTag = ({ onTagSelect }) => {
             style={{ marginRight: 8 }}
             checked={selected}
           />
-          {option.tag}
+          {option.keyword_name}
         </li>
       )}
       style={{ width: 'auto' }}
@@ -45,12 +45,12 @@ const MrTag = ({ onTagSelect }) => {
 export default MrTag;
 
 const tags = [
-  { tag: '브레인스토밍' },
-  { tag: '프로젝트회의' },
-  { tag: '주간회의' },
-  { tag: '프레젠테이션' },
-  { tag: '전략회의' },
-  { tag: '미팅룸' },
-  { tag: '워크샵' },
-  { tag: 'U자형' }
+  { keyword_name: '브레인스토밍' },
+  { keyword_name: '프로젝트회의' },
+  { keyword_name: '주간회의' },
+  { keyword_name: '프레젠테이션' },
+  { keyword_name: '전략회의' },
+  { keyword_name: '미팅룸' },
+  { keyword_name: '워크샵' },
+  { keyword_name: 'U자형' }
 ];

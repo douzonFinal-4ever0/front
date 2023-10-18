@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { Button, Typography } from '@mui/material';
 
-const RectangleBtn = ({ type, text, sx }) => {
+const RectangleBtn = ({ type, text, sx, isDisabled }) => {
   return (
-    <StyledBtn type={type} sx={sx}>
+    <StyledBtn type={type} sx={sx} disabled={isDisabled}>
       <Typography sx={{ fontWeight: 'bold' }}>{text}</Typography>
     </StyledBtn>
   );
@@ -18,6 +18,11 @@ const StyledBtn = styled(Button)(({ theme, sx }) => ({
   color: '#fff',
   '&:hover': {
     backgroundColor: theme.palette.grey['700']
+  },
+  '&:disabled': {
+    backgroundColor: theme.palette.grey['300'],
+    color: 'rgba(0, 0, 0, 0.26)',
+    cursor: 'not-allowed'
   },
   ...sx
 }));

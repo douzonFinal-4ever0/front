@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const SelectTime = () => {
-  const [meetingType, setMeetingType] = useState('default');
+const SelectTime = ({ value, handleSelectTime }) => {
   // 시간 데이터 (9시 - 18시)
   const avlRezTime = [
     {
@@ -105,15 +104,12 @@ const SelectTime = () => {
     }
   ];
 
-  const handleChange = (event) => {
-    setMeetingType(event.target.value);
-  };
   return (
     <Box sx={{ position: 'relative', width: '100%' }}>
-      <StyledSelect id="category" value={meetingType} onChange={handleChange}>
+      <StyledSelect id="category" value={value} onChange={handleSelectTime}>
         <option value="">선택</option>
         {avlRezTime.map((item) => (
-          <option value="item.value">{item.name}</option>
+          <option value={item.value}>{item.name}</option>
         ))}
       </StyledSelect>
       <Box

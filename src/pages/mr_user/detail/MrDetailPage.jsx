@@ -11,20 +11,8 @@ import RoomImage3 from '../../../assets/images/room/room3.jpeg';
 import MrRezDashboard from './section/MrRezDashboard';
 import MrSubInfo from './section/MrSubInfo';
 import RezCard from './form/RezCard';
-import { useState } from 'react';
 
 const MrDetailPage = () => {
-  // 사용자 빠른 예약 정보 더미 데이터
-  // 초기값은 사용자 빠른 예약에서 받아온 데이터
-  const [rezData, setRezData] = useState({
-    type: '',
-    purpose: '',
-    date: '',
-    startTime: '',
-    endTitme: '',
-    totalCtn: ''
-  });
-
   // 회의실 더미 데이터
   const data = {
     mrCode: 'R001',
@@ -217,11 +205,7 @@ const MrDetailPage = () => {
             </Stack>
           </Grid>
           <Grid item xs={5}>
-            <RezCard
-              rezData={rezData}
-              setRezData={setRezData}
-              mrCategory={mrCategory}
-            />
+            <RezCard mrCategory={mrCategory} />
           </Grid>
         </Grid>
       </WrapContainer>

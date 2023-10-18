@@ -13,11 +13,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
 import { PAGE_INNER_PADDING, BORDER_RADIUS } from '../../config';
 import KakaoMap from '../../components/car_user/KakaoMap';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import KakaoMap2 from '../../components/car_user/KakaoMap2';
+import KakaoMap3 from '../../components/car_user/KakaoMap3';
 
 const CarRezComplete = () => {
   const location = useLocation();
   const carRez = location.state;
   const navigate = useNavigate();
+
   const dateFormat = (date) => {
     const preDate = new Date(date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -25,9 +30,12 @@ const CarRezComplete = () => {
   };
   carRez.start_at = dateFormat(carRez.start_at);
   carRez.return_at = dateFormat(carRez.return_at);
+  console.log(carRez);
+  console.log(carRez.carLoc);
   const goList = () => {
     navigate('../dashboard');
   };
+
   return (
     <MainContainer>
       <StyledContainer bgColor={'#fff'} height={'245px'}>
@@ -70,13 +78,13 @@ const CarRezComplete = () => {
               <td>목적 : {carRez.detail}</td>
             </tr>
             <tr>
-              <td>목적지 : {carRez.dest_loc}</td>
+              <td>목적지 : {carRez.carLoc[2].address}</td>
             </tr>
             <tr border>
               <td style={{ borderTop: '1px solid #000' }}>
                 대여
                 <span style={{ display: 'block', textAlign: 'left' }}>
-                  {carRez.receipt_loc}
+                  {carRez.carLoc[0].address}
                 </span>
                 <span style={{ display: 'block', textAlign: 'left' }}>
                   {carRez.start_at}
@@ -87,7 +95,7 @@ const CarRezComplete = () => {
                   반납
                 </span>
                 <span style={{ display: 'block', textAlign: 'right' }}>
-                  {carRez.return_loc}
+                  {carRez.carLoc[1].address}
                 </span>
                 <span style={{ display: 'block', textAlign: 'right' }}>
                   {carRez.return_at}
@@ -95,7 +103,19 @@ const CarRezComplete = () => {
               </td>
             </tr>
           </table>
-          <KakaoMap />
+          <KakaoMap3
+            locations={carRez.carLoc}
+            titles={[
+              carRez.carLoc[0].loc_type,
+              carRez.carLoc[1].loc_type,
+              carRez.carLoc[2].loc_type
+            ]}
+            contents={[
+              carRez.carLoc[0].address,
+              carRez.carLoc[1].address,
+              carRez.carLoc[2].address
+            ]}
+          />
         </Stack>
       </StyledContainer>
     </MainContainer>
