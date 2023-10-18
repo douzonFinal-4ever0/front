@@ -26,7 +26,7 @@ const CarRezComplete = () => {
   const dateFormat = (date) => {
     const preDate = new Date(date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return preDate.toLocaleString('ko-KR', options);
+    return preDate.toLocaleString('ko-KR', options).slice(0, -1);
   };
   carRez.start_at = dateFormat(carRez.start_at);
   carRez.return_at = dateFormat(carRez.return_at);
