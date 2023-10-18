@@ -14,19 +14,71 @@ import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
 
 const MrRegister = () => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  /**탭에 들어가는 데이터 */
+  const tabData = [
+    {
+      title: '회의실 등록',
+      content: (
+        <MrRegistForm
+          selectedRowData={selectedRowData}
+          isEditMode={isEditMode}
+        />
+      )
+    }
+  ];
+  const dispatch = useDispatch();
+  const handleMrRegistClick = () => {
+    setSelectedRowData(null);
+    setIsEditMode(false);
+    handleOpenDrawer();
+  };
+  /**오프캔버스 열기 */
+  const handleOpenDrawer = () => {
+    dispatch(openDrawer());
+  };
+  /**오프캔버스 닫기 */
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+  };
+  const SubContent = () => {
+    return (
+      <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
+        <Button
+          variant="outlined"
+          sx={{ width: '100%' }}
+          onClick={handleMrRegistClick}
+        >
+          회의실 등록
+        </Button>
+      </Grid>
+    );
+  };
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
   useEffect(() => {
     axios.get('http://localhost:8081/mr/mrList').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
-        id: item.mr_code
+        id: item.mr_code,
+        is_opened: 0 ? '활성' : '비활성',
+        is_used: 0 ? '사용중' : '대기중'
       }));
       setMrList(processedData);
-      console.log(res.data);
     });
   }, []);
   /*---------------------------------------------------------------------------------------------------------*/
+  /**데이터 그리드 더블 클릭이벤트 */
+  const handleDbClick = (params) => {
+    // params 객체를 통해 선택된 행의 데이터에 접근
+    const selectedRowData = params.row;
+    setSelectedRowData(selectedRowData);
+    setIsEditMode(true);
+    // 이제 selectedRowData를 사용할 수 있음
+    // console.log('선택된 행의 데이터:', selectedRowData);
+    handleOpenDrawer();
+  };
   return (
     <>
       <SubHeader title={'회의실 등록'} />
@@ -40,6 +92,7 @@ const MrRegister = () => {
               rows={mrList}
               pageSize={10}
               pageSizeOptions={[5, 10]}
+              dbclickEvent={handleDbClick}
             />
           </WrapContainer>
         </MainContainer>
@@ -52,37 +105,12 @@ const MrRegister = () => {
 export default MrRegister;
 
 /**서브 사이드바에 들어가는 컨텐츠 */
-const SubContent = () => {
-  const isDrawerOpen = useSelector((state) => state.drawer.isDrawerOpen);
-
-  const dispatch = useDispatch();
-
-  /**오프캔버스 열기 */
-  const handleOpenDrawer = () => {
-    dispatch(openDrawer());
-  };
-  /**오프캔버스 닫기 */
-  const handleCloseDrawer = () => {
-    dispatch(closeDrawer());
-  };
-
-  return (
-    <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-      <Button
-        variant="outlined"
-        sx={{ width: '100%' }}
-        onClick={handleOpenDrawer}
-      >
-        회의실 등록
-      </Button>
-    </Grid>
-  );
-};
 
 /**데이터 그리드에 들어가는 헤더(열) 부분 */
 const columns = [
   { field: 'mr_code', headerName: '번호', width: 130 },
   { field: 'mr_name', headerName: '회의실 이름', width: 170 },
+  { field: 'mr_type', headerName: '분류', width: 170 },
   {
     field: 'location',
     headerName: '위치',
@@ -90,14 +118,5 @@ const columns = [
   },
   { field: 'maximum_capacity', headerName: '최대 인원', width: 170 },
   { field: 'is_opened', headerName: '개방 여부', width: 170 },
-  { field: 'is_used', headerName: '사용중', width: 170 },
-  { field: 'mr_type', headerName: '분류', width: 170 }
-];
-
-/**탭에 들어가는 데이터 */
-const tabData = [
-  {
-    title: '회의실 등록',
-    content: <MrRegistForm />
-  }
+  { field: 'is_used', headerName: '사용중', width: 170 }
 ];

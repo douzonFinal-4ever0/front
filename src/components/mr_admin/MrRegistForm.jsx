@@ -31,11 +31,28 @@ import Modal from '../common/Modal';
 import DashBoard from '../../pages/mr_admin/DashBoard';
 import axios from 'axios';
 
-const MrRegistForm = () => {
+const MrRegistForm = ({ selectedRowData, isEditMode }) => {
+  console.log(isEditMode);
+  // console.log(selectedRowData.mr_keyword[1].keyword_name);
+  /*------------------------------------수정시 데이터--------------------------------------------*/
+  const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
+  const initialLocation = selectedRowData ? selectedRowData.location : '';
+  const initialMaximumCapacity = selectedRowData
+    ? selectedRowData.maximum_capacity
+    : '';
+  const initialMr_type = selectedRowData ? selectedRowData.mr_type : '';
+  // selectedTags와 같은 구조로 변환
+  const initialSelectedTags =
+    selectedRowData.mr_keyword.map((keywordItem) => ({
+      keyword_name: keywordItem.keyword_name
+    })) || null;
+  console.log('registerForm : ' + initialSelectedTags);
   /*-------------------------------입력폼 제어--------------------------------------------*/
-  const [mr_name, setMr_name] = useState('');
-  const [location, setLocation] = useState('');
-  const [maximum_capacity, setMaximum_capacity] = useState('');
+  const [mr_name, setMr_name] = useState(initialMrName);
+  const [location, setLocation] = useState(initialLocation);
+  const [maximum_capacity, setMaximum_capacity] = useState(
+    initialMaximumCapacity
+  );
   const handleMrName = (event) => {
     setMr_name(event.target.value);
   };
@@ -47,18 +64,19 @@ const MrRegistForm = () => {
   };
   /*-----------------------------------------------------------------------------------------*/
   /*------------------------------회의실 분류-----------------------------*/
-  const [mrType, setMrType] = useState('');
+  const [mrType, setMrType] = useState(initialMr_type);
   const handleSelectChange = (event) => {
     setMrType(event.target.value);
   };
   /*------------------------------------------------------------------------*/
   /*----------------------------회의실 키워드------------------------*/
   //회의실 키워드 선택 값
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
   /**회의실 키워드 선택된 값 */
   const handleTagSelect = (tags) => {
     setSelectedTags(tags);
   };
+  // console.log(selectedTags);
   /*---------------------------------------------------------------------*/
   /*----------------------------모달------------------------------------*/
   // 모달창 열림 여부 값
@@ -126,6 +144,14 @@ const MrRegistForm = () => {
       alert('회의실이 등록되었습니다.');
     });
   };
+  /**회의실 수정 버튼 클릭 이벤트 */
+  const handleUpdate = () => {
+    // axios
+    //   .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
+    //   .then((res) => {
+    //     alert('회의실이 수정되었습니다!!!');
+    //   });
+  };
   /*----------------------------------------------------------------------------- */
   /*-------------------------------FormToData------------------------------------------- */
   const FormToData = {
@@ -136,6 +162,15 @@ const MrRegistForm = () => {
     mr_keyword: selectedTags,
     mr_op_day: mr_op_day // 변환된 요일 배열 사용
   };
+  // const FormToData2 = {
+  //   mr_code,
+  //   mr_name,
+  //   maximum_capacity,
+  //   location,
+  //   mr_type: mrType,
+  //   mr_keyword: selectedTags,
+  //   mr_op_day: mr_op_day // 변환된 요일 배열 사용
+  // };
   /*-------------------------------------------------------------------------------------- */
 
   return (
@@ -242,8 +277,11 @@ const MrRegistForm = () => {
             </Grid>
           </Collapse>
         </Grid>
-        {/* 회의실 분류 영역 */}
-        <MrTag onTagSelect={handleTagSelect} />
+        {/* 회의실 태그 영역 */}
+        <MrTag
+          onTagSelect={handleTagSelect}
+          initailTagSelect={initialSelectedTags}
+        />
         {/* 회의실 사진 업로드 */}
         <Button
           component="label"
@@ -296,9 +334,15 @@ const MrRegistForm = () => {
           ))}
         </ImageList>
         {/* 회의실 등록 버튼 */}
-        <Button variant="outlined" onClick={handleSubmit}>
-          회의실 등록
-        </Button>
+        {isEditMode ? (
+          <Button variant="outlined" onClick={handleUpdate}>
+            회의실 수정
+          </Button>
+        ) : (
+          <Button variant="outlined" onClick={handleSubmit}>
+            회의실 등록
+          </Button>
+        )}
       </Stack>
     </Item>
   );
