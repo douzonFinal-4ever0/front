@@ -1,8 +1,13 @@
 /* global kakao */
 
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-const KakaoMap = () => {
+const KakaoMap = ({ carRezCode }) => {
+  const [locations, setLocations] = useState([]);
+  console.log(locations);
+
   return (
     <Map
       center={{ lat: 33.5563, lng: 126.79581 }}
