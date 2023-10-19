@@ -32,21 +32,14 @@ import { PAGE_INNER_PADDING, BORDER_RADIUS } from '../../config';
 import styled from '@emotion/styled';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Searchbar from '../../components/common/Searchbar';
+import NoRow from '../../components/car_user/NoRow';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
-  const [range, setRange] = useState('전체');
+  const [range, setRange] = useState('');
   const mem_code = 'MEM001';
+
   // 검색창------------------------------------------------------
-  const [value, setValue] = useState(null);
-  // 검색창 입력 이벤트
-  const handleInput = (e) => {
-    setValue(e.target.value);
-  };
-  // 검색 클릭 이벤트
-  const handleSearchBtn = (e) => {
-    e.preventDefault();
-    console.log('asd');
-  };
+  //const [value, setValue] = useState(null);
 
   const dateFormat = (date) => {
     const preDate = new Date(date);
@@ -54,6 +47,8 @@ const Dashboard = () => {
     return preDate.toLocaleString('ko-KR', options).slice(0, -1);
   };
   useEffect(() => {
+    //console.log(range);
+    const rez_status = range;
     axios
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
       .then((res) => {
@@ -70,14 +65,14 @@ const Dashboard = () => {
   }, []);
 
   const createChip = (params) => {
-    if (params.row.status === '확정') {
-      return <Chip label="success" color="success" variant="outlined" />;
+    if (params.row.rez_status === '1') {
+      return <Chip label="확정" color="success" variant="outlined" />;
     }
-    if (params.row.status === '완료') {
-      return <Chip label="primary" color="primary" variant="outlined" />;
+    if (params.row.rez_status === '2') {
+      return <Chip label="완료" color="primary" variant="outlined" />;
     }
-    if (params.row.status === '거절') {
-      return <Chip label="reject" color="error" variant="outlined" />;
+    if (params.row.rez_status === '3') {
+      return <Chip label="취소" color="error" variant="outlined" />;
     }
   };
 
@@ -95,24 +90,29 @@ const Dashboard = () => {
   //   },
   // ];
   // 서브 사이드바 콘텐츠
-  const SubSideContents = ({}) => {
-    // const isDrawerOpen = useSelector((state) => state.drawer.isDrawerOpen);
-    // const dispatch = useDispatch();
-
-    // const handleOpenDrawer = () => {
-    //   dispatch(openDrawer());
-    // };
-
-    // const handleCloseDrawer = () => {
-    //   dispatch(closeDrawer());
-    // };
-
-    // // 차량 수
-    // const totalCar = 20;
-    // const [open, setOpen] = useState(true);
-    // const handleClick = () => {
-    //   setOpen(!open);
-    // };
+  const SubSideContents = () => {
+    const [searchInput, setSearchInput] = useState('');
+    const [rows, setRows] = useState([]);
+    useEffect(() => {
+      axios.get(`http://localhost:8081/car_rez/searchCarList`).then((res) => {
+        setRows(res.data);
+        // res.data.map((row) => {
+        //   let sRow = row.car_name.split(' ');
+        //   res.data.car_name = sRow[0];
+        // });
+        // setRows(res.data);
+      });
+    }, []);
+    const handleInput = (e) => {
+      setSearchInput(e.target.value);
+    };
+    const filterCarData = rows.filter((item) =>
+      item['car_name'].includes(searchInput)
+    );
+    // 검색 클릭 이벤트
+    const handleSearchBtn = (e) => {
+      e.preventDefault();
+    };
     return (
       <Box
         sx={{
@@ -122,19 +122,25 @@ const Dashboard = () => {
           '& .MuiPaper-rounded2': {
             mt: 1,
             backgroundColor: '#f5f5f5',
-            height: 100
+            height: '60vh'
           }
         }}
       >
         <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
           <Button variant="contained" sx={{ width: '100%' }}>
-            차량 등록
+            차량 예약
           </Button>
         </Grid>
         <Divider />
-        <Searchbar width={'100%'} placeholder={'차량/차량번호 입력'} />
+        <Searchbar
+          width={'100%'}
+          placeholder={'차종을 입력하세요'}
+          value={searchInput}
+          handleInput={handleInput}
+          handleSearchBtn={handleSearchBtn}
+        />
         <Paper className="MuiPaper-rounded2" width={'100%'}>
-          <CarList rows={[]} />
+          <CarList rows={filterCarData} />
         </Paper>
       </Box>
     );
@@ -142,11 +148,33 @@ const Dashboard = () => {
 
   const CarList = ({ rows }) => {
     if (rows.length == 0) {
-      return <div>no rows</div>;
+      return <NoRow />;
     } else {
-      rows.map((car) => {
-        return <div>asd</div>;
-      });
+      // <List dense component="div" role="list">
+      //   {rows.map((car) => {
+      //     return (
+      //       <ListItem>
+      //         <ListItemText primary={`${car.car_code}`} />
+      //       </ListItem>
+      //     );
+      //   })}
+      // </List>;
+      return (
+        <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+          <List dense component="div" role="list">
+            {rows.map((car) => {
+              return (
+                <ListItem>
+                  <ListItemText
+                    primary={`${car.car_code}`}
+                    secondary={`${car.car_name}`}
+                  />
+                </ListItem>
+              );
+            })}
+          </List>
+        </div>
+      );
     }
   };
   const colums = [
@@ -155,8 +183,8 @@ const Dashboard = () => {
       headerName: '상태',
       width: 100,
       description: '예약 상태',
-      editable: false
-      //renderCell: (params) => createChip(params)
+      editable: false,
+      renderCell: (params) => createChip(params)
     },
     {
       field: 'start_at/return_at',
@@ -192,14 +220,19 @@ const Dashboard = () => {
       editable: false
     }
   ];
+
+  const filterRezData = carRez.filter((item) =>
+    item['rez_status'].includes(range)
+  );
   const handleRange = (e) => {
     setRange(e.target.value);
+    // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
       <Box sx={{ display: 'flex', height: '95%' }}>
-        <SubSidebar widthP={20} content={<SubSideContents />} />
+        <SubSidebar widthP={30} content={<SubSideContents />} />
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
             <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
@@ -212,19 +245,19 @@ const Dashboard = () => {
                 inputProps={{ 'aria-label': 'Without label' }}
                 onChange={handleRange}
               >
-                <MenuItem value={'전체'}>
+                <MenuItem value={''}>
                   <em>전체</em>
                 </MenuItem>
-                <MenuItem value={'확정'}>확정</MenuItem>
-                <MenuItem value={'취소'}>취소</MenuItem>
-                <MenuItem value={'완료'}>완료</MenuItem>
+                <MenuItem value={'1'}>확정</MenuItem>
+                <MenuItem value={'3'}>취소</MenuItem>
+                <MenuItem value={'2'}>완료</MenuItem>
               </Select>
             </FormControl>
             <br />
             <DataGrid
-              rows={carRez}
+              rows={filterRezData}
               columns={colums}
-              width="90%"
+              width="100%"
               height={'auto'}
               pageSize={5}
               pageSizeOptions={[5, 10]}
