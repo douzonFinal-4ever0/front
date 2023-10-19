@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import listPlugin from '@fullcalendar/list';
 const TimeLineCalendar = ({ events, resources }) => {
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5, 6], // 월~토
@@ -16,7 +17,8 @@ const TimeLineCalendar = ({ events, resources }) => {
         plugins={[
           dayGridPlugin,
           resourceTimelinePlugin,
-          resourceTimeGridPlugin
+          resourceTimeGridPlugin,
+          listPlugin
         ]}
         initialView="resourceTimeline"
         nowIndicator={true}
@@ -26,7 +28,8 @@ const TimeLineCalendar = ({ events, resources }) => {
         headerToolbar={{
           left: 'prev,next',
           center: 'title',
-          right: 'resourceTimeGridDay,resourceTimelineDay,resourceTimelineMonth'
+          right:
+            'resourceTimeGridDay,resourceTimelineDay,resourceTimelineMonth,listWeek'
         }}
         views={{
           resourceTimeGridDay: {
@@ -37,6 +40,9 @@ const TimeLineCalendar = ({ events, resources }) => {
           },
           resourceTimelineMonth: {
             buttonText: '월'
+          },
+          listWeek: {
+            buttonText: '리스트'
           }
         }}
         resources={resources}
