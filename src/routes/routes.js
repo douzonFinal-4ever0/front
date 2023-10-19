@@ -21,7 +21,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       children: [
         { element: <Navigate to="/mr/dashboard" />, index: true },
         { path: 'dashboard', element: <MrUserDashboardPage /> },
-        { path: 'reservation', element: <MrUserRegistherPage /> },
+        { path: 'rez', element: <MrUserMrRezPage /> },
         { path: ':id', element: <MrUserMrDetailPage /> },
         { path: 'inquiry', element: <MrUserMrInquiryPage /> }
       ]
@@ -102,6 +102,10 @@ const MrUserMrDetailPage = Loadable(
 
 const MrUserMrInquiryPage = Loadable(
   lazy(() => import('../pages/mr_user/inquiry/MrInquiryPage'))
+);
+
+const MrUserMrRezPage = Loadable(
+  lazy(() => import('../pages/mr_user/rez/MrRezPage'))
 );
 
 const CarAdminRegisterPage = Loadable(
