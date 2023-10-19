@@ -21,7 +21,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       children: [
         { element: <Navigate to="/mr/dashboard" />, index: true },
         { path: 'dashboard', element: <MrUserDashboardPage /> },
-        { path: 'reservation', element: <MrUserRegistherPage /> },
+        { path: 'rez', element: <MrUserMrRezPage /> },
         { path: ':id', element: <MrUserMrDetailPage /> },
         { path: 'inquiry', element: <MrUserMrInquiryPage /> }
       ]
@@ -44,9 +44,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         },
         {
           path: 'example',
-          element: (
-            <CarAdminExamplePage />
-          )
+          element: <CarAdminExamplePage />
         }
       ]
     },
@@ -106,6 +104,10 @@ const MrUserMrInquiryPage = Loadable(
   lazy(() => import('../pages/mr_user/inquiry/MrInquiryPage'))
 );
 
+const MrUserMrRezPage = Loadable(
+  lazy(() => import('../pages/mr_user/rez/MrRezPage'))
+);
+
 const CarAdminRegisterPage = Loadable(
   lazy(() => import('../pages/car_admin/Register'))
 );
@@ -132,7 +134,7 @@ const CarUserRegisterPage = Loadable(
 
 const CarAdminExamplePage = Loadable(
   lazy(() => import('../pages/car_admin/Example'))
-)
+);
 const CarRezCompletePage = Loadable(
   lazy(() => import('../pages/car_user/CarRezComplete'))
 );
