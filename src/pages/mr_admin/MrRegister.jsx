@@ -19,7 +19,7 @@ const MrRegister = () => {
   /**탭에 들어가는 데이터 */
   const tabData = [
     {
-      title: '회의실 등록',
+      title: isEditMode ? '회의실 수정' : '회의실 등록',
       content: (
         <MrRegistForm
           selectedRowData={selectedRowData}
@@ -81,18 +81,19 @@ const MrRegister = () => {
   };
   return (
     <>
-      <SubHeader title={'회의실 등록'} />
+      <SubHeader title={'회의실'} />
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar widthP={20} content={<SubContent />} />
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
-            <Box sx={{ display: 'flex' }}></Box>
+            <Box sx={{ display: 'flex', width: 'auto' }}></Box>
             <DataGrid
               columns={columns}
               rows={mrList}
               pageSize={10}
               pageSizeOptions={[5, 10]}
               dbclickEvent={handleDbClick}
+              sx={{ width: 'auto' }}
             />
           </WrapContainer>
         </MainContainer>
@@ -108,15 +109,15 @@ export default MrRegister;
 
 /**데이터 그리드에 들어가는 헤더(열) 부분 */
 const columns = [
-  { field: 'mr_code', headerName: '번호', width: 130 },
-  { field: 'mr_name', headerName: '회의실 이름', width: 170 },
-  { field: 'mr_type', headerName: '분류', width: 170 },
+  { field: 'mr_code', headerName: '번호', width: 120 },
+  { field: 'mr_name', headerName: '회의실 이름', width: 160 },
+  { field: 'mr_type', headerName: '분류', width: 160 },
   {
     field: 'location',
     headerName: '위치',
-    width: 170
+    width: 160
   },
-  { field: 'maximum_capacity', headerName: '최대 인원', width: 170 },
-  { field: 'is_opened', headerName: '개방 여부', width: 170 },
-  { field: 'is_used', headerName: '사용중', width: 170 }
+  { field: 'maximum_capacity', headerName: '최대 인원', width: 160 },
+  { field: 'is_opened', headerName: '개방 여부', width: 160 },
+  { field: 'is_used', headerName: '사용중', width: 160 }
 ];

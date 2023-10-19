@@ -42,7 +42,7 @@ const MrNotice = () => {
   };
   return (
     <>
-      <SubHeader title={'공지사항'} />
+      <SubHeader title={'공지사항 작성'} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>

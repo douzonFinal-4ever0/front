@@ -1,6 +1,16 @@
 import * as React from 'react';
 
-import { Button, Checkbox, Container, Paper, styled } from '@mui/material';
+import {
+  Backdrop,
+  Button,
+  Checkbox,
+  Container,
+  Paper,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  styled
+} from '@mui/material';
 import { useState } from 'react';
 import MrTag from '../../components/mr_admin/MrTag';
 import SubHeader from '../../components/common/SubHeader';
@@ -11,44 +21,63 @@ import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useEffect } from 'react';
 import CommonTable from '../../components/common/CommonTable';
 import DataGrid from '../../components/common/DataGrid';
-
+import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
 const DashBoard = () => {
-  const [noticeList, setNoticeList] = useState([]);
-  useEffect(() => {
-    axios.get('http://localhost:8081/mr/notice').then((res) => {
-      const processedData = res.data.map((item) => ({
-        ...item,
-        id: item.notice_code
-      }));
-      setNoticeList(processedData);
-      console.log(res.data);
-    });
-  }, []);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const events = [
+    {
+      resourceId: 'a', // 리소스 ID (resources 배열에 정의한 ID와 일치해야 함)
+      title: '이벤트 1',
+      start: '2023-10-19T09:00:00',
+      end: '2023-10-19T11:00:00'
+    },
+    {
+      resourceId: 'b',
+      title: '이벤트 2',
+      start: '2023-10-19T19:00:00',
+      end: '2023-10-19T21:00:00'
+    }
+    // 추가 이벤트들
+  ];
+  const resources = [
+    { id: 'a', title: 'Room A' },
+    { id: 'b', title: 'Room B' },
+    { id: 'c', title: 'Room C' },
+    { id: 'd', title: 'Room D' }
+  ];
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              {/* {noticeList.map((notice) => {
-                return (
-                  // <>
-                  //   <div>공지사항 번호 : {notice.notice_code}</div>
-                  //   <div>공지사항 제목 : {notice.notice_title}</div>
-                  //   <div>공지사항 업로드일 : {notice.updated_at}</div>
-                  //   <div>공지사항 첨부파일 : {notice.notice_file}</div>
-                  // </>
-                );
-              })} */}
-              <div style={{ height: 'auto', width: '100%' }}>
-                <DataGrid
-                  columns={columns}
-                  rows={noticeList}
-                  pageSize={10}
-                  pageSizeOptions={[5, 10]}
-                  disableRow={false}
-                />
-              </div>
+              <SpeedDial
+                ariaLabel="SpeedDial tooltip example"
+                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+                onClose={handleClose}
+                onOpen={handleOpen}
+                open={open}
+              >
+                {actions.map((action) => (
+                  <SpeedDialAction
+                    key={action.name}
+                    icon={action.icon}
+                    tooltipTitle={action.name}
+                    tooltipOpen
+                    onClick={handleClose}
+                  />
+                ))}
+              </SpeedDial>
+              <TimeLineCalendar events={events} resources={resources} />
             </Container>
           </WrapContainer>
         </MainContainer>
@@ -68,4 +97,10 @@ const columns = [
     headerName: '작성일',
     width: 300
   }
+];
+const actions = [
+  { icon: <FileCopyIcon />, name: 'Copy' },
+  { icon: <SaveIcon />, name: 'Save' },
+  { icon: <PrintIcon />, name: 'Print' },
+  { icon: <ShareIcon />, name: 'Share' }
 ];

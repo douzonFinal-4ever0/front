@@ -8,9 +8,10 @@ import 'dayjs/locale/ko';
 import TimePickerClock from './TimePickerClock';
 import MultiTimePicker from './MultiTimePicker';
 
-const TimeField = ({ withMonth, label, onChange, name }) => {
+const TimeField = ({ withMonth, label, onChange, name, timeValue }) => {
+  const inputTimeValue = timeValue ? timeValue : '2023-10-13T15:30';
   /**date time picker 써야할때 쓰는거 */
-  const [value, setValue] = useState(dayjs('2023-10-13T15:30'));
+  const [value, setValue] = useState(dayjs(inputTimeValue));
   /*-----------------------------------------------------------------------*/
 
   /**시간과 분을 필터링 할 때 쓰는거*/
@@ -35,9 +36,14 @@ const TimeField = ({ withMonth, label, onChange, name }) => {
           label={label}
           onChange={onChange}
           name={name}
+          value={value}
         />
       ) : (
-        <TimePickerClock shouldDisableTime={shouldDisableTime} label={label} />
+        <TimePickerClock
+          shouldDisableTime={shouldDisableTime}
+          label={label}
+          value={value}
+        />
       )}
     </LocalizationProvider>
 

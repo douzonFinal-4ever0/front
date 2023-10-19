@@ -33,7 +33,6 @@ import axios from 'axios';
 
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   console.log(isEditMode);
-  // console.log(selectedRowData.mr_keyword[1].keyword_name);
   /*------------------------------------수정시 데이터--------------------------------------------*/
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
   const initialLocation = selectedRowData ? selectedRowData.location : '';
@@ -43,9 +42,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const initialMr_type = selectedRowData ? selectedRowData.mr_type : '';
   // selectedTags와 같은 구조로 변환
   const initialSelectedTags =
-    selectedRowData.mr_keyword.map((keywordItem) => ({
+    selectedRowData?.mr_keyword?.map((keywordItem) => ({
       keyword_name: keywordItem.keyword_name
-    })) || null;
+    })) || []; // null 체크 추가
   console.log('registerForm : ' + initialSelectedTags);
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
@@ -76,7 +75,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const handleTagSelect = (tags) => {
     setSelectedTags(tags);
   };
-  // console.log(selectedTags);
+  console.log(selectedTags);
   /*---------------------------------------------------------------------*/
   /*----------------------------모달------------------------------------*/
   // 모달창 열림 여부 값
@@ -87,12 +86,12 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
-    월: 0,
-    화: 1,
-    수: 2,
-    목: 3,
-    금: 4,
-    토: 5
+    0: '월',
+    1: '화',
+    2: '수',
+    3: '목',
+    4: '금',
+    5: '토'
   };
   const [selectedDays, setSelectedDays] = useState([
     '월',
@@ -146,11 +145,12 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   };
   /**회의실 수정 버튼 클릭 이벤트 */
   const handleUpdate = () => {
-    // axios
-    //   .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
-    //   .then((res) => {
-    //     alert('회의실이 수정되었습니다!!!');
-    //   });
+    axios
+      .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
+      .then((res) => {
+        alert('회의실이 수정되었습니다!!!');
+        window.location.reload(); // 페이지 새로고침
+      });
   };
   /*----------------------------------------------------------------------------- */
   /*-------------------------------FormToData------------------------------------------- */
@@ -162,15 +162,17 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     mr_keyword: selectedTags,
     mr_op_day: mr_op_day // 변환된 요일 배열 사용
   };
-  // const FormToData2 = {
-  //   mr_code,
-  //   mr_name,
-  //   maximum_capacity,
-  //   location,
-  //   mr_type: mrType,
-  //   mr_keyword: selectedTags,
-  //   mr_op_day: mr_op_day // 변환된 요일 배열 사용
-  // };
+  let FormToData2 = {};
+  if (selectedRowData && selectedRowData.mr_code) {
+    FormToData2 = {
+      mr_code: selectedRowData.mr_code,
+      mr_name,
+      maximum_capacity,
+      location,
+      mr_type: mrType,
+      is_opened: 0
+    };
+  }
   /*-------------------------------------------------------------------------------------- */
 
   return (
@@ -287,6 +289,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           component="label"
           variant="outlined"
           startIcon={<CloudUploadIcon />}
+          color="info"
         >
           회의실 사진
           <VisuallyHiddenInput type="file" />
@@ -335,9 +338,28 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         </ImageList>
         {/* 회의실 등록 버튼 */}
         {isEditMode ? (
-          <Button variant="outlined" onClick={handleUpdate}>
-            회의실 수정
-          </Button>
+          <Grid spacing={2} container>
+            <Grid xs={6}>
+              <Button
+                variant="outlined"
+                onClick={handleUpdate}
+                sx={{ width: '100%' }}
+                color="success"
+              >
+                회의실 수정
+              </Button>
+            </Grid>
+            <Grid xs={6}>
+              <Button
+                variant="outlined"
+                onClick={handleUpdate}
+                sx={{ width: '100%' }}
+                color="error"
+              >
+                회의실 비활성화
+              </Button>
+            </Grid>
+          </Grid>
         ) : (
           <Button variant="outlined" onClick={handleSubmit}>
             회의실 등록
