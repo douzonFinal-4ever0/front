@@ -9,7 +9,7 @@ import axios from 'axios';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useEffect } from 'react';
-import CommonTable from '../../components/common/CommonTable';
+import CommonTable from '../../components/car_admin/CarInfoTable';
 import DataGrid from '../../components/common/DataGrid';
 
 const DashBoard = () => {
