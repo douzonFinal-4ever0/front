@@ -47,6 +47,13 @@ const CarList = ({ setSelectedRows }) => {
       width: 300,
       description: '현재 차량 위치',
       editable: false
+    },
+    {
+      field: 'memo',
+      headerName: '비고',
+      width: 150,
+      description: '기타 정보',
+      editable: false
     }
   ];
   return (

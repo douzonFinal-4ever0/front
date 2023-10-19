@@ -151,6 +151,8 @@ const DataGrid = ({
   disableRow,
   selectedRows,
   clickEvent,
+  header,
+  footer,
   dbclickEvent
 }) => {
   return (
@@ -171,6 +173,8 @@ const DataGrid = ({
         onRowClick={clickEvent}
         onRowDoubleClick={dbclickEvent}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+        disableColumnHeader
+        disableColumnFooter
       />
     </Box>
   );
