@@ -7,12 +7,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { useDispatch } from 'react-redux';
+import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { useState } from 'react';
+import CarDetail from './CarDetail';
 
+const CommonTable = ({ columns, rows, setTabData }) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const dispatch = useDispatch();
+  // const [carCode, setCarCode] = useState('');
 
-const CommonTable=({columns, rows}) =>{
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  console.log(columns);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -20,6 +25,20 @@ const CommonTable=({columns, rows}) =>{
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleClickRow = (event, value) => {
+    setTabData([
+      {
+        title: '차량 정보',
+        content: <CarDetail carCode={value} />
+      },
+      {
+        title: '정비 및 지출',
+        content: <>정비 지출 페이지</>
+      }
+    ]);
+    dispatch(openDrawer());
   };
 
   return (
@@ -44,15 +63,25 @@ const CommonTable=({columns, rows}) =>{
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.code}
+                    onClick={(event) => {
+                      handleClickRow(event, row['car_code']);
+                    }}
+                  >
                     {columns.map((column) => {
-                      const value = row[column.id];
+                      let value = row[column.id];
+                      if (column.id === 'created_at' && value === null) {
+                        value = '최근 운행 없음';
+                      } else if (column.id === 'memo' && value === null) {
+                        value = '-';
+                      }
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {/* {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value} */}
-                            {value}
+                          {value}
                         </TableCell>
                       );
                     })}
@@ -73,6 +102,6 @@ const CommonTable=({columns, rows}) =>{
       />
     </Paper>
   );
-}
+};
 
 export default CommonTable;

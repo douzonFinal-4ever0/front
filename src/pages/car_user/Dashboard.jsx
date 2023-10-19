@@ -1,4 +1,4 @@
-import CommonTable from '../../components/common/CommonTable';
+import CommonTable from '../../components/car_admin/CarInfoTable';
 import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
 import { useState, useEffect } from 'react';

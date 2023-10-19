@@ -32,12 +32,10 @@ function CustomTabPanel(props) {
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired
 };
 
-
-const Tabs = ({tabData}) => {
-
+const Tabs = ({ tabData }) => {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -47,14 +45,18 @@ const Tabs = ({tabData}) => {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <MuiTabs value={value} onChange={handleChange}>
-          {tabData.map((tab, index) => <Tab key={index} label={tab.title} />)}
+          {tabData.map((tab, index) => (
+            <Tab key={index} label={tab.title} />
+          ))}
         </MuiTabs>
       </Box>
-      {tabData.map((tab, index) => <CustomTabPanel key={index} value={value} index={index} >
-        {tab.content}
-      </CustomTabPanel>)}
+      {tabData.map((tab, index) => (
+        <CustomTabPanel key={index} value={value} index={index}>
+          {tab.content}
+        </CustomTabPanel>
+      ))}
     </Box>
   );
-}
+};
 
 export default Tabs;
