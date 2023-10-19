@@ -92,6 +92,7 @@ const Dashboard = () => {
   // 서브 사이드바 콘텐츠
   const SubSideContents = () => {
     const [searchInput, setSearchInput] = useState('');
+
     const [rows, setRows] = useState([]);
     useEffect(() => {
       axios.get(`http://localhost:8081/car_rez/searchCarList`).then((res) => {
@@ -145,26 +146,20 @@ const Dashboard = () => {
       </Box>
     );
   };
-
+  const [carCode, setCarCode] = useState('');
+  const handleItem = (e, car_code) => {
+    setCarCode(car_code);
+  };
   const CarList = ({ rows }) => {
     if (rows.length == 0) {
       return <NoRow />;
     } else {
-      // <List dense component="div" role="list">
-      //   {rows.map((car) => {
-      //     return (
-      //       <ListItem>
-      //         <ListItemText primary={`${car.car_code}`} />
-      //       </ListItem>
-      //     );
-      //   })}
-      // </List>;
       return (
         <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
           <List dense component="div" role="list">
             {rows.map((car) => {
               return (
-                <ListItem>
+                <ListItem onClick={(e) => handleItem(e, car.car_code)}>
                   <ListItemText
                     primary={`${car.car_code}`}
                     secondary={`${car.car_name}`}
@@ -221,9 +216,11 @@ const Dashboard = () => {
     }
   ];
 
-  const filterRezData = carRez.filter((item) =>
-    item['rez_status'].includes(range)
-  );
+  var filterRezData = carRez.filter((item) => {
+    return (
+      item['rez_status'].includes(range) && item['car_code'].includes(carCode)
+    );
+  });
   const handleRange = (e) => {
     setRange(e.target.value);
     // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
