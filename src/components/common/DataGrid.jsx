@@ -150,7 +150,9 @@ const DataGrid = ({
   checkbox,
   disableRow,
   selectedRows,
-  clickEvent
+  clickEvent,
+  header,
+  footer
 }) => {
   return (
     <Box sx={{ height: height, width: width }}>
@@ -169,6 +171,8 @@ const DataGrid = ({
         disableRowSelectionOnClick={disableRow}
         onRowClick={clickEvent}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
+        disableColumnHeader
+        disableColumnFooter
       />
     </Box>
   );
