@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import mrUserReducer from './reducer/mrUserSlice';
 import DrawerReducer from './reducer/DrawerSlice';
+import SnackbarReducer from './reducer/SnackbarSlice';
 
 const store = configureStore({
   reducer: {
     mrUser: mrUserReducer,
-    drawer : DrawerReducer
+    drawer: DrawerReducer,
+    snackbar: SnackbarReducer
   }
 });
 
