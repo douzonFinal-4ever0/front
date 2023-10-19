@@ -31,11 +31,27 @@ import Modal from '../common/Modal';
 import DashBoard from '../../pages/mr_admin/DashBoard';
 import axios from 'axios';
 
-const MrRegistForm = () => {
+const MrRegistForm = ({ selectedRowData, isEditMode }) => {
+  console.log(isEditMode);
+  /*------------------------------------수정시 데이터--------------------------------------------*/
+  const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
+  const initialLocation = selectedRowData ? selectedRowData.location : '';
+  const initialMaximumCapacity = selectedRowData
+    ? selectedRowData.maximum_capacity
+    : '';
+  const initialMr_type = selectedRowData ? selectedRowData.mr_type : '';
+  // selectedTags와 같은 구조로 변환
+  const initialSelectedTags =
+    selectedRowData?.mr_keyword?.map((keywordItem) => ({
+      keyword_name: keywordItem.keyword_name
+    })) || []; // null 체크 추가
+  console.log('registerForm : ' + initialSelectedTags);
   /*-------------------------------입력폼 제어--------------------------------------------*/
-  const [mr_name, setMr_name] = useState('');
-  const [location, setLocation] = useState('');
-  const [maximum_capacity, setMaximum_capacity] = useState('');
+  const [mr_name, setMr_name] = useState(initialMrName);
+  const [location, setLocation] = useState(initialLocation);
+  const [maximum_capacity, setMaximum_capacity] = useState(
+    initialMaximumCapacity
+  );
   const handleMrName = (event) => {
     setMr_name(event.target.value);
   };
@@ -47,18 +63,19 @@ const MrRegistForm = () => {
   };
   /*-----------------------------------------------------------------------------------------*/
   /*------------------------------회의실 분류-----------------------------*/
-  const [mrType, setMrType] = useState('');
+  const [mrType, setMrType] = useState(initialMr_type);
   const handleSelectChange = (event) => {
     setMrType(event.target.value);
   };
   /*------------------------------------------------------------------------*/
   /*----------------------------회의실 키워드------------------------*/
   //회의실 키워드 선택 값
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
   /**회의실 키워드 선택된 값 */
   const handleTagSelect = (tags) => {
     setSelectedTags(tags);
   };
+  console.log(selectedTags);
   /*---------------------------------------------------------------------*/
   /*----------------------------모달------------------------------------*/
   // 모달창 열림 여부 값
@@ -69,12 +86,12 @@ const MrRegistForm = () => {
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
-    월: 0,
-    화: 1,
-    수: 2,
-    목: 3,
-    금: 4,
-    토: 5
+    0: '월',
+    1: '화',
+    2: '수',
+    3: '목',
+    4: '금',
+    5: '토'
   };
   const [selectedDays, setSelectedDays] = useState([
     '월',
@@ -126,6 +143,15 @@ const MrRegistForm = () => {
       alert('회의실이 등록되었습니다.');
     });
   };
+  /**회의실 수정 버튼 클릭 이벤트 */
+  const handleUpdate = () => {
+    axios
+      .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
+      .then((res) => {
+        alert('회의실이 수정되었습니다!!!');
+        window.location.reload(); // 페이지 새로고침
+      });
+  };
   /*----------------------------------------------------------------------------- */
   /*-------------------------------FormToData------------------------------------------- */
   const FormToData = {
@@ -136,8 +162,39 @@ const MrRegistForm = () => {
     mr_keyword: selectedTags,
     mr_op_day: mr_op_day // 변환된 요일 배열 사용
   };
+  let FormToData2 = {};
+  if (selectedRowData && selectedRowData.mr_code) {
+    FormToData2 = {
+      mr_code: selectedRowData.mr_code,
+      mr_name,
+      maximum_capacity,
+      location,
+      mr_type: mrType,
+      is_opened: 0
+    };
+  }
   /*-------------------------------------------------------------------------------------- */
+  const [images, setImages] = useState([]); // 이미지 배열
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newImage = { src: e.target.result, title: file.name };
+        setImages([...images, newImage]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 삭제
+  const handleImageDelete = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+  };
   return (
     <Item
       sx={{
@@ -242,17 +299,39 @@ const MrRegistForm = () => {
             </Grid>
           </Collapse>
         </Grid>
-        {/* 회의실 분류 영역 */}
-        <MrTag onTagSelect={handleTagSelect} />
+        {/* 회의실 태그 영역 */}
+        <MrTag
+          onTagSelect={handleTagSelect}
+          initailTagSelect={initialSelectedTags}
+        />
         {/* 회의실 사진 업로드 */}
-        <Button
+        {/* <Button
           component="label"
           variant="outlined"
           startIcon={<CloudUploadIcon />}
+          color="info"
         >
           회의실 사진
           <VisuallyHiddenInput type="file" />
-        </Button>
+        </Button> */}
+        <input
+          accept="image/*"
+          style={{ display: 'none' }}
+          id="image-upload-button"
+          type="file"
+          onChange={handleImageChange}
+        />
+        <label htmlFor="image-upload-button">
+          <Button
+            component="span"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            color="info"
+            sx={{ width: '100%' }}
+          >
+            회의실 사진 업로드
+          </Button>
+        </label>
         {/* 기본 비품 버튼 영역 */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={2}>
@@ -278,7 +357,7 @@ const MrRegistForm = () => {
           </Grid>
         </Grid>
         {/* 회의실 사진들 */}
-        <ImageList sx={2} cols={3} rowHeight={180}>
+        {/* <ImageList sx={2} cols={3} rowHeight={180}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
               <img
@@ -294,11 +373,57 @@ const MrRegistForm = () => {
               />
             </ImageListItem>
           ))}
+        </ImageList> */}
+        <ImageList sx={2} cols={3} rowHeight={180}>
+          {images.map((item, index) => (
+            <ImageListItem key={index}>
+              <img src={item.src} alt={item.title} loading="lazy" />
+              <ImageListItemBar
+                title={item.title}
+                actionPosition="right"
+                actionIcon={
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleImageDelete(index)}
+                    color="error"
+                  >
+                    삭제
+                  </Button>
+                }
+              />
+            </ImageListItem>
+          ))}
         </ImageList>
         {/* 회의실 등록 버튼 */}
-        <Button variant="outlined" onClick={handleSubmit}>
-          회의실 등록
-        </Button>
+        {isEditMode ? (
+          <Grid spacing={2} container>
+            <Grid xs={6}>
+              <Button
+                variant="outlined"
+                onClick={handleUpdate}
+                sx={{ width: '100%' }}
+                color="success"
+              >
+                회의실 수정
+              </Button>
+            </Grid>
+            <Grid xs={6}>
+              <Button
+                variant="outlined"
+                onClick={handleUpdate}
+                sx={{ width: '100%' }}
+                color="error"
+              >
+                회의실 비활성화
+              </Button>
+            </Grid>
+          </Grid>
+        ) : (
+          <Button variant="outlined" onClick={handleSubmit}>
+            회의실 등록
+          </Button>
+        )}
       </Stack>
     </Item>
   );

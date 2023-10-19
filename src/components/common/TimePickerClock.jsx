@@ -1,6 +1,6 @@
 import React from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-const TimePickerClock = ({ shouldDisableTime, label }) => {
+const TimePickerClock = ({ shouldDisableTime, label, value }) => {
   return (
     <TimePicker
       label={label}
@@ -9,6 +9,7 @@ const TimePickerClock = ({ shouldDisableTime, label }) => {
       shouldDisableTime={shouldDisableTime}
       ampm={false}
       timeSteps={30}
+      defaultValue={value}
     />
   );
 };

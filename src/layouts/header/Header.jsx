@@ -81,7 +81,7 @@ const Header = (props) => {
                 aria-label="check notifications"
                 isAdminMode={isAdminMode}
               >
-                <Badge badgeContent={1} color="error">
+                <Badge badgeContent=" " color="error" variant="dot">
                   <StyledNotificationsIcon isAdminMode={isAdminMode} />
                 </Badge>
               </StyledIconButton>

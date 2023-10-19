@@ -9,12 +9,13 @@ import { useState } from 'react';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const MrTag = ({ onTagSelect }) => {
-  const [selectedTags, setSelectedTags] = useState([]);
+const MrTag = ({ onTagSelect, initailTagSelect }) => {
+  const [selectedTags, setSelectedTags] = useState(initailTagSelect);
+  // console.log(initailTagSelect);
 
   const handleTagSelection = (event, value) => {
     setSelectedTags(value);
-    onTagSelect(value);
+    onTagSelect(initailTagSelect);
   };
   return (
     <Autocomplete

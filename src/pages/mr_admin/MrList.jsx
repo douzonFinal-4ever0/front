@@ -9,38 +9,67 @@ import SubHeader from '../../components/common/SubHeader';
 import axios from 'axios';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import { useEffect } from 'react';
+import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
 
 const MrList = () => {
+  const [value, setValue] = useState(dayjs().minute(0));
+
+  useEffect(() => {
+    axios.get('http://localhost:8081/mr/mrRez').then((res) => {
+      setRezList(res.data);
+      const newEvents = res.data.map((rez) => ({
+        title: rez.m_purpose,
+        start: rez.rez_start_time,
+        end: rez.rez_end_time,
+        resourceId: rez.mr[0].mr_code
+      }));
+
+      setEvents(newEvents);
+    });
+    axios.get('http://localhost:8081/mr/mrList').then((res) => {
+      const mrList = res.data.map((rez) => ({
+        id: rez.mr_code,
+        title: rez.mr_name
+      }));
+      setMrList(mrList);
+    });
+  }, []);
+
   const [rezList, setRezList] = useState([]);
   const [events, setEvents] = useState([
     {
       title: '',
       start: '',
-      end: ''
+      end: '',
+      resourceId: ''
     }
   ]);
-  const handleClick = () => {
-    axios.get('http://localhost:8081/mr/mrRez').then((res) => {
-      console.log(res.data);
-      setRezList(res.data);
-      const newEvents = res.data.map((rez) => ({
-        title: rez.m_purpose,
-        start: rez.rez_start_time,
-        end: rez.rez_end_time
-      }));
-      setEvents(newEvents);
-    });
-  };
+  const [mrList, setMrList] = useState([
+    {
+      id: '',
+      title: ''
+    }
+  ]);
+
   // const events = [
-  //   {
-  //     title: 'test1',
-  //     start: '2023-10-12'
-  //   },
-  //   {
-  //     title: 'test2',
-  //     start: '2023-10-13',
-  //     end: '2023-10-16'
-  //   }
+  //    {
+  //   id: 'event1',
+  //   resourceId: 'a', // 리소스 ID (resources 배열에 정의한 ID와 일치해야 함)
+  //   title: '이벤트 1',
+  //   start: '2023-10-19T09:00:00',
+  //   end: '2023-10-19T11:00:00'
+  // },
+  // {
+  //   id: 'event2',
+  //   resourceId: 'b',
+  //   title: '이벤트 2',
+  //   start: '2023-10-19T19:00:00',
+  //   end: '2023-10-19T21:00:00'
+  // }
+  // 추가 이벤트들
   // ];
   const tabData = [
     {
@@ -61,17 +90,25 @@ const MrList = () => {
         }}
       />
       <Box sx={{ display: 'flex', height: '95%' }}>
-        <SubSidebar />
         <MainContainer>
           <WrapContainer bgColor={'#fff'}>
             <Grid spacing={2}>
-              <TimeField withMonth={false} label={'start-time'} />
-              <TimeField withMonth={false} label={'end-time'} />
+              {/* <TimeField
+                withMonth={false}
+                label={'start-time'}
+                timeValue={dayjs().minute(0)}
+              />
+              <TimeField
+                withMonth={false}
+                label={'end-time'}
+                timeValue={dayjs().minute(0).add(2, 'hour')}
+              />
               <Button variant="outlined" onClick={handleClick}>
                 조회
-              </Button>
+              </Button> */}
             </Grid>
-            <Calendar events={events} tabData={tabData} />
+            <TimeLineCalendar events={events} resources={mrList} />
+            {/* <Calendar events={events} tabData={tabData} /> */}
           </WrapContainer>
         </MainContainer>
       </Box>
