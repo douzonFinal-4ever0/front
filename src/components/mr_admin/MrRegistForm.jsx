@@ -174,7 +174,27 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     };
   }
   /*-------------------------------------------------------------------------------------- */
+  const [images, setImages] = useState([]); // 이미지 배열
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newImage = { src: e.target.result, title: file.name };
+        setImages([...images, newImage]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 삭제
+  const handleImageDelete = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+  };
   return (
     <Item
       sx={{
@@ -285,7 +305,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           initailTagSelect={initialSelectedTags}
         />
         {/* 회의실 사진 업로드 */}
-        <Button
+        {/* <Button
           component="label"
           variant="outlined"
           startIcon={<CloudUploadIcon />}
@@ -293,7 +313,25 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         >
           회의실 사진
           <VisuallyHiddenInput type="file" />
-        </Button>
+        </Button> */}
+        <input
+          accept="image/*"
+          style={{ display: 'none' }}
+          id="image-upload-button"
+          type="file"
+          onChange={handleImageChange}
+        />
+        <label htmlFor="image-upload-button">
+          <Button
+            component="span"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+            color="info"
+            sx={{ width: '100%' }}
+          >
+            회의실 사진 업로드
+          </Button>
+        </label>
         {/* 기본 비품 버튼 영역 */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={2}>
@@ -319,7 +357,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           </Grid>
         </Grid>
         {/* 회의실 사진들 */}
-        <ImageList sx={2} cols={3} rowHeight={180}>
+        {/* <ImageList sx={2} cols={3} rowHeight={180}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
               <img
@@ -332,6 +370,27 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 title={item.title}
                 subtitle={<span>by: {item.author}</span>}
                 position="below"
+              />
+            </ImageListItem>
+          ))}
+        </ImageList> */}
+        <ImageList sx={2} cols={3} rowHeight={180}>
+          {images.map((item, index) => (
+            <ImageListItem key={index}>
+              <img src={item.src} alt={item.title} loading="lazy" />
+              <ImageListItemBar
+                title={item.title}
+                actionPosition="right"
+                actionIcon={
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleImageDelete(index)}
+                    color="error"
+                  >
+                    삭제
+                  </Button>
+                }
               />
             </ImageListItem>
           ))}
