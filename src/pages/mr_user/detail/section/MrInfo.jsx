@@ -142,7 +142,7 @@ const MrInfo = ({ data }) => {
                   <Tag
                     text={tag.value}
                     isHashTag={true}
-                    bgColor={palette.grey['800']}
+                    bgcolor={palette.grey['800']}
                   />
                 ))}
               </StyledRoomTagsWrap>

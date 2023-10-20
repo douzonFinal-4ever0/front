@@ -195,7 +195,7 @@ const MrDetailPage = () => {
 
   return (
     <MainContainer>
-      <WrapContainer bgColor={'#fff'}>
+      <WrapContainer bgcolor={'#fff'}>
         <Grid container spacing={3}>
           <Grid item xs={7}>
             <Stack rowGap={8} sx={{ height: '2000px' }}>

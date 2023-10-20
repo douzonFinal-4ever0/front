@@ -85,7 +85,7 @@ const MrInquiryPage = () => {
         <PageTitle title="회의실 조회" />
       </MainContainer>
       <MainContainer>
-        <WrapContainer bgColor={'#fff'}>
+        <WrapContainer bgcolor={'#fff'}>
           <Box component={'form'} onSubmit={handleInquiryBtn}>
             <Grid container spacing={3}>
               <Grid item xs={12} sx={{ display: 'flex' }} gap={2}>

@@ -25,7 +25,7 @@ const MrSubInfo = ({ data }) => {
             <SectionTitle title="회의실 부가 정보">
               <InfoIcon />
             </SectionTitle>
-            <WrapContainer bgColor={palette.grey['100']}>
+            <WrapContainer bgcolor={palette.grey['100']}>
               <Grid container>
                 <Grid item xs={2}>
                   <StyledTitle>기본 장비</StyledTitle>
@@ -36,7 +36,7 @@ const MrSubInfo = ({ data }) => {
                       <Tag
                         text={item.name}
                         isHashTag={false}
-                        bgColor={palette.grey['600']}
+                        bgcolor={palette.grey['600']}
                       />
                     ))}
                   </Stack>

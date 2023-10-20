@@ -24,7 +24,7 @@ const MrRezDashboard = ({ schedule }) => {
             <SectionTitle title="회의실 예약 현황">
               <TableChartRoundedIcon />
             </SectionTitle>
-            <WrapContainer bgColor={palette.grey['100']}>
+            <WrapContainer bgcolor={palette.grey['100']}>
               <Box sx={{ overflowX: 'scroll' }}>
                 <TimeTable schedule={schedule} />
               </Box>

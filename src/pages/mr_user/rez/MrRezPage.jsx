@@ -327,7 +327,7 @@ const MrRezPage = () => {
 
   return (
     <MainContainer>
-      <WrapContainer bgColor={'#fff'}>
+      <WrapContainer bgcolor={'#fff'}>
         <Grid container direction={'row'} spacing={3}>
           {/* row - 회의실 정보 */}
           <Grid item container xs={8} spacing={3}>
