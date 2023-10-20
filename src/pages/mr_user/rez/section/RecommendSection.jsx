@@ -84,7 +84,7 @@ const MrCardList = ({ data }) => {
     <ContainerWithScroll>
       <StyledList sx={{ width: '100%' }}>
         {data.map((item) => (
-          <StyledListItem key={item.mrCodes}>
+          <StyledListItem key={item.mrCode}>
             <MrCard data={item} />
           </StyledListItem>
         ))}
