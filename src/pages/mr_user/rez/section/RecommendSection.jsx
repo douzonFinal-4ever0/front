@@ -20,9 +20,11 @@ import { palette } from '../../../../theme/palette';
 
 const MrCard = ({ data }) => {
   const { mrCode, mrName, location, maximumCapacity, keywords } = data;
+
   const [selectCard, setSelectCard] = useState('r001');
 
-  const handleCardClick = (mrCode) => {
+  const handleCardClick = (e) => {
+    console.log(mrCode);
     setSelectCard(mrCode);
   };
 
@@ -30,6 +32,7 @@ const MrCard = ({ data }) => {
     <StyledCard
       onClick={handleCardClick}
       isSelect={selectCard === mrCode ? true : false}
+      name={mrCode}
     >
       <CardContent
         sx={{
