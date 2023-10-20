@@ -43,7 +43,7 @@ const Sidebar = (props) => {
       variant="persistent"
       anchor="left"
       open={isOpen}
-      drawerDisplay={drawerDisplay}
+      drawerdisplay={drawerDisplay}
       isAdminMode={isAdminMode}
     >
       <Box sx={{ pt: 10 }}>
@@ -62,10 +62,10 @@ const Sidebar = (props) => {
 export default Sidebar;
 
 const StyledDrawer = styled(Drawer)(
-  ({ theme, isAdminMode, drawerDisplay }) => ({
+  ({ theme, isAdminMode, drawerdisplay }) => ({
     width: DRAWER_WIDTH,
     flexShrink: 0,
-    display: drawerDisplay,
+    display: drawerdisplay,
     '& .MuiDrawer-paper': {
       width: DRAWER_WIDTH,
       boxSizing: 'border-box',
