@@ -31,7 +31,7 @@ const MrCard = ({ data }) => {
   return (
     <StyledCard
       onClick={handleCardClick}
-      isSelect={selectCard === mrCode ? true : false}
+      isselected={selectCard === mrCode ? true : false}
       name={mrCode}
     >
       <CardContent
@@ -136,10 +136,10 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   width: '100%'
 }));
 
-const StyledCard = styled(Card)(({ theme, isSelect }) => ({
+const StyledCard = styled(Card)(({ theme, isselected }) => ({
   margin: '0 4px',
   width: '100%',
-  backgroundColor: isSelect
+  backgroundColor: isselected
     ? theme.palette.grey['100']
     : theme.palette.common.white,
   border: '1px solid #eee'

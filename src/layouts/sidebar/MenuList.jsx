@@ -151,7 +151,7 @@ const MenuList = (props) => {
                       <StyledSubMenuIcon isAdminMode={isAdminMode} />
                     </ListItemIcon>
                     <StyledMenuLinkText
-                      isSelected={selectMenuItem === item.index}
+                      isselected={selectMenuItem === item.index}
                       primary={item.title}
                       isAdminMode={isAdminMode}
                     />
@@ -233,12 +233,12 @@ const StyledMenuButtonText = styled(ListItemText)(({ theme, isAdminMode }) => ({
 }));
 
 const StyledMenuLinkText = styled(ListItemText)(
-  ({ theme, isSelected, isAdminMode }) => ({
+  ({ theme, isselected, isAdminMode }) => ({
     '& span': {
       color: isAdminMode
         ? theme.palette.mode.dark.textSub
         : theme.palette.mode.light.textSub,
-      fontWeight: isSelected
+      fontWeight: isselected
         ? theme.typography.fontWeightBold
         : theme.typography.fontWeightRegular,
       fontSize: '14px'
