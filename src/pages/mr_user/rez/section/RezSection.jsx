@@ -18,6 +18,7 @@ import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import { palette } from '../../../../theme/palette';
 import RezForm from '../form/RezForm';
 import RectangleBtn from '../../../../components/mr_user/RectangleBtn';
+import InnerPtForm from '../form/InnerPtForm';
 
 const RezSection = () => {
   const [expanded, setExpanded] = useState('rez');
@@ -73,10 +74,7 @@ const RezSection = () => {
               </SectionTitle>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>
-                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-                feugiat. Aliquam eget maximus est, id dignissim quam.
-              </Typography>
+              <InnerPtForm />
             </AccordionDetails>
           </Accordion>
 
