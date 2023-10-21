@@ -20,14 +20,44 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import Label from '../../../../components/mr_user/Label';
 import { palette } from '../../../../theme/palette';
+import dayjs from 'dayjs';
 
 const RezForm = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
-  const [age, setAge] = useState('');
+  console.log(rezData);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  // 회의 종류 셀렉트박스 이벤트
+  const handleSelectBox = (e) => {
+    const newRezData = { ...rezData, mType: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 날짜 데이트피커 이벤트
+  const handleDatePick = (newValue) => {
+    const newRezData = {
+      ...rezData,
+      rezDate: dayjs(newValue).format('YYYY-MM-DD')
+    };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 시작 시간 이벤트
+  const handleSelectStartTime = (e) => {
+    const newRezData = { ...rezData, rezStartTime: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 예약 종료 시간 이벤트
+  const handleSelectEndtTime = (e) => {
+    const newRezData = { ...rezData, rezEndTime: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 총인원수 이벤트
+  const handleTotCtn = (e) => {
+    const newRezData = { ...rezData, totPtCtn: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
   };
 
   return (
@@ -54,15 +84,15 @@ const RezForm = () => {
         <Grid item xs={9}>
           <StyledSelect
             value={rezData.mType}
-            onChange={handleChange}
+            onChange={handleSelectBox}
             displayEmpty
             inputProps={{ 'aria-label': 'Without label' }}
             sx={{ width: '100%' }}
           >
             <MenuItem value="">선택</MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            <MenuItem value={'미팅'}>미팅</MenuItem>
+            <MenuItem value={'화상회의'}>화상회의</MenuItem>
+            <MenuItem value={'컨퍼런스'}>컨퍼런스</MenuItem>
           </StyledSelect>
         </Grid>
       </Grid>
@@ -93,7 +123,7 @@ const RezForm = () => {
         <Grid item xs={9}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
-              <StyledDatePicker />
+              <StyledDatePicker onChange={handleDatePick} />
             </DemoContainer>
           </LocalizationProvider>
         </Grid>
@@ -108,7 +138,7 @@ const RezForm = () => {
           <Stack direction={'row'} sx={{ alignItems: 'center' }}>
             <StyledSelect
               value={rezData.rezStartTime}
-              onChange={handleChange}
+              onChange={handleSelectStartTime}
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
               sx={{ width: '100%' }}
@@ -123,7 +153,7 @@ const RezForm = () => {
             </Typography>
             <StyledSelect
               value={rezData.rezEndTime}
-              onChange={handleChange}
+              onChange={handleSelectEndtTime}
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
               sx={{ width: '100%' }}
