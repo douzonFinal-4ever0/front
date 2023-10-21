@@ -27,8 +27,9 @@ const StyledSearchbar = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  border: '1px solid #333',
-  borderRadius: '2px'
+  border: `1px solid ${theme.palette.grey['500']}`,
+  borderRadius: '2px',
+  backgroundColor: theme.palette.common.white
 }));
 
 const StyledInput = styled(TextField)(({ theme }) => ({
