@@ -46,13 +46,13 @@ const MrInfoSection = ({ data }) => {
           <StyledRoomTitleInfoWrap>
             {/* 회의실명 영역 */}
             <StyledRoomName>{mrName}</StyledRoomName>
-            <StyledIconButton onClick={handleBookmark}>
+            <IconButton onClick={handleBookmark}>
               {bookmark ? (
                 <StarRoundedIcon fontSize="large" />
               ) : (
                 <StarBorderRoundedIcon fontSize="large" />
               )}
-            </StyledIconButton>
+            </IconButton>
           </StyledRoomTitleInfoWrap>
           <Stack sx={{ rowGap: '6px' }}>
             {/* 위치 영역 */}
@@ -124,10 +124,4 @@ const StyledInfoText = styled(Typography)(({ theme }) => ({
 
 const StyledRoomTagsWrap = styled(StyledRoomInfoWrap)(({ theme }) => ({
   flexWrap: 'wrap'
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: 'transparent'
-  }
 }));
