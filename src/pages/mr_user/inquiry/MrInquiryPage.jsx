@@ -76,7 +76,7 @@ const MrInquiryPage = () => {
   // 조회 버튼 이벤트
   const handleInquiryBtn = (e) => {
     e.preventDefault();
-    navigation('/mr/1');
+    navigation('/mr/rez');
   };
 
   return (
