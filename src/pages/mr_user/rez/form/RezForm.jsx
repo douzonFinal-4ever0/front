@@ -20,6 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import Label from '../../../../components/common/Label';
+import { palette } from '../../../../theme/palette';
 
 const RezForm = () => {
   const dispatch = useDispatch();
@@ -125,6 +126,12 @@ const RezForm = () => {
     }
   ];
 
+  // 회의 목적 이벤트
+  const handleMPurpose = (e) => {
+    const newRezData = { ...rezData, mPurpose: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
   // 회의 종류 셀렉트박스 이벤트
   const handleSelectBox = (e) => {
     const newRezData = { ...rezData, mType: e.target.value };
@@ -135,7 +142,7 @@ const RezForm = () => {
   const handleDatePick = (newValue) => {
     const newRezData = {
       ...rezData,
-      rezDate: dayjs(newValue).format('YYYY-MM-DD')
+      rezDate: newValue.format('YYYY-MM-DD')
     };
     dispatch(setRezData({ data: newRezData }));
   };
@@ -171,6 +178,12 @@ const RezForm = () => {
             variant="outlined"
             value={mPurpose}
             placeholder="회의 목적을 입력하세요"
+            onChange={handleMPurpose}
+            sx={{
+              '.MuiInputBase-root': {
+                border: `2px solid ${palette.primary.main}`
+              }
+            }}
           />
         </Grid>
       </Grid>
@@ -213,7 +226,7 @@ const RezForm = () => {
               <DatePicker
                 onChange={handleDatePick}
                 format="YYYY-MM-DD"
-                value={rezDate}
+                value={dayjs(rezDate)}
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -228,7 +241,7 @@ const RezForm = () => {
         <Grid item xs={9}>
           <Stack direction={'row'} sx={{ alignItems: 'center' }}>
             <Select
-              value={rezData.rezStartTime}
+              value={rezStartTime}
               onChange={handleSelectStartTime}
               displayEmpty
             >
@@ -241,7 +254,7 @@ const RezForm = () => {
               ~
             </Typography>
             <Select
-              value={rezData.rezEndTime}
+              value={rezEndTime}
               onChange={handleSelectEndtTime}
               displayEmpty
             >
@@ -264,7 +277,8 @@ const RezForm = () => {
             id="totPtCtn"
             variant="outlined"
             type="number"
-            value={rezData.totPtCtn}
+            value={totPtCtn}
+            onChange={handleTotCtn}
           />
         </Grid>
       </Grid>
