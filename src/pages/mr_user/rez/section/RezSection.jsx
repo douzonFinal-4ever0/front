@@ -17,7 +17,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import { palette } from '../../../../theme/palette';
 import RezForm from '../form/RezForm';
-import RectangleBtn from '../../../../components/mr_user/RectangleBtn';
+import RectangleBtn from '../../../../components/common/RectangleBtn';
 import InnerPtForm from '../form/InnerPtForm';
 import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
