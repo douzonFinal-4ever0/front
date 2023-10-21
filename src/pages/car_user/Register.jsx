@@ -26,6 +26,8 @@ import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@fullcalendar/core';
+import dayjs from 'dayjs';
+import SubSideContents from '../../components/car_user/SubsideContents';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -120,7 +122,7 @@ const Register = () => {
   };
   //차량 선택 후 처리
   const carSelect = () => {
-    //console.log(selectedRows);
+    console.log(selectedRows);
     if (selectedRows.length !== 0) {
       //console.log(selectedRows.id);
       setFormData({
@@ -133,7 +135,7 @@ const Register = () => {
       alert('차량을 선택해주세요');
     }
     axios
-      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.id}`)
+      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows}`)
       .then((res) => {
         setCarDetail({
           id: res.data.carVO.car_code,
@@ -215,6 +217,7 @@ const Register = () => {
                       label={'대여 날짜'}
                       name={'start_at'}
                       onChange={(e) => handleTimeChange(e, 'start_at')}
+                      timeValue={dayjs()}
                     ></TimeField>
                   </NewFormControl>
                   ~
@@ -224,6 +227,7 @@ const Register = () => {
                       label={'반납 날짜'}
                       name={'return_at'}
                       onChange={(e) => handleTimeChange(e, 'return_at')}
+                      timeValue={dayjs()}
                     ></TimeField>
                   </NewFormControl>
                 </Grid>
@@ -244,7 +248,9 @@ const Register = () => {
                     open={open}
                     handleModal={(e, reason) => handleCloseModal(reason)}
                     modalTitle={'차량 찾기'}
-                    content={<CarList setSelectedRows={setSelectedRows} />}
+                    content={
+                      <SubSideContents setSelectedRows={setSelectedRows} />
+                    }
                     buttons={
                       <ButtonGroup>
                         <Button onClick={carSelect}>선택</Button>{' '}
