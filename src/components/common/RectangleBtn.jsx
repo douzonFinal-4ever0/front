@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { Button, Typography } from '@mui/material';
 
-const RectangleBtn = ({ type, text, sx, isDisabled }) => {
+const RectangleBtn = ({ type, text, sx, isDisabled, handlebtn }) => {
   return (
-    <StyledBtn type={type} sx={sx} disabled={isDisabled}>
+    <StyledBtn type={type} sx={sx} disabled={isDisabled} onClick={handlebtn}>
       <Typography sx={{ fontWeight: 'bold' }}>{text}</Typography>
     </StyledBtn>
   );
