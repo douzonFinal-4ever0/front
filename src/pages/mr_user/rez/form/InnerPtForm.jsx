@@ -1,4 +1,4 @@
-import RectangleBtn from '../../../../components/mr_user/RectangleBtn';
+import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { palette } from '../../../../theme/palette';
 
 const InnerPtForm = () => {
