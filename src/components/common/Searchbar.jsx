@@ -1,33 +1,45 @@
-import { IconButton, InputBase, Paper } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import styled from '@emotion/styled';
 
 const Searchbar = (props) => {
-  const { width, placeholder, value, handleInput, handleSearchBtn } = props;
+  const { placeholder, value, handleInputChange, handleSearchBtnClick } = props;
 
   return (
-    <Paper
-      component="form"
-      px
-      sx={{
-        p: '2px 4px',
-        display: 'flex',
-        alignItems: 'center',
-        width: width
-      }}
-      onSubmit={handleSearchBtn}
-    >
-      <InputBase
-        sx={{ ml: 1, flex: 1 }}
+    <StyledSearchbar onSubmit={handleSearchBtnClick}>
+      <StyledInput
         placeholder={placeholder}
         inputProps={{ 'aria-label': '검색' }}
         value={value}
-        onChange={handleInput}
+        onChange={handleInputChange}
       />
       <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
         <SearchIcon />
       </IconButton>
-    </Paper>
+    </StyledSearchbar>
   );
 };
 
 export default Searchbar;
+
+const StyledSearchbar = styled(Box)(({ theme }) => ({
+  padding: '2px 4px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  border: '1px solid #333',
+  borderRadius: '2px'
+}));
+
+const StyledInput = styled(TextField)(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    border: 'none',
+    backgroundColor: '#fff'
+  },
+  '&:hover fieldset, &:hover input': {
+    border: 'none'
+  },
+  '& .Mui-focused fieldset': {
+    border: 'none'
+  }
+}));
