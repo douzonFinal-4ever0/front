@@ -1,12 +1,12 @@
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRezData } from '../../../../redux/reducer/mrUserSlice';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  Stack,
-  Typography
+  Stack
 } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
@@ -22,17 +22,42 @@ import InnerPtForm from '../form/InnerPtForm';
 import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
 import SuppliesForm from '../form/SuppliesForm';
+import dayjs from 'dayjs';
 
 const RezSection = () => {
+  const dispatch = useDispatch();
+  const rezData = useSelector(setRezData).payload.mrUser;
+  const { mPurpose, mType, rezDate, rezStartTime, rezEndTime, totPtCtn } =
+    rezData;
+  // 열린 Accordion 표시
   const [expanded, setExpanded] = useState('rez');
+  // 예약버튼 활성화 여부
+  const [isDisabled, setisDisabled] = useState(true);
 
+  useEffect(() => {
+    if (
+      mPurpose !== '' &&
+      mType !== '' &&
+      rezDate !== '' &&
+      rezStartTime !== '' &&
+      rezEndTime !== '' &&
+      totPtCtn !== ''
+    ) {
+      setisDisabled(false);
+    } else {
+      setisDisabled(true);
+    }
+  }, [rezData]);
+
+  // Accordion 활성화 표시 이벤트
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  // 예약 버튼 이벤트
   const handleBtnSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target);
+    console.log(rezData);
   };
 
   return (
@@ -45,9 +70,11 @@ const RezSection = () => {
               expanded={expanded === 'rez'}
               onChange={handleChange('rez')}
               sx={{
-                border: `3px solid ${
-                  expanded === 'rez' ? palette.grey['500'] : 'none'
-                }`
+                '&.MuiPaper-root': {
+                  border: `3px solid ${
+                    expanded === 'rez' ? palette.grey['500'] : 'none'
+                  }`
+                }
               }}
             >
               <AccordionSummary
@@ -69,9 +96,11 @@ const RezSection = () => {
               expanded={expanded === 'interPt'}
               onChange={handleChange('interPt')}
               sx={{
-                border: `3px solid ${
-                  expanded === 'interPt' ? palette.grey['500'] : 'none'
-                }`
+                '&.MuiPaper-root': {
+                  border: `3px solid ${
+                    expanded === 'interPt' ? palette.grey['500'] : 'none'
+                  }`
+                }
               }}
             >
               <AccordionSummary
@@ -93,9 +122,11 @@ const RezSection = () => {
               expanded={expanded === 'outerPt'}
               onChange={handleChange('outerPt')}
               sx={{
-                border: `3px solid ${
-                  expanded === 'outerPt' ? palette.grey['500'] : 'none'
-                }`
+                '&.MuiPaper-root': {
+                  border: `3px solid ${
+                    expanded === 'outerPt' ? palette.grey['500'] : 'none'
+                  }`
+                }
               }}
             >
               <AccordionSummary
@@ -117,9 +148,11 @@ const RezSection = () => {
               expanded={expanded === 'supplies'}
               onChange={handleChange('supplies')}
               sx={{
-                border: `3px solid ${
-                  expanded === 'supplies' ? palette.grey['500'] : 'none'
-                }`
+                '&.MuiPaper-root': {
+                  border: `3px solid ${
+                    expanded === 'supplies' ? palette.grey['500'] : 'none'
+                  }`
+                }
               }}
             >
               <AccordionSummary
@@ -136,7 +169,11 @@ const RezSection = () => {
               </AccordionDetails>
             </Accordion>
           </Box>
-          <RectangleBtn type={'submit'} text={'예약하기'} />
+          <RectangleBtn
+            type={'submit'}
+            text={'예약하기'}
+            isDisabled={isDisabled ? true : false}
+          />
         </Stack>
       </StyledForm>
     </Box>
