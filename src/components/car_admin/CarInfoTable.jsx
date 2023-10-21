@@ -8,15 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { useDispatch } from 'react-redux';
-import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { openDrawer } from '../../redux/reducer/DrawerSlice';
 import { useState } from 'react';
 import CarDetail from './CarDetail';
+import { Chip } from '@mui/material';
 
-const CommonTable = ({ columns, rows, setTabData }) => {
+const CommonTable = ({ columns, rows, setTabData, filter, searchValue }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const dispatch = useDispatch();
-  // const [carCode, setCarCode] = useState('');
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -43,9 +43,9 @@ const CommonTable = ({ columns, rows, setTabData }) => {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 620 }}>
+      <TableContainer sx={{ maxHeight: 700, borderRadius: 0 }}>
         <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+          <TableHead sx={{ borderColor: '#eeeee' }}>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
@@ -60,6 +60,8 @@ const CommonTable = ({ columns, rows, setTabData }) => {
           </TableHead>
           <TableBody>
             {rows
+              .filter((item) => filter === '전체' || item.type === filter)
+              .filter((item) => item.car_name.includes(searchValue))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
@@ -81,7 +83,21 @@ const CommonTable = ({ columns, rows, setTabData }) => {
                       }
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {value}
+                          {column.id !== 'type' ? (
+                            value
+                          ) : value === '법인' ? (
+                            <Chip
+                              label="법인"
+                              size="small"
+                              sx={{ backgroundColor: '#90caf9' }}
+                            />
+                          ) : (
+                            <Chip
+                              label="개인"
+                              size="small"
+                              sx={{ backgroundColor: '#a5d6a7' }}
+                            />
+                          )}
                         </TableCell>
                       );
                     })}

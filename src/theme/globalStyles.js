@@ -40,6 +40,11 @@ const GlobalStyles = () => {
           //   }
           // }
         },
+        button: {
+          '&.MuiButtonBase-root': {
+            borderRadius: '2px'
+          }
+        },
         img: {
           display: 'block',
           maxWidth: '100%'
