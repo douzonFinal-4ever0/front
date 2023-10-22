@@ -9,12 +9,9 @@ import {
   Chip,
   Collapse,
   Divider,
-  FormControl,
   FormControlLabel,
-  FormHelperText,
   FormLabel,
   Grid,
-  InputLabel,
   ListItem,
   ListItemIcon,
   MenuItem,
@@ -49,10 +46,10 @@ import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 import {
-  closeSanckbar,
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
+import { palette } from '../../theme/palette';
 
 // transferList 관련 함수
 function not(a, b) {
@@ -66,7 +63,16 @@ function intersection(a, b) {
 // transferList 관련 함수 끝
 
 // 서브 사이드바 콘텐츠
-const SubSidebarContent = ({ setTabData, carInfo, setCarInfo }) => {
+const SubSidebarContent = ({
+  setTabData,
+  carInfo,
+  setCarInfo,
+  carCounts,
+  setCarCounts,
+  setFilterValue,
+  setSearchValue,
+  setSearchInput
+}) => {
   //   const isDrawerOpen = useSelector((state) => state.drawer.isDrawerOpen);
   const dispatch = useDispatch();
 
@@ -74,25 +80,35 @@ const SubSidebarContent = ({ setTabData, carInfo, setCarInfo }) => {
     dispatch(openDrawer());
   };
 
-  const handleCloseDrawer = () => {
-    dispatch(closeDrawer());
-  };
-
   const handleCarRegisterBtn = () => {
     setTabData([
       {
         title: '차량 등록',
-        content: <CarRegisterFrom carInfo={carInfo} setCarInfo={setCarInfo} />
+        content: (
+          <CarRegisterFrom
+            carInfo={carInfo}
+            setCarInfo={setCarInfo}
+            carCounts={carCounts}
+            setCarCounts={setCarCounts}
+          />
+        )
       }
     ]);
     handleOpenDrawer();
   };
 
-  // 차량 수
-  const totalCar = 20;
-  const [open, setOpen] = useState(true);
+  const handleFilterClick = (e, filterValue) => {
+    e.stopPropagation();
+    console.log(filterValue);
+    setSearchValue('');
+    setSearchInput('');
+    setFilterValue(filterValue);
+  };
+
   const handleClick = () => {
-    setOpen(!open);
+    setSearchValue('');
+    setSearchInput('');
+    setFilterValue('전체');
   };
   return (
     <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 2 }}>
@@ -109,34 +125,43 @@ const SubSidebarContent = ({ setTabData, carInfo, setCarInfo }) => {
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={handleClick}>
-            <ListItemText primary={`전체 차량(${totalCar})`} />
-            {open ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText primary={`전체 차량(${carCounts.total})`} />
           </ListItemButton>
         </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={true} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItemButton
+              sx={{ pl: 4 }}
+              onClick={(e) => {
+                handleFilterClick(e, '법인');
+              }}
+            >
               <ListItemIcon>
                 <Circle color="primary" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`법인 차량 (${totalCar})`}
+                primary={`법인 차량 (${carCounts.corporation})`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItemButton
+              sx={{ pl: 4 }}
+              onClick={(e) => {
+                handleFilterClick(e, '개인');
+              }}
+            >
               <ListItemIcon>
                 <Circle color="success" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`개인 차량 (${totalCar})`}
+                primary={`개인 차량 (${carCounts.personal})`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
           </List>
         </Collapse>
         <ListItemButton>
-          <ListItemText primary={`삭제된 차량 (${totalCar})`} />
+          <ListItemText primary={`삭제된 차량 (${carCounts.delete})`} />
         </ListItemButton>
       </List>
       {/* </Box> */}
@@ -145,10 +170,9 @@ const SubSidebarContent = ({ setTabData, carInfo, setCarInfo }) => {
 };
 
 // 차량 등록 Drawer 컴포넌트
-const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
+const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
   // carInfo props로 잘 받았는지 확인
   console.log(carInfo);
-  console.log(setCarInfo);
 
   const dispatch = useDispatch();
 
@@ -281,7 +305,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
               </ListItemIcon>
               <ListItemText
                 id={labelId}
-                primary={`${value['mem_code']} ${value['name']} ${value['dept_code']}_${value['position_name']}`}
+                primary={`${value['mem_code']} ${value['name']} ${value.deptVO.dept_name}_${value['position_name']}`}
               />
             </ListItem>
           );
@@ -338,11 +362,11 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
   // 차량 등록 버튼
   const handleSubmitBtn = async (e) => {
     if (
-      registerData.car_code ||
-      registerData.type ||
-      registerData.car_name ||
-      registerData.fuel_type ||
-      registerData.carDetail.fuel_effciency ||
+      registerData.car_code === null ||
+      registerData.type === null ||
+      registerData.car_name === null ||
+      registerData.fuel_type === null ||
+      registerData.carDetail.fuel_effciency === null ||
       registerData.authority === ''
     ) {
       alert('입력하지 않은 필수값이 있습니다.');
@@ -365,9 +389,14 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
         }
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const newCarInfo = [...carInfo, res.data];
         setCarInfo(newCarInfo);
+        if (res.data.type === '법인') {
+          setCarCounts({ ...carCounts, corporation: ++carCounts.corporation });
+        } else if (res.data.type === '개인') {
+          setCarCounts({ ...carCounts, personal: ++carCounts.personal });
+        }
         handleCloseDrawer();
         handleSetSnackbarContent('동록이 완료되었습니다.');
         handleOpenSnackbar();
@@ -381,7 +410,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
         '& .MuiTextField-root': {
           m: 1,
           width: '100%',
-          backgroundColor: '#f5f5f5'
+          backgroundColor: palette.grey[100]
         },
         '& .MuiGrid-item': { alignSelf: 'center' }
       }}
@@ -816,14 +845,27 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
     }
   }, []);
 
+  // 차량 수
+  const [carCounts, setCarCounts] = useState({
+    total: 0,
+    corporation: 0,
+    personal: 0,
+    delete: 0
+  });
+
+  const [filter, setFilterValue] = useState('전체');
+
   const [searchInput, setSearchInput] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
   const handleInput = (e) => {
     setSearchInput(e.target.value);
   };
   const handleSearchBtn = (e) => {
     e.preventDefault();
-    alert('검색 : ' + searchInput);
+    // alert('검색 : ' + searchInput);
+    // 여기서 필터링 해줄 상태를 체크!
+    setSearchValue(searchInput);
   };
 
   // car DataGrid 시작
@@ -833,6 +875,15 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
       .get('http://localhost:8081/admin/car/carList')
       .then((res) => {
         setCarInfo(res.data);
+        const filteredCor = res.data.filter((obj) => obj.type === '법인');
+        const filteredPer = res.data.filter((obj) => obj.type === '개인');
+        setCarCounts({
+          ...carCounts,
+          total: res.data.length,
+          corporation: filteredCor.length,
+          personal: filteredPer.length
+        });
+        // 삭제 차량 수 설정
       })
       .catch((error) => {
         // 에러 발생 시 코드 실행
@@ -847,25 +898,25 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
       id: 'car_name',
       label: '차량명',
       minWidth: 170,
-      align: 'right'
+      align: 'center'
     },
     {
       id: 'created_at',
       label: '최근운행',
       minWidth: 170,
-      align: 'right'
+      align: 'center'
     },
     {
       id: 'accum_mileage',
       label: '누적주행거리',
       minWidth: 170,
-      align: 'right'
+      align: 'center'
     },
     {
       id: 'memo',
       label: '메모',
       minWidth: 170,
-      align: 'right'
+      align: 'center'
     }
   ];
 
@@ -882,6 +933,11 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
               setTabData={setTabData}
               carInfo={carInfo}
               setCarInfo={setCarInfo}
+              carCounts={carCounts}
+              setCarCounts={setCarCounts}
+              setFilterValue={setFilterValue}
+              setSearchValue={setSearchValue}
+              setSearchInput={setSearchInput}
             />
           }
           widthP={20}
@@ -909,6 +965,8 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
               columns={columns}
               rows={carInfo}
               setTabData={setTabData}
+              filter={filter}
+              searchValue={searchValue}
             />
           </StyledContainer>
         </Box>

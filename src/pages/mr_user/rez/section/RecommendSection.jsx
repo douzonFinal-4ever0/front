@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Box,
   Card,
@@ -10,16 +12,28 @@ import {
 } from '@mui/material';
 import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded';
 import styled from '@emotion/styled';
+
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import Tag from '../../../../components/mr_user/Tag';
 import { palette } from '../../../../theme/palette';
 
 const MrCard = ({ data }) => {
-  const { mrName, location, maximumCapacity, keywords } = data;
+  const { mrCode, mrName, location, maximumCapacity, keywords } = data;
+
+  const [selectCard, setSelectCard] = useState('r001');
+
+  const handleCardClick = (e) => {
+    console.log(mrCode);
+    setSelectCard(mrCode);
+  };
 
   return (
-    <StyledCard>
+    <StyledCard
+      onClick={handleCardClick}
+      isselected={selectCard === mrCode ? true : false}
+      name={mrCode}
+    >
       <CardContent
         sx={{
           '&:last-child': {
@@ -70,7 +84,7 @@ const MrCardList = ({ data }) => {
     <ContainerWithScroll>
       <StyledList sx={{ width: '100%' }}>
         {data.map((item) => (
-          <StyledListItem key={item.mrCodes}>
+          <StyledListItem key={item.mrCode}>
             <MrCard data={item} />
           </StyledListItem>
         ))}
@@ -122,10 +136,13 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   width: '100%'
 }));
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(({ theme, isselected }) => ({
+  margin: '0 4px',
   width: '100%',
-  backgroundColor: theme.palette.grey['100']
-  // backgroundColor: theme.palette.common.white
+  backgroundColor: isselected
+    ? theme.palette.grey['100']
+    : theme.palette.common.white,
+  border: '1px solid #eee'
 }));
 
 const StyledMrName = styled(Typography)(({ theme }) => ({

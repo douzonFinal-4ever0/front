@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // -------------------------------------------
 import Header from './header/Header';
@@ -11,7 +11,7 @@ import {
   closeSanckbar,
   setSnackbarContent
 } from '../redux/reducer/SnackbarSlice';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Collapse, Snackbar } from '@mui/material';
 
 const Layout = ({ isAdminMode, setIsAdminMode }) => {
   // 사이드바 오픈 여부 (boolean)
@@ -38,12 +38,14 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
           isAdminMode={isAdminMode}
           setIsAdminMode={setIsAdminMode}
         />
-        <Sidebar
-          isOpen={isSidebarOpen}
-          onMenuIconClick={handleMenuIconClick}
-          isAdminMode={isAdminMode}
-          setIsAdminMode={setIsAdminMode}
-        />
+        <Collapse in={isSidebarOpen}>
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onMenuIconClick={handleMenuIconClick}
+            isAdminMode={isAdminMode}
+            setIsAdminMode={setIsAdminMode}
+          />
+        </Collapse>
         <StyledMain isSidebarOpen={isSidebarOpen}>
           <Outlet />
         </StyledMain>
@@ -52,6 +54,7 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
         open={isSnackbarOpen}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
           onClose={handleCloseSnackbar}
@@ -75,19 +78,18 @@ const StyledRoot = styled('div')({
 });
 
 const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
-  paddingTop: HEADER_HIEGHT,
+  paddingTop: '110px',
   flexGrow: 1,
   overflow: 'auto',
   minHeight: '100%',
   paddingBottom: 0,
-  // overflowX: 'hidden',
+  width: '100%',
+  paddingLeft: isSidebarOpen ? '280px' : '0',
+  transition: 'all 0.3s ease',
   [theme.breakpoints.up('lg')]: {
-    paddingLeft: 0,
-    paddingRight: 0
+    paddingRight: '0'
   },
-  width: isSidebarOpen ? 'calc(100% - 240px)' : '100%',
-  transition: 'width 0.3s ease',
   [theme.breakpoints.down('md')]: {
-    width: '100%' // 사이드바가 닫혀있을 때 작은 화면에 맞게 조정
+    width: '100%'
   }
 }));

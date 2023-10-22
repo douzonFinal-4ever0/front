@@ -38,7 +38,7 @@ const CarRezComplete = () => {
 
   return (
     <MainContainer>
-      <StyledContainer bgColor={'#fff'} height={'245px'}>
+      <StyledContainer bgcolor={'#fff'} height={'245px'}>
         <Stack
           container
           justifyContent="center"
@@ -62,7 +62,7 @@ const CarRezComplete = () => {
         </Stack>
       </StyledContainer>
 
-      <StyledContainer bgColor={'#fff'} height={'500px'}>
+      <StyledContainer bgcolor={'#fff'} height={'500px'}>
         <Stack>
           <Typography variant="h3" color="text.secondary" align="left">
             예약 정보
@@ -123,13 +123,13 @@ const CarRezComplete = () => {
 };
 
 export default CarRezComplete;
-const StyledContainer = styled(Container)(({ theme, bgColor, height }) => ({
+const StyledContainer = styled(Container)(({ theme, bgcolor, height }) => ({
   padding: PAGE_INNER_PADDING,
   borderRadius: BORDER_RADIUS,
   marginTop: '1%',
 
   height: height,
-  backgroundColor: bgColor,
+  backgroundColor: bgcolor,
   [theme.breakpoints.up('md')]: {
     minWidth: '100%'
   }
