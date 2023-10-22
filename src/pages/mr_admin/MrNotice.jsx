@@ -45,7 +45,7 @@ const MrNotice = () => {
       <SubHeader title={'공지사항 작성'} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
-          <WrapContainer bgColor={'#fff'}>
+          <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <TextField
                 id="outlined-basic"

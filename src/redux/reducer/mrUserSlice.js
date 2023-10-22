@@ -3,12 +3,12 @@ import dayjs from 'dayjs';
 import { getFormattedDate } from '../../utils/formatDate';
 
 const initialState = {
-  mType: '', // 회의 종류,
   mPurpose: '', // 회의 목적
-  rezDate: '', // 예약 날짜
-  rezStartTime: '', // 예약 시작 시간
-  rezEndTime: '', // 예약 종료 시간
-  totPtCtn: '' // 총 인원수
+  mType: '프로젝트 회의', // 회의 종류,
+  rezDate: getFormattedDate(), // 예약 날짜
+  rezStartTime: '9:00', // 예약 시작 시간
+  rezEndTime: '9:00', // 예약 종료 시간
+  totPtCtn: '2' // 총 인원수
 };
 
 const mrUserSlice = createSlice({
