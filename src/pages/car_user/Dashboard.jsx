@@ -33,22 +33,22 @@ import styled from '@emotion/styled';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Searchbar from '../../components/common/Searchbar';
 import NoRow from '../../components/car_user/NoRow';
+import { useDispatch } from 'react-redux';
+import Drawer from '../../components/common/Drawer';
+import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
+import CarRezDetail from '../../components/car_user/CarRezDetail';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('');
   const mem_code = 'MEM001';
-
-  // 검색창------------------------------------------------------
-  //const [value, setValue] = useState(null);
 
   const dateFormat = (date) => {
     const preDate = new Date(date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return preDate.toLocaleString('ko-KR', options).slice(0, -1);
   };
+
   useEffect(() => {
-    //console.log(range);
-    const rez_status = range;
     axios
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
       .then((res) => {
@@ -97,11 +97,6 @@ const Dashboard = () => {
     useEffect(() => {
       axios.get(`http://localhost:8081/car_rez/searchCarList`).then((res) => {
         setRows(res.data);
-        // res.data.map((row) => {
-        //   let sRow = row.car_name.split(' ');
-        //   res.data.car_name = sRow[0];
-        // });
-        // setRows(res.data);
       });
     }, []);
     const handleInput = (e) => {
@@ -225,6 +220,29 @@ const Dashboard = () => {
     setRange(e.target.value);
     // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
+  //오프캔버스 관련
+  const dispatch = useDispatch();
+  const [selectedRezCode, setSelectedRezCode] = useState(null);
+  /**오프캔버스 열기 */
+  const handleOpenDrawer = () => {
+    dispatch(openDrawer());
+  };
+  /**오프캔버스 닫기 */
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+  };
+  const handleDbClick = (param) => {
+    const Data = param.row;
+    setSelectedRezCode(Data.id);
+    console.log(Data.id);
+    handleOpenDrawer();
+  };
+  const tabData = [
+    {
+      title: '예약 상세',
+      content: <CarRezDetail rezCode={selectedRezCode} />
+    }
+  ];
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
@@ -258,13 +276,14 @@ const Dashboard = () => {
               height={'auto'}
               pageSize={5}
               pageSizeOptions={[5, 10]}
-              checkbox={true}
+              checkbox={false}
               disableRow={false}
-              footer={true}
+              dbclickEvent={handleDbClick}
             />
           </WrapContainer>
         </MainContainer>
       </Box>
+      <Drawer width={'100vh'} tabData={tabData} />
     </>
   );
 };

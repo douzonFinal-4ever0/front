@@ -37,7 +37,7 @@ const CarList = ({ setSelectedRows }) => {
     {
       field: 'car_name',
       headerName: '차종',
-      width: 100,
+      width: 300,
       description: '차량 종류',
       editable: false
     },

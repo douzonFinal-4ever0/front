@@ -12,10 +12,10 @@ import MainContainer from '../../components/mr_user/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
 import { PAGE_INNER_PADDING, BORDER_RADIUS } from '../../config';
-import KakaoMap from '../../components/car_user/KakaoMap';
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import KakaoMap2 from '../../components/car_user/KakaoMap2';
+
 import KakaoMap3 from '../../components/car_user/KakaoMap3';
 
 const CarRezComplete = () => {
