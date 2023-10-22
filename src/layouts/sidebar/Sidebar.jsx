@@ -49,7 +49,7 @@ const Sidebar = (props) => {
       variant="persistent"
       anchor="left"
       open={isOpen}
-      drawerDisplay={drawerDisplay}
+      drawerdisplay={drawerDisplay}
       isAdminMode={isAdminMode}
     >
       <Box sx={{ pt: '110px', height: '100%' }}>

@@ -30,7 +30,7 @@ const MrNoticeList = () => {
       <SubHeader title={'공지사항 조회'} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
-          <WrapContainer bgColor={'#fff'}>
+          <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <div style={{ height: 'auto', width: '100%' }}>
                 <DataGrid

@@ -20,7 +20,7 @@ export default Carousel;
 
 const StyledImageBox = styled(Box)(() => ({
   height: '300px',
-  borderRadius: '10px'
+  borderRadius: '2px'
 }));
 
 const StyledImage = styled('img')(() => ({
@@ -28,5 +28,5 @@ const StyledImage = styled('img')(() => ({
   width: '100%',
   height: '100%',
   objectFit: 'cover',
-  borderRadius: '10px'
+  borderRadius: '2px'
 }));

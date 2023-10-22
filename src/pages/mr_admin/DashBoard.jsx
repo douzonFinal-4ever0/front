@@ -58,7 +58,7 @@ const DashBoard = () => {
     <>
       <Box sx={{ display: 'flex' }}>
         <MainContainer>
-          <WrapContainer bgColor={'#fff'}>
+          <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <SpeedDial
                 ariaLabel="SpeedDial tooltip example"

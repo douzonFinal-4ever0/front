@@ -231,7 +231,7 @@ const Dashboard = () => {
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar widthP={30} content={<SubSideContents />} />
         <MainContainer>
-          <WrapContainer bgColor={'#fff'}>
+          <WrapContainer bgcolor={'#fff'}>
             <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
               {/* <InputLabel id="demo-simple-select-filled-label">전체</InputLabel> */}
               <Select
@@ -271,13 +271,13 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const StyledBox = styled(Box)(({ theme, bgColor, height }) => ({
+const StyledBox = styled(Box)(({ theme, bgcolor, height }) => ({
   padding: PAGE_INNER_PADDING,
   borderRadius: BORDER_RADIUS,
   marginTop: '1%',
   alignContent: 'center',
   height: height,
-  backgroundColor: bgColor,
+  backgroundColor: bgcolor,
   [theme.breakpoints.up('md')]: {
     minWidth: '100%'
   }
