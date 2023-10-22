@@ -21,7 +21,7 @@ const MrList = () => {
     axios.get('http://localhost:8081/mr/mrRez').then((res) => {
       setRezList(res.data);
       const newEvents = res.data.map((rez) => ({
-        title: rez.m_purpose,
+        title: rez.m_name,
         start: rez.rez_start_time,
         end: rez.rez_end_time,
         resourceId: rez.mr[0].mr_code

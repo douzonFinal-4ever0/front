@@ -167,6 +167,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       setShowTimeField(false);
     }
   };
+  /*--------------------------------회의실 CRUD----------------------------------------- */
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
     axios.post('http://localhost:8081/mr/mrRegister', FormToData).then(() => {
@@ -185,6 +186,17 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleCloseDrawer();
       });
   };
+  /**회의실 비활성화 버튼 클릭 이벤트 */
+  const handleDeactive = () => {
+    axios
+      .patch('http://localhost:8081/mr/mrDeactivate', FormToData3)
+      .then((res) => {
+        handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
+        handleOpenSnackbar();
+        handleCloseDrawer();
+      });
+  };
+
   /*-------------------------------FormToData------------------------------------------- */
   /**등록시 필요한 데이터 */
   const FormToData = {
@@ -205,6 +217,18 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       location,
       mr_type: mrType,
       is_opened: 0
+    };
+  }
+  /**비활성시 필요한 데이터 */
+  let FormToData3 = {};
+  if (selectedRowData && selectedRowData.mr_code) {
+    FormToData3 = {
+      mr_code: selectedRowData.mr_code,
+      mr_name,
+      maximum_capacity,
+      location,
+      mr_type: mrType,
+      is_opened: 1
     };
   }
   /*---------------------------------이미지 저장---------------------------------- */
@@ -422,7 +446,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             <Grid xs={6}>
               <Button
                 variant="contained"
-                onClick={handleUpdate}
+                onClick={handleDeactive}
                 sx={{ width: '100%' }}
                 color="error"
               >
@@ -442,20 +466,20 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
 
 export default MrRegistForm;
 
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast'
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger'
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera'
-  }
-];
+// const itemData = [
+//   {
+//     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+//     title: 'Breakfast'
+//   },
+//   {
+//     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+//     title: 'Burger'
+//   },
+//   {
+//     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+//     title: 'Camera'
+//   }
+// ];
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,

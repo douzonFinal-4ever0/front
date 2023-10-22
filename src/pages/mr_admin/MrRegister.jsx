@@ -29,11 +29,7 @@ const MrRegister = () => {
     }
   ];
   const dispatch = useDispatch();
-  const handleMrRegistClick = () => {
-    setSelectedRowData(null);
-    setIsEditMode(false);
-    handleOpenDrawer();
-  };
+
   /**오프캔버스 열기 */
   const handleOpenDrawer = () => {
     dispatch(openDrawer());
@@ -55,9 +51,14 @@ const MrRegister = () => {
       </Grid>
     );
   };
+  const handleMrRegistClick = () => {
+    setSelectedRowData(null);
+    setIsEditMode(false);
+    handleOpenDrawer();
+  };
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
-  useEffect(() => {
+  const handleMrListUpdate = () => {
     axios.get('http://localhost:8081/mr/mrList').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
@@ -67,6 +68,11 @@ const MrRegister = () => {
       }));
       setMrList(processedData);
     });
+  };
+
+  // useEffect를 사용하여 초기 데이터 가져오기
+  useEffect(() => {
+    handleMrListUpdate();
   }, []);
   /*---------------------------------------------------------------------------------------------------------*/
   /**데이터 그리드 더블 클릭이벤트 */
