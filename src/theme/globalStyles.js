@@ -77,6 +77,11 @@ const GlobalStyles = () => {
         input: {
           width: '100%'
         },
+        button: {
+          '&.MuiButtonBase-root': {
+            borderRadius: '2px'
+          }
+        },
         img: {
           display: 'block',
           maxWidth: '100%'
