@@ -1,10 +1,11 @@
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 // -------------------------------------------------------------
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import RecommendSection from './section/RecommendSection';
 import MrInfoSection from './section/MrInfoSection';
 import RezSection from './section/RezSection';
+import SubHeader from '../../../components/common/SubHeader';
 
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
@@ -339,27 +340,32 @@ const MrRezPage = () => {
   }, []);
 
   return (
-    <MainContainer>
-      <WrapContainer bgcolor={'#fff'}>
-        <Grid container direction={'row'} spacing={3}>
-          {/* row - 회의실 정보 */}
-          <Grid item container xs={8} spacing={3}>
-            <Grid item xs={5.5}>
-              <RecommendSection data={data} />
+    <>
+      <SubHeader title="회의실 예약" />
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <MainContainer>
+          <WrapContainer bgcolor={'#fff'}>
+            <Grid container direction={'row'} spacing={3}>
+              {/* row - 회의실 정보 */}
+              <Grid item container xs={8} spacing={3}>
+                <Grid item xs={5.5}>
+                  <RecommendSection data={data} />
+                </Grid>
+                <Grid item xs={6.5}>
+                  <MrInfoSection data={data[0]} />
+                </Grid>
+              </Grid>
+              {/* row - 예약 정보 */}
+              <Grid item xs={4}>
+                <Grid item xs={12} sx={{ height: '100%' }}>
+                  <RezSection />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={6.5}>
-              <MrInfoSection data={data[0]} />
-            </Grid>
-          </Grid>
-          {/* row - 예약 정보 */}
-          <Grid item xs={4}>
-            <Grid item xs={12} sx={{ height: '100%' }}>
-              <RezSection />
-            </Grid>
-          </Grid>
-        </Grid>
-      </WrapContainer>
-    </MainContainer>
+          </WrapContainer>
+        </MainContainer>
+      </Box>
+    </>
   );
 };
 

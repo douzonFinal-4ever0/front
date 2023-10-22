@@ -21,6 +21,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import Label from '../../../../components/common/Label';
 import { palette } from '../../../../theme/palette';
+import Selectbox from '../../../../components/common/Selectbox';
 
 const RezForm = () => {
   const dispatch = useDispatch();
@@ -194,14 +195,11 @@ const RezForm = () => {
           <Label htmlFor={'mrType'} text={'회의 종류'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
-          <Select value={mType} onChange={handleSelectBox} displayEmpty>
-            <MenuItem value="">선택</MenuItem>
-            {meetingTypes.map((item) => (
-              <MenuItem key={item.index} value={item.value}>
-                {item.value}
-              </MenuItem>
-            ))}
-          </Select>
+          <Selectbox
+            value={mType}
+            handleSelectBox={handleSelectBox}
+            menuList={meetingTypes}
+          />
         </Grid>
       </Grid>
 
@@ -240,29 +238,19 @@ const RezForm = () => {
         </StyledLabelGrid>
         <Grid item xs={9}>
           <Stack direction={'row'} sx={{ alignItems: 'center' }}>
-            <Select
+            <Selectbox
               value={rezStartTime}
-              onChange={handleSelectStartTime}
-              displayEmpty
-            >
-              <MenuItem value="">선택</MenuItem>
-              {times.map((item) => (
-                <MenuItem value={item.value}>{item.value}</MenuItem>
-              ))}
-            </Select>
+              handleSelectBox={handleSelectStartTime}
+              menuList={times}
+            />
             <Typography sx={{ margin: '0 6px', display: 'block' }}>
               ~
             </Typography>
-            <Select
+            <Selectbox
               value={rezEndTime}
-              onChange={handleSelectEndtTime}
-              displayEmpty
-            >
-              <MenuItem value="">선택</MenuItem>
-              {times.map((item) => (
-                <MenuItem value={item.value}>{item.value}</MenuItem>
-              ))}
-            </Select>
+              handleSelectBox={handleSelectEndtTime}
+              menuList={times}
+            />
           </Stack>
         </Grid>
       </Grid>
@@ -295,8 +283,14 @@ const StyledLabelGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledSwitchLabel = styled(FormControlLabel)(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
+  '&.MuiFormControlLabel-label': {
     fontSize: '14px',
     fontWeight: 'bold'
+  }
+}));
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+  '&.MuiInputBase-root': {
+    width: '100%'
   }
 }));
