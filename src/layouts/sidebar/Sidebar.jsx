@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui -------------------------------------------
-import { Drawer, Box } from '@mui/material';
+import { Drawer, Box, Button, ButtonGroup } from '@mui/material';
 // -------------------------------------------------
 import MenuList from './MenuList';
 import { DRAWER_WIDTH } from '../../config';
 import styled from '@emotion/styled';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { palette } from '../../theme/palette';
 
 const Sidebar = (props) => {
   const { isOpen, isAdminMode, setIsAdminMode } = props;
@@ -38,15 +41,18 @@ const Sidebar = (props) => {
     setSelectMenuItem((prevIndex) => (prevIndex === index ? null : index));
   };
 
+  // 링크 이동 이벤트
+  const navigate = useNavigate();
+
   return (
     <StyledDrawer
       variant="persistent"
       anchor="left"
       open={isOpen}
-      drawerDisplay={drawerDisplay}
+      drawerdisplay={drawerDisplay}
       isAdminMode={isAdminMode}
     >
-      <Box sx={{ pt: 10 }}>
+      <Box sx={{ pt: '110px', height: '100%' }}>
         <MenuList
           openMenu={openMenu}
           selectMenuItem={selectMenuItem}
@@ -54,6 +60,46 @@ const Sidebar = (props) => {
           handleMenuItemClick={handleMenuItemClick}
           isAdminMode={isAdminMode}
         />
+        <ButtonGroup
+          sx={{
+            width: '100% !important',
+            height: '50px',
+            position: 'absolute',
+            bottom: '0px'
+          }}
+          aria-label="large button group"
+        >
+          {[
+            <StyledButton
+              key="one"
+              sx={{
+                backgroundColor: isAdminMode
+                  ? palette.common.white
+                  : palette.grey['300']
+              }}
+              onClick={() => {
+                setIsAdminMode(false);
+                navigate('/mr/dashboard');
+              }}
+            >
+              <AccountCircleIcon />
+            </StyledButton>,
+            <StyledButton
+              key="two"
+              sx={{
+                backgroundColor: isAdminMode
+                  ? palette.grey['300']
+                  : palette.common.white
+              }}
+              onClick={() => {
+                setIsAdminMode(true);
+                navigate('/mr/admin/MrRegister');
+              }}
+            >
+              <AdminPanelSettingsIcon />
+            </StyledButton>
+          ]}
+        </ButtonGroup>
       </Box>
     </StyledDrawer>
   );
@@ -61,18 +107,20 @@ const Sidebar = (props) => {
 
 export default Sidebar;
 
-const StyledDrawer = styled(Drawer)(
-  ({ theme, isAdminMode, drawerDisplay }) => ({
+const StyledDrawer = styled(Drawer)(({ theme, drawerDisplay }) => ({
+  width: DRAWER_WIDTH,
+  flexShrink: 0,
+  display: drawerDisplay,
+  '& .MuiDrawer-paper': {
     width: DRAWER_WIDTH,
-    flexShrink: 0,
-    display: drawerDisplay,
-    '& .MuiDrawer-paper': {
-      width: DRAWER_WIDTH,
-      boxSizing: 'border-box',
-      zIndex: '1000',
-      backgroundColor: isAdminMode
-        ? theme.palette.mode.dark.bgMain
-        : theme.palette.mode.light.bgMain
-    }
-  })
-);
+    boxSizing: 'border-box',
+    zIndex: '1000',
+    backgroundColor: theme.palette.mode.light.bgMain,
+    height: '100%'
+  },
+  height: '100%'
+}));
+
+const StyledButton = styled(Button)(({ theme, drawerDisplay }) => ({
+  width: '100%'
+}));

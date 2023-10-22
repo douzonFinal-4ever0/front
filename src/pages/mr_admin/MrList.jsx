@@ -91,7 +91,7 @@ const MrList = () => {
       />
       <Box sx={{ display: 'flex', height: '95%' }}>
         <MainContainer>
-          <WrapContainer bgColor={'#fff'}>
+          <WrapContainer bgcolor={'#fff'}>
             <Grid spacing={2}>
               {/* <TimeField
                 withMonth={false}

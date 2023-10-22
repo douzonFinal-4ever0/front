@@ -104,14 +104,10 @@ const Dashboard = () => {
         buttons={<ModalActionBtns />}
       />
 
-      {/* 검색창 예시 (*검색창 크기는 width 값으로 지정!!!)*/}
-      <Searchbar
-        width={400}
-        placeholder={'검색어를 입력하세요'}
-        value={value}
-        handleInput={handleInput}
-        handleSubmitBtn={handleSearchBtn}
-      />
+      {/* 검색창 예시 (*검색창 크기는 겉에 감싸는 태그 width만큼 !!!)*/}
+      <Box sx={{ width: '300px' }}>
+        <Searchbar />
+      </Box>
     </>
   );
 };

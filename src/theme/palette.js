@@ -79,6 +79,10 @@ export const palette = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
+  logo: {
+    light: '#4873aa',
+    dark: '#114c96'
+  },
   divider: alpha(GREY[500], 0.24),
   text: {
     primary: GREY[800],

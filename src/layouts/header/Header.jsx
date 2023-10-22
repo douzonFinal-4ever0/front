@@ -17,7 +17,8 @@ import {
   CardContent,
   Grid,
   Switch,
-  Badge
+  Badge,
+  Button
 } from '@mui/material';
 // @icons -------------------------------------------
 import MenuIcon from '@mui/icons-material/Menu';
@@ -28,6 +29,9 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { HEADER_HIEGHT } from '../../config';
 import UserProfile from '../../assets/images/user/user-round.svg';
 import LogoImage from '../../assets/images/logo/logo.png';
+import { palette } from '../../theme/palette';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { minHeight } from '@mui/system';
 
 const Header = (props) => {
   const { onMenuIconClick, isAdminMode, setIsAdminMode } = props;
@@ -58,53 +62,69 @@ const Header = (props) => {
             <StyledLogo to="/">
               <StyledLogoImage src={LogoImage} alt="logo" />
             </StyledLogo>
-            <StyledIconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              isAdminMode={isAdminMode}
-            >
-              <StyledMenuIcon
-                onClick={onMenuIconClick}
-                isAdminMode={isAdminMode}
-              />
-            </StyledIconButton>
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Box sx={{ display: { md: 'flex' } }}>
-            <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-              <StyledIconButton
+          <Box
+            sx={{ display: { md: 'flex' }, width: '13%', minWidth: '230px' }}
+          >
+            <Stack
+              direction="row"
+              width="100%"
+              spacing={3}
+              sx={{ alignItems: 'center' }}
+            >
+              <StyledBox
+                width="100%"
                 size="large"
                 aria-label="check notifications"
                 isAdminMode={isAdminMode}
               >
-                <Badge badgeContent=" " color="error" variant="dot">
-                  <StyledNotificationsIcon isAdminMode={isAdminMode} />
-                </Badge>
-              </StyledIconButton>
-              <StyledChip
-                isAdminMode={isAdminMode}
-                icon={
-                  <StyledAvatar
-                    src={UserProfile}
-                    ref={anchorRef}
-                    aria-controls={open ? 'menu-list-grow' : undefined}
-                    aria-haspopup="true"
-                  />
-                }
-                label={
-                  <StyledSettingIcon size="1.5rem" isAdminMode={isAdminMode} />
-                }
-                variant="outlined"
-                ref={anchorRef}
-                aria-controls={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true"
-                onClick={handleClick('bottom-end')}
-              />
-              {/* Popover 영역 */}
+                <StyledAvatar
+                  src={UserProfile}
+                  ref={anchorRef}
+                  aria-controls={open ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                />
+                <Stack direction={'column'} width="70%" minWidth="120px">
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ color: palette.text.secondary }}
+                  >
+                    김더존
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: { md: 'flex' },
+                      width: '100%',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: palette.text.secondary
+                      }}
+                    >
+                      더존ICT제작1팀
+                    </Typography>
+                    <KeyboardArrowDownIcon
+                      sx={{ color: palette.text.disabled }}
+                    />
+                  </Box>
+                </Stack>
+              </StyledBox>
+              <Badge
+                sx={{ flexGrow: 1, margin: '0px !important' }}
+                badgeContent=" "
+                color="error"
+                variant="dot"
+              >
+                <StyledNotificationsIcon isAdminMode={isAdminMode} />
+              </Badge>
+
+              {/* Popover 영역
               <Popper
                 open={open}
                 anchorEl={anchorEl}
@@ -165,10 +185,22 @@ const Header = (props) => {
                     </StyledPaper>
                   </Fade>
                 )}
-              </Popper>
+              </Popper> */}
             </Stack>
           </Box>
         </StyledToolbar>
+        <StyledSubToolbar direction="row">
+          <StyledButton onClick={onMenuIconClick}>
+            <StyledMenuIcon isAdminMode={isAdminMode} />
+          </StyledButton>
+          <Typography
+            variant="h5"
+            marginLeft="10px"
+            color={palette.common.white}
+          >
+            자원 관리
+          </Typography>
+        </StyledSubToolbar>
       </StyledAppBar>
     </Box>
   );
@@ -180,17 +212,21 @@ export default Header;
 const StyledAppBar = styled(AppBar)(({ theme, isAdminMode }) => ({
   borderBottom: `1px solid ${theme.palette.grey[300]}`,
   boxShadow: 'none',
-  backgroundColor: isAdminMode
-    ? theme.palette.mode.dark.bgMain
-    : theme.palette.mode.light.bgMain
+  backgroundColor: theme.palette.mode.light.bgMain
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  minHeight: HEADER_HIEGHT,
+  height: HEADER_HIEGHT,
   [theme.breakpoints.up('lg')]: {
-    minHeight: HEADER_HIEGHT,
-    padding: '16px 24px'
+    minHeight: HEADER_HIEGHT
   }
+}));
+
+const StyledSubToolbar = styled(Stack)(({ theme }) => ({
+  backgroundColor: theme.palette.logo.light,
+  height: HEADER_HIEGHT,
+  width: '100%',
+  alignItems: 'center'
 }));
 
 const StyledLogo = styled(Link)(({ theme }) => ({
@@ -198,57 +234,45 @@ const StyledLogo = styled(Link)(({ theme }) => ({
   textDecoration: 'none'
 }));
 
-const StyledIconButton = styled(IconButton)(({ theme, isAdminMode }) => ({
-  padding: '6px',
-  width: '34px',
-  height: '34px',
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.logo.dark,
+  width: '3%',
+  '&:hover': { backgroundColor: theme.palette.logo.dark },
+  borderRadius: '0px',
+  height: '100%'
+}));
+
+const StyledBox = styled(Box)(({ theme, isAdminMode }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
   borderRadius: '10px',
-  backgroundColor: isAdminMode
-    ? theme.palette.mode.dark.bgSub
-    : theme.palette.mode.light.bgSub
+  backgroundColor: theme.palette.common.white
 }));
 
 const StyledMenuIcon = styled(MenuIcon)(({ theme, isAdminMode }) => ({
-  color: isAdminMode
-    ? theme.palette.mode.dark.textMain
-    : theme.palette.mode.light.textMain
+  color: theme.palette.common.white
 }));
 
 const StyledNotificationsIcon = styled(NotificationsOutlinedIcon)(
   ({ theme, isAdminMode }) => ({
-    color: isAdminMode
-      ? theme.palette.mode.dark.textMain
-      : theme.palette.mode.light.textMain
+    color: theme.palette.mode.light.textMain
   })
 );
 
-const StyledChip = styled(Chip)(({ theme, isAdminMode }) => ({
+const StyledChip = styled(Chip)(({ theme }) => ({
   height: '48px',
   alignItems: 'center',
   borderRadius: '27px',
   transition: 'all .2s ease-in-out',
-  borderColor: isAdminMode
-    ? theme.palette.mode.dark.bgSub
-    : theme.palette.mode.light.bgSub,
-  backgroundColor: isAdminMode
-    ? theme.palette.mode.dark.bgSub
-    : theme.palette.mode.light.bgSub,
+  borderColor: theme.palette.mode.light.bgSub,
+  backgroundColor: theme.palette.mode.light.bgSub,
   '&[aria-controls="menu-list-grow"], &:hover': {
-    borderColor: isAdminMode
-      ? theme.palette.mode.dark.textSub
-      : theme.palette.mode.light.textSub,
-    background: `${
-      isAdminMode
-        ? theme.palette.mode.dark.textSub
-        : theme.palette.mode.light.textSub
-    }!important`,
-    color: isAdminMode
-      ? theme.palette.mode.dark.bgMain
-      : theme.palette.mode.light.bgMain,
+    borderColor: theme.palette.mode.light.textSub,
+    background: `${theme.palette.mode.light.textSub}!important`,
+    color: theme.palette.mode.light.bgMain,
     '& svg': {
-      stroke: isAdminMode
-        ? theme.palette.mode.dark.bgMain
-        : theme.palette.mode.light.bgMain
+      stroke: theme.palette.mode.light.bgMain
     }
   },
   '& .MuiChip-label': {
@@ -256,48 +280,38 @@ const StyledChip = styled(Chip)(({ theme, isAdminMode }) => ({
   }
 }));
 
-const StyledPaper = styled(Paper)(({ theme, isAdminMode }) => ({
+const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: '0px 0px 20px -5px rgba(0,0,0,0.2)',
-  backgroundColor: isAdminMode
-    ? theme.palette.mode.dark.bgMain
-    : theme.palette.mode.light.bgMain
+  backgroundColor: theme.palette.mode.light.bgMain
 }));
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
-  margin: '8px 0 8px 8px !important',
-  width: '34px',
-  height: '34px',
-  cursor: 'pointer'
+  marginTop: 'auto',
+  marginBottom: 'auto',
+  width: '45px',
+  height: '45px'
 }));
 
-const StyledSettingIcon = styled(SettingsOutlinedIcon)(
-  ({ theme, isAdminMode }) => ({
-    color: isAdminMode
-      ? theme.palette.mode.dark.textMain
-      : theme.palette.mode.light.textMain
-  })
-);
+const StyledSettingIcon = styled(SettingsOutlinedIcon)(({ theme }) => ({
+  color: theme.palette.mode.light.textMain
+}));
 
 const StyledLogoImage = styled('img')({
   maxWidth: '100px',
   height: 'auto'
 });
 
-const StyledAdminCard = styled(Card)(({ theme, isAdminMode }) => ({
-  backgroundColor: isAdminMode
-    ? theme.palette.mode.dark.bgSub
-    : theme.palette.mode.light.bgSub
+const StyledAdminCard = styled(Card)(({ theme }) => ({
+  backgroundColor: theme.palette.mode.light.bgSub
 }));
 
-const StyledText = styled(Typography)(({ theme, isAdminMode, alignItems }) => ({
+const StyledText = styled(Typography)(({ theme, alignItems }) => ({
   ...theme.typography.subtitle1,
   textAlign: alignItems,
-  color: isAdminMode
-    ? theme.palette.mode.dark.textMain
-    : theme.palette.mode.light.textMain
+  color: theme.palette.mode.light.textMain
 }));
 
-const StyledSwitch = styled(Switch)(({ theme, isAdminMode }) => ({
+const StyledSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-thumb': {
     backgroundColor: theme.palette.primary.main
   },
