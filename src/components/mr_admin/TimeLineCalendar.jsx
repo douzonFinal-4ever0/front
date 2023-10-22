@@ -5,6 +5,12 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
 const TimeLineCalendar = ({ events, resources }) => {
+  // console.log(events[0].title);
+  const handleEventClick = (info) => {
+    // console.log(info.event.title);
+    alert(info.event.title);
+  };
+
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5, 6], // 월~토
 
@@ -24,6 +30,7 @@ const TimeLineCalendar = ({ events, resources }) => {
         nowIndicator={true}
         businessHours={businessHours}
         events={events}
+        eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
           left: 'prev,next',
@@ -49,6 +56,9 @@ const TimeLineCalendar = ({ events, resources }) => {
         schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
         slotMinTime={businessHours.startTime}
         slotMaxTime={businessHours.endTime} // 11pm
+        resourceAreaWidth="10%"
+        navLinks="true"
+        // eventColor="blue"
       />
     </div>
   );
