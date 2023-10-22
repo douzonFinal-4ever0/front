@@ -4,11 +4,18 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
+import { useState } from 'react';
 const TimeLineCalendar = ({ events, resources }) => {
+  const [currentView, setCurrentView] = useState('resourceTimeline');
   // console.log(events[0].title);
   const handleEventClick = (info) => {
     // console.log(info.event.title);
     alert(info.event.title);
+    // dayGridPlugin 페이지로 전환
+    setCurrentView('dayGrid');
+    /**클릭한 이벤트의 시작 날짜를 가져옴 */
+    const eventDate = info.event.start;
+    info.view.calendar.gotoDate(eventDate);
   };
 
   const businessHours = {
@@ -26,7 +33,7 @@ const TimeLineCalendar = ({ events, resources }) => {
           resourceTimeGridPlugin,
           listPlugin
         ]}
-        initialView="resourceTimeline"
+        initialView={currentView}
         nowIndicator={true}
         businessHours={businessHours}
         events={events}
