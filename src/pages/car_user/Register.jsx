@@ -26,6 +26,9 @@ import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@fullcalendar/core';
+import dayjs from 'dayjs';
+import SubSideContents from '../../components/car_user/SubsideContents';
+import Label from '../../components/common/Label';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -120,7 +123,7 @@ const Register = () => {
   };
   //차량 선택 후 처리
   const carSelect = () => {
-    //console.log(selectedRows);
+    console.log(selectedRows);
     if (selectedRows.length !== 0) {
       //console.log(selectedRows.id);
       setFormData({
@@ -133,7 +136,7 @@ const Register = () => {
       alert('차량을 선택해주세요');
     }
     axios
-      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.id}`)
+      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows}`)
       .then((res) => {
         setCarDetail({
           id: res.data.carVO.car_code,
@@ -156,21 +159,7 @@ const Register = () => {
     display: 'none'
   };
   return (
-    <Box
-      sx={{
-        '& .MuiTextField-root': {
-          m: 1,
-          width: '100%',
-          backgroundColor: '#f5f5f5'
-        },
-        '& .MuiInput-root': {
-          m: 1,
-          width: '100%',
-          height: 50,
-          backgroundColor: '#f5f5f5'
-        }
-      }}
-    >
+    <>
       <SubHeader title={'차량 예약'} />
       <form onSubmit={handleSubmit}>
         <Grid
@@ -178,9 +167,52 @@ const Register = () => {
           spacing={2}
           style={{ paddingTop: 16, paddingLeft: 16, paddingRight: 16 }}
         >
-          <Grid item xs={6} md={6}>
+          <Grid item xs={6}>
             <Item>
-              <Stack>
+              <Stack sx={{ rowGap: '10px' }}>
+                {/* 이름 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={1}>
+                    <Label htmlFor={'mem_code'} text={'이름'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={11}>
+                    <TextField
+                      id="mem_code"
+                      variant="outlined"
+                      placeholder="이름을 입력하세요"
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* 부서 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={1}>
+                    <Label htmlFor={'dpt_name'} text={'부서'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={11}>
+                    <TextField
+                      id="dpt_name"
+                      variant="outlined"
+                      placeholder="부서를 입력하세요"
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* 직급 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={1}>
+                    <Label htmlFor={'position_name'} text={'직급'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={11}>
+                    <TextField
+                      id="position_name"
+                      variant="outlined"
+                      placeholder="직급을 입력하세요"
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* <Stack>
                 <TextField
                   label="사번"
                   name="mem_code"
@@ -215,6 +247,7 @@ const Register = () => {
                       label={'대여 날짜'}
                       name={'start_at'}
                       onChange={(e) => handleTimeChange(e, 'start_at')}
+                      timeValue={dayjs()}
                     ></TimeField>
                   </NewFormControl>
                   ~
@@ -224,6 +257,7 @@ const Register = () => {
                       label={'반납 날짜'}
                       name={'return_at'}
                       onChange={(e) => handleTimeChange(e, 'return_at')}
+                      timeValue={dayjs()}
                     ></TimeField>
                   </NewFormControl>
                 </Grid>
@@ -244,7 +278,9 @@ const Register = () => {
                     open={open}
                     handleModal={(e, reason) => handleCloseModal(reason)}
                     modalTitle={'차량 찾기'}
-                    content={<CarList setSelectedRows={setSelectedRows} />}
+                    content={
+                      <SubSideContents setSelectedRows={setSelectedRows} />
+                    }
                     buttons={
                       <ButtonGroup>
                         <Button onClick={carSelect}>선택</Button>{' '}
@@ -262,10 +298,11 @@ const Register = () => {
                     onChange={handleChange}
                   />
                 </NewFormControl>
+              </Stack> */}
               </Stack>
             </Item>
           </Grid>
-          <Grid item xs={6} md={6}>
+          <Grid item xs={6}>
             <Item>
               <Typography
                 variant="h7"
@@ -380,7 +417,7 @@ const Register = () => {
           </Button>
         </BottomBox>
       </form>
-    </Box>
+    </>
   );
 };
 export default Register;
@@ -388,7 +425,7 @@ export default Register;
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
   height: 700
@@ -404,4 +441,10 @@ const BottomBox = styled(Box)(({ theme }) => ({
 const NewFormControl = styled(FormControl)(({ theme }) => ({
   textAlign: 'left',
   margin: 7
+}));
+
+const StyledLabelGrid = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center'
 }));
