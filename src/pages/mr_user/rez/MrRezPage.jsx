@@ -9,6 +9,8 @@ import RezSection from './section/RezSection';
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const MrRezPage = () => {
   const data = [
@@ -324,6 +326,17 @@ const MrRezPage = () => {
       ]
     }
   ];
+
+  const [mrList, setMrList] = useState([]);
+
+  useEffect(() => {
+    const requestMrList = async () => {
+      const res = await axios.get('http://localhost:3000/mr/mrList');
+      setMrList([...res.data]);
+    };
+
+    requestMrList();
+  }, []);
 
   return (
     <MainContainer>
