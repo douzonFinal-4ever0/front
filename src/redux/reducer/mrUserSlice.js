@@ -1,14 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import dayjs from 'dayjs';
 import { getFormattedDate } from '../../utils/formatDate';
 
 const initialState = {
-  mPurpose: '', // 회의 목적
-  mType: '프로젝트 회의', // 회의 종류,
-  rezDate: getFormattedDate(), // 예약 날짜
-  rezStartTime: '9:00', // 예약 시작 시간
-  rezEndTime: '9:00', // 예약 종료 시간
-  totPtCtn: '2' // 총 인원수
+  m_name: '', // 회의명
+  m_type: '프로젝트 회의', // 회의 종류,
+  rez_date: getFormattedDate(), // 예약 날짜
+  rez_start_time: '9:00', // 예약 시작 시간
+  rez_end_time: '9:30', // 예약 종료 시간
+  tot_pt_ctn: '2' // 총 인원수
 };
 
 const mrUserSlice = createSlice({

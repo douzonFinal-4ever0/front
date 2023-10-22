@@ -23,11 +23,12 @@ import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
 import SuppliesForm from '../form/SuppliesForm';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 const RezSection = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
-  const { mPurpose, mType, rezDate, rezStartTime, rezEndTime, totPtCtn } =
+  const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
   // 열린 Accordion 표시
   const [expanded, setExpanded] = useState('rez');
@@ -36,12 +37,12 @@ const RezSection = () => {
 
   useEffect(() => {
     if (
-      mPurpose !== '' &&
-      mType !== '' &&
-      rezDate !== '' &&
-      rezStartTime !== '' &&
-      rezEndTime !== '' &&
-      totPtCtn !== ''
+      m_name !== '' &&
+      m_type !== '' &&
+      rez_date !== '' &&
+      rez_start_time !== '' &&
+      rez_end_time !== '' &&
+      tot_pt_ctn !== ''
     ) {
       setisDisabled(false);
     } else {
@@ -55,8 +56,10 @@ const RezSection = () => {
   };
 
   // 예약 버튼 이벤트
-  const handleBtnSubmit = (e) => {
+  const handleBtnSubmit = async (e) => {
     e.preventDefault();
+
+    const res = await axios.post('/mr/rez');
     console.log(rezData);
   };
 
