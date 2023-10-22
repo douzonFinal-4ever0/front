@@ -68,6 +68,7 @@ import { DataGrid as MuiDataGrid } from '@mui/x-data-grid';
 //   ]
 
 import { styled } from '@mui/material/styles';
+import { palette } from '../../theme/palette';
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -151,13 +152,19 @@ const DataGrid = ({
   disableRow,
   selectedRows,
   clickEvent,
-  header,
-  footer,
   dbclickEvent
 }) => {
   return (
-    <Box sx={{ height: height, width: width }}>
+    <Box
+      sx={{
+        height: height,
+        width: width
+      }}
+    >
       <MuiDataGrid
+        sx={{
+          border: palette.grey['500']
+        }}
         rows={rows}
         columns={columns}
         initialState={{
@@ -173,8 +180,6 @@ const DataGrid = ({
         onRowClick={clickEvent}
         onRowDoubleClick={dbclickEvent}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
-        disableColumnHeader
-        disableColumnFooter
       />
     </Box>
   );
