@@ -62,8 +62,8 @@ const MrRegister = () => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.mr_code,
-        is_opened: 0 ? '활성' : '비활성',
-        is_used: 0 ? '사용중' : '대기중'
+        is_opened: item.is_opened === 0 ? '활성' : '비활성',
+        is_used: item.is_used === 0 ? '사용중' : '대기중'
       }));
       setMrList(processedData);
     });

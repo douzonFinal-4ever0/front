@@ -4,18 +4,34 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const MrTag = ({ onTagSelect, initailTagSelect }) => {
-  const [selectedTags, setSelectedTags] = useState(initailTagSelect);
-  // console.log(initailTagSelect);
+const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
+  const filterInitialTagSelect = initailTagSelect
+    ? initailTagSelect.filter((tag) => tag.keyword_name !== null)
+    : [];
+  const [selectedTags, setSelectedTags] = useState(filterInitialTagSelect);
+  // console.log(filterInitialTagSelect);
 
+  useEffect(() => {
+    if (selectedRowData) {
+      const initialKeywords = selectedRowData.mr_keyword.map(
+        (keyword) => keyword.keyword_name
+      );
+      const filteredKeywords = initialKeywords.filter((keyword) =>
+        tags.some((tag) => tag.keyword_name === keyword)
+      );
+      setSelectedTags(initialKeywords);
+      // onTagSelect(filteredKeywords);
+      onTagSelect(initialKeywords);
+    }
+  }, [selectedRowData]);
   const handleTagSelection = (event, value) => {
     setSelectedTags(value);
-    onTagSelect(initailTagSelect);
+    onTagSelect(value);
   };
   return (
     <Autocomplete
@@ -31,7 +47,12 @@ const MrTag = ({ onTagSelect, initailTagSelect }) => {
             icon={icon}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
-            checked={selected}
+            checked={
+              selected ||
+              initailTagSelect.some(
+                (tag) => tag.keyword_name === option.keyword_name
+              )
+            }
           />
           {option.keyword_name}
         </li>

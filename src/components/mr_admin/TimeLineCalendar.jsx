@@ -46,7 +46,7 @@ const TimeLineCalendar = ({ events, resources }) => {
           }
         }}
         resources={resources}
-        // schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+        schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
         slotMinTime={businessHours.startTime}
         slotMaxTime={businessHours.endTime} // 11pm
       />

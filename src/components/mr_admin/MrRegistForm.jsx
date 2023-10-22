@@ -30,9 +30,31 @@ import MrTag from './MrTag';
 import Modal from '../common/Modal';
 import DashBoard from '../../pages/mr_admin/DashBoard';
 import axios from 'axios';
-
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
+import { useDispatch } from 'react-redux';
+import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
-  console.log(isEditMode);
+  /*--------------------------------------오프캔버스------------------------------------------ */
+  // console.log(isEditMode);
+  console.log(selectedRowData);
+  /**오프캔버스 닫기 */
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+  };
+  /*-------------------------------------알림-----------------------------------------------*/
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   /*------------------------------------수정시 데이터--------------------------------------------*/
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
   const initialLocation = selectedRowData ? selectedRowData.location : '';
@@ -45,7 +67,11 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     selectedRowData?.mr_keyword?.map((keywordItem) => ({
       keyword_name: keywordItem.keyword_name
     })) || []; // null 체크 추가
-  console.log('registerForm : ' + initialSelectedTags);
+  const initialMr_op_day = selectedRowData?.mr_op_day?.map(
+    (days) => days.day
+  ) || [0, 1, 2, 3, 4];
+  // console.log(initialMr_op_day);
+  // console.log(initialSelectedTags);
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
   const [location, setLocation] = useState(initialLocation);
@@ -61,13 +87,11 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const handleMaximum_capacity = (event) => {
     setMaximum_capacity(event.target.value);
   };
-  /*-----------------------------------------------------------------------------------------*/
   /*------------------------------회의실 분류-----------------------------*/
   const [mrType, setMrType] = useState(initialMr_type);
   const handleSelectChange = (event) => {
     setMrType(event.target.value);
   };
-  /*------------------------------------------------------------------------*/
   /*----------------------------회의실 키워드------------------------*/
   //회의실 키워드 선택 값
   const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
@@ -76,13 +100,11 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     setSelectedTags(tags);
   };
   console.log(selectedTags);
-  /*---------------------------------------------------------------------*/
   /*----------------------------모달------------------------------------*/
-  // 모달창 열림 여부 값
+  // 모달창 열림 여부 값*/
   const [open, setOpen] = useState(false);
-  // 모달창 열림닫힘 이벤트
+  /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
-  /*--------------------------------------------------------------------*/
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
@@ -93,16 +115,23 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     4: '금',
     5: '토'
   };
-  const [selectedDays, setSelectedDays] = useState([
-    '월',
-    '화',
-    '수',
-    '목',
-    '금'
-  ]); // 배열로 선택된 요일을 저장
-
-  // 선택된 요일 배열을 숫자 값으로 변환하여 mr_op_day 배열 생성
-  const mr_op_day = selectedDays.map((day) => ({ day: dayMappings[day] }));
+  /** 텍스트로 되어있는 요일을 숫자로 변환*/
+  const numericDaysMapping = {
+    월: 0,
+    화: 1,
+    수: 2,
+    목: 3,
+    금: 4,
+    토: 5
+  };
+  /**숫자 배열을 날짜로 변경*/
+  const initialDay = initialMr_op_day.map((number) => dayMappings[number]);
+  const [selectedDays, setSelectedDays] = useState(initialDay); // 배열로 선택된 요일을 저장
+  // console.log(initialDay);
+  /** 선택된 요일 배열을 숫자 값으로 변환하여 mr_op_day 배열 생성*/
+  const mr_op_day = selectedDays.map((day) => ({
+    day: numericDaysMapping[day]
+  }));
   /** 배열로 선택된 요일을 저장*/
   const [showTimeField, setShowTimeField] = useState(false); // 기간 선택을 보여줄지 여부
   const [value, setValue] = useState('종일');
@@ -121,7 +150,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     }
     setSelectedDays(newSelectedDays);
     // 선택된 요일을 출력
-    console.log('선택된 요일: ', newSelectedDays);
+    // console.log('선택된 요일: ', newSelectedDays);
+    // console.log(mr_op_day);
   };
   /**상태를 토글하여 보이기/숨기기 */
   const toggleTimeField = () => {
@@ -140,7 +170,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
     axios.post('http://localhost:8081/mr/mrRegister', FormToData).then(() => {
-      alert('회의실이 등록되었습니다.');
+      handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
+      handleOpenSnackbar();
+      handleCloseDrawer();
     });
   };
   /**회의실 수정 버튼 클릭 이벤트 */
@@ -148,12 +180,13 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     axios
       .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
       .then((res) => {
-        alert('회의실이 수정되었습니다!!!');
-        window.location.reload(); // 페이지 새로고침
+        handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
+        handleOpenSnackbar();
+        handleCloseDrawer();
       });
   };
-  /*----------------------------------------------------------------------------- */
   /*-------------------------------FormToData------------------------------------------- */
+  /**등록시 필요한 데이터 */
   const FormToData = {
     mr_name,
     maximum_capacity,
@@ -162,6 +195,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     mr_keyword: selectedTags,
     mr_op_day: mr_op_day // 변환된 요일 배열 사용
   };
+  /**수정시 필요한 데이터 */
   let FormToData2 = {};
   if (selectedRowData && selectedRowData.mr_code) {
     FormToData2 = {
@@ -173,9 +207,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       is_opened: 0
     };
   }
-  /*-------------------------------------------------------------------------------------- */
+  /*---------------------------------이미지 저장---------------------------------- */
   const [images, setImages] = useState([]); // 이미지 배열
-
+  /**이미지가 리스트에 추가가 되는 이벤트 */
   const handleImageChange = (event) => {
     const file = event.target.files[0];
 
@@ -184,17 +218,20 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       reader.onload = (e) => {
         const newImage = { src: e.target.result, title: file.name };
         setImages([...images, newImage]);
+        console.log(images);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // 이미지 삭제
+  /**이미지 삭제 */
   const handleImageDelete = (index) => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
+    console.log(images);
   };
+  /*------------------------------------------------------------------------------ */
   return (
     <Item
       sx={{
@@ -305,15 +342,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           initailTagSelect={initialSelectedTags}
         />
         {/* 회의실 사진 업로드 */}
-        {/* <Button
-          component="label"
-          variant="outlined"
-          startIcon={<CloudUploadIcon />}
-          color="info"
-        >
-          회의실 사진
-          <VisuallyHiddenInput type="file" />
-        </Button> */}
         <input
           accept="image/*"
           style={{ display: 'none' }}
@@ -324,7 +352,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         <label htmlFor="image-upload-button">
           <Button
             component="span"
-            variant="outlined"
+            variant="contained"
             startIcon={<CloudUploadIcon />}
             color="info"
             sx={{ width: '100%' }}
@@ -340,7 +368,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           <Grid item xs={1}>
             <IconButton
               component="label"
-              variant="outlined"
+              variant="contained"
               color="secondary"
               size="large"
               onClick={handleModal}
@@ -357,23 +385,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           </Grid>
         </Grid>
         {/* 회의실 사진들 */}
-        {/* <ImageList sx={2} cols={3} rowHeight={180}>
-          {itemData.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                alt={item.title}
-                loading="lazy"
-              />
-              <ImageListItemBar
-                title={item.title}
-                subtitle={<span>by: {item.author}</span>}
-                position="below"
-              />
-            </ImageListItem>
-          ))}
-        </ImageList> */}
         <ImageList sx={2} cols={3} rowHeight={180}>
           {images.map((item, index) => (
             <ImageListItem key={index}>
@@ -383,7 +394,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 actionPosition="right"
                 actionIcon={
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                     onClick={() => handleImageDelete(index)}
                     color="error"
@@ -400,17 +411,17 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           <Grid spacing={2} container>
             <Grid xs={6}>
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={handleUpdate}
                 sx={{ width: '100%' }}
-                color="success"
+                color="primary"
               >
                 회의실 수정
               </Button>
             </Grid>
             <Grid xs={6}>
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={handleUpdate}
                 sx={{ width: '100%' }}
                 color="error"
@@ -420,7 +431,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             </Grid>
           </Grid>
         ) : (
-          <Button variant="outlined" onClick={handleSubmit}>
+          <Button variant="contained" onClick={handleSubmit}>
             회의실 등록
           </Button>
         )}
