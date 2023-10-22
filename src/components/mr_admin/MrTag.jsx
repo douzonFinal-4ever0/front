@@ -36,7 +36,7 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
   return (
     <Autocomplete
       multiple
-      limitTags={3}
+      limitTags={4}
       id="checkboxes"
       options={tags}
       disableCloseOnSelect

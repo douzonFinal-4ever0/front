@@ -19,11 +19,11 @@ import {
   Stack,
   TextField,
   Typography,
-  styled
+  styled,
+  Grid
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 import TimeField from '../../components/common/TimeField';
 import MrTag from './MrTag';
@@ -36,6 +36,9 @@ import {
 } from '../../redux/reducer/SnackbarSlice';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import Label from '../common/Label';
+import { palette } from '../../theme/palette';
+import { width } from '@mui/system';
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
@@ -257,40 +260,66 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   };
   /*------------------------------------------------------------------------------ */
   return (
-    <Item
-      sx={{
-        '& .MuiTextField-root': {
-          width: '100%',
-          backgroundColor: '#f5f5f5'
-        }
-      }}
-    >
-      <Stack spacing={1}>
-        <TextField
-          id="outlined-basic"
-          label="회의실명"
-          variant="outlined"
-          value={mr_name}
-          onChange={handleMrName}
-        />
-        <TextField
-          id="outlined-basic"
-          label="위치"
-          variant="outlined"
-          value={location}
-          onChange={handleLocation}
-        />
-        <TextField
-          id="outlined-basic"
-          label="최대 수용 인원"
-          variant="outlined"
-          value={maximum_capacity}
-          onChange={handleMaximum_capacity}
-        />
+    <Grid container spacing={1}>
+      <Grid item container spacing={2}>
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'mPurpose'} text={'회의실명'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <TextField
+            id="mPurpose"
+            variant="outlined"
+            value={mr_name}
+            placeholder="회의실명을 입력하세요"
+            onChange={handleMrName}
+            sx={{
+              '.MuiInputBase-root': {
+                border: `2px solid ${palette.primary.main}`
+              }
+            }}
+          />
+        </Grid>
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'location'} text={'위치'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <TextField
+            id="location"
+            variant="outlined"
+            placeholder="위치를 입력하세요"
+            value={location}
+            onChange={handleLocation}
+            sx={{
+              '.MuiInputBase-root': {
+                border: `2px solid ${palette.primary.main}`
+              }
+            }}
+          />
+        </Grid>
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'maximum_capacity'} text={'최대 수용 인원'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <TextField
+            id="maximum_capacity"
+            placeholder="최대 수용 인원을 입력하세요"
+            variant="outlined"
+            value={maximum_capacity}
+            onChange={handleMaximum_capacity}
+            sx={{
+              '.MuiInputBase-root': {
+                border: `2px solid ${palette.primary.main}`
+              }
+            }}
+          />
+        </Grid>
         {/* 요일 영역 */}
-        <Grid container spacing={1}>
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'maximum_capacity'} text={'요일'} />
+        </StyledLabelGrid>
+        <Grid item container xs={9}>
           {daysOfWeek.map((day, index) => (
-            <Grid key={index} item xs>
+            <Grid key={index} xs item>
               <label>
                 <Checkbox
                   checked={selectedDays.includes(day)} // 요일이 선택되었는지 확인
@@ -304,136 +333,150 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           ))}
         </Grid>
         {/* 회의실 분류 영역 */}
-        <FormControl fullWidth sx={{ backgroundColor: '#f5f5f5' }}>
-          <InputLabel id="demo-simple-select-label">회의실 분류</InputLabel>
-          <Select
-            value={mrType}
-            label="회의실 분류"
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="미팅룸">미팅룸</MenuItem>
-            <MenuItem value="소회의실">소회의실</MenuItem>
-            <MenuItem value="중회의실">중회의실</MenuItem>
-            <MenuItem value="대회의실">대회의실</MenuItem>
-          </Select>
-        </FormControl>
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'mrType'} text={'회의실 분류'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <FormControl fullWidth sx={{ backgroundColor: '#f5f5f5' }}>
+            <InputLabel>회의실 분류</InputLabel>
+            <Select
+              value={mrType}
+              placeholder="회의실 분류를 선택하세요"
+              onChange={handleSelectChange}
+            >
+              <MenuItem value="미팅룸">미팅룸</MenuItem>
+              <MenuItem value="소회의실">소회의실</MenuItem>
+              <MenuItem value="중회의실">중회의실</MenuItem>
+              <MenuItem value="대회의실">대회의실</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         {/* 기간 선택 영역 */}
-        <Grid spacing={2}>
-          <RadioGroup
-            aria-labelledby="demo-controlled-radio-buttons-group"
-            name="controlled-radio-buttons-group"
-            value={value}
-            onChange={handleChange}
-          >
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={6}>
-                <Typography ml={1}>기간 선택</Typography>
+        <Grid item container spacing={2}>
+          <StyledLabelGrid item xs={3}>
+            <Label htmlFor={'mrType'} text={'기간 선택'} />
+          </StyledLabelGrid>
+          <Grid item xs={9}>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={value}
+              onChange={handleChange}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <FormControlLabel
+                    value="종일"
+                    control={<Radio />}
+                    label="종일"
+                    labelPlacement="end"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControlLabel
+                    value="기간 선택"
+                    control={<Radio />}
+                    label="기간 선택"
+                    labelPlacement="end"
+                    onClick={toggleTimeField}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={3}>
-                <FormControlLabel
-                  value="종일"
-                  control={<Radio />}
-                  label="종일"
-                  labelPlacement="end"
-                />
+            </RadioGroup>
+            {/* 날짜 선택시 콜랩스 영역 */}
+            <Collapse in={checked}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TimeField withMonth={true} label={'시작 시간'} />
+                </Grid>
+                <Grid item xs={6}>
+                  <TimeField withMonth={true} label={'종료 시간'} />
+                </Grid>
               </Grid>
-              <Grid item xs={3}>
-                <FormControlLabel
-                  value="기간 선택"
-                  control={<Radio />}
-                  label="기간 선택"
-                  labelPlacement="end"
-                  onClick={toggleTimeField}
-                />
-              </Grid>
-            </Grid>
-          </RadioGroup>
-          {/* 날짜 선택시 콜랩스 영역 */}
-          <Collapse in={checked}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TimeField withMonth={true} label={'시작 시간'} />
-              </Grid>
-              <Grid item xs={6}>
-                <TimeField withMonth={true} label={'종료 시간'} />
-              </Grid>
-            </Grid>
-          </Collapse>
+            </Collapse>
+          </Grid>
         </Grid>
         {/* 회의실 태그 영역 */}
-        <MrTag
-          onTagSelect={handleTagSelect}
-          initailTagSelect={initialSelectedTags}
-        />
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'mrTag'} text={'회의실 태그'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <MrTag
+            onTagSelect={handleTagSelect}
+            initailTagSelect={initialSelectedTags}
+          />
+        </Grid>
         {/* 회의실 사진 업로드 */}
-        <input
-          accept="image/*"
-          style={{ display: 'none' }}
-          id="image-upload-button"
-          type="file"
-          onChange={handleImageChange}
-        />
-        <label htmlFor="image-upload-button">
-          <Button
-            component="span"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            color="info"
-            sx={{ width: '100%' }}
-          >
-            회의실 사진 업로드
-          </Button>
-        </label>
-        {/* 기본 비품 버튼 영역 */}
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={2}>
-            <Typography>기본 비품</Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <IconButton
-              component="label"
+        <Grid item xs={12}>
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="image-upload-button"
+            type="file"
+            onChange={handleImageChange}
+          />
+          <label htmlFor="image-upload-button">
+            <Button
+              component="span"
               variant="contained"
-              color="secondary"
-              size="large"
-              onClick={handleModal}
+              startIcon={<CloudUploadIcon />}
+              color="info"
+              sx={{ width: '100%' }}
             >
-              <ControlPointOutlinedIcon />
-            </IconButton>
-            <Modal
-              open={open}
-              modalTitle={'비품 항목'}
-              handleModal={handleModal}
-              content={<ModalContentExample />}
-              buttons={<ModalActionBtns />}
-            />
-          </Grid>
+              회의실 사진 업로드
+            </Button>
+          </label>
+        </Grid>
+        {/* 기본 비품 버튼 영역 */}
+        <StyledLabelGrid item xs={3}>
+          <Label htmlFor={'supplies'} text={'기본 비품'} />
+        </StyledLabelGrid>
+        <Grid item xs={9}>
+          <IconButton
+            component="label"
+            variant="contained"
+            color="secondary"
+            size="large"
+            onClick={handleModal}
+          >
+            <ControlPointOutlinedIcon />
+          </IconButton>
+          <Modal
+            open={open}
+            modalTitle={'비품 항목'}
+            handleModal={handleModal}
+            content={<ModalContentExample />}
+            buttons={<ModalActionBtns />}
+          />
         </Grid>
         {/* 회의실 사진들 */}
-        <ImageList sx={2} cols={3} rowHeight={180}>
-          {images.map((item, index) => (
-            <ImageListItem key={index}>
-              <img src={item.src} alt={item.title} loading="lazy" />
-              <ImageListItemBar
-                title={item.title}
-                actionPosition="right"
-                actionIcon={
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleImageDelete(index)}
-                    color="error"
-                  >
-                    삭제
-                  </Button>
-                }
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
+        <Grid item xs={12}>
+          <ImageList sx={2} cols={3} rowHeight={190}>
+            {images.map((item, index) => (
+              <ImageListItem key={index}>
+                <img src={item.src} alt={item.title} loading="lazy" />
+                <ImageListItemBar
+                  title={item.title}
+                  actionPosition="right"
+                  actionIcon={
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleImageDelete(index)}
+                      color="error"
+                    >
+                      삭제
+                    </Button>
+                  }
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        </Grid>
         {/* 회의실 등록 버튼 */}
         {isEditMode ? (
-          <Grid spacing={2} container>
-            <Grid xs={6}>
+          <Grid item container xs={12}>
+            <Grid item xs={6}>
               <Button
                 variant="contained"
                 onClick={handleUpdate}
@@ -443,7 +486,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 회의실 수정
               </Button>
             </Grid>
-            <Grid xs={6}>
+            <Grid item xs={6}>
               <Button
                 variant="contained"
                 onClick={handleDeactive}
@@ -455,12 +498,20 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             </Grid>
           </Grid>
         ) : (
-          <Button variant="contained" onClick={handleSubmit}>
-            회의실 등록
-          </Button>
+          <Grid item container xs={12}>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                sx={{ width: '100%' }}
+              >
+                회의실 등록
+              </Button>
+            </Grid>
+          </Grid>
         )}
-      </Stack>
-    </Item>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -528,3 +579,8 @@ const ModalContentExample = () => {
     </Box>
   );
 };
+const StyledLabelGrid = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center'
+}));
