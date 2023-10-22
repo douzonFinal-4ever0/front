@@ -52,6 +52,7 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
         open={isSnackbarOpen}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
           onClose={handleCloseSnackbar}
@@ -75,7 +76,7 @@ const StyledRoot = styled('div')({
 });
 
 const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
-  paddingTop: HEADER_HIEGHT,
+  paddingTop: '110px',
   flexGrow: 1,
   overflow: 'auto',
   minHeight: '100%',
