@@ -61,11 +61,6 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
       renderInput={(params) => <TextField {...params} label="" />}
       value={selectedTags}
       onChange={handleTagSelection}
-      sx={{
-        '.MuiInputBase-root': {
-          border: `2px solid ${palette.primary.main}`
-        }
-      }}
     />
   );
 };

@@ -274,11 +274,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             value={mr_name}
             placeholder="회의실명을 입력하세요"
             onChange={handleMrName}
-            sx={{
-              '.MuiInputBase-root': {
-                border: `2px solid ${palette.primary.main}`
-              }
-            }}
           />
         </Grid>
         <StyledLabelGrid item xs={3}>
@@ -291,11 +286,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             placeholder="위치를 입력하세요"
             value={location}
             onChange={handleLocation}
-            sx={{
-              '.MuiInputBase-root': {
-                border: `2px solid ${palette.primary.main}`
-              }
-            }}
           />
         </Grid>
         <StyledLabelGrid item xs={3}>
@@ -308,11 +298,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             variant="outlined"
             value={maximum_capacity}
             onChange={handleMaximum_capacity}
-            sx={{
-              '.MuiInputBase-root': {
-                border: `2px solid ${palette.primary.main}`
-              }
-            }}
           />
         </Grid>
         {/* 요일 영역 */}
@@ -339,14 +324,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           <Label htmlFor={'mrType'} text={'회의실 분류'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
-          <FormControl
-            fullWidth
-            sx={{
-              '.MuiInputBase-root': {
-                border: `2px solid ${palette.primary.main}`
-              }
-            }}
-          >
+          <FormControl fullWidth>
             {/* <InputLabel>회의실 분류</InputLabel> */}
             <Select
               value={mrType}
