@@ -79,7 +79,7 @@ const RezSection = () => {
   return (
     <Box component={'section'} sx={{ height: '100%' }}>
       <StyledForm onSubmit={handleBtnSubmit}>
-        <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
+        <Stack sx={{ justifyContent: 'space-between', rowGap: '16px' }}>
           <Box>
             {/* 예약 정보 */}
             <Accordion

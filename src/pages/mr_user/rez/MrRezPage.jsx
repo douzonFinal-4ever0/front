@@ -371,7 +371,7 @@ const MrRezPage = () => {
               </Grid>
               {/* row - 예약 정보 */}
               <Grid item xs={4}>
-                <Grid item xs={12} sx={{ height: '100%' }}>
+                <Grid item xs={12}>
                   <Stack spacing={2}>
                     <StyledStepText>
                       <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
