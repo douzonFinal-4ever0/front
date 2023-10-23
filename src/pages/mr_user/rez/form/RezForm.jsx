@@ -26,7 +26,7 @@ import Selectbox from '../../../../components/common/Selectbox';
 const RezForm = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
-  const { mPurpose, mType, rezDate, rezStartTime, rezEndTime, totPtCtn } =
+  const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
 
   const meetingTypes = [
@@ -128,14 +128,14 @@ const RezForm = () => {
   ];
 
   // 회의 목적 이벤트
-  const handleMPurpose = (e) => {
-    const newRezData = { ...rezData, mPurpose: e.target.value };
+  const handleMName = (e) => {
+    const newRezData = { ...rezData, m_name: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
 
   // 회의 종류 셀렉트박스 이벤트
   const handleSelectBox = (e) => {
-    const newRezData = { ...rezData, mType: e.target.value };
+    const newRezData = { ...rezData, m_type: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
 
@@ -143,26 +143,26 @@ const RezForm = () => {
   const handleDatePick = (newValue) => {
     const newRezData = {
       ...rezData,
-      rezDate: newValue.format('YYYY-MM-DD')
+      rez_date: newValue.format('YYYY-MM-DD')
     };
     dispatch(setRezData({ data: newRezData }));
   };
 
   // 예약 시작 시간 이벤트
   const handleSelectStartTime = (e) => {
-    const newRezData = { ...rezData, rezStartTime: e.target.value };
+    const newRezData = { ...rezData, rez_start_time: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
 
   // 예약 종료 시간 이벤트
   const handleSelectEndtTime = (e) => {
-    const newRezData = { ...rezData, rezEndTime: e.target.value };
+    const newRezData = { ...rezData, rez_end_time: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
 
   // 총인원수 이벤트
   const handleTotCtn = (e) => {
-    const newRezData = { ...rezData, totPtCtn: e.target.value };
+    const newRezData = { ...rezData, tot_pt_ctn: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
 
@@ -171,15 +171,15 @@ const RezForm = () => {
       {/* 회의 목적 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
-          <Label htmlFor={'mPurpose'} text={'회의 목적'} />
+          <Label htmlFor={'m_name'} text={'회의명'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
           <TextField
-            id="mPurpose"
+            id="m_name"
             variant="outlined"
-            value={mPurpose}
-            placeholder="회의 목적을 입력하세요"
-            onChange={handleMPurpose}
+            value={m_name}
+            placeholder="회의명을 입력하세요"
+            onChange={handleMName}
             sx={{
               '.MuiInputBase-root': {
                 border: `2px solid ${palette.primary.main}`
@@ -192,11 +192,11 @@ const RezForm = () => {
       {/* 회의 종류 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
-          <Label htmlFor={'mrType'} text={'회의 종류'} />
+          <Label htmlFor={'m_type'} text={'회의 종류'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
           <Selectbox
-            value={mType}
+            value={m_type}
             handleSelectBox={handleSelectBox}
             menuList={meetingTypes}
           />
@@ -216,7 +216,7 @@ const RezForm = () => {
       {/* 예약 일자 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
-          <Label htmlFor={'rezDate'} text={'예약 일자'} />
+          <Label htmlFor={'rez_date'} text={'예약 일자'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -224,7 +224,7 @@ const RezForm = () => {
               <DatePicker
                 onChange={handleDatePick}
                 format="YYYY-MM-DD"
-                value={dayjs(rezDate)}
+                value={dayjs(rez_date)}
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -239,7 +239,7 @@ const RezForm = () => {
         <Grid item xs={9}>
           <Stack direction={'row'} sx={{ alignItems: 'center' }}>
             <Selectbox
-              value={rezStartTime}
+              value={rez_start_time}
               handleSelectBox={handleSelectStartTime}
               menuList={times}
             />
@@ -247,7 +247,7 @@ const RezForm = () => {
               ~
             </Typography>
             <Selectbox
-              value={rezEndTime}
+              value={rez_end_time}
               handleSelectBox={handleSelectEndtTime}
               menuList={times}
             />
@@ -258,14 +258,14 @@ const RezForm = () => {
       {/* 총 인원수 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
-          <Label htmlFor={'totPtCtn'} text={'총 인원수'} />
+          <Label htmlFor={'tot_pt_ctn'} text={'총 인원수'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
           <TextField
-            id="totPtCtn"
+            id="tot_pt_ctn"
             variant="outlined"
             type="number"
-            value={totPtCtn}
+            value={tot_pt_ctn}
             onChange={handleTotCtn}
           />
         </Grid>

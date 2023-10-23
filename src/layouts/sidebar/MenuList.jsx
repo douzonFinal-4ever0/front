@@ -42,7 +42,7 @@ const MenuList = (props) => {
       icon: <StyledRoomIcon />,
       categories: [
         { index: 1, title: '회의실 조회', url: '/mr/dashboard' },
-        { index: 2, title: '회의실 예약', url: '/mr/reservation' }
+        { index: 2, title: '회의실 예약', url: '/mr/rez' }
       ]
     },
     {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { setUserData } from '../../../../redux/reducer/userSlice';
 import {
   Accordion,
   AccordionDetails,
@@ -23,12 +24,18 @@ import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
 import SuppliesForm from '../form/SuppliesForm';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 const RezSection = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
-  const { mPurpose, mType, rezDate, rezStartTime, rezEndTime, totPtCtn } =
+  const userData = useSelector(setUserData).payload.user;
+  // 회의실 예약 리덕스 데이터
+  const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
+  // 사용자 리덕스 데이터
+  const { mem_code, name } = userData;
+
   // 열린 Accordion 표시
   const [expanded, setExpanded] = useState('rez');
   // 예약버튼 활성화 여부
@@ -36,12 +43,12 @@ const RezSection = () => {
 
   useEffect(() => {
     if (
-      mPurpose !== '' &&
-      mType !== '' &&
-      rezDate !== '' &&
-      rezStartTime !== '' &&
-      rezEndTime !== '' &&
-      totPtCtn !== ''
+      m_name !== '' &&
+      m_type !== '' &&
+      rez_date !== '' &&
+      rez_start_time !== '' &&
+      rez_end_time !== '' &&
+      tot_pt_ctn !== ''
     ) {
       setisDisabled(false);
     } else {
@@ -55,9 +62,12 @@ const RezSection = () => {
   };
 
   // 예약 버튼 이벤트
-  const handleBtnSubmit = (e) => {
+  const handleBtnSubmit = async (e) => {
     e.preventDefault();
-    console.log(rezData);
+    const mr_code = 'R022'; // *임시로 회의실 코드 지정
+    const data = { ...rezData, mem_code, mr_code };
+    const res = await axios.post('/mr/rez', data);
+    console.log(res);
   };
 
   return (
