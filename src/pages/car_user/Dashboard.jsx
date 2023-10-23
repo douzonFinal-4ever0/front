@@ -33,22 +33,25 @@ import styled from '@emotion/styled';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Searchbar from '../../components/common/Searchbar';
 import NoRow from '../../components/car_user/NoRow';
+import { useDispatch } from 'react-redux';
+import Drawer from '../../components/common/Drawer';
+import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
+import CarRezDetail from '../../components/car_user/CarRezDetail';
+import Selectbox from '../../components/common/Selectbox';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import { palette } from '../../theme/palette';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('');
   const mem_code = 'MEM001';
-
-  // 검색창------------------------------------------------------
-  //const [value, setValue] = useState(null);
 
   const dateFormat = (date) => {
     const preDate = new Date(date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return preDate.toLocaleString('ko-KR', options).slice(0, -1);
   };
+
   useEffect(() => {
-    //console.log(range);
-    const rez_status = range;
     axios
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
       .then((res) => {
@@ -97,11 +100,6 @@ const Dashboard = () => {
     useEffect(() => {
       axios.get(`http://localhost:8081/car_rez/searchCarList`).then((res) => {
         setRows(res.data);
-        // res.data.map((row) => {
-        //   let sRow = row.car_name.split(' ');
-        //   res.data.car_name = sRow[0];
-        // });
-        // setRows(res.data);
       });
     }, []);
     const handleInput = (e) => {
@@ -128,9 +126,14 @@ const Dashboard = () => {
         }}
       >
         <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-          <Button variant="contained" sx={{ width: '100%' }}>
+          {/* <Button variant="contained" sx={{ width: '100%' }}>
             차량 예약
-          </Button>
+          </Button> */}
+          <RectangleBtn
+            type={'button'}
+            text={'차량 예약'}
+            sx={{ padding: '14px 12px', backgroundColor: palette.grey['500'] }}
+          />
         </Grid>
         <Divider />
         <Searchbar
@@ -225,6 +228,30 @@ const Dashboard = () => {
     setRange(e.target.value);
     // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
+  //오프캔버스 관련
+  const dispatch = useDispatch();
+  const [selectedRezCode, setSelectedRezCode] = useState(null);
+  /**오프캔버스 열기 */
+  const handleOpenDrawer = () => {
+    dispatch(openDrawer());
+  };
+  /**오프캔버스 닫기 */
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+  };
+  const handleDbClick = (param) => {
+    const Data = param.row;
+    setSelectedRezCode(Data.id);
+    console.log(Data.id);
+    handleOpenDrawer();
+  };
+  const tabData = [
+    {
+      title: '예약 상세',
+      content: <CarRezDetail rezCode={selectedRezCode} />
+    }
+  ];
+
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
@@ -232,25 +259,24 @@ const Dashboard = () => {
         <SubSidebar widthP={30} content={<SubSideContents />} />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
-            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-              {/* <InputLabel id="demo-simple-select-filled-label">전체</InputLabel> */}
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                displayEmpty
-                value={range}
-                inputProps={{ 'aria-label': 'Without label' }}
-                onChange={handleRange}
-              >
-                <MenuItem value={''}>
-                  <em>전체</em>
-                </MenuItem>
-                <MenuItem value={'1'}>확정</MenuItem>
-                <MenuItem value={'3'}>취소</MenuItem>
-                <MenuItem value={'2'}>완료</MenuItem>
-              </Select>
-            </FormControl>
-            <br />
+            {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}> */}
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              displayEmpty
+              value={range}
+              inputProps={{ 'aria-label': 'Without label' }}
+              onChange={handleRange}
+              sx={{ minWidth: 120, mb: 1 }}
+            >
+              <MenuItem value={''}>
+                <em>전체</em>
+              </MenuItem>
+              <MenuItem value={'1'}>확정</MenuItem>
+              <MenuItem value={'3'}>취소</MenuItem>
+              <MenuItem value={'2'}>완료</MenuItem>
+            </Select>
+
             <DataGrid
               rows={filterRezData}
               columns={colums}
@@ -258,13 +284,14 @@ const Dashboard = () => {
               height={'auto'}
               pageSize={5}
               pageSizeOptions={[5, 10]}
-              checkbox={true}
+              checkbox={false}
               disableRow={false}
-              footer={true}
+              dbclickEvent={handleDbClick}
             />
           </WrapContainer>
         </MainContainer>
       </Box>
+      <Drawer width={'100vh'} tabData={tabData} />
     </>
   );
 };
@@ -281,4 +308,10 @@ const StyledBox = styled(Box)(({ theme, bgcolor, height }) => ({
   [theme.breakpoints.up('md')]: {
     minWidth: '100%'
   }
+}));
+
+const StyledLabelGrid = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center'
 }));

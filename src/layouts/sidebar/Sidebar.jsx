@@ -12,6 +12,8 @@ import { palette } from '../../theme/palette';
 
 const Sidebar = (props) => {
   const { isOpen, isAdminMode, setIsAdminMode } = props;
+  console.log('여기');
+  console.log(isOpen);
   // 페이지 PATH
   const PATHNAME = useLocation().pathname;
 
@@ -21,6 +23,7 @@ const Sidebar = (props) => {
   // 클릭한 소메뉴 인덱스 (number)
   const [selectMenuItem, setSelectMenuItem] = useState(null);
 
+  // const drawerDisplay = 'none';
   const drawerDisplay = isOpen ? 'flex' : 'none';
 
   // 메인 페이지일 경우엔 openMenu, selectMenuItem 값 초기화
@@ -108,7 +111,7 @@ const Sidebar = (props) => {
 export default Sidebar;
 
 const StyledDrawer = styled(Drawer)(({ theme, drawerDisplay }) => ({
-  width: DRAWER_WIDTH,
+  // width: DRAWER_WIDTH,
   flexShrink: 0,
   display: drawerDisplay,
   '& .MuiDrawer-paper': {

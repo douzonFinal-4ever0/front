@@ -35,7 +35,6 @@ const GlobalStyles = () => {
           backgroundColor: palette.grey['100']
         },
         '.MuiInputBase-root': {
-          width: '100%',
           borderRadius: '2px',
           border: `1px solid ${palette.grey['400']}`,
           backgroundColor: palette.grey['100']
