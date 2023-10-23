@@ -11,7 +11,7 @@ const MultiTimePicker = ({
   return (
     <DateTimePicker
       label={label}
-      format="YYYY-MM-DD HH:mm"
+      format="YYYY-MM-DD"
       defaultValue={value}
       showDaysOutsideCurrentMonth
       skipDisabled

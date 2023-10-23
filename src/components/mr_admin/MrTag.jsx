@@ -5,7 +5,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useState, useEffect } from 'react';
-
+import { palette } from '../../theme/palette';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -58,9 +58,14 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
         </li>
       )}
       style={{ width: 'auto' }}
-      renderInput={(params) => <TextField {...params} label="회의실 태그" />}
+      renderInput={(params) => <TextField {...params} label="" />}
       value={selectedTags}
       onChange={handleTagSelection}
+      sx={{
+        '.MuiInputBase-root': {
+          border: `2px solid ${palette.primary.main}`
+        }
+      }}
     />
   );
 };

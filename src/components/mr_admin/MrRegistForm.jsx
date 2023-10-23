@@ -38,7 +38,9 @@ import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import Label from '../common/Label';
 import { palette } from '../../theme/palette';
-import { width } from '@mui/system';
+import dayjs from 'dayjs';
+import SuppliesList from './SuppliesList';
+
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
@@ -337,8 +339,15 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           <Label htmlFor={'mrType'} text={'회의실 분류'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
-          <FormControl fullWidth sx={{ backgroundColor: '#f5f5f5' }}>
-            <InputLabel>회의실 분류</InputLabel>
+          <FormControl
+            fullWidth
+            sx={{
+              '.MuiInputBase-root': {
+                border: `2px solid ${palette.primary.main}`
+              }
+            }}
+          >
+            {/* <InputLabel>회의실 분류</InputLabel> */}
             <Select
               value={mrType}
               placeholder="회의실 분류를 선택하세요"
@@ -387,10 +396,18 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             <Collapse in={checked}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <TimeField withMonth={true} label={'시작 시간'} />
+                  <TimeField
+                    withMonth={true}
+                    label={'시작 시간'}
+                    timeValue={dayjs().hour(9)}
+                  />
                 </Grid>
                 <Grid item xs={6}>
-                  <TimeField withMonth={true} label={'종료 시간'} />
+                  <TimeField
+                    withMonth={true}
+                    label={'종료 시간'}
+                    timeValue={dayjs().hour(9)}
+                  />
                 </Grid>
               </Grid>
             </Collapse>
@@ -475,7 +492,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         </Grid>
         {/* 회의실 등록 버튼 */}
         {isEditMode ? (
-          <Grid item container xs={12}>
+          <Grid item container xs={12} spacing={2}>
             <Grid item xs={6}>
               <Button
                 variant="contained"
@@ -574,8 +591,8 @@ const ModalActionBtns = () => {
 
 const ModalContentExample = () => {
   return (
-    <Box sx={{ maxWidth: 800 }}>
-      <DashBoard />
+    <Box>
+      <SuppliesList />
     </Box>
   );
 };
