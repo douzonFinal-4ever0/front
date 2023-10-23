@@ -51,11 +51,11 @@ const RezForm = () => {
   const times = [
     {
       index: 0,
-      value: '9:00'
+      value: '09:00'
     },
     {
       index: 1,
-      value: '9:30'
+      value: '09:30'
     },
     {
       index: 2,

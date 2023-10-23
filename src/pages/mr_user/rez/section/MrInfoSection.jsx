@@ -37,9 +37,9 @@ const MrInfoSection = ({ data }) => {
       component={'section'}
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
-      <SectionTitle title="회의실 정보" sx={{ fontSize: '16px' }}>
+      {/* <SectionTitle title="회의실 정보" sx={{ fontSize: '16px' }}>
         <MeetingRoomIcon />
-      </SectionTitle>
+      </SectionTitle> */}
       <Box>
         <Carousel data={data} />
         <Stack sx={{ padding: '10px 20px 10px', rowGap: '6px' }}>

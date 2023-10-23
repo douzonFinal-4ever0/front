@@ -65,7 +65,13 @@ const RezSection = () => {
   const handleBtnSubmit = async (e) => {
     e.preventDefault();
     const mr_code = 'R022'; // *임시로 회의실 코드 지정
-    const data = { ...rezData, mem_code, mr_code };
+    const mr_pt_list = [mem_code]; // *임시로 회의 참석자 리스트 예약자만 지정
+    const data = {
+      ...rezData,
+      mem_code,
+      mr_code,
+      mr_pt_list
+    };
     const res = await axios.post('/mr/rez', data);
     console.log(res);
   };
