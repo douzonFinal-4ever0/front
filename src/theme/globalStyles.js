@@ -44,8 +44,14 @@ const GlobalStyles = () => {
             backgroundColor: 'transparent'
           }
         },
+        '.MuiAutocomplete-inputRoot': {
+          padding: '0px !important'
+        },
+        '.MuiAutocomplete-input': {
+          padding: '0px !important'
+        },
         '.MuiOutlinedInput-input': {
-          padding: '12px 10px'
+          padding: '12px 10px !important'
         },
         '.MuiPaper-root': {
           borderRadius: '2px',

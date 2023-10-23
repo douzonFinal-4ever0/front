@@ -28,6 +28,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 import EditIcon from '@mui/icons-material/Edit';
 import ImageUpload from '../../components/mr_admin/ImageUpload';
+import SuppliesList from '../../components/mr_admin/SuppliesList';
 const DashBoard = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -60,6 +61,7 @@ const DashBoard = () => {
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
+              <SuppliesList />
               <SpeedDial
                 ariaLabel="SpeedDial tooltip example"
                 sx={{ position: 'absolute', bottom: 16, right: 16 }}

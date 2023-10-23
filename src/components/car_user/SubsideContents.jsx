@@ -13,6 +13,8 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Searchbar from '../common/Searchbar';
 import NoRow from './NoRow';
+import RectangleBtn from '../common/RectangleBtn';
+import { palette } from '../../theme/palette';
 
 // 서브 사이드바 콘텐츠
 const SubSideContents = ({ setSelectedRows }) => {
@@ -40,9 +42,9 @@ const SubSideContents = ({ setSelectedRows }) => {
   const handleSearchBtn = (e) => {
     e.preventDefault();
   };
-  const handleItem = (e, car_code) => {
+  const handleItem = (e, car_code, car_address) => {
     //setCarCode(car_code);
-    setSelectedRows(car_code);
+    setSelectedRows({ car_code, car_address });
   };
 
   const CarList = ({ rows }) => {
@@ -54,7 +56,9 @@ const SubSideContents = ({ setSelectedRows }) => {
           <List dense component="div" role="list">
             {rows.map((car) => {
               return (
-                <ListItem onClick={(e) => handleItem(e, car.id)}>
+                <ListItem
+                  onClick={(e) => handleItem(e, car.id, car.car_address)}
+                >
                   <ListItemText
                     primary={`${car.id}`}
                     secondary={`${car.car_name}`}
@@ -68,6 +72,7 @@ const SubSideContents = ({ setSelectedRows }) => {
       );
     }
   };
+
   return (
     <Box
       sx={{
@@ -85,13 +90,18 @@ const SubSideContents = ({ setSelectedRows }) => {
         <Button variant="contained" sx={{ width: '100%' }}>
           차량 예약
         </Button>
+        <RectangleBtn
+          type={'button'}
+          text={'차량 예약'}
+          sx={{ padding: '14px 12px', backgroundColor: palette.grey['500'] }}
+        />
       </Grid> */}
 
       <Searchbar
         width={'100%'}
         placeholder={'차종을 입력하세요'}
         value={searchInput}
-        handleInput={handleInput}
+        handleInputChange={handleInput}
         handleSearchBtn={handleSearchBtn}
       />
       <Divider />

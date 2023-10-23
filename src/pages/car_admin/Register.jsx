@@ -222,7 +222,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 
   const handleCarAuthority = (e) => {
     setRegisterData({ ...registerData, authority: e.target.value });
-    setIsSelectUser(e.target.value === '1' ? false : true);
+    setIsSelectUser(e.target.value === '모두' ? false : true);
   };
 
   // axios로 사용자 정보 불러오기
@@ -430,6 +430,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
       {/* 전체 그리드 */}
       <Grid sx={{ flexGrow: 1, p: '30px' }} container>
         <Grid item xs={12}>
+          {/* TODO */}
           <RadioGroup
             row
             name="row-radio-buttons-group"
@@ -437,39 +438,47 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
             value={registerData.type}
             onChange={(e) => {
               setRegisterData({ ...registerData, type: e.target.value });
+              console.log(e.target.value);
             }}
           >
-            <FormLabel
-              id="demo-row-radio-buttons-group-label"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '80px',
-                fontWeight: 'bold'
-              }}
-            >
-              종류 *
-            </FormLabel>
-            <FormControlLabel
-              value="법인"
-              control={<Radio />}
-              label={<Chip label="법인" color="primary" />}
-            />
-            <FormControlLabel
-              value="개인"
-              control={<Radio />}
-              label={<Chip label="개인" color="success" />}
-            />
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <FormLabel
+                  id="demo-row-radio-buttons-group-label"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  종류 *
+                </FormLabel>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControlLabel
+                  value="법인"
+                  control={<Radio />}
+                  label={<Chip label="법인" color="primary" />}
+                />
+                <FormControlLabel
+                  value="개인"
+                  control={<Radio />}
+                  label={<Chip label="개인" color="success" />}
+                />
+              </Grid>
+            </Grid>
           </RadioGroup>
         </Grid>
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
+                  justifyContent: 'flex-end',
                   alignItems: 'center',
                   fontWeight: 'bold'
                 }}
@@ -477,7 +486,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 차량명 *
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <Autocomplete
                 freeSolo
                 {...defaultProps}
@@ -515,12 +524,13 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 )}
               />
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
+                  justifyContent: 'flex-end',
                   alignItems: 'center',
                   fontWeight: 'bold'
                 }}
@@ -528,7 +538,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 차량번호 *
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <TextField
                 sx={{ m: 1 }}
                 item
@@ -551,21 +561,22 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'flex-end',
                   fontWeight: 'bold'
                 }}
               >
                 유종 *
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <TextField
                 id="outlined-select-currency"
                 select
@@ -588,20 +599,21 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 </MenuItem>
               </TextField>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'flex-end',
                   fontWeight: 'bold'
                 }}
               >
                 연비 *
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <TextField
                 item
                 required
@@ -630,23 +642,24 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'flex-end',
                   fontWeight: 'bold',
-                  whiteSpace: 'pre-line',
-                  fontSize: '15px'
+                  whiteSpace: 'pre-line'
                 }}
               >
-                {'누적' + '\n' + '주행 거리'}
+                {/* {'누적' + '\n' + '주행 거리'} */}
+                {'누적 주행 거리'}
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <TextField
                 item
                 required
@@ -678,17 +691,22 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
-                sx={{ fontWeight: 'bold' }}
+                sx={{
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
+                }}
               >
                 구입일자
               </FormLabel>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box
                   sx={{
@@ -722,17 +740,22 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
         </Grid>
 
         <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}>
+          <Grid container spacing={1}>
+            <Grid item xs={2}>
               <FormLabel
                 item
                 id="demo-row-radio-buttons-group-label"
-                sx={{ fontWeight: 'bold' }}
+                sx={{
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
+                }}
               >
                 메모
               </FormLabel>
             </Grid>
-            <Grid item xs={11}>
+            <Grid item xs={10}>
               <TextField
                 id="outlined-multiline-static"
                 label="메모"
@@ -747,45 +770,46 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           </Grid>
         </Grid>
 
-        <Grid container xs={12}>
+        <Grid item xs={12}>
           <RadioGroup
             row
             name="row-radio-buttons-group"
             defaultValue={registerData.authority}
             onChange={handleCarAuthority}
           >
-            <FormLabel
-              id="demo-row-radio-buttons-group-label"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                fontWeight: 'bold',
-                mr: '15px'
-              }}
-            >
-              차량 사용 권한 *
-            </FormLabel>
-            <FormControlLabel
-              value="모두"
-              control={<Radio />}
-              label="전체 사용 가능"
-            />
-            <FormControlLabel
-              value="지정"
-              control={<Radio />}
-              label="선택 사용자만 사용 가능"
-            />
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <FormLabel
+                  id=""
+                  sx={{
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                  }}
+                >
+                  차량 사용 권한 *
+                </FormLabel>
+              </Grid>
+              <Grid item xs={10}>
+                <FormControlLabel
+                  value="모두"
+                  control={<Radio />}
+                  label="전체 사용 가능"
+                />
+                <FormControlLabel
+                  value="지정"
+                  control={<Radio />}
+                  label="선택 사용자만 사용 가능"
+                />
+              </Grid>
+            </Grid>
           </RadioGroup>
         </Grid>
         {isShowSelectUser === true ? (
-          <Grid
-            container
-            xs={12}
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={5}>
+          <Grid container xs={12} spacing={1}>
+            <Grid item xs={2}></Grid>
+            <Grid item xs={4}>
               {customList(left, <Typography></Typography>)}
             </Grid>
             <Grid item>
@@ -812,7 +836,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               {customList(
                 filterMemData,
                 <CardHeader
@@ -926,7 +950,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
             
         */}
       <SubHeader title={'차량'} />
-      <Box sx={{ display: 'flex', height: 'calc(100% - 64px)' }}>
+      <Box sx={{ display: 'flex', height: 'calc(100% - 65px)' }}>
         <SubSidebar
           content={
             <SubSidebarContent
