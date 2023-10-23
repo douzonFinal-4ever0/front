@@ -1,9 +1,14 @@
 import styled from '@emotion/styled';
 import { MenuItem, Select } from '@mui/material';
 
-const Selectbox = ({ value, handleSelectBox, menuList }) => {
+const Selectbox = ({ name, value, handleSelectBox, menuList }) => {
   return (
-    <StyledSelect value={value} onChange={handleSelectBox} displayEmpty>
+    <StyledSelect
+      name={name}
+      value={value}
+      onChange={handleSelectBox}
+      displayEmpty
+    >
       <MenuItem value="">선택</MenuItem>
       {menuList.map((item) => (
         <MenuItem key={item.index} value={item.value}>

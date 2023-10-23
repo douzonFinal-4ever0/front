@@ -37,6 +37,9 @@ import { useDispatch } from 'react-redux';
 import Drawer from '../../components/common/Drawer';
 import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 import CarRezDetail from '../../components/car_user/CarRezDetail';
+import Selectbox from '../../components/common/Selectbox';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import { palette } from '../../theme/palette';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('');
@@ -123,9 +126,14 @@ const Dashboard = () => {
         }}
       >
         <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-          <Button variant="contained" sx={{ width: '100%' }}>
+          {/* <Button variant="contained" sx={{ width: '100%' }}>
             차량 예약
-          </Button>
+          </Button> */}
+          <RectangleBtn
+            type={'button'}
+            text={'차량 예약'}
+            sx={{ padding: '14px 12px', backgroundColor: palette.grey['500'] }}
+          />
         </Grid>
         <Divider />
         <Searchbar
@@ -243,6 +251,7 @@ const Dashboard = () => {
       content: <CarRezDetail rezCode={selectedRezCode} />
     }
   ];
+
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
@@ -250,25 +259,24 @@ const Dashboard = () => {
         <SubSidebar widthP={30} content={<SubSideContents />} />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
-            <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-              {/* <InputLabel id="demo-simple-select-filled-label">전체</InputLabel> */}
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                displayEmpty
-                value={range}
-                inputProps={{ 'aria-label': 'Without label' }}
-                onChange={handleRange}
-              >
-                <MenuItem value={''}>
-                  <em>전체</em>
-                </MenuItem>
-                <MenuItem value={'1'}>확정</MenuItem>
-                <MenuItem value={'3'}>취소</MenuItem>
-                <MenuItem value={'2'}>완료</MenuItem>
-              </Select>
-            </FormControl>
-            <br />
+            {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}> */}
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              displayEmpty
+              value={range}
+              inputProps={{ 'aria-label': 'Without label' }}
+              onChange={handleRange}
+              sx={{ minWidth: 120, mb: 1 }}
+            >
+              <MenuItem value={''}>
+                <em>전체</em>
+              </MenuItem>
+              <MenuItem value={'1'}>확정</MenuItem>
+              <MenuItem value={'3'}>취소</MenuItem>
+              <MenuItem value={'2'}>완료</MenuItem>
+            </Select>
+
             <DataGrid
               rows={filterRezData}
               columns={colums}
@@ -300,4 +308,10 @@ const StyledBox = styled(Box)(({ theme, bgcolor, height }) => ({
   [theme.breakpoints.up('md')]: {
     minWidth: '100%'
   }
+}));
+
+const StyledLabelGrid = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center'
 }));
