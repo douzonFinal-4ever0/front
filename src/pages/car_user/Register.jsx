@@ -25,10 +25,13 @@ import axios from 'axios';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useNavigate } from 'react-router-dom';
-import { formatDate } from '@fullcalendar/core';
+// import { formatDate } from '@fullcalendar/core';
 import dayjs from 'dayjs';
 import SubSideContents from '../../components/car_user/SubsideContents';
 import Label from '../../components/common/Label';
+import Selectbox from '../../components/common/Selectbox';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import { palette } from '../../theme/palette';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -63,9 +66,23 @@ const Register = () => {
     return_loc: '',
     dest_loc: ''
   });
-
+  const returnLocList = [
+    {
+      index: 0,
+      value: '강원특별자치도 춘천시 남산면 버들1길 130'
+    },
+    {
+      index: 0,
+      value: '서울특별시 중구 을지로1가 을지로 29'
+    },
+    {
+      index: 0,
+      value: '부산 해운대구 센텀중앙로 79'
+    }
+  ];
   //값이 변하면 formdata 값변경 함수
   const handleChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -128,7 +145,7 @@ const Register = () => {
       //console.log(selectedRows.id);
       setFormData({
         ...formData,
-        carDTO: { car_code: selectedRows.id },
+        carDTO: { car_code: selectedRows.car_code },
         receipt_loc: selectedRows.car_address
       });
       setOpen(false);
@@ -136,7 +153,7 @@ const Register = () => {
       alert('차량을 선택해주세요');
     }
     axios
-      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows}`)
+      .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
         setCarDetail({
           id: res.data.carVO.car_code,
@@ -172,10 +189,10 @@ const Register = () => {
               <Stack sx={{ rowGap: '10px' }}>
                 {/* 이름 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={1}>
+                  <StyledLabelGrid item xs={2}>
                     <Label htmlFor={'mem_code'} text={'이름'} />
                   </StyledLabelGrid>
-                  <Grid item xs={11}>
+                  <Grid item xs={10}>
                     <TextField
                       id="mem_code"
                       variant="outlined"
@@ -186,10 +203,10 @@ const Register = () => {
 
                 {/* 부서 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={1}>
+                  <StyledLabelGrid item xs={2}>
                     <Label htmlFor={'dpt_name'} text={'부서'} />
                   </StyledLabelGrid>
-                  <Grid item xs={11}>
+                  <Grid item xs={10}>
                     <TextField
                       id="dpt_name"
                       variant="outlined"
@@ -200,10 +217,10 @@ const Register = () => {
 
                 {/* 직급 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={1}>
+                  <StyledLabelGrid item xs={2}>
                     <Label htmlFor={'position_name'} text={'직급'} />
                   </StyledLabelGrid>
-                  <Grid item xs={11}>
+                  <Grid item xs={10}>
                     <TextField
                       id="position_name"
                       variant="outlined"
@@ -211,37 +228,27 @@ const Register = () => {
                     />
                   </Grid>
                 </Grid>
-
-                {/* <Stack>
-                <TextField
-                  label="사번"
-                  name="mem_code"
-                  variant="outlined"
-                  type="text"
-                  style={hiddenStyle}
-                  onChange={handleChange}
-                  value={'MEM001'}
-                />
-                <NewFormControl>
-                  <TextField label="이름" variant="outlined" type="text" />
-                </NewFormControl>
-                <NewFormControl>
-                  <TextField label="부서" variant="outlined" type="text" />
-                </NewFormControl>
-                <NewFormControl>
-                  <TextField label="직급" variant="outlined" type="text" />
-                </NewFormControl>
-                <NewFormControl>
-                  <TextField
-                    label="목적"
-                    name="detail"
-                    variant="outlined"
-                    type="text"
-                    onChange={handleChange}
-                  />
-                </NewFormControl>
-                <Grid>
-                  <NewFormControl>
+                {/* 목적 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'detail'} text={'목적'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="detail"
+                      name="detail"
+                      variant="outlined"
+                      placeholder="목적을 입력하세요"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+                {/* 대여 날짜 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'start_at'} text={'대여 날짜'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
                     <TimeField
                       withMonth={true}
                       label={'대여 날짜'}
@@ -249,9 +256,14 @@ const Register = () => {
                       onChange={(e) => handleTimeChange(e, 'start_at')}
                       timeValue={dayjs()}
                     ></TimeField>
-                  </NewFormControl>
-                  ~
-                  <NewFormControl>
+                  </Grid>
+                </Grid>
+                {/* 반납 날짜 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'return_at'} text={'반납 날짜'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
                     <TimeField
                       withMonth={true}
                       label={'반납 날짜'}
@@ -259,147 +271,206 @@ const Register = () => {
                       onChange={(e) => handleTimeChange(e, 'return_at')}
                       timeValue={dayjs()}
                     ></TimeField>
-                  </NewFormControl>
+                  </Grid>
                 </Grid>
-                <NewFormControl>
-                  <InputLabel htmlFor="dest">목적지</InputLabel>
-                  <Input
-                    id="dest"
-                    name="dest_loc"
-                    type="text"
-                    value={addressObj.areaAddress + addressObj.townAddress}
-                    readOnly
-                  />
-                  <DaumPost setAddressObj={setAddressObj} />
-                </NewFormControl>
-                <NewFormControl>
-                  <Button onClick={handleOpenModal}>차량 찾기</Button>
-                  <Modal
-                    open={open}
-                    handleModal={(e, reason) => handleCloseModal(reason)}
-                    modalTitle={'차량 찾기'}
-                    content={
-                      <SubSideContents setSelectedRows={setSelectedRows} />
-                    }
-                    buttons={
-                      <ButtonGroup>
-                        <Button onClick={carSelect}>선택</Button>{' '}
-                        <Button onClick={handleCloseModal}>취소</Button>
-                      </ButtonGroup>
-                    }
-                  />
-                </NewFormControl>
-                <NewFormControl>
-                  <InputLabel htmlFor="est_mileage">예상 주행거리</InputLabel>
-                  <Input
-                    id="est_mileage"
-                    name="est_mileage"
-                    type="number"
-                    onChange={handleChange}
-                  />
-                </NewFormControl>
-              </Stack> */}
+                {/* 목적지 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'dest'} text={'목적지'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={8}>
+                    <TextField
+                      id="dest"
+                      name="dest_loc"
+                      type="text"
+                      value={addressObj.areaAddress + addressObj.townAddress}
+                      onChange={handleChange}
+                      readOnly
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <DaumPost setAddressObj={setAddressObj} />
+                  </Grid>
+                </Grid>
+                {/* 차량 찾기 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'detail'} text={'차량 찾기'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    {/* <Button onClick={handleOpenModal}>차량 찾기</Button> */}
+                    <RectangleBtn
+                      type={'button'}
+                      text={'차량 찾기'}
+                      sx={{
+                        padding: '14px 12px',
+                        backgroundColor: palette.grey['500']
+                      }}
+                      handlebtn={handleOpenModal}
+                    />
+                    <Modal
+                      open={open}
+                      handleModal={(e, reason) => handleCloseModal(reason)}
+                      modalTitle={'차량 찾기'}
+                      content={
+                        <SubSideContents setSelectedRows={setSelectedRows} />
+                      }
+                      buttons={
+                        <ButtonGroup>
+                          <Button onClick={carSelect}>선택</Button>{' '}
+                          <Button onClick={handleCloseModal}>취소</Button>
+                        </ButtonGroup>
+                      }
+                    />
+                  </Grid>
+                </Grid>
+                {/* 예상 주행 거리 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="est_mileage"
+                      name="est_mileage"
+                      type="number"
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
               </Stack>
             </Item>
           </Grid>
+
           <Grid item xs={6}>
             <Item>
-              <Typography
-                variant="h7"
-                component="div"
-                sx={{ flexGrow: 1, color: '#000' }}
-              >
-                차량 정보
-              </Typography>
-              <NewFormControl>
-                <InputLabel htmlFor="car_name">차종</InputLabel>
-                <Input
-                  id="car_name"
-                  type="text"
-                  value={carDetail.car_name}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl>
-                <InputLabel htmlFor="car_code">차량 번호</InputLabel>
-                <Input
-                  id="car_code"
-                  name="car_code"
-                  type="text"
-                  //onChange={handleChange}
-                  value={carDetail.id}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl>
-                <InputLabel htmlFor="accum_mileage">누적 주행 거리</InputLabel>
-                <Input
-                  id="accum_mileage"
-                  type="text"
-                  value={carDetail.accum_mileage}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl>
-                <InputLabel htmlFor="authority">권한</InputLabel>
-                <Input
-                  id="authority"
-                  type="text"
-                  value={carDetail.authority}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl>
-                <InputLabel htmlFor="fuel_type">유종</InputLabel>
-                <Input
-                  id="fuel_type"
-                  type="text"
-                  value={carDetail.fuel_type}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl>
-                <InputLabel htmlFor="fuel_effciency">연비</InputLabel>
-                <Input
-                  id="fuel_effciency"
-                  type="text"
-                  value={carDetail.fuel_effciency}
-                  readOnly
-                />
-              </NewFormControl>
-
-              <NewFormControl>
-                <InputLabel htmlFor="receipt_loc">인수지</InputLabel>
-                <Input
-                  id="receipt_loc"
-                  name="receipt_loc"
-                  type="text"
-                  //onChange={handleChange}
-                  value={carDetail.car_address}
-                  readOnly
-                />
-              </NewFormControl>
-              <NewFormControl sx={{ minWidth: 240 }}>
-                <InputLabel id="demo-simple-select-label">반납지</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="return_loc"
-                  name="return_loc"
-                  label="반납지"
-                  onChange={handleChange}
-                  style={{ backgroundColor: '#f5f5f5' }}
+              <Stack sx={{ rowGap: '10px' }}>
+                <Typography
+                  variant="h7"
+                  component="div"
+                  sx={{ flexGrow: 1, color: '#000' }}
                 >
-                  <MenuItem value={'강원특별자치도 춘천시 남산면 버들1길 130'}>
-                    본사
-                  </MenuItem>
-                  <MenuItem value={'서울특별시 중구 을지로1가 을지로 29'}>
-                    을지로
-                  </MenuItem>
-                  <MenuItem value={'부산 해운대구 센텀중앙로 79'}>
-                    부산
-                  </MenuItem>
-                </Select>
-              </NewFormControl>
+                  차량 정보
+                </Typography>
+
+                {/* 차종 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'car_name'} text={'차종'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="car_name"
+                      type="text"
+                      value={carDetail.car_name}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 차량 번호 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'car_code'} text={'차량 번호'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="car_code"
+                      name="car_code"
+                      type="text"
+                      onChange={handleChange}
+                      value={carDetail.id}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 누적 주행 거리 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'accum_mileage'} text={'누적주행거리'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="accum_mileage"
+                      type="text"
+                      value={carDetail.accum_mileage}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 권한 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'authority'} text={'권한'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="authority"
+                      type="text"
+                      value={carDetail.authority}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 유종 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'fuel_type'} text={'유종'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="fuel_type"
+                      type="text"
+                      value={carDetail.fuel_type}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 유종 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'fuel_effciency'} text={'연비'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="fuel_effciency"
+                      type="text"
+                      value={carDetail.fuel_effciency}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 인수지 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'receipt_loc'} text={'인수지'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="receipt_loc"
+                      name="receipt_loc"
+                      type="text"
+                      onChange={handleChange}
+                      value={carDetail.car_address}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 반납지 */}
+                <Grid item container spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'return_loc'} text={'반납지'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <Selectbox
+                      name="return_loc"
+                      // onChange={handleChange}
+                      value={formData.return_loc}
+                      handleSelectBox={handleChange}
+                      menuList={returnLocList}
+                    />
+                  </Grid>
+                </Grid>
+              </Stack>
             </Item>
           </Grid>
         </Grid>

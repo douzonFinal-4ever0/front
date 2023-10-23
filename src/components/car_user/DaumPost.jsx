@@ -1,6 +1,8 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
+import RectangleBtn from '../common/RectangleBtn';
+import { palette } from '../../theme/palette';
 //import { useDaumPostcodePopup } from './useDaumPostcodePopup'; // useDaumPostcodePopup 함수를 가져옵니다
 
 // Daum Postcode 스크립트 URL
@@ -46,9 +48,18 @@ function DaumPost({ setAddressObj }) {
   };
 
   return (
-    <Button type="button" onClick={handleClick}>
-      주소찾기
-    </Button>
+    // <Button type="button" onClick={handleClick}>
+    //   주소찾기
+    // </Button>
+    <RectangleBtn
+      type={'button'}
+      text={'주소 찾기'}
+      sx={{
+        padding: '14px 12px',
+        backgroundColor: palette.grey['500']
+      }}
+      handlebtn={handleClick}
+    />
   );
 }
 
