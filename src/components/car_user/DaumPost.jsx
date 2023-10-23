@@ -9,7 +9,7 @@ import { palette } from '../../theme/palette';
 const postcodeScriptUrl =
   '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
 
-function DaumPost({ setAddressObj }) {
+function DaumPost({ setAddressObj, setFormData, formData }) {
   // 클릭 시 수행될 팝업 생성 함수
   const open = useDaumPostcodePopup(postcodeScriptUrl);
 
@@ -35,15 +35,21 @@ function DaumPost({ setAddressObj }) {
         townAddress: (fullAddress +=
           extraAddress !== '' ? `(${extraAddress})` : '')
       });
-
       // 주소 검색이 완료된 후 결과를 매개변수로 전달
       // 다음에 수행할 작업을 명시
+      setFormData({
+        ...formData,
+        dest_loc:
+          localAddress +
+          (fullAddress += extraAddress !== '' ? `(${extraAddress})` : '')
+      });
     }
   };
 
   // 클릭 시 발생할 이벤트
   const handleClick = () => {
     // 주소 검색이 완료되고, 결과 주소를 클릭 시 해당 함수 수행
+
     open({ onComplete: handleComplete });
   };
 
@@ -53,7 +59,7 @@ function DaumPost({ setAddressObj }) {
     // </Button>
     <RectangleBtn
       type={'button'}
-      text={'주소 찾기'}
+      text={'찾기'}
       sx={{
         padding: '14px 12px',
         backgroundColor: palette.grey['500']
