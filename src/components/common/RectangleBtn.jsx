@@ -46,9 +46,9 @@ const RectangleBtn = ({ type, text, sx, handlebtn, category }) => {
       sx={sx}
       onClick={handlebtn}
       category={category}
-      fontColor={fontColor(category)}
-      bgColor={bgColor(category)}
-      bgHoverColor={bgHoverColor(category)}
+      fontcolor={fontColor(category)}
+      bgcolor={bgColor(category)}
+      bghovercolor={bgHoverColor(category)}
     >
       <Typography sx={{ fontWeight: 'bold' }}>{text}</Typography>
     </StyledBtn>
@@ -58,16 +58,16 @@ const RectangleBtn = ({ type, text, sx, handlebtn, category }) => {
 export default RectangleBtn;
 
 const StyledBtn = styled(Button)(
-  ({ theme, sx, fontColor, category, bgColor, bgHoverColor }) => ({
+  ({ theme, sx, fontcolor, category, bgcolor, bghovercolor }) => ({
     padding: '18px 16px',
     width: '100%',
     backgroundColor:
-      category !== undefined ? bgColor : theme.palette.grey['700'],
-    color: category !== undefined ? fontColor : theme.palette.common.white,
+      category !== undefined ? bgcolor : theme.palette.grey['700'],
+    color: category !== undefined ? fontcolor : theme.palette.common.white,
     border: category === 'cancel' ? '1px solid #dfdfdf' : 'none',
     '&:hover': {
       backgroundColor:
-        category !== undefined ? bgHoverColor : theme.palette.grey['800']
+        category !== undefined ? bghovercolor : theme.palette.grey['800']
     },
     ...sx
   })

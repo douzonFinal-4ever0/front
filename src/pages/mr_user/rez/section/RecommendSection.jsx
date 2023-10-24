@@ -61,7 +61,12 @@ const MrCard = ({ data }) => {
             sx={{
               mt: '10px',
               gap: '4px',
-              overflow: 'scroll'
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': {
+                display: 'none'
+              }
             }}
           >
             {keywords.map((item) => (
@@ -99,15 +104,21 @@ const RecommendSection = ({ data }) => {
       component={'section'}
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
-      <Stack direction={'row'} sx={{ alignItems: 'center', gap: '4px' }}>
-        <SectionTitle title="추천 10건" sx={{ fontSize: '16px' }} />
+      {/* <Stack
+        direction={'row'}
+        sx={{ justifyContent: 'flex-end', alignItems: 'center', gap: '2px' }}
+      >
         <Tooltip
           title="사용자 데이터를 분석하여 회의실을 추천드립니다 :-D"
           placement="top"
         >
           <InfoRoundedIcon fontSize="small" />
         </Tooltip>
-      </Stack>
+        <SectionTitle
+          title="추천 10건"
+          sx={{ fontSize: '16px', marginLeft: '0' }}
+        />
+      </Stack> */}
       <MrCardList data={data} />
     </Box>
   );
@@ -117,9 +128,13 @@ export default RecommendSection;
 
 const ContainerWithScroll = styled('div')(() => ({
   height: '800px',
-  overflow: 'scroll',
+  overflowY: 'scroll',
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': {
+    display: 'none'
+  }
 }));
 
 const StyledList = styled(List)(({ theme }) => ({

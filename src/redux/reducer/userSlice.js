@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   mem_code: 'MEM001', // 사번
-  name: '이기원' // 성명
+  name: '이기원', // 성명
+  position_name: '부장' // 직급명
 };
 
 const userSlice = createSlice({
