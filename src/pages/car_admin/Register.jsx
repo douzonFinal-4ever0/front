@@ -36,7 +36,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import axios from 'axios';
-import CommonTable from '../../components/car_admin/CarInfoTable';
+import CarInfoTable from '../../components/car_admin/CarInfoTable';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import UserSearchBar from '../../components/car_admin/UserSearchBar';
@@ -1021,18 +1021,20 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
               margin: '0px auto'
             }}
           >
-            <Searchbar
-              width={'40%'}
-              placeholder={'차량명 검색'}
-              value={searchInput}
-              handleInput={handleInput}
-              handleSearchBtn={handleSearchBtn}
-            />
+            <Box sx={{ width: '40%' }}>
+              <Searchbar
+                placeholder={'차량명 검색'}
+                value={searchInput}
+                handleInputChange={handleInput}
+                handleSearchBtnClick={handleSearchBtn}
+              />
+            </Box>
           </Stack>
           <StyledContainer>
-            <CommonTable
+            <CarInfoTable
               columns={columns}
               rows={carInfo}
+              tabData={tabData}
               setTabData={setTabData}
               filter={filter}
               searchValue={searchValue}
