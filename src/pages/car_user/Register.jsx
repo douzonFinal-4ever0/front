@@ -32,6 +32,7 @@ import Label from '../../components/common/Label';
 import Selectbox from '../../components/common/Selectbox';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
+import RectangleIcon from '@mui/icons-material/Rectangle';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const Register = () => {
       car_code: ''
     },
     detail: '',
-    est_mileage: 0,
+    est_mileage: '',
     start_at: '',
     return_at: '',
     receipt_loc: '',
@@ -187,6 +188,29 @@ const Register = () => {
           <Grid item xs={6}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
+                <Box
+                  display="flex"
+                  marginTop="15px"
+                  sx={{
+                    width: '100%',
+                    borderBottom: '3px solid black',
+                    padding: '5px 0px'
+                  }}
+                  mb={1}
+                >
+                  <RectangleIcon
+                    sx={{
+                      color: 'black',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      width: '6px',
+                      height: '6px'
+                    }}
+                  />
+                  <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
+                    기본 정보
+                  </Typography>
+                </Box>
                 {/* 이름 */}
                 <Grid item container xs={12} spacing={2}>
                   <StyledLabelGrid item xs={2}>
@@ -254,7 +278,6 @@ const Register = () => {
                       label={'대여 날짜'}
                       name={'start_at'}
                       onChange={(e) => handleTimeChange(e, 'start_at')}
-                      timeValue={dayjs()}
                     ></TimeField>
                   </Grid>
                 </Grid>
@@ -269,7 +292,6 @@ const Register = () => {
                       label={'반납 날짜'}
                       name={'return_at'}
                       onChange={(e) => handleTimeChange(e, 'return_at')}
-                      timeValue={dayjs()}
                     ></TimeField>
                   </Grid>
                 </Grid>
@@ -316,10 +338,43 @@ const Register = () => {
                         <SubSideContents setSelectedRows={setSelectedRows} />
                       }
                       buttons={
-                        <ButtonGroup>
-                          <Button onClick={carSelect}>선택</Button>{' '}
-                          <Button onClick={handleCloseModal}>취소</Button>
-                        </ButtonGroup>
+                        <Grid
+                          container
+                          xs={12}
+                          sx={{ m: '10px 0px' }}
+                          justifyContent="center"
+                          spacing={2}
+                        >
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              borderColor: '#BEBEBE',
+                              backgroundColor: '#ffffff',
+                              ':hover': {
+                                backgroundColor: '#ffffff',
+                                borderColor: '#BEBEBE'
+                              },
+                              margin: '0px 4px'
+                            }}
+                            onClick={handleCloseModal}
+                          >
+                            취소
+                          </Button>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              borderColor: '#BEBEBE',
+                              ':hover': {
+                                backgroundColor: '#2065D1',
+                                borderColor: '#BEBEBE'
+                              },
+                              margin: '0px 4px'
+                            }}
+                            onClick={carSelect}
+                          >
+                            선택
+                          </Button>
+                        </Grid>
                       }
                     />
                   </Grid>
@@ -345,13 +400,29 @@ const Register = () => {
           <Grid item xs={6}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
-                <Typography
-                  variant="h7"
-                  component="div"
-                  sx={{ flexGrow: 1, color: '#000' }}
+                <Box
+                  display="flex"
+                  marginTop="15px"
+                  sx={{
+                    width: '100%',
+                    borderBottom: '3px solid black',
+                    padding: '5px 0px'
+                  }}
+                  mb={1}
                 >
-                  차량 정보
-                </Typography>
+                  <RectangleIcon
+                    sx={{
+                      color: 'black',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      width: '6px',
+                      height: '6px'
+                    }}
+                  />
+                  <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
+                    차량 정보
+                  </Typography>
+                </Box>
 
                 {/* 차종 */}
                 <Grid item container xs={12} spacing={2}>
@@ -499,7 +570,7 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
-  height: 700
+  height: 650
 }));
 
 const BottomBox = styled(Box)(({ theme }) => ({

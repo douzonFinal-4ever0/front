@@ -6,7 +6,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper
+  Paper,
+  Typography
 } from '@mui/material';
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -15,6 +16,7 @@ import Searchbar from '../common/Searchbar';
 import NoRow from './NoRow';
 import RectangleBtn from '../common/RectangleBtn';
 import { palette } from '../../theme/palette';
+import RectangleIcon from '@mui/icons-material/Rectangle';
 
 // 서브 사이드바 콘텐츠
 const SubSideContents = ({ setSelectedRows }) => {
@@ -42,9 +44,9 @@ const SubSideContents = ({ setSelectedRows }) => {
   const handleSearchBtn = (e) => {
     e.preventDefault();
   };
-  const handleItem = (e, car_code, car_address) => {
+  const handleItem = (e, car_code, car_address, car_name) => {
     //setCarCode(car_code);
-    setSelectedRows({ car_code, car_address });
+    setSelectedRows({ car_code, car_address, car_name });
   };
 
   const CarList = ({ rows }) => {
@@ -57,7 +59,9 @@ const SubSideContents = ({ setSelectedRows }) => {
             {rows.map((car) => {
               return (
                 <ListItem
-                  onClick={(e) => handleItem(e, car.id, car.car_address)}
+                  onClick={(e) =>
+                    handleItem(e, car.id, car.car_address, car.car_name)
+                  }
                 >
                   <ListItemText
                     primary={`${car.id}`}
@@ -78,7 +82,8 @@ const SubSideContents = ({ setSelectedRows }) => {
       sx={{
         flexGrow: 1,
         overflow: 'hidden',
-        px: 2,
+        // px: 2,
+        // pt: 0,
         '& .MuiPaper-rounded2': {
           mt: 1,
           backgroundColor: '#f5f5f5',
@@ -97,6 +102,30 @@ const SubSideContents = ({ setSelectedRows }) => {
         />
       </Grid> */}
 
+      <Divider />
+      {/* <Box
+        display="flex"
+        // marginTop="15px"
+        sx={{
+          width: '100%',
+          borderBottom: '3px solid black',
+          padding: '5px 0px',
+          mb: 1
+        }}
+      >
+        <RectangleIcon
+          sx={{
+            color: 'black',
+            marginTop: 'auto',
+            marginBottom: 'auto',
+            width: '6px',
+            height: '6px'
+          }}
+        />
+        <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
+          차량 검색
+        </Typography>
+      </Box> */}
       <Searchbar
         width={'100%'}
         placeholder={'차종을 입력하세요'}
