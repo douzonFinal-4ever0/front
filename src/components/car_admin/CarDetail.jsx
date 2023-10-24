@@ -38,7 +38,13 @@ const style = {
   boxShadow: 24
 };
 
-const CarDetail = ({ carCode }) => {
+const CarDetail = ({
+  carCode,
+  carListInfo,
+  setCarListInfo,
+  carCounts,
+  setCarCounts
+}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -58,6 +64,13 @@ const CarDetail = ({ carCode }) => {
       memo: '',
       type: ''
     },
+    carUser: {
+      mem_code: '',
+      dept_code: '',
+      position_name: '',
+      name: '',
+      dept_name: ''
+    },
     accum_mileage: 0,
     fuel_effciency: 0,
     car_address: '',
@@ -74,19 +87,6 @@ const CarDetail = ({ carCode }) => {
   const [checked, setChecked] = useState([]);
   const [left, setLeft] = useState([]);
   const [right, setRight] = useState([]);
-
-  // axios로 사용자 정보 불러오기
-  useEffect(() => {
-    axios
-      .get('http://localhost:8081/admin/memList')
-      .then((res) => {
-        setRight(res.data);
-      })
-      .catch((error) => {
-        // 에러 발생 시 코드 실행
-        console.log(error);
-      });
-  }, []);
 
   function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -123,6 +123,13 @@ const CarDetail = ({ carCode }) => {
       setLeft(left.concat(rightChecked));
       setRight(not(right, rightChecked));
       setChecked(not(checked, rightChecked));
+      setCarModifyInfo({
+        ...carModifyInfo,
+        carUser: {
+          ...carModifyInfo.carUser,
+          mem_code: rightChecked[0].mem_code
+        }
+      });
     }
   };
 
@@ -139,6 +146,7 @@ const CarDetail = ({ carCode }) => {
     item['name'].includes(inputUser)
   );
 
+  // left = items
   const customList = (items, header) => (
     <Card
       sx={{
@@ -181,24 +189,36 @@ const CarDetail = ({ carCode }) => {
     </Card>
   );
 
-  const handleCarAuthority = (e) => {
-    // setRegisterData({ ...registerData, authority: e.target.value });
-    setIsShowSelectUser(e.target.value === '모두' ? false : true);
-  };
-
   // transferList 관련 함수, 변수들 끝
 
   const [carModifyInfo, setCarModifyInfo] = useState({
+    car_code: carCode,
     car_name: '',
     memo: '',
+    authority: '',
     carDetail: {
       fuel_effciency: 0,
       accum_mileage: 0
     },
-    carUser: { mem_code: left[0] ? left[0] : null, car_code: '' }
+    carUser: { mem_code: left[0] ? left[0].mem_code : null }
   });
 
+  const handleCarAuthority = (e) => {
+    setIsShowSelectUser(e.target.value === '모두' ? false : true);
+
+    if (e.target.value === '모두') {
+      setCarModifyInfo({ ...carModifyInfo, authority: e.target.value });
+    } else {
+      setCarModifyInfo({
+        ...carModifyInfo,
+        authority: e.target.value,
+        carUser: { ...carModifyInfo.carUser, mem_code: '' }
+      });
+    }
+  };
+
   useEffect(() => {
+    console.log(carCode);
     axios
       .get(`http://localhost:8081/admin/car/carGetOne`, {
         params: {
@@ -206,28 +226,8 @@ const CarDetail = ({ carCode }) => {
         }
       })
       .then((res) => {
-        const data = res.data;
-        setCarInfo({
-          ...setCarInfo,
-          carVO: {
-            ...carInfo.carVO,
-            car_name: data.carVO.car_name,
-            type: data.carVO.type,
-            fuel_type: data.carVO.fuel_type,
-            authority: data.carVO.authority,
-            buy_at: new Date(data.carVO.buy_at),
-            memo: data.carVO.memo,
-            created_at: new Date(data.carVO.created_at)
-          },
-          fuel_effciency: data.fuel_effciency,
-          accum_mileage: data.accum_mileage,
-          car_status: data.car_status,
-          updated_at: new Date(data.updated_at),
-          car_latitude: data.car_latitude,
-          car_longitude: data.car_longitude,
-          car_address: data.car_address
-        });
-
+        console.log(res.data);
+        setCarInfo(res.data);
         setIsLoading(false);
       });
   }, []);
@@ -241,18 +241,92 @@ const CarDetail = ({ carCode }) => {
   // 차량 상세 수정
   const handleModifyBtn = () => {
     // 모달창 오픈
+    axios
+      .get('http://localhost:8081/admin/memList')
+      .then((res) => {
+        carInfo.carUser !== null
+          ? setRight(
+              res.data.filter(
+                (item) => item.mem_code !== carInfo.carUser.mem_code
+              )
+            )
+          : setRight(res.data);
+      })
+      .catch((error) => {
+        // 에러 발생 시 코드 실행
+        console.log(error);
+      });
+
+    setIsShowSelectUser(carInfo.carVO.authority === '모두' ? false : true);
+
+    // 차량 정보 모달창에 바로 반영
     setCarModifyInfo({
       ...setCarModifyInfo,
+      car_code: carInfo.carVO.car_code,
       car_name: carInfo.carVO.car_name,
-      memo: carInfo.carVO.memo,
+      memo: carInfo.carVO.memo !== null ? carInfo.carVO.memo : '',
       authority: carInfo.carVO.authority,
       carDetail: {
+        ...carModifyInfo.carDetail,
         fuel_effciency: carInfo.fuel_effciency,
         accum_mileage: carInfo.accum_mileage
       },
-      carUser: {}
+      carUser: {
+        ...carModifyInfo.carUser,
+        mem_code: carInfo.carUser !== null ? carInfo.carUser.mem_code : ''
+      }
     });
+
+    if (carInfo.carVO.authority === '지정') {
+      setLeft([
+        {
+          mem_code: carInfo.carUser.mem_code,
+          name: carInfo.carUser.name,
+          position_name: carInfo.carUser.position_name,
+          deptVO: { dept_name: carInfo.carUser.dept_name }
+        }
+      ]);
+    }
+
     handleOpen();
+  };
+
+  // 수정 버튼 클릭
+  const clickModifyBtn = () => {
+    console.log(carModifyInfo);
+    // 수정 axios 처리
+    axios
+      .put('http://localhost:8081/admin/car/carModify', carModifyInfo)
+      .then(() => {
+        axios
+          .get(`http://localhost:8081/admin/car/carGetOne`, {
+            params: {
+              car_code: carModifyInfo.car_code
+            }
+          })
+          .then((res) => {
+            console.log(res.data);
+            // 상세 페이지에 적용
+            setCarInfo(res.data);
+
+            // 리스트에 적용
+            const newCarInfo = carListInfo.map((obj) => {
+              if (obj.car_code === carModifyInfo.car_code) {
+                return res.data;
+              }
+              return obj;
+            });
+            console.log(carListInfo);
+
+            handleClose();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -306,6 +380,12 @@ const CarDetail = ({ carCode }) => {
                     id="carName"
                     variant="outlined"
                     value={carModifyInfo.car_name}
+                    onChange={(e) => {
+                      setCarModifyInfo({
+                        ...carModifyInfo,
+                        car_name: e.target.value
+                      });
+                    }}
                   ></TextField>
                 </Grid>
               </Grid>
@@ -318,6 +398,15 @@ const CarDetail = ({ carCode }) => {
                     id="fuel_effciency"
                     variant="outlined"
                     value={carModifyInfo.carDetail.fuel_effciency}
+                    onChange={(e) => {
+                      setCarModifyInfo({
+                        ...carModifyInfo,
+                        carDetail: {
+                          ...carModifyInfo.carDetail,
+                          fuel_effciency: e.target.value
+                        }
+                      });
+                    }}
                   ></TextField>
                 </Grid>
               </Grid>
@@ -330,6 +419,15 @@ const CarDetail = ({ carCode }) => {
                     id="accum_mileage"
                     variant="outlined"
                     value={carModifyInfo.carDetail.accum_mileage}
+                    onChange={(e) => {
+                      setCarModifyInfo({
+                        ...carModifyInfo,
+                        carDetail: {
+                          ...carModifyInfo.carDetail,
+                          accum_mileage: e.target.value
+                        }
+                      });
+                    }}
                   ></TextField>
                 </Grid>
               </Grid>
@@ -342,6 +440,12 @@ const CarDetail = ({ carCode }) => {
                     id="memo"
                     variant="outlined"
                     value={carModifyInfo.memo}
+                    onChange={(e) => {
+                      setCarModifyInfo({
+                        ...carModifyInfo,
+                        memo: e.target.value
+                      });
+                    }}
                     multiline
                   ></TextField>
                 </Grid>
@@ -354,11 +458,8 @@ const CarDetail = ({ carCode }) => {
                   <RadioGroup
                     row
                     name="row-radio-buttons-group"
-                    // defaultValue="모두"
                     value={carModifyInfo.authority}
-                    onChange={(e) => {
-                      handleCarAuthority(e);
-                    }}
+                    onChange={handleCarAuthority}
                   >
                     <FormControlLabel
                       value="모두"
@@ -452,6 +553,7 @@ const CarDetail = ({ carCode }) => {
                 },
                 margin: '0px 4px'
               }}
+              onClick={handleClose}
             >
               취소
             </Button>
@@ -465,6 +567,7 @@ const CarDetail = ({ carCode }) => {
                 },
                 margin: '0px 4px'
               }}
+              onClick={clickModifyBtn}
             >
               수정
             </Button>
@@ -562,7 +665,9 @@ const CarDetail = ({ carCode }) => {
             <ListItemText primary="구입일자" />
           </ListItem>
           <ListItem>
-            <ListItemText primary={carInfo.carVO.created_at.toString()} />
+            <ListItemText
+              primary={new Date(carInfo.carVO.created_at).toLocaleString()}
+            />
           </ListItem>
         </Grid>
         <Grid item sx={{ display: 'flex' }} xs={6}>
@@ -570,16 +675,48 @@ const CarDetail = ({ carCode }) => {
             <ListItemText primary="등록일자" />
           </ListItem>
           <ListItem>
-            <ListItemText primary={carInfo.carVO.buy_at.toString()} />
+            <ListItemText
+              primary={new Date(carInfo.carVO.buy_at).toLocaleString()}
+            />
           </ListItem>
         </Grid>
-        <Grid item sx={{ display: 'flex' }} xs={12}>
-          <ListItem className="infoTitle" sx={{ width: '32.5%' }}>
+        <Grid item sx={{ display: 'flex' }} xs={6}>
+          <ListItem className="infoTitle">
             <ListItemText primary="차량 사용 권한" />
           </ListItem>
           <ListItem>
             <ListItemText primary={carInfo.carVO.authority} />
+            {carInfo.carVO.authority === '지정' && (
+              <ListItemText
+                primary={`${carInfo.carUser.dept_name}부서 ${carInfo.carUser.position_name} ${carInfo.carUser.name}`}
+              />
+            )}
           </ListItem>
+        </Grid>
+        <Grid item sx={{ display: 'flex' }} xs={6}>
+          <ListItem className="infoTitle">
+            <ListItemText primary="최근 수정일자" />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary={
+                carInfo.updated_at &&
+                new Date(carInfo.updated_at).toLocaleString()
+              }
+            />
+          </ListItem>
+        </Grid>
+        <Grid item container sx={{ display: 'flex' }} xs={12}>
+          <Grid item xs={3}>
+            <ListItem className="infoTitle">
+              <ListItemText primary="수용 인원" />
+            </ListItem>
+          </Grid>
+          <Grid item xs={9}>
+            <ListItem>
+              <ListItemText primary={`${carInfo.carVO.max_capacity}명`} />
+            </ListItem>
+          </Grid>
         </Grid>
         <Grid item sx={{ display: 'flex' }} xs={12}>
           <ListItem className="infoTitle" sx={{ width: '32.5%' }}>
