@@ -133,28 +133,28 @@ const SubSidebarContent = ({
             <ListItemButton
               sx={{ pl: 4 }}
               onClick={(e) => {
-                handleFilterClick(e, '법인');
+                handleFilterClick(e, '승용차');
               }}
             >
               <ListItemIcon>
                 <Circle color="primary" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`법인 차량 (${carCounts.corporation})`}
+                primary={`승용차 (${carCounts.corporation})`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
             <ListItemButton
               sx={{ pl: 4 }}
               onClick={(e) => {
-                handleFilterClick(e, '개인');
+                handleFilterClick(e, '화물차');
               }}
             >
               <ListItemIcon>
                 <Circle color="success" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`개인 차량 (${carCounts.personal})`}
+                primary={`화물차 (${carCounts.personal})`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
@@ -203,11 +203,12 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
   const [registerData, setRegisterData] = useState({
     car_code: '',
     car_name: null,
-    type: '법인',
+    type: '승용차',
     fuel_type: '휘발유',
     authority: '모두',
     buy_at: dayjs(today).toISOString(),
     memo: '',
+    max_capacity: 0,
     carDetail: { fuel_effciency: '', accum_mileage: '' },
     carUser: { mem_code: left[0] ? left[0] : null, car_code: '' }
   });
@@ -322,7 +323,10 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
   const carData = cardata;
 
   const defaultProps = {
-    options: cardata,
+    options:
+      registerData.type === '승용차'
+        ? cardata.filter((item) => item.type === '승용차')
+        : cardata.filter((item) => item.type === '화물차'),
     getOptionLabel: (option) => {
       return option ? option.model : '';
     }
@@ -367,7 +371,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
       registerData.car_name === null ||
       registerData.fuel_type === null ||
       registerData.carDetail.fuel_effciency === null ||
-      registerData.authority === ''
+      registerData.authority === '' ||
+      registerData.max_capacity === null
     ) {
       alert('입력하지 않은 필수값이 있습니다.');
       return;
@@ -392,13 +397,13 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
         // console.log(res);
         const newCarInfo = [...carInfo, res.data];
         setCarInfo(newCarInfo);
-        if (res.data.type === '법인') {
+        if (res.data.type === '승용차') {
           setCarCounts({ ...carCounts, corporation: ++carCounts.corporation });
-        } else if (res.data.type === '개인') {
+        } else if (res.data.type === '화물차') {
           setCarCounts({ ...carCounts, personal: ++carCounts.personal });
         }
         handleCloseDrawer();
-        handleSetSnackbarContent('동록이 완료되었습니다.');
+        handleSetSnackbarContent('등록이 완료되었습니다.');
         handleOpenSnackbar();
       });
   };
@@ -434,7 +439,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           <RadioGroup
             row
             name="row-radio-buttons-group"
-            defaultValue="법인"
+            defaultValue="승용차"
             value={registerData.type}
             onChange={(e) => {
               setRegisterData({ ...registerData, type: e.target.value });
@@ -457,14 +462,14 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
               </Grid>
               <Grid item xs={4}>
                 <FormControlLabel
-                  value="법인"
+                  value="승용차"
                   control={<Radio />}
-                  label={<Chip label="법인" color="primary" />}
+                  label={<Chip label="승용차" color="primary" />}
                 />
                 <FormControlLabel
-                  value="개인"
+                  value="화물차"
                   control={<Radio />}
-                  label={<Chip label="개인" color="success" />}
+                  label={<Chip label="화물차" color="success" />}
                 />
               </Grid>
             </Grid>
@@ -500,6 +505,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                       ...registerData,
                       car_name: '',
                       fuel_type: '',
+                      type: '승용차',
+                      max_capacity: 0,
                       carDetail: {
                         ...registerData.carDetail,
                         fuel_effciency: ''
@@ -511,6 +518,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                       ...registerData,
                       car_name: newValue.model,
                       fuel_type: newValue.fuel_type,
+                      type: newValue.type,
+                      max_capacity: newValue.max_capacity,
                       carDetail: {
                         ...registerData.carDetail,
                         fuel_effciency: newValue.fuel_effciency
@@ -597,11 +606,13 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 <MenuItem key="전기" value="전기">
                   전기
                 </MenuItem>
+                <MenuItem key="하이브리드" value="하이브리드">
+                  전기
+                </MenuItem>
               </TextField>
             </Grid>
             <Grid item xs={2}>
               <FormLabel
-                item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
@@ -615,7 +626,6 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
             </Grid>
             <Grid item xs={4}>
               <TextField
-                item
                 required
                 id="outlined-multiline-flexible"
                 placeholder="연비"
@@ -645,7 +655,6 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           <Grid container spacing={1}>
             <Grid item xs={2}>
               <FormLabel
-                item
                 id="demo-row-radio-buttons-group-label"
                 sx={{
                   display: 'flex',
@@ -655,13 +664,11 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                   whiteSpace: 'pre-line'
                 }}
               >
-                {/* {'누적' + '\n' + '주행 거리'} */}
                 {'누적 주행 거리'}
               </FormLabel>
             </Grid>
             <Grid item xs={4}>
               <TextField
-                item
                 required
                 id="outlined-number"
                 type="number"
@@ -683,6 +690,44 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                       ...registerData.carDetail,
                       accum_mileage: e.target.value
                     }
+                  });
+                }}
+                sx={{ m: 1 }}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <FormLabel
+                item
+                id="demo-row-radio-buttons-group-label"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  fontWeight: 'bold',
+                  whiteSpace: 'pre-line'
+                }}
+              >
+                {'수용 인원'}
+              </FormLabel>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                item
+                required
+                id="outlined-number"
+                type="number"
+                InputProps={{
+                  inputProps: { min: 0 }
+                }}
+                placeholder="수용 인원"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                value={registerData.max_capacity}
+                onChange={(e) => {
+                  setRegisterData({
+                    ...registerData,
+                    max_capacity: e.target.value
                   });
                 }}
                 sx={{ m: 1 }}
@@ -810,33 +855,6 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
           <Grid container xs={12} spacing={1}>
             <Grid item xs={2}></Grid>
             <Grid item xs={4}>
-              {customList(left, <Typography></Typography>)}
-            </Grid>
-            <Grid item>
-              <Grid container direction="column" alignItems="center">
-                <Button
-                  sx={{ my: 0.5 }}
-                  variant="outlined"
-                  size="small"
-                  onClick={handleCheckedRight}
-                  disabled={leftChecked.length === 0}
-                  aria-label="move selected right"
-                >
-                  &gt;
-                </Button>
-                <Button
-                  sx={{ my: 0.5 }}
-                  variant="outlined"
-                  size="small"
-                  onClick={handleCheckedLeft}
-                  disabled={rightChecked.length === 0 || left.length >= 1}
-                  aria-label="move selected left"
-                >
-                  &lt;
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
               {customList(
                 filterMemData,
                 <CardHeader
@@ -850,6 +868,33 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                   }
                 />
               )}
+            </Grid>
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                <Button
+                  sx={{ my: 0.5 }}
+                  variant="outlined"
+                  size="small"
+                  onClick={handleCheckedLeft}
+                  disabled={rightChecked.length === 0 || left.length >= 1}
+                  aria-label="move selected left"
+                >
+                  &gt;
+                </Button>
+                <Button
+                  sx={{ my: 0.5 }}
+                  variant="outlined"
+                  size="small"
+                  onClick={handleCheckedRight}
+                  disabled={leftChecked.length === 0}
+                  aria-label="move selected right"
+                >
+                  &lt;
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              {customList(left, <Typography></Typography>)}
             </Grid>
           </Grid>
         ) : null}
@@ -899,8 +944,8 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
       .get('http://localhost:8081/admin/car/carList')
       .then((res) => {
         setCarInfo(res.data);
-        const filteredCor = res.data.filter((obj) => obj.type === '법인');
-        const filteredPer = res.data.filter((obj) => obj.type === '개인');
+        const filteredCor = res.data.filter((obj) => obj.type === '승용차');
+        const filteredPer = res.data.filter((obj) => obj.type === '화물차');
         setCarCounts({
           ...carCounts,
           total: res.data.length,
@@ -913,7 +958,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
         // 에러 발생 시 코드 실행
         console.log(error);
       });
-  }, []);
+  }, [carInfo]);
 
   const columns = [
     { id: 'type', label: '종류', minWidth: 170 },
@@ -991,6 +1036,9 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
               setTabData={setTabData}
               filter={filter}
               searchValue={searchValue}
+              setCarListInfo={setCarInfo}
+              carCounts={carCounts}
+              setCarCounts={setCarCounts}
             />
           </StyledContainer>
         </Box>
