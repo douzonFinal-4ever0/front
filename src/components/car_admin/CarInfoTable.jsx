@@ -12,10 +12,12 @@ import { openDrawer } from '../../redux/reducer/DrawerSlice';
 import { useState } from 'react';
 import CarDetail from './CarDetail';
 import { Chip } from '@mui/material';
+import CarMaint from './CarMaint';
 
-const CommonTable = ({
+const CarInfoTable = ({
   columns,
   rows,
+  tabData,
   setTabData,
   filter,
   searchValue,
@@ -52,7 +54,16 @@ const CommonTable = ({
       },
       {
         title: '정비 및 지출',
-        content: <>정비 지출 페이지</>
+        content: (
+          <CarMaint
+            setTabData={setTabData}
+            carCode={value}
+            carListInfo={rows}
+            setCarListInfo={setCarListInfo}
+            carCounts={carCounts}
+            setCarCounts={setCarCounts}
+          />
+        )
       }
     ]);
     dispatch(openDrawer());
@@ -60,15 +71,18 @@ const CommonTable = ({
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 700, borderRadius: 0 }}>
-        <Table stickyHeader aria-label="sticky table">
+      <TableContainer sx={{ maxHeight: 730, borderRadius: 0 }}>
+        <Table stickyHeader aria-label="tableTitle">
           <TableHead sx={{ borderColor: '#eeeee' }}>
             <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{
+                    minWidth: column.minWidth,
+                    backgroundColor: '#f0f0f0'
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -137,4 +151,4 @@ const CommonTable = ({
   );
 };
 
-export default CommonTable;
+export default CarInfoTable;
