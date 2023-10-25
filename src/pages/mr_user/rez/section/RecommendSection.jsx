@@ -61,7 +61,12 @@ const MrCard = ({ data }) => {
             sx={{
               mt: '10px',
               gap: '4px',
-              overflow: 'scroll'
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': {
+                display: 'none'
+              }
             }}
           >
             {keywords.map((item) => (
@@ -99,14 +104,25 @@ const RecommendSection = ({ data }) => {
       component={'section'}
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
-      <Stack direction={'row'} sx={{ alignItems: 'center', gap: '4px' }}>
-        <SectionTitle title="추천 10건" sx={{ fontSize: '16px' }} />
+      <Stack
+        direction={'row'}
+        sx={{
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: '2px',
+          paddingRight: '10px'
+        }}
+      >
         <Tooltip
           title="사용자 데이터를 분석하여 회의실을 추천드립니다 :-D"
           placement="top"
         >
-          <InfoRoundedIcon fontSize="small" />
+          <StyledInfoIcon fontSize="small" color="#555" />
         </Tooltip>
+        <SectionTitle
+          title="추천 10건"
+          sx={{ fontSize: '14px', marginLeft: '0', color: '#555' }}
+        />
       </Stack>
       <MrCardList data={data} />
     </Box>
@@ -117,9 +133,13 @@ export default RecommendSection;
 
 const ContainerWithScroll = styled('div')(() => ({
   height: '800px',
-  overflow: 'scroll',
+  overflowY: 'scroll',
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': {
+    display: 'none'
+  }
 }));
 
 const StyledList = styled(List)(({ theme }) => ({
@@ -153,4 +173,8 @@ const StyledMrName = styled(Typography)(({ theme }) => ({
 const StyledCapacity = styled(Typography)(({ theme }) => ({
   fontSize: '13px',
   fontWeight: theme.typography.fontWeightBold
+}));
+
+const StyledInfoIcon = styled(InfoRoundedIcon)(({ theme }) => ({
+  color: '#555'
 }));

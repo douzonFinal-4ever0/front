@@ -87,7 +87,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
 export default Router;
 
 const MrUserDashboardPage = Loadable(
-  lazy(() => import('../pages/mr_user/Dashboard'))
+  lazy(() => import('../pages/mr_user/dashboard/DashboardPage'))
 );
 
 const MrUserMrRezPage = Loadable(

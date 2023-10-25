@@ -19,6 +19,7 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
+  Modal,
   Paper,
   Select,
   Stack,
@@ -40,17 +41,23 @@ import CarRezDetail from '../../components/car_user/CarRezDetail';
 import Selectbox from '../../components/common/Selectbox';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
+import CarOperation from '../../components/car_user/CarOperation';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('');
   const mem_code = 'MEM001';
-
+  const [open, setOpen] = useState(false);
   const dateFormat = (date) => {
     const preDate = new Date(date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return preDate.toLocaleString('ko-KR', options).slice(0, -1);
   };
-
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     axios
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
@@ -196,7 +203,7 @@ const Dashboard = () => {
     {
       field: 'mem/dept',
       headerName: '이름/부서',
-      width: 200,
+      width: 150,
       description: '예약자 이름, 부서',
       editable: false,
       valueGetter: (params) => `${params.row.name} / ${params.row.dept_name}`
@@ -216,6 +223,29 @@ const Dashboard = () => {
       width: 100,
       description: '사량 사용 목적',
       editable: false
+    },
+    {
+      field: 'action',
+      headerName: '운행 완료 처리',
+      width: 100,
+      description: '운행 완료 처리',
+      renderCell: (params) => {
+        const handleClick = () => {
+          const Data = params.row;
+          setSelectedRezCode(Data.id);
+          console.log(Data.id);
+          handleOpen();
+        };
+        return (
+          <Button
+            onClick={(e) => {
+              handleClick(e);
+            }}
+          >
+            운행완료
+          </Button>
+        );
+      }
     }
   ];
 
@@ -239,22 +269,40 @@ const Dashboard = () => {
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
   };
+  //더블클릭 이벧느
   const handleDbClick = (param) => {
     const Data = param.row;
     setSelectedRezCode(Data.id);
     console.log(Data.id);
     handleOpenDrawer();
   };
+
   const tabData = [
     {
       title: '예약 상세',
       content: <CarRezDetail rezCode={selectedRezCode} />
     }
   ];
+  const tabData2 = [
+    {
+      title: '예약 상세',
+      content: <CarRezDetail rezCode={selectedRezCode} />
+    },
 
+    {
+      title: '운행 완료 처리',
+      content: <CarOperation rezCode={selectedRezCode} />
+    }
+  ];
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
+      <CarOperation
+        rezCode={selectedRezCode}
+        open={open}
+        handleClose={handleClose}
+      />
+
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar widthP={30} content={<SubSideContents />} />
         <MainContainer>
@@ -286,12 +334,16 @@ const Dashboard = () => {
               pageSizeOptions={[5, 10]}
               checkbox={false}
               disableRow={false}
+              // clickEvent={handleClick}
               dbclickEvent={handleDbClick}
             />
           </WrapContainer>
         </MainContainer>
       </Box>
-      <Drawer width={'100vh'} tabData={tabData} />
+      <Drawer
+        width={'100vh'}
+        tabData={carRez.rez_status == '1' ? tabData2 : tabData}
+      />
     </>
   );
 };

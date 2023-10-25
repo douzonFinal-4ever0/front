@@ -9,7 +9,7 @@ import TimePickerClock from './TimePickerClock';
 import MultiTimePicker from './MultiTimePicker';
 
 const TimeField = ({ withMonth, label, onChange, name, timeValue }) => {
-  const inputTimeValue = timeValue ? timeValue : '2023-10-13T15:30';
+  const inputTimeValue = timeValue ? timeValue : '';
   /**date time picker 써야할때 쓰는거 */
   const [value, setValue] = useState(dayjs(inputTimeValue));
   /*-----------------------------------------------------------------------*/

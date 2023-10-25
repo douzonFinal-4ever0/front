@@ -1,4 +1,9 @@
-import { Box, Grid } from '@mui/material';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+// -------------------------------------------------------------
+import styled from '@emotion/styled';
+import { Box, Grid, Stack, Typography } from '@mui/material';
+import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
 // -------------------------------------------------------------
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
@@ -6,12 +11,9 @@ import RecommendSection from './section/RecommendSection';
 import MrInfoSection from './section/MrInfoSection';
 import RezSection from './section/RezSection';
 import SubHeader from '../../../components/common/SubHeader';
-
 import RoomImage1 from '../../../assets/images/room/room1.jpeg';
 import RoomImage2 from '../../../assets/images/room/room2.jpeg';
 import RoomImage3 from '../../../assets/images/room/room3.jpeg';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const MrRezPage = () => {
   const data = [
@@ -349,16 +351,34 @@ const MrRezPage = () => {
               {/* row - 회의실 정보 */}
               <Grid item container xs={8} spacing={3}>
                 <Grid item xs={5.5}>
-                  <RecommendSection data={data} />
+                  <Stack spacing={2}>
+                    <StyledStepText>
+                      <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+                      Step 1 - 추천 회의실 선택
+                    </StyledStepText>
+                    <RecommendSection data={data} />
+                  </Stack>
                 </Grid>
                 <Grid item xs={6.5}>
-                  <MrInfoSection data={data[0]} />
+                  <Stack spacing={2}>
+                    <StyledStepText>
+                      <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+                      Step 2 - 회의실 상세정보 확인
+                    </StyledStepText>
+                    <MrInfoSection data={data[0]} />
+                  </Stack>
                 </Grid>
               </Grid>
               {/* row - 예약 정보 */}
               <Grid item xs={4}>
-                <Grid item xs={12} sx={{ height: '100%' }}>
-                  <RezSection />
+                <Grid item xs={12}>
+                  <Stack spacing={2}>
+                    <StyledStepText>
+                      <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+                      Step 3 - 예약 정보 입력
+                    </StyledStepText>
+                    <RezSection />
+                  </Stack>
                 </Grid>
               </Grid>
             </Grid>
@@ -370,3 +390,12 @@ const MrRezPage = () => {
 };
 
 export default MrRezPage;
+
+const StyledStepText = styled(Typography)(({ theme }) => ({
+  paddingBottom: '6px',
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '18px',
+  fontWeight: 'bold',
+  borderBottom: '3px solid black'
+}));
