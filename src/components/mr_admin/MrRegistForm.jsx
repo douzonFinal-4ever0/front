@@ -40,8 +40,12 @@ import Label from '../common/Label';
 import { palette } from '../../theme/palette';
 import dayjs from 'dayjs';
 import SuppliesList from './SuppliesList';
-
+import SetAxiosHeaders from '../../utils/axios';
+import { useEffect } from 'react';
+import Axios from '../../utils/axios';
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
+  const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
+  axios.defaults.headers.common['Authorization'] = token;
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
   console.log(selectedRowData);
@@ -247,8 +251,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       reader.onload = (e) => {
         const newImage = { src: e.target.result, title: file.name };
         setImages([...images, newImage]);
-        console.log(images);
+        console.log(newImage);
       };
+      console.log(file);
       reader.readAsDataURL(file);
     }
   };
@@ -409,6 +414,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             id="image-upload-button"
             type="file"
             onChange={handleImageChange}
+            multiple
           />
           <label htmlFor="image-upload-button">
             <Button

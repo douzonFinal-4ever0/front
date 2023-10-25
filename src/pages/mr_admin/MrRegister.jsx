@@ -14,6 +14,17 @@ import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
 
 const MrRegister = () => {
+  const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
+
+  axios.defaults.headers.common['Authorization'] = token;
+  // const [jwtToken, setJwtToken] = useState('');
+  // // JWT 토큰을 localStorage에서 가져오기
+  // useEffect(() => {
+  //   const storedJwtToken = localStorage.getItem('jwtToken');
+  //   if (storedJwtToken) {
+  //     setJwtToken(storedJwtToken);
+  //   }
+  // }, []);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   /**탭에 들어가는 데이터 */
@@ -42,7 +53,7 @@ const MrRegister = () => {
     return (
       <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
         <Button
-          variant="outlined"
+          variant="contained"
           sx={{ width: '100%' }}
           onClick={handleMrRegistClick}
         >
@@ -59,15 +70,20 @@ const MrRegister = () => {
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
   const handleMrListUpdate = () => {
-    axios.get('http://localhost:8081/mr/mrList').then((res) => {
-      const processedData = res.data.map((item) => ({
-        ...item,
-        id: item.mr_code,
-        is_opened: item.is_opened === 0 ? '활성' : '비활성',
-        is_used: item.is_used === 0 ? '사용중' : '대기중'
-      }));
-      setMrList(processedData);
-    });
+    axios
+      .get('http://localhost:8081/mr/mrList')
+      .then((res) => {
+        const processedData = res.data.map((item) => ({
+          ...item,
+          id: item.mr_code,
+          is_opened: item.is_opened === 0 ? '활성' : '비활성',
+          is_used: item.is_used === 0 ? '사용중' : '대기중'
+        }));
+        setMrList(processedData);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
 
   // useEffect를 사용하여 초기 데이터 가져오기
