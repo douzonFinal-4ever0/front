@@ -6,7 +6,8 @@ import {
   TextField,
   Stack,
   Input,
-  ButtonGroup
+  ButtonGroup,
+  InputAdornment
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -390,6 +391,12 @@ const Register = () => {
                       name="est_mileage"
                       type="number"
                       onChange={handleChange}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞</InputAdornment>
+                        )
+                      }}
                     />
                   </Grid>
                 </Grid>
@@ -465,6 +472,12 @@ const Register = () => {
                       type="text"
                       value={carDetail.accum_mileage}
                       readOnly
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞</InputAdornment>
+                        )
+                      }}
                     />
                   </Grid>
                 </Grid>
@@ -507,6 +520,12 @@ const Register = () => {
                       type="text"
                       value={carDetail.fuel_effciency}
                       readOnly
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞/ℓ</InputAdornment>
+                        )
+                      }}
                     />
                   </Grid>
                 </Grid>
