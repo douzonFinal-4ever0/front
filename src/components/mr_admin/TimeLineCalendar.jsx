@@ -63,8 +63,14 @@ const TimeLineCalendar = ({ events, resources }) => {
         schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
         slotMinTime={businessHours.startTime}
         slotMaxTime={businessHours.endTime} // 11pm
-        resourceAreaWidth="10%"
+        resourceAreaWidth="15%"
         navLinks="true"
+        resourceAreaColumns={[
+          {
+            field: resources.title, // This should match the field name in your 'resources' data
+            width: 150 // Set the width as per your requirement
+          }
+        ]}
         // eventColor="blue"
       />
     </div>
