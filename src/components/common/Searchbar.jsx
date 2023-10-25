@@ -6,7 +6,7 @@ const Searchbar = (props) => {
   const { placeholder, value, handleInputChange, handleSearchBtnClick } = props;
 
   return (
-    <StyledSearchbar onSubmit={handleSearchBtnClick}>
+    <StyledSearchbar component="form" onSubmit={handleSearchBtnClick}>
       <StyledInput
         placeholder={placeholder}
         inputProps={{ 'aria-label': '검색' }}

@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid, InputAdornment, TextField } from '@mui/material';
 import Label from '../common/Label';
 import styled from '@emotion/styled';
 import TimeField from '../common/TimeField';
@@ -237,6 +237,12 @@ const ModifyRez = ({
                   id="est_mileage"
                   name="est_mileage"
                   type="number"
+                  InputProps={{
+                    inputProps: { min: 0 },
+                    endAdornment: (
+                      <InputAdornment position="end">㎞</InputAdornment>
+                    )
+                  }}
                   defaultValue={formData.est_mileage}
                   onChange={(e) =>
                     setFormData({ ...formData, est_mileage: e.target.value })

@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   Container,
   Grid,
+  InputAdornment,
   ListItem,
   ListItemText,
   Typography
@@ -83,6 +84,8 @@ const CarRezDetail = ({ rezCode }) => {
       .patch('http://localhost:8081/car_rez/carRezDetail', formData)
       .then((res) => {
         console.log('수정완료', res.data);
+        alert('수정완료.');
+        window.location.href = '/carRez/dashboard';
       });
   };
 
@@ -216,7 +219,7 @@ const CarRezDetail = ({ rezCode }) => {
                   >
                     예약 취소
                   </Button>
-                  <Button
+                  {/* <Button
                     sx={{
                       backgroundColor: '#607d8b',
                       ':hover': { backgroundColor: '#455a64' },
@@ -225,7 +228,7 @@ const CarRezDetail = ({ rezCode }) => {
                     variant="contained"
                   >
                     운행 완료
-                  </Button>
+                  </Button> */}
                 </Grid>
               ) : (
                 ''
@@ -311,7 +314,7 @@ const CarRezDetail = ({ rezCode }) => {
                 <ListItemText primary="예상 주행 거리" />
               </ListItem>
               <ListItem>
-                <ListItemText primary={rezData.est_mileage} />
+                <ListItemText primary={rezData.est_mileage + '㎞'} />
               </ListItem>
             </Grid>
             <Grid item sx={{ display: 'flex' }} xs={12}>
@@ -419,7 +422,7 @@ const CarRezDetail = ({ rezCode }) => {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={rezData.carDetailResponseVO.fuel_effciency}
+                  primary={rezData.carDetailResponseVO.fuel_effciency + '㎞/ℓ'}
                 />
               </ListItem>
             </Grid>
@@ -429,7 +432,7 @@ const CarRezDetail = ({ rezCode }) => {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={rezData.carDetailResponseVO.accum_mileage}
+                  primary={rezData.carDetailResponseVO.accum_mileage + '㎞'}
                 />
               </ListItem>
             </Grid>
