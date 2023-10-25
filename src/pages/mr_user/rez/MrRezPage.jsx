@@ -392,6 +392,7 @@ const MrRezPage = () => {
 export default MrRezPage;
 
 const StyledStepText = styled(Typography)(({ theme }) => ({
+  paddingBottom: '6px',
   display: 'flex',
   alignItems: 'center',
   fontSize: '18px',

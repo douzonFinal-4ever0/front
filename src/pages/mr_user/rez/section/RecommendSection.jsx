@@ -104,21 +104,26 @@ const RecommendSection = ({ data }) => {
       component={'section'}
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
-      {/* <Stack
+      <Stack
         direction={'row'}
-        sx={{ justifyContent: 'flex-end', alignItems: 'center', gap: '2px' }}
+        sx={{
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: '2px',
+          paddingRight: '10px'
+        }}
       >
         <Tooltip
           title="사용자 데이터를 분석하여 회의실을 추천드립니다 :-D"
           placement="top"
         >
-          <InfoRoundedIcon fontSize="small" />
+          <StyledInfoIcon fontSize="small" color="#555" />
         </Tooltip>
         <SectionTitle
           title="추천 10건"
-          sx={{ fontSize: '16px', marginLeft: '0' }}
+          sx={{ fontSize: '14px', marginLeft: '0', color: '#555' }}
         />
-      </Stack> */}
+      </Stack>
       <MrCardList data={data} />
     </Box>
   );
@@ -168,4 +173,8 @@ const StyledMrName = styled(Typography)(({ theme }) => ({
 const StyledCapacity = styled(Typography)(({ theme }) => ({
   fontSize: '13px',
   fontWeight: theme.typography.fontWeightBold
+}));
+
+const StyledInfoIcon = styled(InfoRoundedIcon)(({ theme }) => ({
+  color: '#555'
 }));

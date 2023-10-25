@@ -12,8 +12,7 @@ import { palette } from '../../theme/palette';
 
 const Sidebar = (props) => {
   const { isOpen, isAdminMode, setIsAdminMode } = props;
-  console.log('여기');
-  console.log(isOpen);
+
   // 페이지 PATH
   const PATHNAME = useLocation().pathname;
 
