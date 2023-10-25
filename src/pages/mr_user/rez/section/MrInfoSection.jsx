@@ -1,6 +1,5 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import styled from '@emotion/styled';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
@@ -8,22 +7,28 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 
-import SectionTitle from '../../../../components/mr_user/SectionTitle';
+import { setMrRecommendData } from '../../../../redux/reducer/MrRecommendSlice';
 import Carousel from '../../../../components/mr_user/Carousel';
 import { useState } from 'react';
 import { PAGE_INNER_PADDING } from '../../../../config';
 import Tag from '../../../../components/mr_user/Tag';
+import { convertDayToText } from '../../../../utils/convertDayToText';
 
 const MrInfoSection = ({ data }) => {
   const {
-    mrName,
+    mr_name,
     location,
-    maximumCapacity,
-    avlStartTime,
-    avlEndTime,
-    days,
-    keywords
+    maximum_capacity,
+    avl_start_time,
+    avl_end_time,
+    mr_keyword,
+    mr_img,
+    mr_op_day
   } = data;
+
+  const newDays = mr_op_day.forEach((item) => convertDayToText(item.day));
+  console.log(newDays);
+  console.log(mr_keyword);
 
   // 즐겨찾기 유무
   const [bookmark, setBookmark] = useState(false);
@@ -37,15 +42,12 @@ const MrInfoSection = ({ data }) => {
       component={'section'}
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
-      {/* <SectionTitle title="회의실 정보" sx={{ fontSize: '16px' }}>
-        <MeetingRoomIcon />
-      </SectionTitle> */}
       <Box>
-        <Carousel data={data} />
+        {/* <Carousel data={data} /> */}
         <Stack sx={{ padding: '10px 20px 10px', rowGap: '6px' }}>
           <StyledRoomTitleInfoWrap>
             {/* 회의실명 영역 */}
-            <StyledRoomName>{mrName}</StyledRoomName>
+            <StyledRoomName>{mr_name}</StyledRoomName>
             <IconButton onClick={handleBookmark}>
               {bookmark ? (
                 <StarRoundedIcon fontSize="large" />
@@ -63,35 +65,49 @@ const MrInfoSection = ({ data }) => {
             {/* 최대 인원수 영역 */}
             <StyledRoomInfoWrap>
               <PermIdentityOutlinedIcon fontSize="small" />
-              <StyledInfoText>최대 {maximumCapacity} 명</StyledInfoText>
+              <StyledInfoText>최대 {maximum_capacity} 명</StyledInfoText>
             </StyledRoomInfoWrap>
             {/* 이용시간 영역 */}
             <StyledRoomInfoWrap>
               <AccessTimeRoundedIcon fontSize="small" />
               <StyledInfoText>
-                {avlStartTime} - {avlEndTime}
+                {new Date(avl_start_time)
+                  .toLocaleTimeString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  })
+                  .replace(/:\d+\s/, ' ')}
+                -
+                {new Date(avl_end_time)
+                  .toLocaleTimeString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  })
+                  .replace(/:\d+\s/, ' ')}
               </StyledInfoText>
             </StyledRoomInfoWrap>
             {/* 요일 영역 */}
-            <StyledRoomInfoWrap>
+            {/* <StyledRoomInfoWrap>
               <DateRangeRoundedIcon fontSize="small" />
-              {days.map((day, index) => (
+              {mr_op_day.map((day, index) => (
                 <StyledInfoText key={index}>{day}</StyledInfoText>
               ))}
-            </StyledRoomInfoWrap>
+            </StyledRoomInfoWrap> */}
           </Stack>
           {/* 태그 영역 */}
-          <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
+          {/* <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
             <StyledRoomTagsWrap>
-              {keywords.map((tag) => (
+              {mr_keyword.map((tag) => (
                 <Tag
-                  key={tag.keywordCode}
-                  text={tag.keywordName}
+                  key={tag.keyword_code}
+                  text={tag.keyword_name}
                   isHashTag={true}
                 />
               ))}
             </StyledRoomTagsWrap>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Box>
     </Box>

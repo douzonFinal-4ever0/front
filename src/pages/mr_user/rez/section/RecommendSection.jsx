@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   Box,
@@ -19,20 +20,18 @@ import Tag from '../../../../components/mr_user/Tag';
 import { palette } from '../../../../theme/palette';
 
 const MrCard = ({ data }) => {
-  const { mrCode, mrName, location, maximumCapacity, keywords } = data;
-
-  const [selectCard, setSelectCard] = useState('r001');
+  const { mr_code, mr_name, location, maximum_capacity, mr_keyword } = data;
 
   const handleCardClick = (e) => {
-    console.log(mrCode);
-    setSelectCard(mrCode);
+    console.log(mr_code);
   };
 
+  console.log(mr_keyword);
   return (
     <StyledCard
       onClick={handleCardClick}
-      isselected={selectCard === mrCode ? true : false}
-      name={mrCode}
+      // isselected={selectCard === mr_code ? true : false}
+      name={mr_code}
     >
       <CardContent
         sx={{
@@ -49,8 +48,8 @@ const MrCard = ({ data }) => {
               alignItems: 'center'
             }}
           >
-            <StyledMrName>{mrName}</StyledMrName>
-            <StyledCapacity>최대 {maximumCapacity}명</StyledCapacity>
+            <StyledMrName>{mr_name}</StyledMrName>
+            <StyledCapacity>최대 {maximum_capacity}명</StyledCapacity>
           </Stack>
           <Stack sx={{ flexDirection: 'row', alignItems: 'center' }}>
             <PlaceRoundedIcon fontSize="small" />
@@ -69,10 +68,10 @@ const MrCard = ({ data }) => {
               }
             }}
           >
-            {keywords.map((item) => (
+            {mr_keyword.map((item) => (
               <Tag
-                key={item.keywordCode}
-                text={item.keywordName}
+                key={item.keyword_code}
+                text={item.keyword_name}
                 isHashTag={true}
                 sx={{ backgroundColor: palette.grey['500'], fontSize: '12px' }}
               />
@@ -82,6 +81,7 @@ const MrCard = ({ data }) => {
       </CardContent>
     </StyledCard>
   );
+  return <></>;
 };
 
 const MrCardList = ({ data }) => {
@@ -89,7 +89,7 @@ const MrCardList = ({ data }) => {
     <ContainerWithScroll>
       <StyledList sx={{ width: '100%' }}>
         {data.map((item) => (
-          <StyledListItem key={item.mrCode}>
+          <StyledListItem key={item.mr_code}>
             <MrCard data={item} />
           </StyledListItem>
         ))}
@@ -120,7 +120,7 @@ const RecommendSection = ({ data }) => {
           <StyledInfoIcon fontSize="small" color="#555" />
         </Tooltip>
         <SectionTitle
-          title="추천 10건"
+          title={`추천 ${data.length}건`}
           sx={{ fontSize: '14px', marginLeft: '0', color: '#555' }}
         />
       </Stack>
