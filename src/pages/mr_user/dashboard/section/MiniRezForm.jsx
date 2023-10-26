@@ -16,7 +16,6 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { async } from 'q';
 import axios from 'axios';
 
 const MiniRezForm = () => {
