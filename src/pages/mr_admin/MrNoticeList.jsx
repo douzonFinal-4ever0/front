@@ -8,7 +8,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import DataGrid from '../../components/common/DataGrid';
 import { useNavigate } from 'react-router-dom';
-
+import axiosInstance from '../../utils/axios.js';
+import RectangleBtn from '../../components/common/RectangleBtn';
 const MrNoticeList = () => {
   const navigate = useNavigate();
   const handleWriteNotice = () => {
@@ -16,7 +17,7 @@ const MrNoticeList = () => {
   };
   const [noticeList, setNoticeList] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:8081/mr/notice').then((res) => {
+    axiosInstance.get('http://localhost:8081/mr/notice').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.notice_code
@@ -41,9 +42,15 @@ const MrNoticeList = () => {
                   //   disableRow={false}
                 />
               </div>
-              <Button variant="outlined" onClick={handleWriteNotice}>
-                공지사항 작성
-              </Button>
+              <RectangleBtn
+                category={'register'}
+                type={'submit'}
+                text={'공지사항 작성'}
+                sx={{
+                  padding: '14px 12px'
+                }}
+                handlebtn={handleWriteNotice}
+              />
             </Container>
           </WrapContainer>
         </MainContainer>
