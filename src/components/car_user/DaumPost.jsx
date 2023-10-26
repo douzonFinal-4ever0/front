@@ -30,19 +30,23 @@ function DaumPost({ setAddressObj, setFormData, formData }) {
       // 지역 주소 제외 전체 주소 치환
       fullAddress = fullAddress.replace(localAddress, '');
       // 조건 판단 완료 후 지역 주소 및 상세 주소 state 수정
+
       setAddressObj({
         areaAddress: localAddress,
         townAddress: (fullAddress +=
           extraAddress !== '' ? `(${extraAddress})` : '')
       });
+
       // 주소 검색이 완료된 후 결과를 매개변수로 전달
       // 다음에 수행할 작업을 명시
-      setFormData({
-        ...formData,
-        dest_loc:
-          localAddress +
-          (fullAddress += extraAddress !== '' ? `(${extraAddress})` : '')
-      });
+      if (setFormData) {
+        setFormData({
+          ...formData,
+          dest_loc:
+            localAddress +
+            (fullAddress += extraAddress !== '' ? `(${extraAddress})` : '')
+        });
+      }
     }
   };
 

@@ -51,12 +51,12 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
         console.log(res.data);
         setRezData(res.data);
         setFormData({
-          ...formData,
-          distance: res.data.est_mileage,
-          car_rez_code: res.data.car_rez_code,
-          bef_mileage: res.data.carDetailResponseVO.accum_mileage,
-          mem_code: res.data.memResponseVO.mem_code,
-          car_code: res.data.carDetailResponseVO.car_code
+          // ...formData,
+          // distance: res.data.est_mileage,
+          // car_rez_code: res.data.car_rez_code,
+          // bef_mileage: res.data.carDetailResponseVO.accum_mileage,
+          // mem_code: res.data.memResponseVO.mem_code,
+          // car_code: res.data.carDetailResponseVO.car_code
         });
       });
     axios
@@ -145,10 +145,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
-                      value={
-                        formData.distance +
-                        rezData.carDetailResponseVO.accum_mileage
-                      }
+                      // value={
+                      //   formData.distance +
+                      //   rezData.carDetailResponseVO.accum_mileage
+                      // }
                     ></TextField>
                   </Grid>
                 </Grid>

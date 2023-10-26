@@ -15,35 +15,51 @@ import CreateChip from './CreateChip';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import Modal from '../common/Modal';
 import ModifyRez from './ModifyRez';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 
 const CarRezDetail = ({ rezCode }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [rezData, setRezData] = useState(null);
   const [rezLoc, setRezLoc] = useState(null);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(null);
+
   const [addressObj, setAddressObj] = useState({
     areaAddress: '',
     townAddress: ''
   });
   const dateFormat = (date) => {
     const preDate = new Date(date);
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return preDate.toLocaleString('ko-KR', options).slice(0, -1);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return preDate.toLocaleString('ko-KR', options);
   };
-
+  // var rezMerge = {};
   useEffect(() => {
     axios
       .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setRezData(res.data);
+        // setRezMerge(res.data);
+        // console.log(rezMerge);
         //console.log(res.data.memResponseVO.name);
       });
     axios
       .get(`http://localhost:8081/car_rez/locations/${rezCode}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setRezLoc(res.data);
+        // setRezMerge({ ...rezMerge, locations: res.data });
+        // console.log(rezMerge);
       });
   }, []);
 
@@ -54,7 +70,8 @@ const CarRezDetail = ({ rezCode }) => {
         if (res.status === 204) {
           //삭제 성공
           alert('취소 성공.');
-          window.location.href = '/carRez/dashboard';
+
+          // setData(1);
         } else {
           alert('취소 실패.');
           //삭제 실패
@@ -63,6 +80,10 @@ const CarRezDetail = ({ rezCode }) => {
       .catch((e) => {
         //오류
         alert('오류발생', e);
+      })
+      .finally(() => {
+        dispatch(closeDrawer());
+        window.location.href = '/carRez/dashboard';
       });
   };
   //modal여는 함수
@@ -87,6 +108,11 @@ const CarRezDetail = ({ rezCode }) => {
         alert('수정완료.');
         window.location.href = '/carRez/dashboard';
       });
+  };
+  //예약 수정 버튼 클릭
+  const updateRez2 = () => {
+    const merge = { rez: rezData, loc: rezLoc };
+    navigate('../reservation', { state: merge });
   };
 
   return (
@@ -204,7 +230,7 @@ const CarRezDetail = ({ rezCode }) => {
                       margin: '0px 4px'
                     }}
                     variant="contained"
-                    onClick={handleOpenModal}
+                    onClick={updateRez2}
                   >
                     예약 수정
                   </Button>
