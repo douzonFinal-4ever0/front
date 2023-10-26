@@ -40,12 +40,9 @@ import Label from '../common/Label';
 import { palette } from '../../theme/palette';
 import dayjs from 'dayjs';
 import SuppliesList from './SuppliesList';
-import SetAxiosHeaders from '../../utils/axios';
 import { useEffect } from 'react';
-import Axios from '../../utils/axios';
+import axiosInstance from '../../utils/axios.js';
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
-  const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
-  axios.defaults.headers.common['Authorization'] = token;
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
   console.log(selectedRowData);
@@ -179,7 +176,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------회의실 CRUD----------------------------------------- */
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
-    axios.post('http://localhost:8081/mr/mrRegister', FormToData).then(() => {
+    axiosInstance.post('/mr/mrRegister', FormToData).then(() => {
       handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
       handleOpenSnackbar();
       handleCloseDrawer();
@@ -187,23 +184,19 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   };
   /**회의실 수정 버튼 클릭 이벤트 */
   const handleUpdate = () => {
-    axios
-      .patch('http://localhost:8081/mr/mrUpdate', FormToData2)
-      .then((res) => {
-        handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
-        handleOpenSnackbar();
-        handleCloseDrawer();
-      });
+    axiosInstance.patch('/mr/mrUpdate', FormToData2).then((res) => {
+      handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
+      handleOpenSnackbar();
+      handleCloseDrawer();
+    });
   };
   /**회의실 비활성화 버튼 클릭 이벤트 */
   const handleDeactive = () => {
-    axios
-      .patch('http://localhost:8081/mr/mrDeactivate', FormToData3)
-      .then((res) => {
-        handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
-        handleOpenSnackbar();
-        handleCloseDrawer();
-      });
+    axiosInstance.patch('/mr/mrDeactivate', FormToData3).then((res) => {
+      handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
+      handleOpenSnackbar();
+      handleCloseDrawer();
+    });
   };
 
   /*-------------------------------FormToData------------------------------------------- */

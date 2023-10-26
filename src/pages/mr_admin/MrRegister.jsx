@@ -12,11 +12,11 @@ import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
-
+import axiosInstance from '../../utils/axios.js';
 const MrRegister = () => {
-  const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
+  // const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
 
-  axios.defaults.headers.common['Authorization'] = token;
+  // axios.defaults.headers.common['Authorization'] = token;
   // const [jwtToken, setJwtToken] = useState('');
   // // JWT 토큰을 localStorage에서 가져오기
   // useEffect(() => {
@@ -70,7 +70,7 @@ const MrRegister = () => {
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
   const handleMrListUpdate = () => {
-    axios
+    axiosInstance
       .get('http://localhost:8081/mr/mrList')
       .then((res) => {
         const processedData = res.data.map((item) => ({

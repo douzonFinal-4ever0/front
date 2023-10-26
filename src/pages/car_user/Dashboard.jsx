@@ -47,10 +47,17 @@ const Dashboard = () => {
   const [range, setRange] = useState('');
   const mem_code = 'MEM001';
   const [open, setOpen] = useState(false);
+  // const [flag, setFlag] = useState(false);
   const dateFormat = (date) => {
     const preDate = new Date(date);
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return preDate.toLocaleString('ko-KR', options).slice(0, -1);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return preDate.toLocaleString('ko-KR', options);
   };
   const handleOpen = () => {
     setOpen(true);
@@ -67,7 +74,24 @@ const Dashboard = () => {
           ...item,
           id: item.car_rez_code,
           start_at: dateFormat(item.start_at),
-          return_at: dateFormat(item.return_at)
+          return_at: dateFormat(item.return_at),
+          during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+        }));
+        console.log(rezData);
+        setCarRez(rezData);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
+      .then((res) => {
+        console.log(res.data);
+        const rezData = res.data.map((item) => ({
+          ...item,
+          id: item.car_rez_code,
+          start_at: dateFormat(item.start_at),
+          return_at: dateFormat(item.return_at),
+          during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
         }));
         console.log(rezData);
         setCarRez(rezData);
@@ -192,13 +216,16 @@ const Dashboard = () => {
       renderCell: (params) => createChip(params)
     },
     {
-      field: 'start_at/return_at',
+      field: 'during',
       headerName: '일자',
       width: 300,
       description: '예약 기간',
       editable: false,
-      valueGetter: (params) =>
-        `${params.row.start_at} - ${params.row.return_at}`
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'pre-line' }}>{params.value}</div>
+      )
+      // valueGetter: (params) =>
+      //   `${params.row.start_at} - ${params.row.return_at}`
     },
     {
       field: 'mem/dept',
@@ -261,13 +288,16 @@ const Dashboard = () => {
   //오프캔버스 관련
   const dispatch = useDispatch();
   const [selectedRezCode, setSelectedRezCode] = useState(null);
+  const [flag, setFlag] = useState(false);
   /**오프캔버스 열기 */
   const handleOpenDrawer = () => {
     dispatch(openDrawer());
+    setFlag(!flag);
   };
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
+    setFlag(!flag);
   };
   //더블클릭 이벧느
   const handleDbClick = (param) => {
@@ -280,20 +310,16 @@ const Dashboard = () => {
   const tabData = [
     {
       title: '예약 상세',
-      content: <CarRezDetail rezCode={selectedRezCode} />
+      content: (
+        <CarRezDetail
+          rezCode={selectedRezCode}
+          handleCloseDrawer={handleCloseDrawer}
+          setFlag={setFlag}
+        />
+      )
     }
   ];
-  const tabData2 = [
-    {
-      title: '예약 상세',
-      content: <CarRezDetail rezCode={selectedRezCode} />
-    },
 
-    {
-      title: '운행 완료 처리',
-      content: <CarOperation rezCode={selectedRezCode} />
-    }
-  ];
   return (
     <>
       <SubHeader title={'차량 예약 조회'} />
@@ -340,10 +366,7 @@ const Dashboard = () => {
           </WrapContainer>
         </MainContainer>
       </Box>
-      <Drawer
-        width={'100vh'}
-        tabData={carRez.rez_status == '1' ? tabData2 : tabData}
-      />
+      {flag && <Drawer width={'100vh'} tabData={tabData} />}
     </>
   );
 };
