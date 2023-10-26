@@ -1,48 +1,23 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const defHeader = {};
-
-const clientStateDefinition = () => {
-  return typeof window !== 'undefined' ? 'BROWSER' : 'SERVER';
-};
-
-const setToken = () => {
-  const token = localStorage.getItem('jwtToken');
-  if (token) {
-    defHeader.Auth = token;
-  }
-};
-
-const request = axios.create({
-  timeout: 10000,
-  headers: defHeader
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8081' // API의 기본 URL
 });
- 
-const Axios = () => {
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setToken();
-        const response = await axios.get('/your-api-endpoint'); // 
-        setResponse(response.data);
-      } catch (error) {
-        setError(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>
-      {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
-      {error && <p>Error: {error.message}</p>}
-    </div>
-  );
+// JWT 토큰을 가져오는 함수
+const getJwtToken = () => {
+  return localStorage.getItem('jwtToken');
 };
 
-export default Axios;
+// Request 인터셉터: 모든 요청에 JWT 토큰을 추가
+axiosInstance.interceptors.request.use(
+  (config) => {
+    config.headers['Authorization'] = getJwtToken();
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;
