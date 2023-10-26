@@ -26,9 +26,11 @@ const MrInfoSection = ({ data }) => {
     mr_op_day
   } = data;
 
-  const newDays = mr_op_day.forEach((item) => convertDayToText(item.day));
-  console.log(newDays);
-  console.log(mr_keyword);
+  // 요일 number -> string으로 변경
+  const newDays = [];
+  if (mr_op_day) {
+    mr_op_day.forEach((item) => newDays.push(convertDayToText(item.day)));
+  }
 
   // 즐겨찾기 유무
   const [bookmark, setBookmark] = useState(false);
@@ -89,25 +91,27 @@ const MrInfoSection = ({ data }) => {
               </StyledInfoText>
             </StyledRoomInfoWrap>
             {/* 요일 영역 */}
-            {/* <StyledRoomInfoWrap>
+            <StyledRoomInfoWrap>
               <DateRangeRoundedIcon fontSize="small" />
-              {mr_op_day.map((day, index) => (
-                <StyledInfoText key={index}>{day}</StyledInfoText>
-              ))}
-            </StyledRoomInfoWrap> */}
+              {newDays &&
+                newDays.map((day, index) => (
+                  <StyledInfoText key={index}>{day}</StyledInfoText>
+                ))}
+            </StyledRoomInfoWrap>
           </Stack>
           {/* 태그 영역 */}
-          {/* <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
+          <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
             <StyledRoomTagsWrap>
-              {mr_keyword.map((tag) => (
-                <Tag
-                  key={tag.keyword_code}
-                  text={tag.keyword_name}
-                  isHashTag={true}
-                />
-              ))}
+              {mr_keyword &&
+                mr_keyword.map((tag) => (
+                  <Tag
+                    key={tag.keyword_code}
+                    text={tag.keyword_name}
+                    isHashTag={true}
+                  />
+                ))}
             </StyledRoomTagsWrap>
-          </Stack> */}
+          </Stack>
         </Stack>
       </Box>
     </Box>
