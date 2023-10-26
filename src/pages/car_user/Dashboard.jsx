@@ -81,22 +81,22 @@ const Dashboard = () => {
         setCarRez(rezData);
       });
   }, []);
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
-      .then((res) => {
-        console.log(res.data);
-        const rezData = res.data.map((item) => ({
-          ...item,
-          id: item.car_rez_code,
-          start_at: dateFormat(item.start_at),
-          return_at: dateFormat(item.return_at),
-          during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
-        }));
-        console.log(rezData);
-        setCarRez(rezData);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       const rezData = res.data.map((item) => ({
+  //         ...item,
+  //         id: item.car_rez_code,
+  //         start_at: dateFormat(item.start_at),
+  //         return_at: dateFormat(item.return_at),
+  //         during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+  //       }));
+  //       console.log(rezData);
+  //       setCarRez(rezData);
+  //     });
+  // }, []);
 
   const createChip = (params) => {
     if (params.row.rez_status === '1') {
