@@ -111,7 +111,7 @@ const MiniRezForm = () => {
             <StyledLabelGrid item xs={3}>
               <Label htmlFor={'rez_date'} text={'예약 일자'} />
             </StyledLabelGrid>
-            <Grid item xs={9} direction={'row'}>
+            <Grid item xs={9} container direction={'row'}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={['DatePicker']}
