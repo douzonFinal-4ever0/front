@@ -24,30 +24,33 @@ import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
+import Login from '../user/Login';
+import axiosInstance from '../../utils/axios.js';
 const DashBoard = () => {
   // const [open, setOpen] = React.useState(false);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
-  const [mem_code, setMem_code] = useState('MEM003');
-  const [password, setPassword] = useState('1234');
-  const [jwt, setJwt] = useState('');
-
-  const FormToData = {
-    mem_code,
-    password
-  };
-  const handleTest = () => {
-    axios
-      .post('http://localhost:8081/api/v1/user/login', FormToData)
-      .then((res) => {
-        setJwt('Bearer ' + res.data.token);
-      });
-  };
+  // const [mem_code, setMem_code] = useState('MEM003');
+  // const [password, setPassword] = useState('1234');
+  // const [jwt, setJwt] = useState('');
+  //
+  // const FormToData = {
+  //   mem_code,
+  //   password
+  // };
+  //로그인 테스트
+  // const handleTest = () => {
+  //   axiosInstance
+  //     .post('http://localhost:8081/api/v1/user/login', FormToData)
+  //     .then((res) => {
+  //       setJwt('Bearer ' + res.data.token);
+  //     });
+  // };
   // JWT 토큰을 localStorage에 저장
-  localStorage.setItem('jwtToken', jwt);
+  // localStorage.setItem('jwtToken', jwt);
 
   // JWT 토큰을 localStorage에서 가져오기
-  const storedJwtToken = localStorage.getItem('jwtToken');
+  // const storedJwtToken = localStorage.getItem('jwtToken');
 
   // // 가져온 토큰을 사용하여 API 요청을 보낼 수 있음
   // if (storedJwtToken) {
@@ -87,7 +90,9 @@ const DashBoard = () => {
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              <img src="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/25942229-e8e1-41ed-9fd1-98168eb36e7e-d1.jpg"></img>
+              {/* 이미지 리스트 */}
+              {/* <img src="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/25942229-e8e1-41ed-9fd1-98168eb36e7e-d1.jpg"></img> */}
+              {/* 스피드 다이얼 테스트 */}
               {/* <SpeedDial
                 ariaLabel="SpeedDial tooltip example"
                 sx={{ position: 'absolute', bottom: 16, right: 16 }}
@@ -106,9 +111,11 @@ const DashBoard = () => {
                   />
                 ))}
               </SpeedDial> */}
+              {/* 자원 캘린더 */}
               {/* <TimeLineCalendar events={events} resources={resources} /> */}
+              {/* 이미지 업로드 */}
               {/* <ImageUpload /> */}
-              <Button onClick={handleTest}>asd</Button>
+              {/* <Login /> */}
             </Container>
           </WrapContainer>
         </MainContainer>

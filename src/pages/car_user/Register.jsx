@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
   Box,
   Grid,
@@ -25,7 +25,7 @@ import CarList from '../../components/car_user/CarList';
 import axios from 'axios';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import { formatDate } from '@fullcalendar/core';
 import dayjs from 'dayjs';
 import SubSideContents from '../../components/car_user/SubsideContents';
@@ -37,6 +37,8 @@ import RectangleIcon from '@mui/icons-material/Rectangle';
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const carRez = location.state;
   const [addressObj, setAddressObj] = useState({
     areaAddress: '',
     townAddress: ''
@@ -68,28 +70,185 @@ const Register = () => {
     return_loc: '',
     dest_loc: ''
   });
+  //수정시 초기값 설정
+  const initMem_code = carRez ? carRez.rez.memResponseVO.mem_code : '';
+  const initCar_code = carRez
+    ? carRez.rez.carDetailResponseVO.carVO.car_code
+    : '';
+  const initDetail = carRez ? carRez.rez.detail : '';
+  const initEst_mileage = carRez ? carRez.rez.est_mileage : '';
+  const initStart_at = carRez ? carRez.rez.start_at : '';
+  const initReturn_at = carRez ? carRez.rez.return_at : '';
+  const initReceipt_loc = carRez ? carRez.loc[0].address : '';
+  const initReturn_loc = carRez ? carRez.loc[1].address : '';
+  const initDest_loc = carRez ? carRez.loc[2].address : '';
+
+  const [mem_code, setMem_code] = useState(initMem_code);
+  const [car_code, setCar_code] = useState(initCar_code);
+  const [detail, setDetail] = useState(initDetail);
+  const [est_mileage, setEst_mileage] = useState(initEst_mileage);
+  const [start_at, setStart_at] = useState(initStart_at);
+  const [return_at, setReturn_at] = useState(initReturn_at);
+  const [receipt_loc, setReceipt_loc] = useState(initReceipt_loc);
+  const [return_loc, setReturn_loc] = useState(initReturn_loc);
+  const [dest_loc, setDest_loc] = useState(initDest_loc);
+
+  //입력시 변환
+  const handleCarCode = (e) => {
+    if (carRez) {
+      setCar_code(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleDetail = (e) => {
+    if (carRez) {
+      setDetail(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleEstMileage = (e) => {
+    if (carRez) {
+      setEst_mileage(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleStartAt = (e) => {
+    if (carRez) {
+      setStart_at(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleReturnAt = (e) => {
+    if (carRez) {
+      setReturn_at(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleReceiptLoc = (e) => {
+    if (carRez) {
+      setReceipt_loc(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleReturnLoc = (e) => {
+    if (carRez) {
+      setReturn_loc(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleDestLoc = (e) => {
+    if (carRez) {
+      setDest_loc(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+
+  let updateData = {};
+  if (carRez) {
+    updateData = {
+      memDTO: {
+        mem_code: mem_code
+      },
+      carDTO: {
+        car_code: car_code
+      },
+      detail: detail,
+      est_mileage: est_mileage,
+      start_at: start_at,
+      return_at: return_at,
+      receipt_loc: receipt_loc,
+      return_loc: return_loc,
+      dest_loc: dest_loc
+    };
+  }
   const returnLocList = [
     {
       index: 0,
+      key: 0,
       value: '강원특별자치도 춘천시 남산면 버들1길 130'
     },
     {
-      index: 0,
+      index: 1,
+      key: 1,
       value: '서울특별시 중구 을지로1가 을지로 29'
     },
     {
-      index: 0,
+      index: 2,
+      key: 2,
       value: '부산 해운대구 센텀중앙로 79'
     }
   ];
+  const dateFormat = (date) => {
+    const preDate = new Date(date);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return preDate.toLocaleString('ko-KR', options);
+  };
   //값이 변하면 formdata 값변경 함수
-  const handleChange = (e) => {
+  const handleChange2 = (e) => {
     console.log(e.target);
     const { name, value } = e.target;
+
     setFormData({
       ...formData,
       [name]: value
     });
+  };
+  const handleChange = (e, set) => {
+    if (carRez) {
+      set(e.target.value);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
   const handleTimeChange = (e, name) => {
     //const { name, value } = e;
@@ -141,16 +300,20 @@ const Register = () => {
     setOpen(false);
   };
   //차량 선택 후 처리
-  const carSelect = () => {
+  const carSelect = (e) => {
     console.log(selectedRows);
     if (selectedRows.length !== 0) {
       //console.log(selectedRows.id);
-      setFormData({
-        ...formData,
-        carDTO: { car_code: selectedRows.car_code },
-        receipt_loc: selectedRows.car_address
-      });
-      setOpen(false);
+      if (carRez) {
+        setCar_code(e.target.value);
+      } else {
+        setFormData({
+          ...formData,
+          carDTO: { car_code: selectedRows.car_code },
+          receipt_loc: selectedRows.car_address
+        });
+        setOpen(false);
+      }
     } else {
       alert('차량을 선택해주세요');
     }
@@ -168,15 +331,55 @@ const Register = () => {
         });
       });
   };
+  // useLayoutEffect(() => {
+  //   if (carRez !== null) {
+  //     console.log(carRez);
+
+  // setFormData({
+  //   memDTO: {
+  //     mem_code: 'MEM001'
+  //   },
+  //   carDTO: {
+  //     car_code: carRez.rez.carDetailResponseVO.carVO.car_name
+  //   },
+  //   detail: carRez.rez.detail,
+  //   est_mileage: carRez.rez.est_mileage,
+  //   start_at: carRez.rez.start_at,
+  //   return_at: carRez.rez.return_at,
+  //   receipt_loc: carRez.loc[0].address,
+  //   return_loc: carRez.loc[1].address,
+  //   dest_loc: carRez.loc[2].address
+  // });
+  //   }
+  //   setFormData({
+  //     ...formData,
+  //     dest_loc: addressObj.areaAddress + addressObj.townAddress
+  //   });
+  // }, []);
+
+  // 예약 정보 수정
+  const updateRez = () => {
+    console.log(updateData);
+    // axios
+    //   .patch('http://localhost:8081/car_rez/carRezDetail', updateData)
+    //   .then((res) => {
+    //     console.log('수정완료', res.data);
+    //     let data = { ...res.data, isUp: true };
+    //     alert('수정완료.');
+    //     // window.location.href = '/carRez/dashboard';
+    //     navigate('../carRezComplete', { state: data });
+    //   });
+  };
   useEffect(() => {
+    if (carRez !== null) {
+      console.log(carRez);
+    }
     setFormData({
       ...formData,
       dest_loc: addressObj.areaAddress + addressObj.townAddress
     });
   }, [addressObj]);
-  const hiddenStyle = {
-    display: 'none'
-  };
+
   return (
     <>
       <SubHeader title={'차량 예약'} />
@@ -222,6 +425,9 @@ const Register = () => {
                       id="mem_code"
                       variant="outlined"
                       placeholder="이름을 입력하세요"
+                      value={
+                        carRez !== null ? carRez.rez.memResponseVO.name : ''
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -236,6 +442,11 @@ const Register = () => {
                       id="dpt_name"
                       variant="outlined"
                       placeholder="부서를 입력하세요"
+                      value={
+                        carRez !== null
+                          ? carRez.rez.memResponseVO.deptVO.dept_name
+                          : ''
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -250,6 +461,11 @@ const Register = () => {
                       id="position_name"
                       variant="outlined"
                       placeholder="직급을 입력하세요"
+                      value={
+                        carRez !== null
+                          ? carRez.rez.memResponseVO.position_name
+                          : ''
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -264,7 +480,7 @@ const Register = () => {
                       name="detail"
                       variant="outlined"
                       placeholder="목적을 입력하세요"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setDetail)}
                     />
                   </Grid>
                 </Grid>
@@ -306,8 +522,7 @@ const Register = () => {
                       id="dest"
                       name="dest_loc"
                       type="text"
-                      value={addressObj.areaAddress + addressObj.townAddress}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setDest_loc)}
                       readOnly
                     />
                   </Grid>
@@ -390,7 +605,7 @@ const Register = () => {
                       id="est_mileage"
                       name="est_mileage"
                       type="number"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setEst_mileage)}
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (
@@ -455,7 +670,7 @@ const Register = () => {
                       id="car_code"
                       name="car_code"
                       type="text"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setCar_code)}
                       value={carDetail.id}
                       readOnly
                     />
@@ -539,7 +754,7 @@ const Register = () => {
                       id="receipt_loc"
                       name="receipt_loc"
                       type="text"
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setReceipt_loc)}
                       value={carDetail.car_address}
                       readOnly
                     />
@@ -553,9 +768,10 @@ const Register = () => {
                   <Grid item xs={10}>
                     <Selectbox
                       name="return_loc"
+                      key={returnLocList.key}
                       // onChange={handleChange}
                       value={formData.return_loc}
-                      handleSelectBox={handleChange}
+                      handleSelectBox={(e) => handleChange(e, setReturn_loc)}
                       menuList={returnLocList}
                     />
                   </Grid>
@@ -565,14 +781,26 @@ const Register = () => {
           </Grid>
         </Grid>
         <BottomBox>
-          <Button
-            variant="contained"
-            color="success"
-            style={{ marginRight: '10px' }}
-            type="submit"
-          >
-            예약
-          </Button>
+          {carRez !== null ? (
+            <Button
+              variant="contained"
+              color="success"
+              style={{ marginRight: '10px' }}
+              onClick={updateRez}
+            >
+              수정
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="success"
+              style={{ marginRight: '10px' }}
+              type="submit"
+            >
+              예약
+            </Button>
+          )}
+
           <Button variant="outlined" color="error">
             Error
           </Button>

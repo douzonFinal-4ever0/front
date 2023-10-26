@@ -3,10 +3,11 @@ import DataGrid from '../../components/common/DataGrid';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
+import axiosInstance from '../../utils/axios.js';
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:8081/sp/spList').then((res) => {
+    axiosInstance.get('/sp/spList').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.supplies_code

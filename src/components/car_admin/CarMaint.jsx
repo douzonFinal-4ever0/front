@@ -1,10 +1,22 @@
-import { Button, Typography } from '@mui/material';
+import { Button, Grid, Modal, Typography } from '@mui/material';
 import CarMaintTable from './CarMaintTable';
 import { Box } from '@mui/system';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import RectangleBtn from '../common/RectangleBtn';
-import CarDetail from './CarDetail';
 import CarMaintRegister from './CarMaintRegister';
+import { useState } from 'react';
+import { palette } from '../../theme/palette';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 900,
+  bgcolor: palette.grey['50'],
+  // border: '2px solid #000',
+  boxShadow: 24
+};
 
 const CarMaint = ({
   setTabData,
@@ -14,26 +26,47 @@ const CarMaint = ({
   carCounts,
   setCarCounts
 }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const maintCtnClick = () => {
-    setTabData([
-      {
-        title: '정비 등록',
-        content: (
-          <CarMaintRegister
-            setTabData={setTabData}
-            carCode={carCode}
-            carListInfo={carListInfo}
-            setCarListInfo={setCarListInfo}
-            carCounts={carCounts}
-            setCarCounts={setCarCounts}
-          />
-        )
-      }
-    ]);
+    // setTabData([
+    //   {
+    //     title: '정비 등록',
+    //     content: (
+    //       <CarMaintRegister
+    // setTabData={setTabData}
+    // carCode={carCode}
+    // carListInfo={carListInfo}
+    // setCarListInfo={setCarListInfo}
+    // carCounts={carCounts}
+    // setCarCounts={setCarCounts}
+    //       />
+    //     )
+    //   }
+    // ]);
+    handleOpen();
   };
 
   return (
     <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <CarMaintRegister
+          setTabData={setTabData}
+          carCode={carCode}
+          carListInfo={carListInfo}
+          setCarListInfo={setCarListInfo}
+          carCounts={carCounts}
+          setCarCounts={setCarCounts}
+          style={style}
+        />
+      </Modal>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -79,7 +112,7 @@ const CarMaint = ({
           />
         </Box>
       </Box>
-      <CarMaintTable />
+      <CarMaintTable carCode={carCode} />
     </>
   );
 };
