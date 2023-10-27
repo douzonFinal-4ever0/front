@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types';
 
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { palette } from '../../theme/palette';
 
 const Toggle = (props) => {
-  const { data, handleToggleBtn, selectBtn } = props;
+  const { data, handleToggleBtn, selectBtn, sx } = props;
 
   return (
     <ToggleButtonGroup value={selectBtn} exclusive onChange={handleToggleBtn}>
       {data.map((item) => (
-        <ToggleButton value={item.value}>{item.name}</ToggleButton>
+        <ToggleButton
+          value={item.value}
+          sx={{ border: `1px solid ${palette.grey['500']}`, ...sx }}
+        >
+          {item.name}
+        </ToggleButton>
       ))}
     </ToggleButtonGroup>
   );

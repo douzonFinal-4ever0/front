@@ -19,18 +19,13 @@ import SectionTitle from '../../../../components/mr_user/SectionTitle';
 import Tag from '../../../../components/mr_user/Tag';
 import { palette } from '../../../../theme/palette';
 
-const MrCard = ({ data }) => {
+const MrCard = ({ data, selectMrCard, handleCardClick }) => {
   const { mr_code, mr_name, location, maximum_capacity, mr_keyword } = data;
 
-  const handleCardClick = (e) => {
-    console.log(mr_code);
-  };
-
-  console.log(mr_keyword);
   return (
     <StyledCard
       onClick={handleCardClick}
-      // isselected={selectCard === mr_code ? true : false}
+      isselected={selectMrCard['mr_code'] === mr_code ? true : false}
       name={mr_code}
     >
       <CardContent
@@ -84,13 +79,17 @@ const MrCard = ({ data }) => {
   return <></>;
 };
 
-const MrCardList = ({ data }) => {
+const MrCardList = ({ data, selectMrCard, handleCardClick }) => {
   return (
     <ContainerWithScroll>
       <StyledList sx={{ width: '100%' }}>
         {data.map((item) => (
           <StyledListItem key={item.mr_code}>
-            <MrCard data={item} />
+            <MrCard
+              data={item}
+              selectMrCard={selectMrCard}
+              handleCardClick={handleCardClick}
+            />
           </StyledListItem>
         ))}
       </StyledList>
@@ -98,7 +97,7 @@ const MrCardList = ({ data }) => {
   );
 };
 
-const RecommendSection = ({ data }) => {
+const RecommendSection = ({ data, selectMrCard, handleCardClick }) => {
   return (
     <Box
       component={'section'}
@@ -124,7 +123,11 @@ const RecommendSection = ({ data }) => {
           sx={{ fontSize: '14px', marginLeft: '0', color: '#555' }}
         />
       </Stack>
-      <MrCardList data={data} />
+      <MrCardList
+        data={data}
+        selectMrCard={selectMrCard}
+        handleCardClick={handleCardClick}
+      />
     </Box>
   );
 };
@@ -160,7 +163,7 @@ const StyledCard = styled(Card)(({ theme, isselected }) => ({
   margin: '0 4px',
   width: '100%',
   backgroundColor: isselected
-    ? theme.palette.grey['100']
+    ? theme.palette.grey['300']
     : theme.palette.common.white,
   border: '1px solid #eee'
 }));

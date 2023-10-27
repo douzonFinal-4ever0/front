@@ -1,12 +1,20 @@
 import { useState } from 'react';
+import axios from 'axios';
+
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { palette } from '../../../../theme/palette';
 import Modal from '../../../../components/common/Modal';
 import InnerPtModalContent from '../modal/InnerPtModalContent';
+import { convertDataTree } from '../../../../utils/ConvertDataTree';
 
 const InnerPtForm = () => {
   const [openModal, setOpenModal] = useState(false);
-  const handleInnerPtBtn = () => {
+  const [members, setMembers] = useState([]);
+
+  const handleInnerPtBtn = async () => {
+    const res = await axios.get('/mr/mem');
+    const memList = convertDataTree(res.data); // 사원 리스트
+    setMembers(memList);
     setOpenModal(!openModal);
   };
 
@@ -26,7 +34,7 @@ const InnerPtForm = () => {
         open={openModal}
         handleModal={handleModal}
         modalTitle={'참석자 추가'}
-        content={<InnerPtModalContent />}
+        content={<InnerPtModalContent list={members} />}
       />
     </>
   );
