@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { useEffect } from 'react';
+import Selectbox from '../../components/common/Selectbox';
 const MrNotice = () => {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState('');
@@ -82,6 +83,7 @@ const MrNotice = () => {
                 justifyContent="space-between"
               >
                 <OnOffSwitch checked={isPublic} onChange={handleSwitchChange} />
+                <Selectbox menuList={template} />
                 {/* <Select
                   value={template}
                   placeholder="탬플릿"
@@ -116,3 +118,4 @@ const MrNotice = () => {
 };
 
 export default MrNotice;
+// index,value

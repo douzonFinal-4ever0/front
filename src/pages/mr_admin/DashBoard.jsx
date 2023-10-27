@@ -26,7 +26,12 @@ import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 import Login from '../user/Login';
 import axiosInstance from '../../utils/axios.js';
+import { useNavigate } from 'react-router-dom';
 const DashBoard = () => {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    navigate('/login');
+  };
   // const [open, setOpen] = React.useState(false);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
@@ -116,6 +121,7 @@ const DashBoard = () => {
               {/* 이미지 업로드 */}
               {/* <ImageUpload /> */}
               {/* <Login /> */}
+              <Button onClick={handleLogOut}>로그아웃</Button>
             </Container>
           </WrapContainer>
         </MainContainer>

@@ -31,6 +31,7 @@ const Login = () => {
   const handleLogin = () => {
     axiosInstance.post('/api/v1/user/login', FormToData).then((res) => {
       setJwt('Bearer ' + res.data.token);
+      console.log(res.data);
     });
   };
   // JWT 토큰을 localStorage에 저장
@@ -40,6 +41,7 @@ const Login = () => {
       navigate('/mr/dashboard');
     }
   }
+
   return (
     <Container
       sx={{
