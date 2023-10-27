@@ -9,7 +9,8 @@ import {
   TextField,
   styled
 } from '@mui/material';
-import axios from 'axios';
+import { setUserData } from '../../redux/reducer/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import axiosInstance from '../../utils/axios';
@@ -19,6 +20,8 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import RectangleBtn from '../../components/common/RectangleBtn';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const userData = useSelector(setUserData).payload.user;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [jwt, setJwt] = useState('');
@@ -31,7 +34,18 @@ const Login = () => {
   const handleLogin = () => {
     axiosInstance.post('/api/v1/user/login', FormToData).then((res) => {
       setJwt('Bearer ' + res.data.token);
-      console.log(res.data);
+      const user = res.data.userInfo;
+      console.log(user);
+
+      dispatch(
+        setUserData({
+          data: {
+            mem_code: user.mem_code,
+            name: user.name,
+            position_name: user.position_name
+          }
+        })
+      );
     });
   };
   // JWT 토큰을 localStorage에 저장
