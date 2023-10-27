@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import axiosInstance from '../../../../utils/axios';
 
 import { Box, Grid, TextField, Typography, Stack } from '@mui/material';
 import styled from '@emotion/styled';
@@ -16,7 +17,6 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import axios from 'axios';
 
 const MiniRezForm = () => {
   const dispatch = useDispatch();
@@ -71,9 +71,11 @@ const MiniRezForm = () => {
       tot_pt_ctn
     };
 
-    console.log(data);
-    const res = await axios.get('/mr/recommend', { params: data });
+    console.log('버튼 클릭 시작');
+    const res = await axiosInstance.get('/mr/recommend', { params: data });
     if (!res.data) return;
+    console.log(res);
+    console.log('버튼 클릭 종료');
 
     // 리덕스 저장
     dispatch(setMrRecommendData({ data: res.data }));
