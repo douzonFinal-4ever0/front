@@ -18,7 +18,7 @@ const MrList = () => {
   const [value, setValue] = useState(dayjs().minute(0));
 
   useEffect(() => {
-    axiosInstance.get('http://localhost:8081/mr/mrRez').then((res) => {
+    axiosInstance.get('/mr/mrRez').then((res) => {
       setRezList(res.data);
       const newEvents = res.data.map((rez) => ({
         title: rez.m_name,
@@ -30,7 +30,7 @@ const MrList = () => {
 
       setEvents(newEvents);
     });
-    axiosInstance.get('http://localhost:8081/mr/mrList').then((res) => {
+    axiosInstance.get('/mr/mrList').then((res) => {
       const mrList = res.data.map((rez) => ({
         id: rez.mr_code,
         title: rez.mr_name

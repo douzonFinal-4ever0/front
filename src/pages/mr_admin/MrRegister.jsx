@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
 import axiosInstance from '../../utils/axios.js';
+import RectangleBtn from '../../components/common/RectangleBtn';
 const MrRegister = () => {
   // const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
 
@@ -52,13 +53,16 @@ const MrRegister = () => {
   const SubContent = () => {
     return (
       <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-        <Button
-          variant="contained"
-          sx={{ width: '100%' }}
-          onClick={handleMrRegistClick}
-        >
-          회의실 등록
-        </Button>
+        <RectangleBtn
+          category={'register'}
+          text={'회의실 등록'}
+          sx={{
+            padding: '14px 12px',
+            margin: '1px',
+            width: '100%'
+          }}
+          handlebtn={handleMrRegistClick}
+        />
       </Grid>
     );
   };
@@ -71,7 +75,7 @@ const MrRegister = () => {
   const [mrList, setMrList] = useState([]);
   const handleMrListUpdate = () => {
     axiosInstance
-      .get('http://localhost:8081/mr/mrList')
+      .get('/mr/mrList')
       .then((res) => {
         const processedData = res.data.map((item) => ({
           ...item,
@@ -108,7 +112,6 @@ const MrRegister = () => {
         <SubSidebar widthP={20} content={<SubContent />} />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
-            <Box sx={{ display: 'flex', width: 'auto' }}></Box>
             <DataGrid
               columns={columns}
               rows={mrList}

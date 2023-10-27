@@ -42,6 +42,7 @@ import dayjs from 'dayjs';
 import SuppliesList from './SuppliesList';
 import { useEffect } from 'react';
 import axiosInstance from '../../utils/axios.js';
+import RectangleBtn from '../common/RectangleBtn';
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
@@ -78,6 +79,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   ) || [0, 1, 2, 3, 4];
   // console.log(initialMr_op_day);
   // console.log(initialSelectedTags);
+  const initialMr_Img = selectedRowData?.mr_img?.map((urls) => urls.url) || [];
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
   const [location, setLocation] = useState(initialLocation);
@@ -250,7 +252,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       reader.readAsDataURL(file);
     }
   };
-
+  console.log(initialMr_Img);
   /**이미지 삭제 */
   const handleImageDelete = (index) => {
     const newImages = [...images];
@@ -453,16 +455,22 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                   title={item.title}
                   actionPosition="right"
                   actionIcon={
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() => handleImageDelete(index)}
-                      color="error"
-                    >
-                      삭제
-                    </Button>
+                    <RectangleBtn
+                      category={'delete'}
+                      text={'삭제'}
+                      sx={{
+                        padding: '14px 12px',
+                        margin: '1px'
+                      }}
+                      handlebtn={() => handleImageDelete(index)}
+                    />
                   }
                 />
+              </ImageListItem>
+            ))}
+            {initialMr_Img.map((url, index) => (
+              <ImageListItem key={index}>
+                <img src={url} alt={`Image ${index}`} loading="lazy" />
               </ImageListItem>
             ))}
           </ImageList>
@@ -471,36 +479,43 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         {isEditMode ? (
           <Grid item container xs={12} spacing={2}>
             <Grid item xs={6}>
-              <Button
-                variant="contained"
-                onClick={handleUpdate}
-                sx={{ width: '100%' }}
-                color="primary"
-              >
-                회의실 수정
-              </Button>
+              <RectangleBtn
+                category={'modify'}
+                text={'회의실 수정'}
+                sx={{
+                  padding: '14px 12px',
+                  margin: '1px',
+                  width: '100%'
+                }}
+                handlebtn={handleUpdate}
+              />
             </Grid>
             <Grid item xs={6}>
-              <Button
-                variant="contained"
-                onClick={handleDeactive}
-                sx={{ width: '100%' }}
-                color="error"
-              >
-                회의실 비활성화
-              </Button>
+              <RectangleBtn
+                category={'delete'}
+                text={'회의실 비활성화'}
+                sx={{
+                  padding: '14px 12px',
+                  margin: '1px',
+                  width: '100%'
+                }}
+                handlebtn={handleDeactive}
+              />
             </Grid>
           </Grid>
         ) : (
           <Grid item container xs={12}>
             <Grid item xs={12}>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                sx={{ width: '100%' }}
-              >
-                회의실 등록
-              </Button>
+              <RectangleBtn
+                category={'register'}
+                text={'회의실 등록'}
+                sx={{
+                  padding: '14px 12px',
+                  margin: '1px',
+                  width: '100%'
+                }}
+                handlebtn={handleSubmit}
+              />
             </Grid>
           </Grid>
         )}

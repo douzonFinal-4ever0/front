@@ -5,7 +5,10 @@ import {
   Button,
   Checkbox,
   Container,
+  FormControl,
+  MenuItem,
   Paper,
+  Select,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -26,7 +29,13 @@ import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 import Login from '../user/Login';
 import axiosInstance from '../../utils/axios.js';
+import { useNavigate } from 'react-router-dom';
+import Editor from '../../components/mr_admin/Editor';
 const DashBoard = () => {
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    navigate('/login');
+  };
   // const [open, setOpen] = React.useState(false);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
@@ -116,6 +125,14 @@ const DashBoard = () => {
               {/* 이미지 업로드 */}
               {/* <ImageUpload /> */}
               {/* <Login /> */}
+              {/* <Select placeholder="탬플릿" defaultValue={'미팅룸'}>
+                <MenuItem value="미팅룸">미팅룸</MenuItem>
+                <MenuItem value="소회의실">소회의실</MenuItem>
+                <MenuItem value="중회의실">중회의실</MenuItem>
+                <MenuItem value="대회의실">대회의실</MenuItem>
+              </Select> */}
+              <Editor />
+              <Button onClick={handleLogOut}>로그아웃</Button>
             </Container>
           </WrapContainer>
         </MainContainer>
