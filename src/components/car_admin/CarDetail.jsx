@@ -20,17 +20,16 @@ import {
 import { Box, Container } from '@mui/system';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import styled from '@emotion/styled';
 import Label from '../common/Label';
 import { palette } from '../../theme/palette';
-import { typography } from '../../theme/typography';
 import UserSearchBar from './UserSearchBar';
 import RectangleBtn from '../common/RectangleBtn';
 import CarDeleteModal from './CarDeleteModal';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HdrAutoOutlinedIcon from '@mui/icons-material/HdrAutoOutlined';
+import axiosInstance from '../../utils/axios';
 
 const style = {
   position: 'absolute',
@@ -234,8 +233,8 @@ const CarDetail = ({
 
   useEffect(() => {
     console.log(carCode);
-    axios
-      .get(`http://localhost:8081/admin/car/carGetOne`, {
+    axiosInstance
+      .get(`/manager/car/carGetOne`, {
         params: {
           car_code: carCode
         }
@@ -256,8 +255,8 @@ const CarDetail = ({
   // 차량 상세 수정
   const handleModifyBtn = () => {
     // 모달창 오픈
-    axios
-      .get('http://localhost:8081/admin/memList')
+    axiosInstance
+      .get('/manager/memList')
       .then((res) => {
         carInfo.carUser !== null
           ? setRight(
@@ -310,11 +309,11 @@ const CarDetail = ({
   const clickModifyBtn = () => {
     console.log(carModifyInfo);
     // 수정 axios 처리
-    axios
-      .put('http://localhost:8081/admin/car/carModify', carModifyInfo)
+    axiosInstance
+      .put('/manager/car/carModify', carModifyInfo)
       .then(() => {
-        axios
-          .get(`http://localhost:8081/admin/car/carGetOne`, {
+        axiosInstance
+          .get(`/manager/car/carGetOne`, {
             params: {
               car_code: carModifyInfo.car_code
             }

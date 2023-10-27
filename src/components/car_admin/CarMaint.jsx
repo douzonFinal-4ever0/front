@@ -6,7 +6,7 @@ import RectangleBtn from '../common/RectangleBtn';
 import CarMaintRegister from './CarMaintRegister';
 import { useState } from 'react';
 import { palette } from '../../theme/palette';
-import axios from 'axios';
+import axiosInstance from '../../utils/axios';
 
 const style = {
   position: 'absolute',
@@ -57,8 +57,8 @@ const CarMaint = ({ carCode }) => {
 
     console.log(maintModify);
 
-    axios
-      .post(`http://localhost:8081/admin/car/maintCarStatusModify`, maintModify)
+    axiosInstance
+      .post(`/manager/car/maintCarStatusModify`, maintModify)
       .then((res) => {
         // 여기서 maintData 값을 변경
       })

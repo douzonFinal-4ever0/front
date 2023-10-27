@@ -22,13 +22,13 @@ import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import axios from 'axios';
 import RectangleBtn from '../common/RectangleBtn';
 import { useDispatch } from 'react-redux';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
+import axiosInstance from '../../utils/axios';
 
 const CarMaintRegister = ({
   carCode,
@@ -54,8 +54,8 @@ const CarMaintRegister = ({
 
   // 정비 내역, 정비 업체 axios 요청
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/admin/car/getMaintItem')
+    axiosInstance
+      .get('/manager/car/getMaintItem')
       .then((res) => {
         console.log(res.data);
         setMaintItem({
@@ -123,11 +123,8 @@ const CarMaintRegister = ({
     }
 
     console.log(maintRegisterData);
-    axios
-      .post(
-        'http://localhost:8081/admin/car/maintRecordRegister',
-        maintRegisterData
-      )
+    axiosInstance
+      .post('/manager/car/maintRecordRegister', maintRegisterData)
       .then((res) => {
         console.log(res.data);
         // res.data -> maint 객체 하나
