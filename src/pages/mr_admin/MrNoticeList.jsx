@@ -66,7 +66,6 @@ const MrNoticeList = () => {
           </WrapContainer>
         </MainContainer>
       </Box>
-      <MrNoticeDeatails selectedNotice={selectedNotice} />
     </>
   );
 };
