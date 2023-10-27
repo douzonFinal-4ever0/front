@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
 import { styled } from '@mui/material/styles';
 import {
@@ -34,6 +36,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { minHeight } from '@mui/system';
 
 const Header = (props) => {
+  const user = useSelector(setUserData).payload.user;
   const { onMenuIconClick, isAdminMode, setIsAdminMode } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   // popover ----------
@@ -92,7 +95,7 @@ const Header = (props) => {
                     variant="subtitle2"
                     sx={{ color: palette.text.secondary }}
                   >
-                    김더존
+                    {user.name}
                   </Typography>
                   <Box
                     sx={{

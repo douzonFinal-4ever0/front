@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axiosInstance from '../../../../utils/axios';
+
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
 import { setUserData } from '../../../../redux/reducer/userSlice';
 import {
@@ -23,8 +25,6 @@ import InnerPtForm from '../form/InnerPtForm';
 import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
 import SuppliesForm from '../form/SuppliesForm';
-import dayjs from 'dayjs';
-import axios from 'axios';
 
 const RezSection = () => {
   const dispatch = useDispatch();
@@ -72,7 +72,7 @@ const RezSection = () => {
       mr_code,
       mr_pt_list
     };
-    const res = await axios.post('/mr/rez', data);
+    const res = await axiosInstance.post('/mr/rez', data);
   };
 
   return (
