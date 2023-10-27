@@ -48,7 +48,14 @@ const SubSideContents = ({ setSelectedRows }) => {
     //setCarCode(car_code);
     setSelectedRows({ car_code, car_address, car_name });
   };
-
+  // hover
+  const [isHovered, setIsHovered] = useState(null);
+  const handleHover = (index) => {
+    setIsHovered(index);
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(null);
+  };
   const CarList = ({ rows }) => {
     if (rows.length == 0) {
       return <NoRow />;
@@ -56,9 +63,14 @@ const SubSideContents = ({ setSelectedRows }) => {
       return (
         <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
           <List dense component="div" role="list">
-            {rows.map((car) => {
+            {rows.map((car, index) => {
               return (
                 <ListItem
+                  key={car.id}
+                  onMouseEnter={() => handleHover(index)}
+                  onMouseLeave={handleMouseLeave}
+                  sx={{ background: isHovered === index && '#FFFFFF' }}
+                  // {isHovered&&}
                   onClick={(e) =>
                     handleItem(e, car.id, car.car_address, car.car_name)
                   }

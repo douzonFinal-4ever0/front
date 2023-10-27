@@ -13,7 +13,9 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography
+  Typography,
+  Select,
+  MenuItem
 } from '@mui/material';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import { useState } from 'react';
@@ -45,27 +47,72 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     handleClose();
   };
   useEffect(() => {
-    axios
-      .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
-      .then((res) => {
-        console.log(res.data);
-        setRezData(res.data);
-        setFormData({
-          // ...formData,
-          // distance: res.data.est_mileage,
-          // car_rez_code: res.data.car_rez_code,
-          // bef_mileage: res.data.carDetailResponseVO.accum_mileage,
-          // mem_code: res.data.memResponseVO.mem_code,
-          // car_code: res.data.carDetailResponseVO.car_code
+    let carDetailDTO;
+    if (open) {
+      axios
+        .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
+        .then((res) => {
+          console.log(res.data);
+          setRezData(res.data);
+          setFormData({
+            ...formData,
+            distance: res.data.est_mileage,
+            bef_mileage: res.data.carDetailResponseVO.accum_mileage,
+            aft_mileage:
+              res.data.carDetailResponseVO.accum_mileage + res.data.est_mileage,
+            car_rez_code: res.data.car_rez_code,
+            mem_code: res.data.memResponseVO.mem_code,
+            car_code: res.data.carDetailResponseVO.carVO.car_code
+          });
         });
-      });
-    axios
-      .get(`http://localhost:8081/car_rez/locations/${rezCode}`)
-      .then((res) => {
-        console.log(res.data);
-        setRezLoc(res.data);
-      });
-  }, [rezCode]);
+    } else {
+      setRezData(null);
+      setFormData(null);
+      setRezLoc(null);
+    }
+  }, [open]);
+
+  //formdata 설정
+  const hanldeFormData = (e) => {
+    const { name, value } = e.target;
+    console.log(name);
+    console.log(value);
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+  //submit 함수
+  const hanldSubmit = (e) => {
+    e.preventDefault();
+    // if (!spend) {
+    //   setFormData({ ...formData, expenditureDTO: {} });
+    // }
+    // setFormData({
+    //   ...formData,
+    //     address: rezLoc[1].address,
+    //     latitude: rezLoc[1].latitude,
+    //     longitude: rezLoc[1].longitude
+    // });
+    if (
+      parseFloat(formData.distance) <
+      parseFloat(formData.nomal_biz_mileage) +
+        parseFloat(formData.commute_mileage)
+    ) {
+      console.log(formData.distance);
+      console.log(formData.nomal_biz_mileage + formData.commute_mileage);
+      alert('총주행거리가 업무용 거리보다 작습니다.');
+    } else {
+      console.log(formData);
+      axios
+        .post(`http://localhost:8081/car_rez/operation`, formData)
+        .then((res) => {
+          console.log(res.data);
+          alert('운행 처리 완료');
+          handleClose();
+        });
+    }
+  };
   //지출 여부
   const handleSpend = (e) => {
     console.log(e.target.value);
@@ -91,7 +138,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     <Modal open={open} onClose={handleClose}>
       <Box sx={{ ...style, width: 750 }}>
         {(formData !== null) & (rezData !== null) && (
-          <>
+          <form onSubmit={hanldSubmit}>
             <Box sx={{ pt: 2, px: 4, pb: 3, bgcolor: 'background.paper' }}>
               <Box>
                 <Typography
@@ -132,11 +179,15 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
               <Grid container spacing={1} margin="5px 0px" padding="0px 6px">
                 <Grid item container spacing={2}>
                   <StyledLabelGrid item xs={3}>
-                    <Label htmlFor={'distance'} text={'주행 후 계기판 거리'} />
+                    <Label
+                      htmlFor={'aft_mileage'}
+                      text={'주행 후 계기판 거리'}
+                    />
                   </StyledLabelGrid>
                   <Grid item xs={8}>
                     <TextField
-                      id="distance"
+                      id="aft_mileage"
+                      name="aft_mileage"
                       variant="outlined"
                       type="number"
                       InputProps={{
@@ -145,6 +196,8 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
+                      defaultValue={formData.aft_mileage}
+                      onChange={hanldeFormData}
                       // value={
                       //   formData.distance +
                       //   rezData.carDetailResponseVO.accum_mileage
@@ -162,8 +215,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                   <Grid item xs={8}>
                     <TextField
                       id="nomal_biz_mileage"
+                      name="nomal_biz_mileage"
                       variant="outlined"
                       type="number"
+                      onChange={hanldeFormData}
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (
@@ -180,8 +235,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                   <Grid item xs={8}>
                     <TextField
                       id="commute_mileage"
+                      name="commute_mileage"
                       variant="outlined"
                       type="number"
+                      onChange={hanldeFormData}
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (
@@ -198,8 +255,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                   <Grid item xs={8}>
                     <TextField
                       id="memo"
+                      name="memo"
                       variant="outlined"
                       type="text"
+                      onChange={hanldeFormData}
                       multiline
                     ></TextField>
                   </Grid>
@@ -296,6 +355,43 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     </Grid>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
+                        <Label htmlFor={'distance'} text={'계정세목'} />
+                      </StyledLabelGrid>
+                      <Grid item xs={8}>
+                        <Select
+                          labelId="demo-simple-select-filled-label"
+                          id="demo-simple-select-filled"
+                          displayEmpty
+                          inputProps={{ 'aria-label': 'Without label' }}
+                          sx={{ minWidth: 220 }}
+                        >
+                          <MenuItem value={'1'}>통행료</MenuItem>
+                          <MenuItem value={'2'}>유류비</MenuItem>
+                          <MenuItem value={'3'}>주차비</MenuItem>
+                        </Select>
+                      </Grid>
+                    </Grid>
+                    <Grid item container spacing={2}>
+                      <StyledLabelGrid item xs={3}>
+                        <Label htmlFor={'distance'} text={'결제 수단'} />
+                      </StyledLabelGrid>
+                      <Grid item xs={8}>
+                        <Select
+                          labelId="demo-simple-select-filled-label"
+                          id="demo-simple-select-filled"
+                          displayEmpty
+                          inputProps={{ 'aria-label': 'Without label' }}
+                          sx={{ minWidth: 220, mb: 1 }}
+                        >
+                          <MenuItem value={'1'}>법인 카드</MenuItem>
+                          <MenuItem value={'2'}>법인 현금</MenuItem>
+                          <MenuItem value={'3'}>개인 카드</MenuItem>
+                          <MenuItem value={'4'}>개인 현금</MenuItem>
+                        </Select>
+                      </Grid>
+                    </Grid>
+                    <Grid item container spacing={2}>
+                      <StyledLabelGrid item xs={3}>
                         <Label htmlFor={'imgUpload'} text={'영수증'} />
                       </StyledLabelGrid>
                       <Grid item xs={9}>
@@ -321,6 +417,21 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     {/* ))} */}
                     {/* </ImageList> */}
                   </Grid>
+                </Grid>
+                <Grid container xs={12} justifyContent="center">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderColor: '#BEBEBE',
+                      ':hover': {
+                        backgroundColor: '#2065D1',
+                        borderColor: '#BEBEBE'
+                      },
+                      margin: '0px 4px'
+                    }}
+                  >
+                    추가
+                  </Button>
                 </Grid>
               </Collapse>
             </Box>
@@ -348,6 +459,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
               </Button>
               <Button
                 variant="contained"
+                type="submit"
                 sx={{
                   borderColor: '#BEBEBE',
                   ':hover': {
@@ -360,7 +472,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                 완료
               </Button>
             </Grid>
-          </>
+          </form>
         )}
       </Box>
     </Modal>
