@@ -36,6 +36,7 @@ const MrNoticeList = () => {
       navigate(`../NoticeDetail/${notice_code}`);
     });
   };
+
   return (
     <>
       <SubHeader title={'공지사항 조회'} />
