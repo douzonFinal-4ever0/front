@@ -44,7 +44,7 @@ import { palette } from '../../theme/palette';
 import CarOperation from '../../components/car_user/CarOperation';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
-  const [range, setRange] = useState('');
+  const [range, setRange] = useState('0');
   const mem_code = 'MEM001';
   const [open, setOpen] = useState(false);
   // const [flag, setFlag] = useState(false);
@@ -65,9 +65,25 @@ const Dashboard = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       const rezData = res.data.map((item) => ({
+  //         ...item,
+  //         id: item.car_rez_code,
+  //         start_at: dateFormat(item.start_at),
+  //         return_at: dateFormat(item.return_at),
+  //         during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+  //       }));
+  //       console.log(rezData);
+  //       setCarRez(rezData);
+  //     });
+  // }, []);
   useEffect(() => {
     axios
-      .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
+      .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
       .then((res) => {
         console.log(res.data);
         const rezData = res.data.map((item) => ({
@@ -80,32 +96,19 @@ const Dashboard = () => {
         console.log(rezData);
         setCarRez(rezData);
       });
-  }, []);
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
-      .then((res) => {
-        console.log(res.data);
-        const rezData = res.data.map((item) => ({
-          ...item,
-          id: item.car_rez_code,
-          start_at: dateFormat(item.start_at),
-          return_at: dateFormat(item.return_at),
-          during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
-        }));
-        console.log(rezData);
-        setCarRez(rezData);
-      });
-  }, []);
+  }, [range]);
 
   const createChip = (params) => {
     if (params.row.rez_status === '1') {
-      return <Chip label="확정" color="success" variant="outlined" />;
+      return <Chip label="미처리" color="primary" variant="outlined" />;
     }
     if (params.row.rez_status === '2') {
-      return <Chip label="완료" color="primary" variant="outlined" />;
+      return <Chip label="확정" color="success" variant="outlined" />;
     }
     if (params.row.rez_status === '3') {
+      return <Chip label="완료" variant="outlined" />;
+    }
+    if (params.row.rez_status === '4') {
       return <Chip label="취소" color="error" variant="outlined" />;
     }
   };
@@ -253,34 +256,42 @@ const Dashboard = () => {
     },
     {
       field: 'action',
-      headerName: '운행 완료 처리',
+      headerName: '비고',
       width: 100,
       description: '운행 완료 처리',
       renderCell: (params) => {
+        const Data = params.row;
         const handleClick = () => {
-          const Data = params.row;
           setSelectedRezCode(Data.id);
-          console.log(Data.id);
+          console.log(Data.rez_status);
           handleOpen();
         };
         return (
-          <Button
-            onClick={(e) => {
-              handleClick(e);
-            }}
-          >
-            운행완료
-          </Button>
+          <>
+            {Data.rez_status !== '3' ? (
+              <Button
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
+                운행완료
+              </Button>
+            ) : Data.rez_status !== '4' ? (
+              '처리 완료'
+            ) : (
+              ''
+            )}
+          </>
         );
       }
     }
   ];
 
-  var filterRezData = carRez.filter((item) => {
-    return (
-      item['rez_status'].includes(range) && item['car_code'].includes(carCode)
-    );
-  });
+  // var filterRezData = carRez.filter((item) => {
+  //   return (
+  //     item['rez_status'].includes(range) && item['car_code'].includes(carCode)
+  //   );
+  // });
   const handleRange = (e) => {
     setRange(e.target.value);
     // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
@@ -343,16 +354,17 @@ const Dashboard = () => {
               onChange={handleRange}
               sx={{ minWidth: 120, mb: 1 }}
             >
-              <MenuItem value={''}>
+              <MenuItem value={'0'}>
                 <em>전체</em>
               </MenuItem>
-              <MenuItem value={'1'}>확정</MenuItem>
-              <MenuItem value={'3'}>취소</MenuItem>
-              <MenuItem value={'2'}>완료</MenuItem>
+              <MenuItem value={'1'}>미처리</MenuItem>
+              <MenuItem value={'2'}>확정</MenuItem>
+              <MenuItem value={'4'}>취소</MenuItem>
+              <MenuItem value={'3'}>완료</MenuItem>
             </Select>
 
             <DataGrid
-              rows={filterRezData}
+              rows={carRez}
               columns={colums}
               width="100%"
               height={'auto'}

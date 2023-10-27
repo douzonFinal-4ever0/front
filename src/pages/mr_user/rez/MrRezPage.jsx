@@ -19,11 +19,26 @@ const MrRezPage = () => {
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
   const { list } = mrRecommendData;
 
+  const [selectMrCard, setSelectMrCard] = useState({});
+
+  // 새로고침 시 대시보드로 리다이렉트
   useEffect(() => {
     if (mrRecommendData.list.length === 0) {
       navigation('/mr/dashboard');
     }
-  }, [mrRecommendData]);
+  }, []);
+
+  // 첫번째 리스트 카드를 selectMrCard로 설정
+  useEffect(() => {
+    setSelectMrCard({ ...list[2] });
+  }, []);
+
+  // 회의실 카드 클릭 이벤트
+  const handleCardClick = (e) => {
+    const mrCode = e.currentTarget.getAttribute('name');
+    const res = list.find((item) => item.mr_code == mrCode);
+    setSelectMrCard({ ...res });
+  };
 
   return (
     <>
@@ -41,7 +56,11 @@ const MrRezPage = () => {
                       Step 1 - 추천 회의실 선택
                     </StyledStepText>
                     {list.length !== 0 ? (
-                      <RecommendSection data={list} />
+                      <RecommendSection
+                        data={list}
+                        selectMrCard={selectMrCard}
+                        handleCardClick={handleCardClick}
+                      />
                     ) : (
                       '데이터 없음'
                     )}
@@ -54,7 +73,7 @@ const MrRezPage = () => {
                       Step 2 - 회의실 상세정보 확인
                     </StyledStepText>
                     {list.length !== 0 ? (
-                      <MrInfoSection data={list[0]} />
+                      <MrInfoSection data={selectMrCard} />
                     ) : (
                       '데이터 없음'
                     )}

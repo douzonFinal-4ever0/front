@@ -23,19 +23,19 @@ const CarRezComplete = () => {
   const carRez = location.state;
   const navigate = useNavigate();
 
-  const dateFormat = (date) => {
-    const preDate = new Date(date);
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return preDate.toLocaleString('ko-KR', options);
-  };
-  carRez.start_at = dateFormat(carRez.start_at);
-  carRez.return_at = dateFormat(carRez.return_at);
+  // const dateFormat = (date) => {
+  //   const preDate = new Date(date);
+  //   const options = {
+  //     year: 'numeric',
+  //     month: '2-digit',
+  //     day: '2-digit',
+  //     hour: '2-digit',
+  //     minute: '2-digit'
+  //   };
+  //   return preDate.toLocaleString('ko-KR', options);
+  // };
+  // carRez.start_at = dateFormat(carRez.start_at);
+  // carRez.return_at = dateFormat(carRez.return_at);
   console.log(carRez);
   console.log(carRez.carLoc);
   const goList = () => {
@@ -52,10 +52,11 @@ const CarRezComplete = () => {
           spacing={2}
         >
           <Typography variant="h1" color="text.secondary" align="center">
-            예약 완료
+            {carRez.isUp === true ? '예약 수정' : '예약'} 완료
           </Typography>
           <Typography variant="h6" align="center">
-            사용자 이름 님의 예약이 완료되었습니다.
+            {carRez.memDTO.name} 님의{' '}
+            {carRez.isUp === true ? '예약 수정이' : '예약이'} 완료되었습니다.
           </Typography>
           <Button
             variant="contained"
@@ -75,10 +76,10 @@ const CarRezComplete = () => {
           </Typography>
           <table>
             <tr>
-              <td>예약정보 : {carRez.car_rez_code}</td>
+              <td>예약번호 : {carRez.car_rez_code}</td>
             </tr>
             <tr>
-              <td>예약자 이름 : </td>
+              <td>예약자 이름 : {carRez.memDTO.name}</td>
             </tr>
             <tr>
               <td>목적 : {carRez.detail}</td>

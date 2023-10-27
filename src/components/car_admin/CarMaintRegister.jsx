@@ -12,8 +12,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import CarDetail from './CarDetail';
-import CarMaint from './CarMaint';
 import { Box, Container } from '@mui/system';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import styled from '@emotion/styled';
@@ -26,12 +24,33 @@ import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import RectangleBtn from '../common/RectangleBtn';
+import { useDispatch } from 'react-redux';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
 
-const CarMaintRegister = ({ carCode, style }) => {
+const CarMaintRegister = ({
+  carCode,
+  style,
+  maintData,
+  setMaintData,
+  handleModalClose
+}) => {
   const [maintItem, setMaintItem] = useState({
     maintItemList: [],
     maintComList: []
   });
+
+  const dispatch = useDispatch();
+
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
 
   // 정비 내역, 정비 업체 axios 요청
   useEffect(() => {
@@ -111,16 +130,35 @@ const CarMaintRegister = ({ carCode, style }) => {
       )
       .then((res) => {
         console.log(res.data);
+        // res.data -> maint 객체 하나
+        const newData = {
+          maint_name: res.data.carMaintResponseVO.maint_name,
+          maint_start_at: new Date(
+            res.data.maint_start_at
+          ).toLocaleDateString(),
+          maint_end_at:
+            res.data.maint_end_at !== null
+              ? new Date(res.data.maint_end_at).toLocaleDateString()
+              : '-',
+          maint_cost: res.data.maint_cost,
+          pay_method: res.data.pay_method,
+          mc_name: res.data.maintComResponseVO.mc_name,
+          mem_info: [
+            res.data.memResponseVO.name,
+            res.data.memResponseVO.deptVO.dept_name +
+              ' ' +
+              res.data.memResponseVO.position_name
+          ],
+          memo: res.data.memo,
+          maint_code: res.data.maint_code
+        };
+        // 등록후, 새롭게 저장된 maintRecord 정보를 리스트에 추가해주기
+        setMaintData([...maintData, newData]);
 
-        // axios
-        //   .get('http://localhost:8081/admin/car/maintRecordRegister', {
-        //     params: {
-        //       maint_code: res.data
-        //     }
-        //   })
-        //   .then((res) => {
-        //     // res.data -> maint 객체 하나
-        //   });
+        // 모달창 내리고, 등록 완료 snackbar 보여주기
+        handleModalClose();
+        handleSetSnackbarContent('등록이 완료되었습니다.');
+        handleOpenSnackbar();
       })
       .catch((error) => {
         console.log(error);

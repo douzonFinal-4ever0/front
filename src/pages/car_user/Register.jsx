@@ -46,13 +46,13 @@ const Register = () => {
   const [open, setOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [carDetail, setCarDetail] = useState({
-    id: '',
-    car_name: '',
-    accum_mileage: '',
-    authority: '',
-    fuel_type: '',
-    fuel_effciency: '',
-    car_address: ''
+    id: null,
+    car_name: null,
+    accum_mileage: null,
+    authority: null,
+    fuel_type: null,
+    fuel_effciency: null,
+    car_address: null
   });
 
   const [formData, setFormData] = useState({
@@ -71,6 +71,7 @@ const Register = () => {
     dest_loc: ''
   });
   //수정시 초기값 설정
+  const initCar_rez_code = carRez ? carRez.rez.car_rez_code : '';
   const initMem_code = carRez ? carRez.rez.memResponseVO.mem_code : '';
   const initCar_code = carRez
     ? carRez.rez.carDetailResponseVO.carVO.car_code
@@ -83,6 +84,7 @@ const Register = () => {
   const initReturn_loc = carRez ? carRez.loc[1].address : '';
   const initDest_loc = carRez ? carRez.loc[2].address : '';
 
+  const [car_rez_code, setCar_rez_code] = useState(initCar_rez_code);
   const [mem_code, setMem_code] = useState(initMem_code);
   const [car_code, setCar_code] = useState(initCar_code);
   const [detail, setDetail] = useState(initDetail);
@@ -186,6 +188,7 @@ const Register = () => {
   let updateData = {};
   if (carRez) {
     updateData = {
+      car_rez_code: car_rez_code,
       memDTO: {
         mem_code: mem_code
       },
@@ -230,15 +233,15 @@ const Register = () => {
     return preDate.toLocaleString('ko-KR', options);
   };
   //값이 변하면 formdata 값변경 함수
-  const handleChange2 = (e) => {
-    console.log(e.target);
-    const { name, value } = e.target;
+  // const handleChange2 = (e) => {
+  //   console.log(e.target);
+  //   const { name, value } = e.target;
 
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value
+  //   });
+  // };
   const handleChange = (e, set) => {
     if (carRez) {
       set(e.target.value);
@@ -250,15 +253,27 @@ const Register = () => {
       });
     }
   };
-  const handleTimeChange = (e, name) => {
-    //const { name, value } = e;
-    //console.log(name);
-    //console.log(value);
-    console.log(typeof e.$d);
-    setFormData({
-      ...formData,
-      [name]: e.$d
-    });
+  const handleChangeLoc = (e, set) => {
+    if (carRez) {
+      set(addressObj.areaAddress + addressObj.townAddress);
+    } else {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+  const handleTimeChange = (e, name, set) => {
+    if (carRez) {
+      set(e.$d);
+    } else {
+      console.log(typeof e.$d);
+      setFormData({
+        ...formData,
+        [name]: e.$d
+      });
+    }
   };
   //submit하는 함수
   const handleSubmit = (e) => {
@@ -281,8 +296,11 @@ const Register = () => {
       axios
         .post('http://localhost:8081/car_rez/rezSave', formData)
         .then((res) => {
-          console.log('예약 완료 : ' + res.data);
-          navigate('../carRezComplete', { state: res.data });
+          let data = res.data;
+          data.start_at = dateFormat(res.data.start_at);
+          data.return_at = dateFormat(res.data.return_at);
+          console.log('예약 완료 : ' + dateFormat(res.data.start_at));
+          navigate('../carRezComplete', { state: data });
         });
     }
   };
@@ -305,15 +323,15 @@ const Register = () => {
     if (selectedRows.length !== 0) {
       //console.log(selectedRows.id);
       if (carRez) {
-        setCar_code(e.target.value);
+        setCar_code(selectedRows.car_code);
       } else {
         setFormData({
           ...formData,
           carDTO: { car_code: selectedRows.car_code },
           receipt_loc: selectedRows.car_address
         });
-        setOpen(false);
       }
+      setOpen(false);
     } else {
       alert('차량을 선택해주세요');
     }
@@ -360,26 +378,32 @@ const Register = () => {
   // 예약 정보 수정
   const updateRez = () => {
     console.log(updateData);
-    // axios
-    //   .patch('http://localhost:8081/car_rez/carRezDetail', updateData)
-    //   .then((res) => {
-    //     console.log('수정완료', res.data);
-    //     let data = { ...res.data, isUp: true };
-    //     alert('수정완료.');
-    //     // window.location.href = '/carRez/dashboard';
-    //     navigate('../carRezComplete', { state: data });
-    //   });
+    axios
+      .patch('http://localhost:8081/car_rez/carRezDetail', updateData)
+      .then((res) => {
+        // console.log('수정완료', res.data);
+        let data = { ...res.data, isUp: true };
+        data.start_at = dateFormat(res.data.start_at);
+        data.return_at = dateFormat(res.data.return_at);
+        console.log(data.start_at);
+        alert('수정완료.');
+        // window.location.href = '/carRez/dashboard';
+        navigate('../carRezComplete', { state: data });
+      });
   };
   useEffect(() => {
     if (carRez !== null) {
       console.log(carRez);
+      setDest_loc(addressObj.areaAddress + addressObj.townAddress);
     }
     setFormData({
       ...formData,
       dest_loc: addressObj.areaAddress + addressObj.townAddress
     });
   }, [addressObj]);
-
+  useEffect(() => {
+    setDest_loc(initDest_loc);
+  }, []);
   return (
     <>
       <SubHeader title={'차량 예약'} />
@@ -481,6 +505,7 @@ const Register = () => {
                       variant="outlined"
                       placeholder="목적을 입력하세요"
                       onChange={(e) => handleChange(e, setDetail)}
+                      value={carRez ? detail : formData.detail}
                     />
                   </Grid>
                 </Grid>
@@ -494,7 +519,10 @@ const Register = () => {
                       withMonth={true}
                       label={'대여 날짜'}
                       name={'start_at'}
-                      onChange={(e) => handleTimeChange(e, 'start_at')}
+                      onChange={(e) =>
+                        handleTimeChange(e, 'start_at', setStart_at)
+                      }
+                      timeValue={carRez && start_at}
                     ></TimeField>
                   </Grid>
                 </Grid>
@@ -508,7 +536,10 @@ const Register = () => {
                       withMonth={true}
                       label={'반납 날짜'}
                       name={'return_at'}
-                      onChange={(e) => handleTimeChange(e, 'return_at')}
+                      onChange={(e) =>
+                        handleTimeChange(e, 'return_at', setReturn_at)
+                      }
+                      timeValue={carRez && return_at}
                     ></TimeField>
                   </Grid>
                 </Grid>
@@ -522,7 +553,8 @@ const Register = () => {
                       id="dest"
                       name="dest_loc"
                       type="text"
-                      onChange={(e) => handleChange(e, setDest_loc)}
+                      onChange={(e) => handleChangeLoc(e, setDest_loc)}
+                      value={carRez ? dest_loc : formData.dest_loc}
                       readOnly
                     />
                   </Grid>
@@ -612,6 +644,7 @@ const Register = () => {
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
+                      value={carRez ? est_mileage : formData.est_mileage}
                     />
                   </Grid>
                 </Grid>
@@ -655,6 +688,9 @@ const Register = () => {
                     <TextField
                       id="car_name"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.car_name
+                      }
                       value={carDetail.car_name}
                       readOnly
                     />
@@ -671,6 +707,9 @@ const Register = () => {
                       name="car_code"
                       type="text"
                       onChange={(e) => handleChange(e, setCar_code)}
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.car_code
+                      }
                       value={carDetail.id}
                       readOnly
                     />
@@ -685,6 +724,9 @@ const Register = () => {
                     <TextField
                       id="accum_mileage"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.accum_mileage
+                      }
                       value={carDetail.accum_mileage}
                       readOnly
                       InputProps={{
@@ -705,6 +747,9 @@ const Register = () => {
                     <TextField
                       id="authority"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.authority
+                      }
                       value={carDetail.authority}
                       readOnly
                     />
@@ -719,12 +764,15 @@ const Register = () => {
                     <TextField
                       id="fuel_type"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.fuel_type
+                      }
                       value={carDetail.fuel_type}
                       readOnly
                     />
                   </Grid>
                 </Grid>
-                {/* 유종 */}
+                {/* 연비 */}
                 <Grid item container xs={12} spacing={2}>
                   <StyledLabelGrid item xs={2}>
                     <Label htmlFor={'fuel_effciency'} text={'연비'} />
@@ -733,6 +781,9 @@ const Register = () => {
                     <TextField
                       id="fuel_effciency"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.fuel_effciency
+                      }
                       value={carDetail.fuel_effciency}
                       readOnly
                       InputProps={{
@@ -754,6 +805,9 @@ const Register = () => {
                       id="receipt_loc"
                       name="receipt_loc"
                       type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.car_address
+                      }
                       onChange={(e) => handleChange(e, setReceipt_loc)}
                       value={carDetail.car_address}
                       readOnly
@@ -770,7 +824,9 @@ const Register = () => {
                       name="return_loc"
                       key={returnLocList.key}
                       // onChange={handleChange}
-                      value={formData.return_loc}
+                      // defaultValue={
+                      //   carRez &&
+                      value={carRez ? return_loc : formData.return_loc}
                       handleSelectBox={(e) => handleChange(e, setReturn_loc)}
                       menuList={returnLocList}
                     />

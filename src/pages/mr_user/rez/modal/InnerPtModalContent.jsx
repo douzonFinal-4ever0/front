@@ -1,17 +1,24 @@
-import { Grid } from '@mui/material';
-import WrapContainer from '../../../../components/mr_user/WrapContainer';
-import Toggle from '../../../../components/common/Toggle';
 import { useState } from 'react';
+import {
+  UncontrolledTreeEnvironment,
+  Tree,
+  StaticTreeDataProvider
+} from 'react-complex-tree';
+import 'react-complex-tree/lib/style-modern.css';
 
-const InnerPtModalContent = () => {
+import styled from '@emotion/styled';
+import { Box, Button, Grid, IconButton, Stack } from '@mui/material';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+
+import Toggle from '../../../../components/common/Toggle';
+
+const InnerPtModalContent = ({ list }) => {
   // 선택된 토글 버튼 값
-  const [selectBtn, setSeletBtn] = useState('calender');
-  // 토글 버튼 이벤트
-  const handleToggleBtn = (event) => {
-    setSeletBtn(event.currentTarget.value);
-  };
+  const [selectBtn, setSeletBtn] = useState('all');
+
   // 토글버튼 데이터
-  const data = [
+  const toggleData = [
     {
       index: 0,
       value: 'all',
@@ -19,26 +26,78 @@ const InnerPtModalContent = () => {
     },
     {
       index: 1,
+      value: 'search',
+      name: '검색'
+    },
+    {
+      index: 1,
       value: 'bookmark',
       name: '즐겨찾기'
     }
   ];
+
+  // 토글 버튼 이벤트
+  const handleToggleBtn = (e) => {
+    setSeletBtn(e.currentTarget.value);
+  };
+
+  const dataProvider = new StaticTreeDataProvider(list, (item, newName) => ({
+    ...item,
+    data: newName
+  }));
+
   return (
-    <WrapContainer bgcolor={'#fff'}>
-      <Grid container direction={'row'} spacing={2}>
-        <Grid item xs={6}>
+    <Grid container spacing={2} sx={{}}>
+      <Grid item xs={5} sx={{ width: '700px' }}>
+        <Stack sx={{ rowGap: '10px' }}>
           <Toggle
-            data={data}
+            data={toggleData}
             selectBtn={selectBtn}
             handleToggleBtn={handleToggleBtn}
+            sx={{ width: '33.4%' }}
           />
-        </Grid>
-        <Grid item xs={6}>
-          엄마
-        </Grid>
+          <StyledListContainer>
+            <UncontrolledTreeEnvironment
+              dataProvider={dataProvider}
+              getItemTitle={(item) => item.data}
+              viewState={{}}
+              canDragAndDrop={true}
+              canDropOnFolder={true}
+              canReorderItems={true}
+            >
+              <Tree treeId="tree-2" rootItem="root" treeLabel="Tree Example" />
+            </UncontrolledTreeEnvironment>
+          </StyledListContainer>
+        </Stack>
       </Grid>
-    </WrapContainer>
+      <Grid
+        item
+        xs={2}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Stack spacing={1}>
+          <StyledArrowBtn aria-label="add">
+            <KeyboardDoubleArrowRightIcon />
+          </StyledArrowBtn>
+          <StyledArrowBtn aria-label="delete">
+            <KeyboardDoubleArrowLeftIcon />
+          </StyledArrowBtn>
+        </Stack>
+      </Grid>
+      <Grid item xs={5}>
+        엄마
+      </Grid>
+    </Grid>
   );
 };
 
 export default InnerPtModalContent;
+
+const StyledListContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  border: `1px solid ${theme.palette.grey['500']}`
+}));
+
+const StyledArrowBtn = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.grey['100']
+}));
