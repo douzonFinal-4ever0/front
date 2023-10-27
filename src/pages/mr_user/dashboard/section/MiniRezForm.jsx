@@ -71,6 +71,7 @@ const MiniRezForm = () => {
       tot_pt_ctn
     };
 
+    console.log(data);
     const res = await axios.get('/mr/recommend', { params: data });
     if (!res.data) return;
 

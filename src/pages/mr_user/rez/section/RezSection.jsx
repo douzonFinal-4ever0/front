@@ -73,7 +73,6 @@ const RezSection = () => {
       mr_pt_list
     };
     const res = await axios.post('/mr/rez', data);
-    console.log(res);
   };
 
   return (
