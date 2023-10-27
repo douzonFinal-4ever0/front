@@ -215,7 +215,7 @@ const CarRezDetail = ({ rezCode }) => {
               >
                 기본 정보
               </Typography>
-              {(rezData.rez_status !== null) & (rezData.rez_status !== '2') ? (
+              {(rezData.rez_status !== null) & (rezData.rez_status !== '3') ? (
                 <Grid
                   container
                   xs={12}
@@ -223,17 +223,22 @@ const CarRezDetail = ({ rezCode }) => {
                   justifyContent="right"
                   spacing={2}
                 >
-                  <Button
-                    sx={{
-                      backgroundColor: '#607d8b',
-                      ':hover': { backgroundColor: '#455a64' },
-                      margin: '0px 4px'
-                    }}
-                    variant="contained"
-                    onClick={updateRez2}
-                  >
-                    예약 수정
-                  </Button>
+                  {rezData.rez_status !== '1' ? (
+                    <Button
+                      sx={{
+                        backgroundColor: '#607d8b',
+                        ':hover': { backgroundColor: '#455a64' },
+                        margin: '0px 4px'
+                      }}
+                      variant="contained"
+                      onClick={updateRez2}
+                    >
+                      예약 수정
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+
                   <Button
                     sx={{
                       backgroundColor: '#607d8b',
