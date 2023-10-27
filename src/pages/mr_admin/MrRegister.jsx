@@ -112,7 +112,6 @@ const MrRegister = () => {
         <SubSidebar widthP={20} content={<SubContent />} />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
-            <Box sx={{ display: 'flex', width: 'auto' }}></Box>
             <DataGrid
               columns={columns}
               rows={mrList}

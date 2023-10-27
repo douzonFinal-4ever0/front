@@ -2,7 +2,13 @@ import React from 'react';
 import { Stack, Typography, Switch, styled } from '@mui/material';
 const OnOffSwitch = ({ checked, onChange }) => {
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
+    <Stack
+      direction="row"
+      spacing={1}
+      alignItems="center"
+      justifyItems="center"
+      display="flex"
+    >
       <Typography>비공개</Typography>
       <AntSwitch
         checked={checked}

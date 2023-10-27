@@ -10,22 +10,32 @@ import DataGrid from '../../components/common/DataGrid';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import MrNoticeDeatails from './MrNoticeDeatails';
 const MrNoticeList = () => {
+  /*-------------------------------------url 이동---------------------------------------------------*/
   const navigate = useNavigate();
   const handleWriteNotice = () => {
     navigate('../Notice');
   };
+  /*-----------------------------------공지사항 가져오기------------------------------------------------------ */
   const [noticeList, setNoticeList] = useState([]);
   useEffect(() => {
-    axiosInstance.get('http://localhost:8081/mr/notice').then((res) => {
+    axiosInstance.get('/mr/notice').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.notice_code
       }));
       setNoticeList(processedData);
-      console.log(res.data);
+      // console.log(res.data);
     });
   }, []);
+  /*---------------------------상세 내용으로 이동-------------------------------------------------- */
+  const handleClickEvent = (params) => {
+    const notice_code = params.row.notice_code;
+    axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
+      navigate(`../NoticeDetail/${notice_code}`);
+    });
+  };
   return (
     <>
       <SubHeader title={'공지사항 조회'} />
@@ -40,6 +50,7 @@ const MrNoticeList = () => {
                   pageSize={10}
                   pageSizeOptions={[5, 10]}
                   //   disableRow={false}
+                  clickEvent={handleClickEvent}
                 />
               </div>
               <RectangleBtn
@@ -55,6 +66,7 @@ const MrNoticeList = () => {
           </WrapContainer>
         </MainContainer>
       </Box>
+      <MrNoticeDeatails selectedNotice={selectedNotice} />
     </>
   );
 };
