@@ -958,7 +958,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
         // 에러 발생 시 코드 실행
         console.log(error);
       });
-  }, [carInfo]);
+  }, []);
 
   const columns = [
     { id: 'type', label: '종류', minWidth: 170 },
@@ -1011,7 +1011,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
           }
           widthP={20}
         />
-        <Drawer width={1000} tabData={tabData} />
+        <Drawer width={1150} tabData={tabData} />
         <Box sx={{ width: '100%', padding: 3 }}>
           <Stack
             sx={{

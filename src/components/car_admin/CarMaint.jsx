@@ -6,6 +6,7 @@ import RectangleBtn from '../common/RectangleBtn';
 import CarMaintRegister from './CarMaintRegister';
 import { useState } from 'react';
 import { palette } from '../../theme/palette';
+import axios from 'axios';
 
 const style = {
   position: 'absolute',
@@ -18,35 +19,56 @@ const style = {
   boxShadow: 24
 };
 
-const CarMaint = ({
-  setTabData,
-  carCode,
-  carListInfo,
-  setCarListInfo,
-  carCounts,
-  setCarCounts
-}) => {
+const CarMaint = ({ carCode }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const maintCtnClick = () => {
-    // setTabData([
-    //   {
-    //     title: '정비 등록',
-    //     content: (
-    //       <CarMaintRegister
-    // setTabData={setTabData}
-    // carCode={carCode}
-    // carListInfo={carListInfo}
-    // setCarListInfo={setCarListInfo}
-    // carCounts={carCounts}
-    // setCarCounts={setCarCounts}
-    //       />
-    //     )
-    //   }
-    // ]);
     handleOpen();
+  };
+
+  const [maintData, setMaintData] = useState([]);
+  const [checkedRow, setCheckedRow] = useState([]);
+
+  const handleCompleteBtn = () => {
+    // console.log(checkedRow.map((row) => row.id));
+
+    // 오늘 날짜 가져오기
+    const today = new Date();
+    // 비교할 대상 날짜 파싱
+    const hasFutureDate = checkedRow.some((data) => {
+      const maintStartDate = new Date(data.maint_start_at);
+      if (maintStartDate > today) {
+        alert('정비 시작일자가 당일 이후입니다.');
+        return true; // 조건을 만족하면 true 반환
+      }
+      return false;
+    });
+
+    if (hasFutureDate) {
+      return; // 조건을 만족하는 경우 함수 종료
+    }
+
+    const maintModify = {
+      maint_codes: checkedRow.map((row) => row.id),
+      car_code: carCode
+    };
+
+    console.log(maintModify);
+
+    axios
+      .post(`http://localhost:8081/admin/car/maintCarStatusModify`, maintModify)
+      .then((res) => {
+        // 여기서 maintData 값을 변경
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleDeleteBtn = () => {
+    console.log(checkedRow);
   };
 
   return (
@@ -58,13 +80,11 @@ const CarMaint = ({
         aria-describedby="modal-modal-description"
       >
         <CarMaintRegister
-          setTabData={setTabData}
           carCode={carCode}
-          carListInfo={carListInfo}
-          setCarListInfo={setCarListInfo}
-          carCounts={carCounts}
-          setCarCounts={setCarCounts}
           style={style}
+          maintData={maintData}
+          setMaintData={setMaintData}
+          handleModalClose={handleClose}
         />
       </Modal>
       <Box
@@ -77,7 +97,7 @@ const CarMaint = ({
           padding: '20px 0px'
         }}
       >
-        <Box display="flex">
+        <Box display="flex" width="40%">
           <RectangleIcon
             sx={{
               color: 'black',
@@ -97,6 +117,51 @@ const CarMaint = ({
           >
             정비 내역
           </Typography>
+          <Grid
+            container
+            display="flex"
+            spacing={2}
+            width="60%"
+            marginLeft="40px"
+            alignItems="flex-end"
+          >
+            <Grid item xs={5}>
+              <Button
+                variant="outlined"
+                sx={{
+                  height: '30px',
+                  color: '#2e7d32',
+                  borderColor: '#2e7d32',
+                  borderRadius: '6px !important',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    borderColor: '#2e7d32'
+                  }
+                }}
+                onClick={handleCompleteBtn}
+              >
+                선택 완료
+              </Button>
+            </Grid>
+            <Grid item xs={5}>
+              <Button
+                variant="outlined"
+                sx={{
+                  height: '30px',
+                  color: '#d32f2f',
+                  borderColor: '#d32f2f',
+                  borderRadius: '6px !important',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    borderColor: '#d32f2f'
+                  }
+                }}
+                onClick={handleDeleteBtn}
+              >
+                선택 삭제
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
         <Box display="flex" justifyContent="space-between" width="260px">
           <RectangleBtn
@@ -112,7 +177,12 @@ const CarMaint = ({
           />
         </Box>
       </Box>
-      <CarMaintTable carCode={carCode} />
+      <CarMaintTable
+        maintData={maintData}
+        setMaintData={setMaintData}
+        carCode={carCode}
+        setCheckedRow={setCheckedRow}
+      />
     </>
   );
 };

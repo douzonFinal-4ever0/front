@@ -1,27 +1,27 @@
-import { makeStyles } from '@mui/material';
+import { Tooltip, Typography, makeStyles } from '@mui/material';
 import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-const CarMaintTable = ({ carCode }) => {
+const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
   const columns = [
     {
-      field: 'maint_item_code',
+      field: 'maint_name',
       headerName: '정비내역',
       width: 128,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center'
     },
-    {
-      field: 'created_at',
-      headerName: '등록일자',
-      width: 128,
-      headerAlign: 'center',
-      headerClassName: 'super-app-theme--header',
-      align: 'center'
-    },
+    // {
+    //   field: 'created_at',
+    //   headerName: '등록일자',
+    //   width: 128,
+    //   headerAlign: 'center',
+    //   headerClassName: 'super-app-theme--header',
+    //   align: 'center'
+    // },
     {
       field: 'maint_start_at',
       headerName: '정비 시작일',
@@ -33,7 +33,7 @@ const CarMaintTable = ({ carCode }) => {
     {
       field: 'maint_end_at',
       headerName: '정비 종료일',
-      type: 'number',
+      type: '',
       width: 128,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
@@ -46,24 +46,41 @@ const CarMaintTable = ({ carCode }) => {
       width: 128,
       align: 'center',
       headerAlign: 'center',
-      headerClassName: 'super-app-theme--header',
-      align: 'center'
+      headerClassName: 'super-app-theme--header'
     },
     {
-      field: 'mem_code', // 추후 수정 필요
-      headerName: '담당자',
-      //   description: 'This column has a value getter and is not sortable.',
+      field: 'pay_method',
+      headerName: '지불 방법',
+      width: 128,
+      align: 'center',
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header'
+    },
+    {
+      field: 'mc_name',
+      headerName: '정비 회사',
+      width: 128,
+      align: 'center',
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header'
+    },
+    {
+      field: 'mem_info', // 추후 수정 필요
+      headerName: '등록 사원',
       sortable: false,
       width: 128,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`
+      renderCell: (params) => (
+        <Tooltip title={params.value[1]} placement="bottom-start">
+          <Typography>{params.value[0]}</Typography>
+        </Tooltip>
+      )
     },
     {
       field: 'memo',
-      headerName: 'memo',
+      headerName: '메모',
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'super-app-theme--header',
@@ -71,7 +88,7 @@ const CarMaintTable = ({ carCode }) => {
     }
   ];
 
-  const [maintData, setMaintData] = useState([]);
+  // const [rows, setRows] = useState([]);
 
   useEffect(() => {
     axios
@@ -82,12 +99,34 @@ const CarMaintTable = ({ carCode }) => {
       })
       .then((res) => {
         console.log(res.data);
-        setMaintData(res.data);
+        const newData = res.data.map((item, index) => {
+          return {
+            maint_name: item.carMaintResponseVO.maint_name,
+            // created_at: item.created_at,
+            maint_start_at: new Date(item.maint_start_at).toLocaleDateString(),
+            maint_end_at:
+              item.maint_end_at !== null
+                ? new Date(item.maint_end_at).toLocaleDateString()
+                : '-',
+            maint_cost: item.maint_cost,
+            pay_method: item.pay_method,
+            mc_name: item.maintComResponseVO.mc_name,
+            mem_info: [
+              item.memResponseVO.name,
+              item.memResponseVO.deptVO.dept_name +
+                ' ' +
+                item.memResponseVO.position_name
+            ],
+            memo: item.memo,
+            maint_code: item.maint_code
+          };
+        });
+        setMaintData(newData);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [maintData]);
+  }, []);
 
   return (
     <Box
@@ -102,14 +141,36 @@ const CarMaintTable = ({ carCode }) => {
       <DataGrid
         rows={maintData}
         columns={columns}
+        getRowId={(row) => row.maint_code}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 }
           }
         }}
+        localeText={{
+          noRowsLabel: '등록된 정비 내역이 없습니다.'
+        }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
         sx={{ borderRadius: '2px' }}
+        onRowSelectionModelChange={(selectionModel) => {
+          // 선택된 행의 ID 및 maint_start_at 속성을 추출해서 배열로 저장
+          const selectedRowsData = selectionModel.map((selectedId) => {
+            const selectedRow = maintData.find(
+              (row) => row.maint_code === selectedId
+            );
+            return {
+              id: selectedId,
+              maint_start_at: selectedRow ? selectedRow.maint_start_at : null
+            };
+          });
+
+          // 선택된 행의 데이터 배열을 출력
+          console.log(selectedRowsData);
+
+          // 선택된 행의 데이터 배열을 상태로 설정
+          setCheckedRow(selectedRowsData);
+        }}
       />
     </Box>
   );

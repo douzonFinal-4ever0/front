@@ -3,6 +3,7 @@ import {
   Card,
   CardHeader,
   Checkbox,
+  Chip,
   Divider,
   FormControlLabel,
   Grid,
@@ -26,6 +27,10 @@ import Label from '../common/Label';
 import { palette } from '../../theme/palette';
 import { typography } from '../../theme/typography';
 import UserSearchBar from './UserSearchBar';
+import RectangleBtn from '../common/RectangleBtn';
+import CarDeleteModal from './CarDeleteModal';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HdrAutoOutlinedIcon from '@mui/icons-material/HdrAutoOutlined';
 
 const style = {
   position: 'absolute',
@@ -45,12 +50,22 @@ const CarDetail = ({
   carCounts,
   setCarCounts
 }) => {
+  // 수정 모달 관련 변수 및 함수
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  // 삭제 모달 관련 변수 및 함수
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const handleDeleteModalOpen = () => {
+    setDeleteModalOpen(true);
+  };
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
   };
 
   const [carInfo, setCarInfo] = useState({
@@ -574,6 +589,13 @@ const CarDetail = ({
           </Grid>
         </Box>
       </Modal>
+
+      <Modal open={deleteModalOpen} onClose={handleDeleteModalClose}>
+        <CarDeleteModal
+          style={style}
+          handleDeleteModalClose={handleDeleteModalClose}
+        />
+      </Modal>
       <Box
         sx={{
           display: 'flex',
@@ -583,17 +605,25 @@ const CarDetail = ({
         }}
       >
         <Typography variant="h6">기본 정보</Typography>
-        <Button
-          sx={{
-            backgroundColor: '#607d8b',
-            ':hover': { backgroundColor: '#455a64' }
-          }}
-          variant="contained"
-          startIcon={<AutoFixNormalIcon />}
-          onClick={handleModifyBtn}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          width="140px"
+          height="36px"
         >
-          수정
-        </Button>
+          <RectangleBtn
+            text={'수정'}
+            category={'modify'}
+            sx={{ width: '64px' }}
+            handlebtn={handleModifyBtn}
+          />
+          <RectangleBtn
+            text={'삭제'}
+            category={'delete'}
+            sx={{ width: '64px' }}
+            handlebtn={handleDeleteModalOpen}
+          />
+        </Box>
       </Box>
       <Grid
         container
@@ -657,7 +687,7 @@ const CarDetail = ({
             <ListItemText primary="누적 주행거리" />
           </ListItem>
           <ListItem>
-            <ListItemText primary={carInfo.accum_mileage} />
+            <ListItemText primary={carInfo.accum_mileage + ' km'} />
           </ListItem>
         </Grid>
         <Grid item sx={{ display: 'flex' }} xs={6}>
@@ -685,11 +715,32 @@ const CarDetail = ({
             <ListItemText primary="차량 사용 권한" />
           </ListItem>
           <ListItem>
-            <ListItemText primary={carInfo.carVO.authority} />
+            <ListItemText
+              primary={
+                carInfo.carVO.authority === '지정' ? (
+                  <Chip
+                    color="primary"
+                    icon={<CheckCircleOutlineIcon />}
+                    label={carInfo.carVO.authority}
+                    variant="outlined"
+                  />
+                ) : (
+                  <Chip
+                    color="primary"
+                    icon={<HdrAutoOutlinedIcon />}
+                    label={carInfo.carVO.authority}
+                    variant="outlined"
+                  />
+                )
+              }
+            />
             {carInfo.carVO.authority === '지정' && (
-              <ListItemText
-                primary={`${carInfo.carUser.dept_name}부서 ${carInfo.carUser.position_name} ${carInfo.carUser.name}`}
-              />
+              <Box>
+                <ListItemText
+                  primary={`${carInfo.carUser.name} ${carInfo.carUser.position_name}`}
+                />
+                <Typography variant="caption">{`${carInfo.carUser.dept_name}부서`}</Typography>
+              </Box>
             )}
           </ListItem>
         </Grid>
@@ -706,17 +757,34 @@ const CarDetail = ({
             />
           </ListItem>
         </Grid>
-        <Grid item container sx={{ display: 'flex' }} xs={12}>
-          <Grid item xs={3}>
-            <ListItem className="infoTitle">
-              <ListItemText primary="수용 인원" />
-            </ListItem>
-          </Grid>
-          <Grid item xs={9}>
-            <ListItem>
-              <ListItemText primary={`${carInfo.carVO.max_capacity}명`} />
-            </ListItem>
-          </Grid>
+        <Grid item sx={{ display: 'flex' }} xs={6}>
+          <ListItem className="infoTitle">
+            <ListItemText primary="수용 인원" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary={`${carInfo.carVO.max_capacity}명`} />
+          </ListItem>
+        </Grid>
+        <Grid item sx={{ display: 'flex' }} xs={6}>
+          <ListItem className="infoTitle">
+            <ListItemText primary="상태" />
+          </ListItem>
+          <ListItem>
+            {carInfo.car_status === '사용가능' ? (
+              <Chip
+                label={`${carInfo.car_status}`}
+                variant="outlined"
+                sx={{ color: '#388e3c', borderColor: '#388e3c' }}
+              />
+            ) : (
+              <Chip
+                label={`${carInfo.car_status}`}
+                color="success"
+                variant="outlined"
+                sx={{ color: '#d32f2f', borderColor: '#d32f2f' }}
+              />
+            )}
+          </ListItem>
         </Grid>
         <Grid item sx={{ display: 'flex' }} xs={12}>
           <ListItem className="infoTitle" sx={{ width: '32.5%' }}>
