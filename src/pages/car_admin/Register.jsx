@@ -28,14 +28,13 @@ import {
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { Circle, ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Circle } from '@mui/icons-material';
 import { Container, Stack } from '@mui/system';
 import styled from '@emotion/styled';
 import Searchbar from '../../components/common/Searchbar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
-import axios from 'axios';
 import CarInfoTable from '../../components/car_admin/CarInfoTable';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
@@ -50,6 +49,7 @@ import {
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
 import { palette } from '../../theme/palette';
+import axiosInstance from '../../utils/axios';
 
 // transferList 관련 함수
 function not(a, b) {
@@ -228,8 +228,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 
   // axios로 사용자 정보 불러오기
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/admin/memList')
+    axiosInstance
+      .get('/manager/memList')
       .then((res) => {
         setRight(res.data);
       })
@@ -380,15 +380,15 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 
     e.stopPropagation();
 
-    await axios
-      .post('http://localhost:8081/admin/car/carRegister', registerData)
+    await axiosInstance
+      .post('/manager/car/carRegister', registerData)
       .then((res) => {})
       .catch((error) => {
         // 에러 발생 시 코드 실행
         console.log(error);
       });
-    axios
-      .get(`http://localhost:8081/admin/car/carListGetOne`, {
+    axiosInstance
+      .get(`/manager/car/carListGetOne`, {
         params: {
           car_code: registerData.car_code
         }
@@ -940,8 +940,8 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
   // car DataGrid 시작
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/admin/car/carList')
+    axiosInstance
+      .get('/manager/car/carList')
       .then((res) => {
         setCarInfo(res.data);
         const filteredCor = res.data.filter((obj) => obj.type === '승용차');

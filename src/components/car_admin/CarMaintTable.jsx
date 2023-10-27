@@ -1,8 +1,8 @@
 import { Tooltip, Typography, makeStyles } from '@mui/material';
 import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import axiosInstance from '../../utils/axios';
 
 const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
   const columns = [
@@ -91,8 +91,8 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
   // const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/admin/car/maintOneCarRecordList', {
+    axiosInstance
+      .get('/manager/car/maintOneCarRecordList', {
         params: {
           car_code: carCode
         }
