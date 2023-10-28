@@ -92,7 +92,7 @@ const MrNoticeDeatails = () => {
                       </Grid>
                     </Fade>
                   </Grid>
-                  <Grid container item xs={9}>
+                  <Grid item xs>
                     {/* <Button onClick={handleTest}>test</Button> */}
                   </Grid>
                   <Grid item xs={1}>
