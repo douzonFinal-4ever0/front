@@ -12,6 +12,7 @@ const StyledContainer = styled(Container)(({ theme, bgcolor }) => ({
   padding: PAGE_INNER_PADDING,
   borderRadius: BORDER_RADIUS,
   backgroundColor: bgcolor,
+  boxShadow: 'rgba(195, 198, 202, 0.2) 0px 8px 24px',
   [theme.breakpoints.up('md')]: {
     minWidth: '100%'
   }
