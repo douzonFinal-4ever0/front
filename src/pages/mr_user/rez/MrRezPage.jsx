@@ -30,7 +30,7 @@ const MrRezPage = () => {
 
   // 첫번째 리스트 카드를 selectMrCard로 설정
   useEffect(() => {
-    setSelectMrCard({ ...list[2] });
+    setSelectMrCard({ ...list[0] });
   }, []);
 
   // 회의실 카드 클릭 이벤트
