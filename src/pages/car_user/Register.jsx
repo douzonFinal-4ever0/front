@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import Modal from '../../components/common/Modal';
 import Typography from '@mui/material/Typography';
 import CarList from '../../components/car_user/CarList';
-import axios from 'axios';
+
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,6 +34,7 @@ import Selectbox from '../../components/common/Selectbox';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
+import axiosInstance from '../../utils/axios';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -293,7 +294,7 @@ const Register = () => {
       flag++;
     }
     if (flag === 0) {
-      axios
+      axiosInstance
         .post('http://localhost:8081/car_rez/rezSave', formData)
         .then((res) => {
           let data = res.data;
@@ -335,7 +336,7 @@ const Register = () => {
     } else {
       alert('차량을 선택해주세요');
     }
-    axios
+    axiosInstance
       .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
         setCarDetail({
@@ -378,7 +379,7 @@ const Register = () => {
   // 예약 정보 수정
   const updateRez = () => {
     console.log(updateData);
-    axios
+    axiosInstance
       .patch('http://localhost:8081/car_rez/carRezDetail', updateData)
       .then((res) => {
         // console.log('수정완료', res.data);

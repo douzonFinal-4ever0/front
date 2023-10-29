@@ -26,12 +26,21 @@ import Label from '../common/Label';
 import styled from '@emotion/styled';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import axiosInstance from '../../utils/axios';
 
 const CarOperation = ({ rezCode, open, handleClose }) => {
   const [rezData, setRezData] = useState(null);
   const [rezLoc, setRezLoc] = useState(null);
   const [spend, setSpend] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [exp, setExp] = useState({
+    exp_at: '',
+    cost: '',
+    exp_content: '',
+    ac_detail: '',
+    pay_method: ''
+  });
+  const [expList, setExpList] = useState([]);
   const style = {
     position: 'absolute',
     top: '50%',
@@ -42,14 +51,14 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     // border: '2px solid #000',
     boxShadow: 24
   };
+  var expList2 = [];
   const handleCloseEvent = () => {
     setImages([]);
     handleClose();
   };
   useEffect(() => {
-    let carDetailDTO;
     if (open) {
-      axios
+      axiosInstance
         .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
         .then((res) => {
           console.log(res.data);
@@ -82,18 +91,44 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       [name]: value
     });
   };
+  //지출 설정
+
+  const handleExp = (e) => {
+    const { name, value } = e.target;
+    setExp({
+      ...exp,
+      [name]: value
+    });
+  };
+  //지출 리스트
+  const handleExpList = (e) => {
+    console.log(exp);
+
+    setExpList([...expList, exp]);
+    // expList2 = [...expList2, exp];
+    // console.log(expList2);
+    resetExp();
+    setFormData((preState) => {
+      const newState = { ...preState };
+
+      newState.expenditureDTO = [...expList, exp];
+      console.log(newState);
+      return newState;
+    });
+  };
+  const resetExp = () => {
+    setExp({
+      exp_at: '',
+      cost: '',
+      exp_content: '',
+      ac_detail: '',
+      pay_method: ''
+    });
+  };
   //submit 함수
   const hanldSubmit = (e) => {
     e.preventDefault();
-    // if (!spend) {
-    //   setFormData({ ...formData, expenditureDTO: {} });
-    // }
-    // setFormData({
-    //   ...formData,
-    //     address: rezLoc[1].address,
-    //     latitude: rezLoc[1].latitude,
-    //     longitude: rezLoc[1].longitude
-    // });
+
     if (
       parseFloat(formData.distance) <
       parseFloat(formData.nomal_biz_mileage) +
@@ -103,13 +138,14 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       console.log(formData.nomal_biz_mileage + formData.commute_mileage);
       alert('총주행거리가 업무용 거리보다 작습니다.');
     } else {
+      // console.log(expList2);
       console.log(formData);
-      axios
+      axiosInstance
         .post(`http://localhost:8081/car_rez/operation`, formData)
         .then((res) => {
           console.log(res.data);
-          alert('운행 처리 완료');
-          handleClose();
+          // alert('운행 처리 완료');
+          // handleClose();
         });
     }
   };
@@ -134,6 +170,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       reader.readAsDataURL(file);
     }
   };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={{ ...style, width: 750 }}>
@@ -196,7 +233,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
-                      defaultValue={formData.aft_mileage}
+                      defaultValue={
+                        formData.aft_mileage && formData.aft_mileage
+                      }
                       onChange={hanldeFormData}
                       // value={
                       //   formData.distance +
@@ -315,23 +354,32 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                   <Grid xs={6}>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
-                        <Label htmlFor={'distance'} text={'지출날짜'} />
+                        <Label htmlFor={'exp_at'} text={'지출날짜'} />
                       </StyledLabelGrid>
                       <Grid item xs={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DatePicker />
+                          <DatePicker
+                            name={'exp_at'}
+                            onChange={(e) => {
+                              setExp({ ...exp, exp_at: e.$d });
+                            }}
+                            value={exp.exp_at}
+                          />
                         </LocalizationProvider>
                       </Grid>
                     </Grid>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
-                        <Label htmlFor={'distance'} text={'지출금액'} />
+                        <Label htmlFor={'cost'} text={'지출금액'} />
                       </StyledLabelGrid>
                       <Grid item xs={8}>
                         <TextField
-                          id="distance"
+                          id="cost"
+                          name="cost"
                           variant="outlined"
                           type="number"
+                          onChange={handleExp}
+                          value={exp.cost}
                           InputProps={{
                             inputProps: { min: 0 },
                             endAdornment: (
@@ -343,50 +391,59 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     </Grid>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
-                        <Label htmlFor={'distance'} text={'지출내용'} />
+                        <Label htmlFor={'exp_content'} text={'지출내용'} />
                       </StyledLabelGrid>
                       <Grid item xs={8}>
                         <TextField
-                          id="distance"
+                          id="exp_content"
+                          name="exp_content"
+                          onChange={handleExp}
+                          value={exp.exp_content}
                           variant="outlined"
-                          type="number"
+                          type="text"
                         ></TextField>
                       </Grid>
                     </Grid>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
-                        <Label htmlFor={'distance'} text={'계정세목'} />
+                        <Label htmlFor={'ac_detail'} text={'계정세목'} />
                       </StyledLabelGrid>
                       <Grid item xs={8}>
                         <Select
                           labelId="demo-simple-select-filled-label"
                           id="demo-simple-select-filled"
+                          name="ac_detail"
+                          onChange={handleExp}
+                          value={exp.ac_detail}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
                           sx={{ minWidth: 220 }}
                         >
-                          <MenuItem value={'1'}>통행료</MenuItem>
-                          <MenuItem value={'2'}>유류비</MenuItem>
-                          <MenuItem value={'3'}>주차비</MenuItem>
+                          <MenuItem value={'통행료'}>통행료</MenuItem>
+                          <MenuItem value={'유류비'}>유류비</MenuItem>
+                          <MenuItem value={'주차비'}>주차비</MenuItem>
                         </Select>
                       </Grid>
                     </Grid>
                     <Grid item container spacing={2}>
                       <StyledLabelGrid item xs={3}>
-                        <Label htmlFor={'distance'} text={'결제 수단'} />
+                        <Label htmlFor={'pay_method'} text={'결제 수단'} />
                       </StyledLabelGrid>
                       <Grid item xs={8}>
                         <Select
                           labelId="demo-simple-select-filled-label"
                           id="demo-simple-select-filled"
+                          name="pay_method"
+                          onChange={handleExp}
+                          value={exp.pay_method}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
                           sx={{ minWidth: 220, mb: 1 }}
                         >
-                          <MenuItem value={'1'}>법인 카드</MenuItem>
-                          <MenuItem value={'2'}>법인 현금</MenuItem>
-                          <MenuItem value={'3'}>개인 카드</MenuItem>
-                          <MenuItem value={'4'}>개인 현금</MenuItem>
+                          <MenuItem value={'법인 카드'}>법인 카드</MenuItem>
+                          <MenuItem value={'법인 현금'}>법인 현금</MenuItem>
+                          <MenuItem value={'개인 카드'}>개인 카드</MenuItem>
+                          <MenuItem value={'개인 현금'}>개인 현금</MenuItem>
                         </Select>
                       </Grid>
                     </Grid>
@@ -421,6 +478,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                 <Grid container xs={12} justifyContent="center">
                   <Button
                     variant="contained"
+                    onClick={handleExpList}
                     sx={{
                       borderColor: '#BEBEBE',
                       ':hover': {
