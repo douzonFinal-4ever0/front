@@ -1,142 +1,122 @@
-import styled from '@emotion/styled';
+import React, { useState } from 'react';
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
   Avatar,
   AvatarGroup,
-  Button,
-  Grid,
+  ListItemButton,
+  ListItemText,
   IconButton,
-  Stack,
+  List,
+  Collapse,
   Typography,
-  Box
+  Grid
 } from '@mui/material';
-import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
-import FolderIcon from '@mui/icons-material/Folder';
-
-import { palette } from '../../../../theme/palette';
 import UserProfile from '../../../../assets/images/user/user-round.svg';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import WrapContainer from '../../../../components/mr_user/WrapContainer';
-import RectangleBtn from '../../../../components/common/RectangleBtn';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { palette } from '../../../../theme/palette';
+import styled from '@emotion/styled';
+import MemberListItem from '../list/MemberListItem';
 
-const GroupBtn = () => {
+const GroupItem = ({ isDisabled, index, openList, setOpenList }) => {
+  const open = openList[index];
+
+  const handleClick = () => {
+    const updatedOpenList = [...openList];
+    updatedOpenList[index] = !open;
+    setOpenList(updatedOpenList);
+  };
+
   return (
-    <Box sx={{ position: 'relative' }}>
-      <StyledGroupBtn>
-        <FolderIcon
-          sx={{
-            fontSize: '280px',
-            color: '#e6f1fc'
-          }}
-        />
-      </StyledGroupBtn>
-      <StyledGroupHeader>
-        <StyledGroupName>그룹명이다</StyledGroupName>
-        <StyledStarBtn disabled>
+    <Accordion
+      expanded={open}
+      onChange={handleClick}
+      sx={{
+        boxShadow: 'none',
+        border: `1px solid ${palette.grey['100']}`,
+        borderRadius: '2px'
+      }}
+    >
+      {/* 그룹  */}
+      <AccordionSummary>
+        <IconButton>
+          <ExpandMoreIcon />
+        </IconButton>
+        <Box sx={{ display: 'flex', gap: '50px', paddingLeft: '20px' }}>
+          <ListItemText
+            primary="그룹명이올시다"
+            sx={{ display: 'flex', alignItems: 'center' }}
+          />
+          <ListItemText
+            primary="총 6명"
+            sx={{ display: 'flex', alignItems: 'center' }}
+          />
+          <AvatarGroup
+            renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
+            total={10}
+          >
+            <Avatar alt="Remy Sharp" src={UserProfile} />
+            <Avatar alt="Travis Howard" src={UserProfile} />
+            <Avatar alt="Agnes Walker" src={UserProfile} />
+            <Avatar alt="Trevor Henderson" src={UserProfile} />
+          </AvatarGroup>
+        </Box>
+        <StyledStarBtn disabled={isDisabled}>
           <StarRoundedIcon fontSize="large" color="warning" />
         </StyledStarBtn>
-      </StyledGroupHeader>
-      <StyledGroupAvatars
-        renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
-        total={10}
-      >
-        <Avatar alt="Remy Sharp" src={UserProfile} />
-        <Avatar alt="Travis Howard" src={UserProfile} />
-        <Avatar alt="Agnes Walker" src={UserProfile} />
-        <Avatar alt="Trevor Henderson" src={UserProfile} />
-      </StyledGroupAvatars>
-    </Box>
+      </AccordionSummary>
+
+      {/* 상세 멤버 리스트 */}
+      <AccordionDetails>
+        <List component="div">
+          <MemberListItem isDisabled={true} />
+          <MemberListItem isDisabled={true} />
+          <MemberListItem isDisabled={true} />
+          <MemberListItem isDisabled={true} />
+        </List>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
 const BmGroupSection = () => {
+  const [openList, setOpenList] = useState(Array(12).fill(false)); // 12개의 ListItem를 위한 open 상태 배열
+
   return (
-    <WrapContainer bgcolor={'#fff'}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
-            <StyledSectionTitle>즐겨찾기 그룹</StyledSectionTitle>
-            <Stack direction={'row'} sx={{ gap: '8px' }}>
-              <Box>
-                <RectangleBtn
-                  text={'수정'}
-                  type={'button'}
-                  category={'cancel'}
-                  sx={{ padding: '10px 8px' }}
-                />
-              </Box>
-              <Box>
-                <RectangleBtn
-                  text={'추가'}
-                  type={'button'}
-                  category={'modify'}
-                  sx={{ padding: '10px 8px' }}
-                />
-              </Box>
-            </Stack>
-          </Stack>
-          <Grid item xs={12}>
-            <Box>
-              <Stack
-                direction={'row'}
-                sx={{ justifyContent: 'space-between', flexWrap: 'wrap' }}
-              >
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-                <GroupBtn />
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
-      </Grid>
-    </WrapContainer>
+    <Grid container sx={{ width: '100%', overflowY: 'auto' }}>
+      <List
+        sx={{
+          width: '100%',
+          height: '600px',
+          display: 'flex',
+          flexDirection: 'column',
+          rowGap: '6px'
+        }}
+      >
+        {openList.map((open, index) => (
+          <GroupItem
+            key={index}
+            isDisabled={true}
+            index={index}
+            openList={openList}
+            setOpenList={setOpenList}
+          />
+        ))}
+      </List>
+    </Grid>
   );
 };
 
 export default BmGroupSection;
 
-const StyledSectionTitle = styled(Typography)(({ theme }) => ({
-  paddingBottom: '6px',
-  display: 'flex',
-  alignItems: 'center',
-  fontSize: '20px',
-  fontWeight: 'bold'
-}));
-
-const StyledGroupHeader = styled(Stack)(({ theme }) => ({
-  position: 'absolute',
-  top: '32%',
-  left: '20%',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: '50px'
-}));
-
-const StyledGroupName = styled(Typography)(({ theme }) => ({
-  fontWeight: 'bold',
-  fontSize: '20px'
-}));
-
 const StyledStarBtn = styled(IconButton)(({ theme }) => ({
-  padding: 0
-}));
-
-const StyledGroupAvatars = styled(AvatarGroup)(({ theme }) => ({
-  position: 'absolute',
-  top: '60%',
-  left: '16%'
-}));
-
-const StyledGroupBtn = styled(IconButton)(({ theme }) => ({
   padding: 0,
+  display: 'flex',
+  flexGrow: 1,
+  justifyContent: 'flex-end',
   '&:hover': {
     backgroundColor: 'transparent'
   }
