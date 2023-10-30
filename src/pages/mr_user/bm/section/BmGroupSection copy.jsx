@@ -50,7 +50,7 @@ const GroupBtn = () => {
   );
 };
 
-const BmGroupSection = () => {
+const BmGroupSectionssss = () => {
   return (
     <WrapContainer bgcolor={'#fff'}>
       <Grid container spacing={3}>
@@ -99,7 +99,7 @@ const BmGroupSection = () => {
   );
 };
 
-export default BmGroupSection;
+export default BmGroupSectionssss;
 
 const StyledSectionTitle = styled(Typography)(({ theme }) => ({
   paddingBottom: '6px',
