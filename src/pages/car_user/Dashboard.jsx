@@ -1,6 +1,6 @@
 import CommonTable from '../../components/car_admin/CarInfoTable';
 import DataGrid from '../../components/common/DataGrid';
-import axios from 'axios';
+
 import { useState, useEffect } from 'react';
 import Chip from '@mui/material/Chip';
 import SubHeader from '../../components/common/SubHeader';
@@ -42,6 +42,7 @@ import Selectbox from '../../components/common/Selectbox';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import CarOperation from '../../components/car_user/CarOperation';
+import axiosInstance from '../../utils/axios';
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('0');
@@ -66,7 +67,7 @@ const Dashboard = () => {
     setOpen(false);
   };
   // useEffect(() => {
-  //   axios
+  //   axiosInstance
   //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
   //     .then((res) => {
   //       console.log(res.data);
@@ -82,7 +83,7 @@ const Dashboard = () => {
   //     });
   // }, []);
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
       .then((res) => {
         console.log(res.data);
@@ -132,9 +133,11 @@ const Dashboard = () => {
 
     const [rows, setRows] = useState([]);
     useEffect(() => {
-      axios.get(`http://localhost:8081/car_rez/searchCarList`).then((res) => {
-        setRows(res.data);
-      });
+      axiosInstance
+        .get(`http://localhost:8081/car_rez/searchCarList`)
+        .then((res) => {
+          setRows(res.data);
+        });
     }, []);
     const handleInput = (e) => {
       setSearchInput(e.target.value);
@@ -294,7 +297,7 @@ const Dashboard = () => {
   // });
   const handleRange = (e) => {
     setRange(e.target.value);
-    // axios.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
+    // axiosInstance.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
   //오프캔버스 관련
   const dispatch = useDispatch();

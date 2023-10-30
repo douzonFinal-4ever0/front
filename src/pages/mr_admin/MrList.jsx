@@ -73,12 +73,8 @@ const MrList = () => {
   // }
   // 추가 이벤트들
   // ];
-  const tabData = [
-    {
-      title: '이름11111',
-      content: <TimeField contents={events} />
-    }
-  ];
+
+  console.log(value);
   return (
     <>
       <SubHeader
@@ -139,3 +135,15 @@ const Item2 = styled(Paper)(({ theme }) => ({
   width: '100%',
   margin: '1%'
 }));
+
+// const handleSearchClick = () => {
+//   // startDate와 endDate 사이에 있는 데이터를 필터링
+//   const filteredData = receipts.filter((receipt) => {
+//     const reqDate = new Date(receipt.reqdate); // 문자열을 JavaScript Date 객체로 변환
+//     const startDateObj = new Date(startDate); // 문자열을 JavaScript Date 객체로 변환
+//     const endDateObj = new Date(endDate); // 문자열을 JavaScript Date 객체로 변환
+//     return reqDate >= startDateObj && reqDate <= endDateObj;
+//   });
+//   // 필터링된 데이터를 상태에 저장
+//   setFilteredReceipts([...filteredData]);
+// };
