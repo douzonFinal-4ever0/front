@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 import Layout from '../layouts/Layout';
 import Page404 from '../pages/Page404';
+import { useSelector } from 'react-redux';
 
 const Loadable = (Component) => (props) => {
   return (
@@ -12,7 +13,25 @@ const Loadable = (Component) => (props) => {
 };
 
 const Router = ({ isAdminMode, setIsAdminMode }) => {
-  return useRoutes([
+  /**
+   * 사용자 역할에 따른 분류
+   */
+  const role = useSelector((state) => state.user.role);
+  let access = false;
+  let accessAdmin = false;
+  if (role === '관리자') {
+    access = true;
+    accessAdmin = true;
+  } else if (role === '사용자') {
+    access = true;
+    accessAdmin = false;
+  } else {
+    access = false;
+    accessAdmin = false;
+  }
+  const isAdminRoute = accessAdmin ? 'admin' : '';
+
+  const routes = [
     {
       path: '/mr',
       element: (
@@ -26,7 +45,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     },
     {
-      path: '/car/admin',
+      path: `/car/${isAdminRoute}`,
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
@@ -56,7 +75,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     },
     {
-      path: '/mr/admin',
+      path: `/mr/${isAdminRoute}`,
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
@@ -101,7 +120,11 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { path: 'login', element: <LoginPage /> }
       ]
     }
-  ]);
+  ];
+  // accessAdmin을 기반으로 경로를 필터링합니다.
+  const filteredRoutes = [];
+
+  return useRoutes(routes);
 };
 
 export default Router;
@@ -158,6 +181,7 @@ const MrAdminNoticeListPage = Loadable(
   lazy(() => import('../pages/mr_admin/MrNoticeList'))
 );
 const LoginPage = Loadable(lazy(() => import('../pages/user/Login')));
+
 const MrAdminNoticeDetailPage = Loadable(
-  lazy(() => import('../pages/mr_admin/MrNoticeDeatails'))
+  lazy(() => import('../pages/mr_admin/MrNoticeDetails'))
 );

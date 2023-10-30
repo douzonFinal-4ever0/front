@@ -29,6 +29,7 @@
     "@tabler/icons": "^1.72.0",
     "apexcharts": "^3.35.3",
     "axios": "^1.5.1",
+    "base-64": "^1.0.0",
     "dayjs": "^1.11.10",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
@@ -50,6 +51,7 @@
     "react-scripts": "^5.0.1",
     "redux": "^4.2.0",
     "styled-components": "^6.0.9",
+    "utf8": "^3.0.0",
     "yup": "^0.32.11"
   },
   "scripts": {

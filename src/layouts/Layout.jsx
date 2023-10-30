@@ -12,6 +12,7 @@ import {
   setSnackbarContent
 } from '../redux/reducer/SnackbarSlice';
 import { Alert, Collapse, Snackbar } from '@mui/material';
+import JWTdecode from '../components/common/JWTdecode';
 
 const Layout = ({ isAdminMode, setIsAdminMode }) => {
   // 사이드바 오픈 여부 (boolean)
@@ -33,6 +34,7 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
   return (
     <>
       <StyledRoot sx={{ display: 'flex', flexDirection: 'column' }}>
+        <JWTdecode />
         <Header
           onMenuIconClick={handleMenuIconClick}
           isAdminMode={isAdminMode}
