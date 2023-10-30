@@ -6,7 +6,6 @@ import ThemeProvider from './theme';
 //
 import Router from './routes/routes';
 import store from './redux/store';
-import JWTdecode from './components/common/JWTdecode';
 
 const App = () => {
   const [isAdminMode, setIsAdminMode] = useState(false);
@@ -15,7 +14,6 @@ const App = () => {
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider>
-          <JWTdecode />
           <Router isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
         </ThemeProvider>
       </BrowserRouter>
