@@ -20,6 +20,7 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import Selectbox from '../../components/common/Selectbox';
 import styled from 'styled-components';
 import Label from '../../components/common/Label';
+import { useSelector } from 'react-redux';
 const MrNotice = () => {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState('<p>테스트</p>');
@@ -27,7 +28,7 @@ const MrNotice = () => {
   const [notice_title, setNotice_title] = useState('');
   const [template, setTemplate] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-
+  const mem_code = useSelector((state) => state.user.mem_code);
   /**공개 비공개 여부 체크 */
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
@@ -36,7 +37,8 @@ const MrNotice = () => {
   const FormtoData = {
     contents: editorData,
     is_opened: isPublic ? 0 : 1,
-    notice_title
+    notice_title,
+    mem_code
   };
   /**공지사랑 등록 버튼 이벤트 */
   const handleClick = () => {

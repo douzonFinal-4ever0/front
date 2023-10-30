@@ -31,6 +31,7 @@ import Login from '../user/Login';
 import axiosInstance from '../../utils/axios.js';
 import { useNavigate } from 'react-router-dom';
 import Editor from '../../components/mr_admin/Editor';
+import JWTdecode from '../../components/common/JWTdecode';
 const DashBoard = () => {
   const navigate = useNavigate();
   const handleLogOut = () => {
@@ -99,6 +100,7 @@ const DashBoard = () => {
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
+              {/* <JWTdecode /> */}
               {/* 이미지 리스트 */}
               {/* <img src="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/25942229-e8e1-41ed-9fd1-98168eb36e7e-d1.jpg"></img> */}
               {/* 스피드 다이얼 테스트 */}
