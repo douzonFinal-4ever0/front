@@ -34,7 +34,6 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
   return (
     <>
       <StyledRoot sx={{ display: 'flex', flexDirection: 'column' }}>
-        <JWTdecode />
         <Header
           onMenuIconClick={handleMenuIconClick}
           isAdminMode={isAdminMode}
