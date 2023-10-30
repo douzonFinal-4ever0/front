@@ -1,12 +1,15 @@
-import { Button, Grid, Modal, Typography } from '@mui/material';
+import { Button, Grid, Modal, Popover, Slide, Typography } from '@mui/material';
 import CarMaintTable from './CarMaintTable';
-import { Box } from '@mui/system';
+import { Box, Container } from '@mui/system';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import RectangleBtn from '../common/RectangleBtn';
 import CarMaintRegister from './CarMaintRegister';
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios';
+import DangerousIcon from '@mui/icons-material/Dangerous';
+import CarDeleteModal from './CarDeleteModal';
+import CarCurrentMaint from './CarCurrentMaint';
 
 const style = {
   position: 'absolute',
@@ -18,6 +21,10 @@ const style = {
   // border: '2px solid #000',
   boxShadow: 24
 };
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const CarMaint = ({ carCode }) => {
   const [open, setOpen] = useState(false);
@@ -36,6 +43,7 @@ const CarMaint = ({ carCode }) => {
 
     // 오늘 날짜 가져오기
     const today = new Date();
+
     // 비교할 대상 날짜 파싱
     const hasFutureDate = checkedRow.some((data) => {
       const maintStartDate = new Date(data.maint_start_at);
@@ -57,19 +65,82 @@ const CarMaint = ({ carCode }) => {
 
     console.log(maintModify);
 
+    console.log(maintData);
+    console.log(checkedRow);
+
+    let updatedMaintData = [...maintData];
+
     axiosInstance
       .post(`/manager/car/maintCarStatusModify`, maintModify)
       .then((res) => {
-        // 여기서 maintData 값을 변경
+        checkedRow.forEach((rowToCheck) => {
+          updatedMaintData.forEach((item) => {
+            // 'id'와 'maint_code'가 일치하면
+            if (item.maint_code === rowToCheck.id) {
+              // 'maint_start_at' 값을 오늘 날짜로 설정합니다.
+              item.maint_end_at = today.toLocaleDateString();
+            }
+          });
+        });
+
+        setMaintData(updatedMaintData);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleDeleteBtn = () => {
-    console.log(checkedRow);
+  // 삭제 알림창 변수
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const handleDeleteModalOpen = () => {
+    setDeleteModalOpen(true);
   };
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+  };
+
+  // const [isDelete, setIsDelete] = useState(false);
+
+  const handleDeleteBtn = () => {
+    // 삭제 알림창 띄우기
+    handleDeleteModalOpen();
+  };
+
+  // 정비 삭제 버튼 시 함수
+  const handleDeleteConfirm = () => {
+    const maintDelete = {
+      maint_codes: checkedRow.map((row) => row.id),
+      car_code: carCode
+    };
+
+    axiosInstance
+      .post(`/manager/car/maintRecordDelete`, maintDelete)
+      .then((res) => {
+        const updatedMaintData = maintData.filter((data) => {
+          return !maintDelete.maint_codes.includes(data.maint_code);
+        });
+        setMaintData(updatedMaintData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    handleDeleteModalClose();
+  };
+
+  // 정비 현황 관련 popover 변수 및 함수
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleCurrentMaintClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCurrentMaintClose = () => {
+    setAnchorEl(null);
+  };
+
+  const currentMaintopen = Boolean(anchorEl);
+  const id = currentMaintopen ? 'simple-popover' : undefined;
 
   return (
     <>
@@ -86,6 +157,20 @@ const CarMaint = ({ carCode }) => {
           setMaintData={setMaintData}
           handleModalClose={handleClose}
         />
+      </Modal>
+      <Modal open={deleteModalOpen} onClose={handleDeleteModalClose}>
+        <CarDeleteModal
+          style={style}
+          handleDeleteModalClose={handleDeleteModalClose}
+          handleDeleteBtn={handleDeleteConfirm}
+          title={'정비 삭제'}
+        >
+          정말로 선택한 정비를 삭제하시겠습니까?
+          <br />
+          삭제시, 해당 정비의 데이터가 모두 삭제되며,
+          <br />
+          더이상 복구할 수 없습니다.
+        </CarDeleteModal>
       </Modal>
       <Box
         display="flex"
@@ -174,7 +259,20 @@ const CarMaint = ({ carCode }) => {
             text={'정비 현황'}
             sx={{ width: '120px', height: '40px' }}
             category={'register'}
+            handlebtn={handleCurrentMaintClick}
           />
+          <Popover
+            id={id}
+            open={currentMaintopen}
+            anchorEl={anchorEl}
+            onClose={handleCurrentMaintClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left'
+            }}
+          >
+            <CarCurrentMaint />
+          </Popover>
         </Box>
       </Box>
       <CarMaintTable
