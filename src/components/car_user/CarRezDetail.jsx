@@ -18,6 +18,7 @@ import ModifyRez from './ModifyRez';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import axiosInstance from '../../utils/axios';
 
 const CarRezDetail = ({ rezCode }) => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const CarRezDetail = ({ rezCode }) => {
   };
   // var rezMerge = {};
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
       .then((res) => {
         // console.log(res.data);
@@ -53,7 +54,7 @@ const CarRezDetail = ({ rezCode }) => {
         // console.log(rezMerge);
         //console.log(res.data.memResponseVO.name);
       });
-    axios
+    axiosInstance
       .get(`http://localhost:8081/car_rez/locations/${rezCode}`)
       .then((res) => {
         // console.log(res.data);
@@ -101,7 +102,7 @@ const CarRezDetail = ({ rezCode }) => {
 
   // 예약 정보 수정
   const updateRez = () => {
-    axios
+    axiosInstance
       .patch('http://localhost:8081/car_rez/carRezDetail', formData)
       .then((res) => {
         console.log('수정완료', res.data);
