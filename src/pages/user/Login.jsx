@@ -34,19 +34,13 @@ const Login = () => {
   const handleLogin = () => {
     axiosInstance.post('/api/v1/user/login', FormToData).then((res) => {
       setJwt('Bearer ' + res.data.token);
-      const user = res.data.userInfo;
-      console.log(user);
-
-      dispatch(
-        setUserData({
-          data: {
-            mem_code: user.mem_code,
-            name: user.name,
-            position_name: user.position_name
-          }
-        })
-      );
     });
+  };
+  // 엔터 키가 눌렸을 때 실행되는 함수
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
   };
   // JWT 토큰을 localStorage에 저장
   localStorage.setItem('jwtToken', jwt);
@@ -103,6 +97,7 @@ const Login = () => {
                 placeholder="비밀번호를 입력하세요"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={handleKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,6 +113,7 @@ const Login = () => {
                   padding: '14px 12px'
                 }}
                 handlebtn={handleLogin}
+                handleKeyDown={handleLogin}
               />
             </Grid>
           </Grid>

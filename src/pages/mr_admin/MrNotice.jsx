@@ -20,6 +20,8 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import Selectbox from '../../components/common/Selectbox';
 import styled from 'styled-components';
 import Label from '../../components/common/Label';
+import { useSelector } from 'react-redux';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const MrNotice = () => {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState('<p>테스트</p>');
@@ -27,7 +29,7 @@ const MrNotice = () => {
   const [notice_title, setNotice_title] = useState('');
   const [template, setTemplate] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-
+  const mem_code = useSelector((state) => state.user.mem_code);
   /**공개 비공개 여부 체크 */
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
@@ -36,7 +38,8 @@ const MrNotice = () => {
   const FormtoData = {
     contents: editorData,
     is_opened: isPublic ? 0 : 1,
-    notice_title
+    notice_title,
+    mem_code
   };
   /**공지사랑 등록 버튼 이벤트 */
   const handleClick = () => {
@@ -73,7 +76,7 @@ const MrNotice = () => {
   return (
     <>
       <SubHeader title={'공지사항 작성'} />
-      <MainContainer>
+      <MainContainer2>
         <WrapContainer bgcolor={'#fff'}>
           <Grid container spacing={1} sx={{ display: 'flex' }}>
             <Grid item container spacing={2}>
@@ -99,7 +102,7 @@ const MrNotice = () => {
               <Grid item container xs={3}>
                 <StyledSelect onChange={handleSelectChange} displayEmpty>
                   <MenuItem defaultValue="" disabled>
-                    선택
+                    탬플릿 선택
                   </MenuItem>
                   {template.map((item) => (
                     <MenuItem key={item.template_code} value={item.type}>
@@ -129,7 +132,7 @@ const MrNotice = () => {
             </Grid>
           </Grid>
         </WrapContainer>
-      </MainContainer>
+      </MainContainer2>
     </>
   );
 };
