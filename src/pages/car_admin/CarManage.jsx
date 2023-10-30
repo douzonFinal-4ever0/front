@@ -17,12 +17,9 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
-  Select,
   TextField,
-  Paper,
   CardHeader,
   Typography,
-  Alert,
   InputAdornment
 } from '@mui/material';
 import List from '@mui/material/List';
@@ -67,6 +64,7 @@ const SubSidebarContent = ({
   setTabData,
   carInfo,
   setCarInfo,
+  deleteCar,
   carCounts,
   setCarCounts,
   setFilterValue,
@@ -125,7 +123,7 @@ const SubSidebarContent = ({
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={handleClick}>
-            <ListItemText primary={`전체 차량(${carCounts.total})`} />
+            <ListItemText primary={`전체 차량(${carInfo.length})`} />
           </ListItemButton>
         </ListItem>
         <Collapse in={true} timeout="auto" unmountOnExit>
@@ -140,7 +138,9 @@ const SubSidebarContent = ({
                 <Circle color="primary" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`승용차 (${carCounts.corporation})`}
+                primary={`승용차 (${
+                  carInfo.filter((obj) => obj.type === '승용차').length
+                })`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
@@ -154,14 +154,20 @@ const SubSidebarContent = ({
                 <Circle color="success" sx={{ width: '15px !important' }} />
               </ListItemIcon>
               <ListItemText
-                primary={`화물차 (${carCounts.personal})`}
+                primary={`화물차 (${
+                  carInfo.filter((obj) => obj.type === '화물차').length
+                })`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
             </ListItemButton>
           </List>
         </Collapse>
-        <ListItemButton>
-          <ListItemText primary={`삭제된 차량 (${carCounts.delete})`} />
+        <ListItemButton
+          onClick={(e) => {
+            handleFilterClick(e, '삭제');
+          }}
+        >
+          <ListItemText primary={`삭제된 차량 (${deleteCar.length})`} />
         </ListItemButton>
       </List>
       {/* </Box> */}
@@ -396,6 +402,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
       .then((res) => {
         // console.log(res);
         const newCarInfo = [...carInfo, res.data];
+
         setCarInfo(newCarInfo);
         if (res.data.type === '승용차') {
           setCarCounts({ ...carCounts, corporation: ++carCounts.corporation });
@@ -904,8 +911,9 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 };
 
 // 실제 등록 페이지
-const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
+const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
   const [carInfo, setCarInfo] = useState([]);
+  const [deleteCar, setDeleteCar] = useState([]);
   const [tabData, setTabData] = useState([]);
 
   useEffect(() => {
@@ -943,14 +951,18 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
     axiosInstance
       .get('/manager/car/carList')
       .then((res) => {
-        setCarInfo(res.data);
-        const filteredCor = res.data.filter((obj) => obj.type === '승용차');
-        const filteredPer = res.data.filter((obj) => obj.type === '화물차');
+        const response = res.data;
+        setDeleteCar(response.filter((obj) => obj.car_status === '삭제됨'));
+        setCarInfo(response.filter((obj) => obj.car_status !== '삭제됨'));
+
+        const filteredCor = carInfo.filter((obj) => obj.type === '승용차');
+        const filteredPer = carInfo.filter((obj) => obj.type === '화물차');
         setCarCounts({
           ...carCounts,
-          total: res.data.length,
+          total: response.length,
           corporation: filteredCor.length,
-          personal: filteredPer.length
+          personal: filteredPer.length,
+          delete: deleteCar.length
         });
         // 삭제 차량 수 설정
       })
@@ -1002,6 +1014,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
               setTabData={setTabData}
               carInfo={carInfo}
               setCarInfo={setCarInfo}
+              deleteCar={deleteCar}
               carCounts={carCounts}
               setCarCounts={setCarCounts}
               setFilterValue={setFilterValue}
@@ -1034,6 +1047,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
             <CarInfoTable
               columns={columns}
               rows={carInfo}
+              deleteCar={deleteCar}
               tabData={tabData}
               setTabData={setTabData}
               filter={filter}
@@ -1049,7 +1063,7 @@ const RegisterPage = ({ isAdminMode, setIsAdminMode }) => {
   );
 };
 
-export default RegisterPage;
+export default CarManagePage;
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,

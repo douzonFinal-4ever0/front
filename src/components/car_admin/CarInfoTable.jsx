@@ -17,7 +17,7 @@ import CarMaint from './CarMaint';
 const CarInfoTable = ({
   columns,
   rows,
-  tabData,
+  deleteCar,
   setTabData,
   filter,
   searchValue,
@@ -90,51 +90,96 @@ const CarInfoTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .filter((item) => filter === '전체' || item.type === filter)
-              .filter((item) => item.car_name.includes(searchValue))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.code}
-                    onClick={(event) => {
-                      handleClickRow(event, row['car_code']);
-                    }}
-                  >
-                    {columns.map((column) => {
-                      let value = row[column.id];
-                      if (column.id === 'created_at' && value === null) {
-                        value = '최근 운행 없음';
-                      } else if (column.id === 'memo' && value === null) {
-                        value = '-';
-                      }
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.id !== 'type' ? (
-                            value
-                          ) : value === '승용차' ? (
-                            <Chip
-                              label="승용차"
-                              size="small"
-                              sx={{ backgroundColor: '#90caf9' }}
-                            />
-                          ) : (
-                            <Chip
-                              label="화물차"
-                              size="small"
-                              sx={{ backgroundColor: '#a5d6a7' }}
-                            />
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+            {filter !== '삭제'
+              ? rows
+                  .filter((item) => filter === '전체' || item.type === filter)
+                  .filter((item) => item.car_name.includes(searchValue))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.code}
+                        onClick={(event) => {
+                          handleClickRow(event, row['car_code']);
+                        }}
+                      >
+                        {columns.map((column) => {
+                          let value = row[column.id];
+                          if (column.id === 'created_at' && value === null) {
+                            value = '최근 운행 없음';
+                          } else if (column.id === 'memo' && value === null) {
+                            value = '-';
+                          }
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id !== 'type' ? (
+                                value
+                              ) : value === '승용차' ? (
+                                <Chip
+                                  label="승용차"
+                                  size="small"
+                                  sx={{ backgroundColor: '#90caf9' }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="화물차"
+                                  size="small"
+                                  sx={{ backgroundColor: '#a5d6a7' }}
+                                />
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+              : deleteCar
+                  .filter((item) => item.car_name.includes(searchValue))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.code}
+                        onClick={(event) => {
+                          handleClickRow(event, row['car_code']);
+                        }}
+                      >
+                        {columns.map((column) => {
+                          let value = row[column.id];
+                          if (column.id === 'created_at' && value === null) {
+                            value = '최근 운행 없음';
+                          } else if (column.id === 'memo' && value === null) {
+                            value = '-';
+                          }
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.id !== 'type' ? (
+                                value
+                              ) : value === '승용차' ? (
+                                <Chip
+                                  label="승용차"
+                                  size="small"
+                                  sx={{ backgroundColor: '#90caf9' }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="화물차"
+                                  size="small"
+                                  sx={{ backgroundColor: '#a5d6a7' }}
+                                />
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
           </TableBody>
         </Table>
       </TableContainer>

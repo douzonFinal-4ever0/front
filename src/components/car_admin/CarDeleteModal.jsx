@@ -3,7 +3,13 @@ import { Box, Container } from '@mui/system';
 import RectangleBtn from '../common/RectangleBtn';
 import DangerousIcon from '@mui/icons-material/Dangerous';
 
-const CarDeleteModal = ({ style, handleDeleteModalClose }) => {
+const CarDeleteModal = ({
+  style,
+  handleDeleteModalClose,
+  handleDeleteBtn,
+  title,
+  children
+}) => {
   return (
     <Box sx={{ ...style, width: 400 }}>
       <Container width="100%" height="auto" sx={{ padding: '15px' }}>
@@ -19,13 +25,9 @@ const CarDeleteModal = ({ style, handleDeleteModalClose }) => {
         </Box>
 
         <Typography variant="h5" align="center">
-          차량 삭제
+          {title}
         </Typography>
-        <Typography align="center">
-          정말로 선택한 차량을 삭제하시겠습니까?
-          <br />
-          삭제된 차량은 삭제된 차량에서 조회할 수 있습니다.
-        </Typography>
+        <Typography align="center">{children}</Typography>
         <Box
           width="100%"
           display="flex"
@@ -40,9 +42,9 @@ const CarDeleteModal = ({ style, handleDeleteModalClose }) => {
           >
             <RectangleBtn
               text={'삭제'}
-              category={'modify'}
+              category={'delete'}
               sx={{ width: '64px' }}
-              handlebtn={handleDeleteModalClose}
+              handlebtn={handleDeleteBtn}
             />
             <RectangleBtn
               text={'취소'}

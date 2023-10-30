@@ -30,6 +30,7 @@ import CarDeleteModal from './CarDeleteModal';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HdrAutoOutlinedIcon from '@mui/icons-material/HdrAutoOutlined';
 import axiosInstance from '../../utils/axios';
+import { ConsoleView } from 'react-device-detect';
 
 const style = {
   position: 'absolute',
@@ -65,6 +66,13 @@ const CarDetail = ({
   };
   const handleDeleteModalClose = () => {
     setDeleteModalOpen(false);
+  };
+
+  const carDeleteBtn = () => {
+    console.log(carCode);
+    axiosInstance.put('/manager/car/carDelete', carCode).then((res) => {
+      console.log(res.data);
+    });
   };
 
   const [carInfo, setCarInfo] = useState({
@@ -593,7 +601,13 @@ const CarDetail = ({
         <CarDeleteModal
           style={style}
           handleDeleteModalClose={handleDeleteModalClose}
-        />
+          handleDeleteBtn={carDeleteBtn}
+          title={'차량 삭제'}
+        >
+          정말로 선택한 차량을 삭제하시겠습니까?
+          <br />
+          삭제된 차량은 삭제된 차량에서 조회할 수 있습니다.
+        </CarDeleteModal>
       </Modal>
       <Box
         sx={{
