@@ -32,6 +32,7 @@ import axiosInstance from '../../utils/axios.js';
 import { useNavigate } from 'react-router-dom';
 import Editor from '../../components/mr_admin/Editor';
 import JWTdecode from '../../components/common/JWTdecode';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const DashBoard = () => {
   const navigate = useNavigate();
   const handleLogOut = () => {
@@ -97,7 +98,7 @@ const DashBoard = () => {
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <MainContainer>
+        <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               {/* <JWTdecode /> */}
@@ -136,7 +137,7 @@ const DashBoard = () => {
               <Button onClick={handleLogOut}>로그아웃</Button>
             </Container>
           </WrapContainer>
-        </MainContainer>
+        </MainContainer2>
       </Box>
     </>
   );

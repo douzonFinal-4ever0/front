@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import MrNoticeDeatails from './MrNoticeDeatails';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const MrNoticeList = () => {
   /*-------------------------------------url 이동---------------------------------------------------*/
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const MrNoticeList = () => {
     <>
       <SubHeader title={'공지사항 조회'} />
       <Box sx={{ display: 'flex' }}>
-        <MainContainer>
+        <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <div style={{ height: 'auto', width: '100%' }}>
@@ -65,7 +66,7 @@ const MrNoticeList = () => {
               />
             </Container>
           </WrapContainer>
-        </MainContainer>
+        </MainContainer2>
       </Box>
     </>
   );

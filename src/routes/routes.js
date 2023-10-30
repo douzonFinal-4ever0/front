@@ -158,6 +158,7 @@ const MrAdminNoticeListPage = Loadable(
   lazy(() => import('../pages/mr_admin/MrNoticeList'))
 );
 const LoginPage = Loadable(lazy(() => import('../pages/user/Login')));
+
 const MrAdminNoticeDetailPage = Loadable(
   lazy(() => import('../pages/mr_admin/MrNoticeDeatails'))
 );

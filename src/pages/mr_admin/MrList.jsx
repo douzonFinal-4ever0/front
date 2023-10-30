@@ -14,6 +14,7 @@ import 'dayjs/locale/ko';
 import { useEffect } from 'react';
 import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
 import axiosInstance from '../../utils/axios.js';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const MrList = () => {
   const [value, setValue] = useState(dayjs().minute(0));
 
@@ -88,7 +89,7 @@ const MrList = () => {
         }}
       />
       <Box sx={{ display: 'flex', height: '95%' }}>
-        <MainContainer>
+        <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Grid spacing={2}>
               {/* <TimeField
@@ -108,7 +109,7 @@ const MrList = () => {
             <TimeLineCalendar events={events} resources={mrList} />
             {/* <Calendar events={events} tabData={tabData} /> */}
           </WrapContainer>
-        </MainContainer>
+        </MainContainer2>
       </Box>
     </>
   );

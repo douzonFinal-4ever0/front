@@ -10,6 +10,7 @@ import axiosInstance from '../../utils/axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 
 const MrNoticeDeatails = () => {
   /*------------------------제목 번호 가져오기-------------------------------- */
@@ -55,7 +56,7 @@ const MrNoticeDeatails = () => {
     <>
       <SubHeader title={title} />
       <Box sx={{ display: 'flex' }}>
-        <MainContainer>
+        <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <div style={{ height: 'auto', width: '100%' }}>
               <Grid container spacing={1}>
@@ -125,7 +126,7 @@ const MrNoticeDeatails = () => {
               </Grid>
             </div>
           </WrapContainer>
-        </MainContainer>
+        </MainContainer2>
       </Box>
     </>
   );

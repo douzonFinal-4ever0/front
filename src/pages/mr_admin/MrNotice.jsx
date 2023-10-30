@@ -21,6 +21,7 @@ import Selectbox from '../../components/common/Selectbox';
 import styled from 'styled-components';
 import Label from '../../components/common/Label';
 import { useSelector } from 'react-redux';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const MrNotice = () => {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState('<p>테스트</p>');
@@ -75,7 +76,7 @@ const MrNotice = () => {
   return (
     <>
       <SubHeader title={'공지사항 작성'} />
-      <MainContainer>
+      <MainContainer2>
         <WrapContainer bgcolor={'#fff'}>
           <Grid container spacing={1} sx={{ display: 'flex' }}>
             <Grid item container spacing={2}>
@@ -101,7 +102,7 @@ const MrNotice = () => {
               <Grid item container xs={3}>
                 <StyledSelect onChange={handleSelectChange} displayEmpty>
                   <MenuItem defaultValue="" disabled>
-                    선택
+                    탬플릿 선택
                   </MenuItem>
                   {template.map((item) => (
                     <MenuItem key={item.template_code} value={item.type}>
@@ -131,7 +132,7 @@ const MrNotice = () => {
             </Grid>
           </Grid>
         </WrapContainer>
-      </MainContainer>
+      </MainContainer2>
     </>
   );
 };
