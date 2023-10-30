@@ -10,7 +10,6 @@ import DataGrid from '../../components/common/DataGrid';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
-import MrNoticeDeatails from './MrNoticeDeatails';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 const MrNoticeList = () => {
   /*-------------------------------------url 이동---------------------------------------------------*/

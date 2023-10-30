@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 
-const MrNoticeDeatails = () => {
+const MrNoticeDetails = () => {
   /*------------------------제목 번호 가져오기-------------------------------- */
   const { notice_code } = useParams();
   // console.log(notice_code);
@@ -132,7 +132,7 @@ const MrNoticeDeatails = () => {
   );
 };
 
-export default MrNoticeDeatails;
+export default MrNoticeDetails;
 
 // <Button
 //               component="span"

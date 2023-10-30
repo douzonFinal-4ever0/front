@@ -75,7 +75,7 @@ const MrList = () => {
   // 추가 이벤트들
   // ];
 
-  console.log(value);
+  // console.log(value);
   return (
     <>
       <SubHeader
