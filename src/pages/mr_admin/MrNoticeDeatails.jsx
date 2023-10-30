@@ -1,6 +1,6 @@
 import React from 'react';
 import SubHeader from '../../components/common/SubHeader';
-import { Box, Button, Collapse, Fade, Grid } from '@mui/material';
+import { Box, Button, Collapse, Fade, Grid, IconButton } from '@mui/material';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import DataGrid from '../../components/common/DataGrid';
@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const MrNoticeDeatails = () => {
   /*------------------------제목 번호 가져오기-------------------------------- */
@@ -36,9 +37,13 @@ const MrNoticeDeatails = () => {
   };
 
   const [checked, setChecked] = useState(false);
-  const handleTest = () => {
+
+  /**더보기 버튼을 누를시 실행하는 이벤트 */
+  const handleOption = () => {
     setChecked((prev) => !prev);
   };
+
+  /**공지 삭제 이벤트 */
   const handleDeleteNotice = () => {
     axiosInstance.delete(`mr/notice/delete/${notice_code}`).then((res) => {
       alert('삭제가 완료되었습니다.');
@@ -61,9 +66,20 @@ const MrNoticeDeatails = () => {
                   <Grid
                     item
                     xs={1}
-                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'flex-start'
+                    }}
                   >
-                    <Button onClick={handleTest}>도구</Button>
+                    <IconButton
+                      onClick={handleOption}
+                      size="large"
+                      component="label"
+                      variant="contained"
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
                   </Grid>
 
                   <Grid item xs={2}>
@@ -92,7 +108,7 @@ const MrNoticeDeatails = () => {
                       </Grid>
                     </Fade>
                   </Grid>
-                  <Grid container item xs={9}>
+                  <Grid item xs>
                     {/* <Button onClick={handleTest}>test</Button> */}
                   </Grid>
                   <Grid item xs={1}>
@@ -116,3 +132,13 @@ const MrNoticeDeatails = () => {
 };
 
 export default MrNoticeDeatails;
+
+// <Button
+//               component="span"
+//               variant="contained"
+//               startIcon={<CloudUploadIcon />}
+//               color="info"
+//               sx={{ width: '100%' }}
+//             >
+//               회의실 사진 업로드
+//             </Button>

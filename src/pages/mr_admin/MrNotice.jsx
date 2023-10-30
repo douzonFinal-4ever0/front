@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Editor from '../../components/mr_admin/Editor';
 import SubHeader from '../../components/common/SubHeader';
 import {
@@ -22,20 +22,23 @@ import styled from 'styled-components';
 import Label from '../../components/common/Label';
 const MrNotice = () => {
   const navigate = useNavigate();
-  const [editorData, setEditorData] = useState('');
+  const [editorData, setEditorData] = useState('<p>테스트</p>');
   const [isPublic, setIsPublic] = useState(true); // OnOff 스위치의 상태를 관리
   const [notice_title, setNotice_title] = useState('');
-  const [template, setTemplate] = useState('');
+  const [template, setTemplate] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
+  /**공개 비공개 여부 체크 */
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
   };
-
+  /**공지사항에 들어가야하는 데이터 */
   const FormtoData = {
     contents: editorData,
     is_opened: isPublic ? 0 : 1,
     notice_title
   };
+  /**공지사랑 등록 버튼 이벤트 */
   const handleClick = () => {
     axiosInstance.post('/mr/notice', FormtoData).then(() => {
       alert('공지사항이 등록되었습니다.');
@@ -45,24 +48,28 @@ const MrNotice = () => {
     // console.log('공개 여부: ' + isPublic); // OnOff 스위치 상태 출력
   };
 
+  /**템플릿을 선택할때의 이벤트 */
   const handleSelectChange = (event) => {
-    setTemplate(event.target.value);
-  };
-
-  const templateOptions = [
-    {
-      index: 'NT001',
-      key: 'NT001',
-      value:
-        '<h2>안녕하세요, OOO입니다.</h2><p>최근 특정 요일에 회의실이 몰리는 것을 확인했습니다.</p><p>이에 회의실 OOO을 추가했습니다.</p><p>위치는 OOO에 있습니다.</p><p>많은 사용 부탁드립니다.</p><p>감사합니다.&nbsp;</p>'
+    const selectedTemplate = template.find(
+      (item) => item.type === event.target.value
+    );
+    console.log(selectedTemplate);
+    if (selectedTemplate) {
+      setSelectedTemplate(selectedTemplate);
     }
-  ];
-  // useEffect(() => {
-  //   axiosInstance.get('/mr/template').then((res) => {
-  //     console.log(res.data);
-  //     setTemplate(res.data);
-  //   });
-  // }, []);
+  };
+  /**에디터에 데이터가 바뀔때 쓰는 함수 */
+  const handleEditorChange = (content) => {
+    setEditorData(content);
+  };
+  /**템플릿을 불러오는 useEffect */
+  useEffect(() => {
+    axiosInstance.get('/mr/template').then((res) => {
+      // console.log(res.data);
+      setTemplate(res.data);
+    });
+  }, []);
+
   return (
     <>
       <SubHeader title={'공지사항 작성'} />
@@ -85,24 +92,23 @@ const MrNotice = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={6} sx={{ display: 'flex' }}>
+              <Grid item xs={2} sx={{ display: 'flex' }}>
                 <OnOffSwitch checked={isPublic} onChange={handleSwitchChange} />
               </Grid>
-              <Grid item xs={5} sx={{ width: '100%' }}>
-                {/* <FormControl>
-                  <Select
-                    value={notice_title}
-                    placeholder="탬플릿"
-                    onChange={handleSelectChange}
-                  >
-                    <MenuItem value="미팅룸">미팅룸</MenuItem>
-                    <MenuItem value="소회의실">소회의실</MenuItem>
-                    <MenuItem value="중회의실">중회의실</MenuItem>
-                    <MenuItem value="대회의실">대회의실</MenuItem>
-                  </Select>
-                </FormControl> */}
+              <Grid item container xs={5}></Grid>
+              <Grid item container xs={3}>
+                <StyledSelect onChange={handleSelectChange} displayEmpty>
+                  <MenuItem defaultValue="" disabled>
+                    선택
+                  </MenuItem>
+                  {template.map((item) => (
+                    <MenuItem key={item.template_code} value={item.type}>
+                      {item.type}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
               </Grid>
-              <Grid item xs={1}>
+              <Grid item xs={2}>
                 <RectangleBtn
                   category={'register'}
                   type={'submit'}
@@ -114,7 +120,11 @@ const MrNotice = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Editor onEditorChange={(data) => setEditorData(data)} />
+                <Editor
+                  onEditorChange={handleEditorChange}
+                  defaultEditorData={editorData}
+                  selectedTemplate={selectedTemplate}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -126,8 +136,23 @@ const MrNotice = () => {
 
 export default MrNotice;
 // index,value
+
 const StyledLabelGrid = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center'
 }));
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+  '&.MuiInputBase-root': {
+    width: '100%'
+  }
+}));
+// const template = [
+//   {
+//     template_code: 'NT001',
+//     type: '회의실 긴급 추가',
+//     contents:
+//       '<h2>안녕하세요, OOO입니다.</h2><p>최근 특정 요일에 회의실이 몰리는 것을 확인했습니다.</p><p>이에 회의실 OOO을 추가했습니다.</p><p>위치는 OOO에 있습니다.</p><p>많은 사용 부탁드립니다.</p><p>감사합니다.&nbsp;</p>'
+//   }
+// ];

@@ -159,7 +159,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     setSelectedDays(newSelectedDays);
     // 선택된 요일을 출력
     // console.log('선택된 요일: ', newSelectedDays);
-    // console.log(mr_op_day);
+    console.log(mr_op_day);
   };
   /**상태를 토글하여 보이기/숨기기 */
   const toggleTimeField = () => {
@@ -220,6 +220,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       maximum_capacity,
       location,
       mr_type: mrType,
+      mr_keyword: selectedTags,
+      mr_op_day: mr_op_day,
       is_opened: 0
     };
   }
