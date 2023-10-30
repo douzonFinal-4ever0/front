@@ -65,11 +65,10 @@ const MrNotice = () => {
   /**템플릿을 불러오는 useEffect */
   useEffect(() => {
     axiosInstance.get('/mr/template').then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setTemplate(res.data);
     });
   }, []);
-  console.log(editorData);
 
   return (
     <>

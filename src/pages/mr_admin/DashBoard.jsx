@@ -131,7 +131,6 @@ const DashBoard = () => {
                 <MenuItem value="중회의실">중회의실</MenuItem>
                 <MenuItem value="대회의실">대회의실</MenuItem>
               </Select> */}
-              <Editor />
               <Button onClick={handleLogOut}>로그아웃</Button>
             </Container>
           </WrapContainer>
