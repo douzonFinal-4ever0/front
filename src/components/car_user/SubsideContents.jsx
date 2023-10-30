@@ -17,6 +17,7 @@ import NoRow from './NoRow';
 import RectangleBtn from '../common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
+import axiosInstance from '../../utils/axios';
 
 // 서브 사이드바 콘텐츠
 const SubSideContents = ({ setSelectedRows }) => {
@@ -24,15 +25,17 @@ const SubSideContents = ({ setSelectedRows }) => {
   //const [carCode, setCarCode] = useState('');
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:8081/car_rez/availableCars').then((res) => {
-      setRows(
-        res.data.map((car) => ({
-          id: car.carVO.car_code,
-          car_name: car.carVO.car_name,
-          car_address: car.car_address
-        }))
-      );
-    });
+    axiosInstance
+      .get('http://localhost:8081/car_rez/availableCars')
+      .then((res) => {
+        setRows(
+          res.data.map((car) => ({
+            id: car.carVO.car_code,
+            car_name: car.carVO.car_name,
+            car_address: car.car_address
+          }))
+        );
+      });
   }, []);
   const handleInput = (e) => {
     setSearchInput(e.target.value);

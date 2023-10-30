@@ -14,7 +14,6 @@ import { Container } from '@mui/system';
 import { PAGE_INNER_PADDING, BORDER_RADIUS } from '../../config';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import KakaoMap3 from '../../components/car_user/KakaoMap3';
 

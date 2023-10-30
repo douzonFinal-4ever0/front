@@ -3,21 +3,24 @@ import { useEffect, useState } from 'react';
 import DataGrid from '../common/DataGrid';
 import CarAlert from './CarAlert';
 import { Alert, AlertTitle, Box } from '@mui/material';
+import axiosInstance from '../../utils/axios.js';
 
 const CarList = ({ setSelectedRows }) => {
   const [carList, setCarList] = useState([]);
   //const [alertOpen, setAlertOpen] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/car_rez/availableCars').then((res) => {
-      setCarList(
-        res.data.map((car) => ({
-          id: car.carVO.car_code,
-          car_name: car.carVO.car_name,
-          car_address: car.car_address
-        }))
-      );
-    });
+    axiosInstance
+      .get('http://localhost:8081/car_rez/availableCars')
+      .then((res) => {
+        setCarList(
+          res.data.map((car) => ({
+            id: car.carVO.car_code,
+            car_name: car.carVO.car_name,
+            car_address: car.car_address
+          }))
+        );
+      });
   }, []);
   const handleRowClick = (params) => {
     // 클릭한 행의 정보를 params로 받을 수 있음
