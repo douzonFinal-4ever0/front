@@ -10,8 +10,9 @@ import axiosInstance from '../../utils/axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 
-const MrNoticeDeatails = () => {
+const MrNoticeDetails = () => {
   /*------------------------제목 번호 가져오기-------------------------------- */
   const { notice_code } = useParams();
   // console.log(notice_code);
@@ -55,7 +56,7 @@ const MrNoticeDeatails = () => {
     <>
       <SubHeader title={title} />
       <Box sx={{ display: 'flex' }}>
-        <MainContainer>
+        <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <div style={{ height: 'auto', width: '100%' }}>
               <Grid container spacing={1}>
@@ -125,13 +126,13 @@ const MrNoticeDeatails = () => {
               </Grid>
             </div>
           </WrapContainer>
-        </MainContainer>
+        </MainContainer2>
       </Box>
     </>
   );
 };
 
-export default MrNoticeDeatails;
+export default MrNoticeDetails;
 
 // <Button
 //               component="span"

@@ -33,6 +33,10 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
     setSelectedTags(value);
     onTagSelect(value);
   };
+  const isOptionEqualToValue = (option, value) => {
+    // 여기에서 옵션과 값의 일치 여부를 정의합니다.
+    return option.keyword_name === value.keyword_name;
+  };
   return (
     <Autocomplete
       multiple
@@ -61,6 +65,7 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
       renderInput={(params) => <TextField {...params} label="" />}
       value={selectedTags}
       onChange={handleTagSelection}
+      isOptionEqualToValue={isOptionEqualToValue}
     />
   );
 };

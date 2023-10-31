@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
 import { styled } from '@mui/material/styles';
@@ -48,6 +48,10 @@ const Header = (props) => {
     setAnchorEl(event.currentTarget);
     setOpen((prev) => placement !== newPlacement || !prev);
     setPlacement(newPlacement);
+  };
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    navigate('/login');
   };
 
   return (
@@ -110,7 +114,7 @@ const Header = (props) => {
                         color: palette.text.secondary
                       }}
                     >
-                      더존ICT제작1팀
+                      {user.dept_name}
                     </Typography>
                     <KeyboardArrowDownIcon
                       sx={{ color: palette.text.disabled }}
@@ -191,6 +195,7 @@ const Header = (props) => {
               </Popper> */}
             </Stack>
           </Box>
+          <Button onClick={handleLogOut}>로그아웃</Button>
         </StyledToolbar>
         <StyledSubToolbar direction="row">
           <StyledButton onClick={onMenuIconClick}>
