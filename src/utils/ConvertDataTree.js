@@ -9,6 +9,7 @@ export const convertDataTree = (data) => {
     }
   });
   const uniqueDeptNamesArray = Array.from(uniqueDeptNames);
+  console.log(uniqueDeptNamesArray);
 
   // 루트 데이터 생성
   const root = {

@@ -9,10 +9,21 @@ import styled from '@emotion/styled';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { palette } from '../../theme/palette';
+import { useSelector } from 'react-redux';
 
 const Sidebar = (props) => {
   const { isOpen, isAdminMode, setIsAdminMode } = props;
 
+  const role = useSelector((state) => state.user.role);
+
+  let roleToAdmin = false;
+  if (role == '관리자') {
+    roleToAdmin = true;
+    // setRoleToAdmin(true);
+  } else {
+    roleToAdmin = false;
+    // setRoleToAdmin(false);
+  }
   // 페이지 PATH
   const PATHNAME = useLocation().pathname;
 
@@ -62,46 +73,48 @@ const Sidebar = (props) => {
           handleMenuItemClick={handleMenuItemClick}
           isAdminMode={isAdminMode}
         />
-        <ButtonGroup
-          sx={{
-            width: '100% !important',
-            height: '50px',
-            position: 'absolute',
-            bottom: '0px'
-          }}
-          aria-label="large button group"
-        >
-          {[
-            <StyledButton
-              key="one"
-              sx={{
-                backgroundColor: isAdminMode
-                  ? palette.common.white
-                  : palette.grey['300']
-              }}
-              onClick={() => {
-                setIsAdminMode(false);
-                navigate('/mr/dashboard');
-              }}
-            >
-              <AccountCircleIcon />
-            </StyledButton>,
-            <StyledButton
-              key="two"
-              sx={{
-                backgroundColor: isAdminMode
-                  ? palette.grey['300']
-                  : palette.common.white
-              }}
-              onClick={() => {
-                setIsAdminMode(true);
-                navigate('/mr/admin/MrRegister');
-              }}
-            >
-              <AdminPanelSettingsIcon />
-            </StyledButton>
-          ]}
-        </ButtonGroup>
+        {roleToAdmin && (
+          <ButtonGroup
+            sx={{
+              width: '100% !important',
+              height: '50px',
+              position: 'absolute',
+              bottom: '0px'
+            }}
+            aria-label="large button group"
+          >
+            {[
+              <StyledButton
+                key="one"
+                sx={{
+                  backgroundColor: isAdminMode
+                    ? palette.common.white
+                    : palette.grey['300']
+                }}
+                onClick={() => {
+                  setIsAdminMode(false);
+                  navigate('/mr/dashboard');
+                }}
+              >
+                <AccountCircleIcon />
+              </StyledButton>,
+              <StyledButton
+                key="two"
+                sx={{
+                  backgroundColor: isAdminMode
+                    ? palette.grey['300']
+                    : palette.common.white
+                }}
+                onClick={() => {
+                  setIsAdminMode(true);
+                  navigate('/mr/admin/MrRegister');
+                }}
+              >
+                <AdminPanelSettingsIcon />
+              </StyledButton>
+            ]}
+          </ButtonGroup>
+        )}
       </Box>
     </StyledDrawer>
   );

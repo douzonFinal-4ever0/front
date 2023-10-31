@@ -42,7 +42,8 @@ const MenuList = (props) => {
       icon: <StyledRoomIcon />,
       categories: [
         { index: 1, title: '대시보드', url: '/mr/dashboard' },
-        { index: 2, title: '회의실 예약', url: '/mr/rez' }
+        { index: 2, title: '회의실 예약', url: '/mr/rez' },
+        { index: 3, title: '즐겨찾기', url: '/mr/bm' }
       ]
     },
     {

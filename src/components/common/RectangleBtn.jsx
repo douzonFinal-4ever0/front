@@ -2,7 +2,14 @@ import styled from '@emotion/styled';
 import { Button, Typography } from '@mui/material';
 
 // category 값에 따라 컬러 변경
-const RectangleBtn = ({ type, text, sx, handlebtn, category }) => {
+const RectangleBtn = ({
+  type,
+  text,
+  sx,
+  handlebtn,
+  category,
+  handleKeyDown
+}) => {
   const fontColor = () => {
     switch (category) {
       case 'cancel':
@@ -45,6 +52,7 @@ const RectangleBtn = ({ type, text, sx, handlebtn, category }) => {
       type={type}
       sx={sx}
       onClick={handlebtn}
+      onKeyDown={handleKeyDown}
       category={category}
       fontcolor={fontColor(category)}
       bgcolor={bgColor(category)}

@@ -31,11 +31,17 @@ const RezSection = () => {
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   // 회의실 예약 리덕스 데이터
-  const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
-    rezData;
+  const {
+    m_name,
+    m_type,
+    rez_date,
+    rez_start_time,
+    rez_end_time,
+    tot_pt_ctn,
+    mr_pt_list
+  } = rezData;
   // 사용자 리덕스 데이터
   const { mem_code, name } = userData;
-
   // 열린 Accordion 표시
   const [expanded, setExpanded] = useState('rez');
   // 예약버튼 활성화 여부
