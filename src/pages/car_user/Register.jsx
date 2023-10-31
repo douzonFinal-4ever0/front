@@ -254,8 +254,10 @@ const Register = () => {
         ...formData,
         [name]: value
       });
+      set(e.target.value);
     }
   };
+
   const handleChangeLoc = (e, set) => {
     if (carRez) {
       set(addressObj.areaAddress + addressObj.townAddress);
@@ -265,8 +267,13 @@ const Register = () => {
         ...formData,
         [name]: value
       });
+      set(addressObj.areaAddress + addressObj.townAddress);
     }
   };
+  // let rezStart_at;
+  // let rezReturn_at;
+  const [rezStart_at, setRezStart_at] = useState(null);
+  const [rezReturn_at, setRezReturn_at] = useState(null);
   const handleTimeChange = (e, name, set) => {
     if (carRez) {
       set(e.$d);
@@ -276,6 +283,12 @@ const Register = () => {
         ...formData,
         [name]: e.$d
       });
+      if (name === 'start_at') {
+        setRezStart_at(e.$d);
+      }
+      if (name === 'return_at') {
+        setRezReturn_at(e.$d);
+      }
     }
   };
   //submit하는 함수
@@ -310,7 +323,14 @@ const Register = () => {
 
   //modal여는 함수
   const handleOpenModal = () => {
-    setOpen(true);
+    console.log(rezStart_at);
+    if (rezStart_at === null || rezReturn_at === null) {
+      alert('날짜를 입력해주세요');
+    } else {
+      setOpen(true);
+      console.log('대여일:' + rezStart_at);
+      console.log('반납일: ' + rezReturn_at);
+    }
   };
   //modal 닫는 함수
   const handleCloseModal = (reason) => {
@@ -338,6 +358,7 @@ const Register = () => {
     } else {
       alert('차량을 선택해주세요');
     }
+
     axiosInstance
       .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
@@ -350,7 +371,74 @@ const Register = () => {
           fuel_effciency: res.data.fuel_effciency,
           car_address: res.data.car_address
         });
+        //차량 위치 저장
+        setReceipt_loc(selectedRows.car_address);
       });
+  };
+
+  const est_mileageCal = (locList) => {
+    if (locList) {
+      const destCoordinate =
+        locList.dest_loc[0].toString() + ',' + locList.dest_loc[1].toString();
+
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
+        },
+        body: JSON.stringify({
+          tollgateFareOption: 16,
+          roadType: 32,
+          directionOption: 1,
+          endX: locList.return_loc[0],
+          endY: locList.return_loc[1],
+          endRpFlag: 'G',
+          reqCoordType: 'WGS84GEO',
+          startX: locList.receipt_loc[0],
+          startY: locList.receipt_loc[1],
+          //gps시간 예약시간으로
+          gpsTime: '20191125153000',
+          speed: 10,
+          uncetaintyP: 1,
+          uncetaintyA: 1,
+          uncetaintyAP: 1,
+          //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
+          carType: 0,
+          // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
+          // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
+          passList: destCoordinate,
+          gpsInfoList:
+            '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
+          detailPosFlag: '2',
+          resCoordType: 'WGS84GEO',
+          sort: 'index'
+        })
+      };
+      fetch(
+        'https://apis.openapi.sk.com/tmap/routes?version=1&callback=function',
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response.features[0].properties.totalDistance);
+          setFormData({
+            ...formData,
+            est_mileage: (
+              response.features[0].properties.totalDistance / 1000
+            ).toFixed(1)
+          });
+          setEst_mileage(
+            (response.features[0].properties.totalDistance / 1000).toFixed(1)
+          );
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const locSelect = (e) => {
+    handleChange(e, setReturn_loc);
   };
   // useLayoutEffect(() => {
   //   if (carRez !== null) {
@@ -407,6 +495,24 @@ const Register = () => {
   useEffect(() => {
     setDest_loc(initDest_loc);
   }, []);
+  useEffect(() => {
+    console.log('asdasdasdasda');
+    console.log(receipt_loc);
+    console.log(return_loc);
+    console.log(addressObj);
+    if ((receipt_loc !== '') & (return_loc !== '') & (addressObj !== '')) {
+      let dest_loc = addressObj.areaAddress + addressObj.townAddress;
+      axiosInstance
+        .get(
+          `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
+        )
+        .then((res) => {
+          const locList = res.data;
+          console.log(locList);
+          est_mileageCal(locList);
+        });
+    }
+  }, [receipt_loc, return_loc, addressObj]);
   return (
     <>
       <SubHeader title={'차량 예약'} />
@@ -474,7 +580,7 @@ const Register = () => {
                       value={
                         carRez !== null
                           ? carRez.rez.memResponseVO.deptVO.dept_name
-                          : ''
+                          : currentUser.dept_name
                       }
                     />
                   </Grid>
@@ -629,27 +735,6 @@ const Register = () => {
                           </Button>
                         </Grid>
                       }
-                    />
-                  </Grid>
-                </Grid>
-                {/* 예상 주행 거리 */}
-                <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
-                  </StyledLabelGrid>
-                  <Grid item xs={10}>
-                    <TextField
-                      id="est_mileage"
-                      name="est_mileage"
-                      type="number"
-                      onChange={(e) => handleChange(e, setEst_mileage)}
-                      InputProps={{
-                        inputProps: { min: 0 },
-                        endAdornment: (
-                          <InputAdornment position="end">㎞</InputAdornment>
-                        )
-                      }}
-                      value={carRez ? est_mileage : formData.est_mileage}
                     />
                   </Grid>
                 </Grid>
@@ -834,6 +919,27 @@ const Register = () => {
                       value={carRez ? return_loc : formData.return_loc}
                       handleSelectBox={(e) => handleChange(e, setReturn_loc)}
                       menuList={returnLocList}
+                    />
+                  </Grid>
+                </Grid>
+                {/* 예상 주행 거리 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="est_mileage"
+                      name="est_mileage"
+                      type="text"
+                      onChange={(e) => handleChange(e, setEst_mileage)}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞</InputAdornment>
+                        )
+                      }}
+                      value={carRez ? est_mileage : formData.est_mileage}
                     />
                   </Grid>
                 </Grid>

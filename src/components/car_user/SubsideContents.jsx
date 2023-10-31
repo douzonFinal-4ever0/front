@@ -5,6 +5,7 @@ import {
   Grid,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Paper,
   Typography
@@ -70,19 +71,21 @@ const SubSideContents = ({ setSelectedRows }) => {
               return (
                 <ListItem
                   key={car.id}
-                  onMouseEnter={() => handleHover(index)}
-                  onMouseLeave={handleMouseLeave}
-                  sx={{ background: isHovered === index && '#FFFFFF' }}
+                  // onMouseEnter={() => handleHover(index)}
+                  // onMouseLeave={handleMouseLeave}
+                  // sx={{ background: isHovered === index && '#FFFFFF' }}
                   // {isHovered&&}
                   onClick={(e) =>
                     handleItem(e, car.id, car.car_address, car.car_name)
                   }
                 >
-                  <ListItemText
-                    primary={`${car.id}`}
-                    secondary={`${car.car_name}`}
-                  />
-                  <ListItemText primary={`${car.car_address}`} />
+                  <ListItemButton>
+                    <ListItemText
+                      primary={`${car.id}`}
+                      secondary={`${car.car_name}`}
+                    />
+                    <ListItemText primary={`${car.car_address}`} />
+                  </ListItemButton>
                 </ListItem>
               );
             })}
