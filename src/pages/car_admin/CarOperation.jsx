@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 import CarOperationTable from '../../components/car_admin/operation/CarOperationTable';
 import styled from '@emotion/styled';
 import axiosInstance from '../../utils/axios';
+import { PAGE_INNER_PADDING } from '../../config';
+import { Button } from '@mui/material';
+import { palette } from '../../theme/palette';
 
 const CarOperationPage = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -21,54 +24,62 @@ const CarOperationPage = () => {
     setSearchValue(searchInput);
   };
 
-  const [operation, setOperation] = useState([]);
-
-  useEffect(() => {
-    axiosInstance
-      .get('')
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <>
       <SubHeader title={'운행 내역'} />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <MainContainer>
+        <StyledMain>
           <Box sx={{ width: '100%', padding: 3, backgroundColor: '#ffffff' }}>
-            <Stack
+            <Box
               sx={{
                 width: '100%',
                 maxWidth: '1200px',
                 height: 'auto',
                 margin: '0px auto',
-                padding: '0px 20px'
+                padding: '0px 24px',
+                display: 'flex',
+                justifyContent: 'end'
               }}
             >
-              <Box sx={{ width: '40%' }}>
+              <Button
+                sx={{
+                  color: palette.grey['600'],
+                  border: `1px solid ${palette.grey['500']}`,
+                  borderRadius: '2px',
+                  '&:hover': { backgroundColor: '#ffffff' },
+                  height: '35px',
+                  marginRight: '15px'
+                }}
+              >
+                검색 상세
+              </Button>
+              <Box sx={{ width: '30%' }}>
                 <Searchbar
                   placeholder={'차량명 검색'}
                   value={searchInput}
                   handleInputChange={handleInput}
                   handleSearchBtnClick={handleSearchBtn}
+                  inputHeight={'35px !important'}
                 />
               </Box>
-            </Stack>
+            </Box>
             <StyledContainer>
               <CarOperationTable />
             </StyledContainer>
           </Box>
-        </MainContainer>
+        </StyledMain>
       </Box>
     </>
   );
 };
 
 export default CarOperationPage;
+
+const StyledMain = styled(Box)(({ theme }) => ({
+  padding: PAGE_INNER_PADDING,
+  width: '100%',
+  maxWidth: '1400px'
+}));
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
