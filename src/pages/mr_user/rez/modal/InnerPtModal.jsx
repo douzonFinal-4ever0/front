@@ -29,15 +29,19 @@ const InnerPtModal = ({
   handleModal,
   list,
   selectMems,
-  setSelectMems
+  setSelectMems,
+  groupList
 }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
 
-  // 적용 대상 리스트에서 선택된 멤버
+  // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
-  // 전체 리스트에서 선택된 멤머
+  // (좌측창) 전체 리스트에서 선택된 멤버
   const [addMemName, setAddMemName] = useState(null);
+  // 즐겨찾기 리스트에서 선택된 멤버
+  const [addBmMems, setAddBmMems] = useState([]);
+
   // 선택된 토글 버튼 값
   const [selectBtn, setSelectBtn] = useState('all');
 
@@ -54,8 +58,8 @@ const InnerPtModal = ({
       name: '검색'
     },
     {
-      index: 1,
-      value: 'bookmark',
+      index: 2,
+      value: 'bm',
       name: '즐겨찾기'
     }
   ];
@@ -96,6 +100,12 @@ const InnerPtModal = ({
     }
   };
 
+  // 즐겨찾기 트리 데이터 클릭 이벤트
+  const handleBmGroup = (event, nodeId) => {
+    const res = groupList.filter((group) => group.bm_group_name === nodeId);
+    setAddBmMems([...res[0].mem_list]);
+  };
+
   // 선택된 참석자 아이템 클릭 이벤트
   const handlePtItem = (event, nodeId) => {
     setCheckMemName(nodeId);
@@ -103,12 +113,20 @@ const InnerPtModal = ({
 
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
-    const addMem = list.filter((mem) => mem.mem_code === addMemName);
-    const isExist = selectMems.find(
-      (item) => item.mem_code === addMem[0].mem_code
-    );
-    if (isExist) return;
-    setSelectMems([...selectMems, ...addMem]);
+    if (selectBtn === 'all') {
+      const addMem = list.filter((mem) => mem.mem_code === addMemName);
+      const isExist = selectMems.find(
+        (item) => item.mem_code === addMem[0].mem_code
+      );
+      if (isExist) return;
+      setSelectMems([...selectMems, ...addMem]);
+      return;
+    }
+
+    if (selectBtn === 'bm') {
+      setSelectMems([...selectMems, ...addBmMems]);
+      return;
+    }
   };
 
   // 제외 버튼 이벤트
@@ -140,7 +158,18 @@ const InnerPtModal = ({
                 {item.members.map((item, index) => (
                   <TreeItem
                     nodeId={item.name}
-                    label={`${item.name} (${item.email})`}
+                    label={
+                      <Stack direction={'row'} gap={1}>
+                        <Typography
+                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                        >
+                          {item.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '13px' }}>
+                          ({item.email})
+                        </Typography>
+                      </Stack>
+                    }
                   />
                 ))}
               </TreeItem>
@@ -149,8 +178,41 @@ const InnerPtModal = ({
         );
       case 'search':
         return <Box>서치</Box>;
-      case 'bookmark':
-        return <Box>즐겨찾기</Box>;
+      case 'bm':
+        return (
+          <TreeView
+            aria-label="file system navigator"
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+            onNodeSelect={handleBmGroup}
+          >
+            {groupList.map((item, index) => (
+              <TreeItem
+                nodeId={item.bm_group_name}
+                label={item.bm_group_name}
+                key={index}
+              >
+                {item.mem_list.map((item, index) => (
+                  <TreeItem
+                    nodeId={item.name}
+                    label={
+                      <Stack direction={'row'} gap={1}>
+                        <Typography
+                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                        >
+                          {item.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '13px' }}>
+                          ({item.email})
+                        </Typography>
+                      </Stack>
+                    }
+                  />
+                ))}
+              </TreeItem>
+            ))}
+          </TreeView>
+        );
       default:
         return;
     }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { setUserData } from '../../../../redux/reducer/userSlice';
 import axiosInstance from '../../../../utils/axios';
 
 import RectangleBtn from '../../../../components/common/RectangleBtn';
@@ -22,7 +23,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 const InnerPtForm = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
+  const userData = useSelector(setUserData).payload.user;
   const { mr_pt_list } = rezData;
+  const { mem_code } = userData;
 
   // 모달창 오픈
   const [openModal, setOpenModal] = useState(false);
@@ -30,11 +33,49 @@ const InnerPtForm = () => {
   const [members, setMembers] = useState([]);
   // 모달창 적용 대상 리스트
   const [selectMems, setSelectMems] = useState([]);
+  // 즐겨찾기 멤버
+  const [memList, setMemList] = useState([]);
+  // 즐겨찾기 그룹
+  const [groupList, setGroupList] = useState([]);
 
   // 참석자 추가 버튼 이벤트
   const handleInnerPtBtn = async () => {
+    // 전체 멤버 조회
     const res = await axiosInstance.get('/mr/mem');
     setMembers(res.data);
+
+    // 즐겨찾기 멤버 조회
+    const bmRes = await axiosInstance.get(`/mr/mem/bm?mem_code=${mem_code}`);
+    const { data } = bmRes;
+
+    // 개별 멤버
+    const memResult = data.filter((item) => item.bm_group_name === null);
+    // 그룹 & 그룹 멤버
+    const groupResult = data.filter((item) => item.bm_group_name !== null);
+
+    // 그룹핑
+    const groupedData = [];
+    groupResult.forEach((item) => {
+      const { bm_group_name, ...rest } = item;
+
+      // 해당 bm_group_code가 이미 존재하는지 확인
+      const existingGroup = groupedData.find(
+        (group) => group.bm_group_name === bm_group_name
+      );
+
+      if (existingGroup) {
+        // 이미 존재하는 경우 mem_list 배열에 추가
+        existingGroup.mem_list.push(rest);
+      } else {
+        // 새로운 그룹 생성
+        const newGroup = { bm_group_name, mem_list: [rest] };
+        groupedData.push(newGroup);
+      }
+    });
+
+    setMemList([...memResult]);
+    setGroupList([...groupedData]);
+
     setSelectMems(mr_pt_list);
     setOpenModal(!openModal);
   };
@@ -96,6 +137,7 @@ const InnerPtForm = () => {
         ptList={mr_pt_list}
         selectMems={selectMems}
         setSelectMems={setSelectMems}
+        groupList={groupList}
       />
     </>
   );
