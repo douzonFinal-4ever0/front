@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material';
 
+import { setUserData } from '../../../redux/reducer/userSlice';
 import axiosInstance from '../../../utils/axios';
 import SubHeader from '../../../components/common/SubHeader';
 import MainContainer from '../../../components/mr_user/MainContainer';
@@ -13,6 +14,10 @@ import RectangleBtn from '../../../components/common/RectangleBtn';
 import BmMemModal from './modal/BmMemModal';
 
 const BmPage = () => {
+  // 사용자 정보 (**** 추후 작업 예정)
+  const userData = useSelector(setUserData).payload.user;
+  // *임시로 사번 지정
+  const mem_code = 'MEM023';
   // 삭제할 멤버 번호 리스트
   const [deleteMemCodeList, setDeleteMemCodeList] = useState([]);
   // 선택한 탭
@@ -42,9 +47,6 @@ const BmPage = () => {
   // 첫 로드 시 서버로부터 즐겨찾기 데이터 가져오기
   useEffect(() => {
     const bmGroupMemApi = async () => {
-      // *임시로 사번 지정
-      const mem_code = 'MEM023';
-
       const res = await axiosInstance.get(`/mr/mem/bm?mem_code=${mem_code}`);
       const { data } = res;
 
@@ -85,14 +87,14 @@ const BmPage = () => {
     setSelectTab(newValue);
   };
 
-  // 수정 버튼 이벤트
-  const handleModifyBtn = () => {
+  // 삭제 버튼 이벤트
+  const handleDeleteBtn = () => {
     console.log('수정');
     // MemItem 수정 활성화 => row 컬러 변경 && 버튼 클릭 활성화 && 확인/취소 버튼
     setIsModify(true);
   };
 
-  // 추가 버튼 이벤트
+  // 등록 버튼 이벤트
   const handleAddBtn = async () => {
     console.log('추가');
 
@@ -101,13 +103,13 @@ const BmPage = () => {
     setOpenModal(!openModal);
   };
 
-  // 취소 버튼 이벤트
+  // 수정 취소 버튼 이벤트
   const handleCancelBtn = () => {
     console.log('취소');
     setIsModify(false);
   };
 
-  // 확인 버튼 이벤트
+  // 수정 확인 버튼 이벤트
   const handleConfirmBtn = async () => {
     console.log('확인');
     // 삭제 리스트를 db에 보내서 deleted_at 업데이트 하기
@@ -145,16 +147,16 @@ const BmPage = () => {
               >
                 <Box>
                   <RectangleBtn
-                    text={isModify ? '취소' : '수정'}
+                    text={isModify ? '취소' : '삭제'}
                     type={'button'}
                     category={'cancel'}
                     sx={{ padding: '10px 8px' }}
-                    handlebtn={isModify ? handleCancelBtn : handleModifyBtn}
+                    handlebtn={isModify ? handleCancelBtn : handleDeleteBtn}
                   />
                 </Box>
                 <Box>
                   <RectangleBtn
-                    text={isModify ? '확인' : '추가'}
+                    text={isModify ? '확인' : '등록'}
                     type={'button'}
                     category={'register'}
                     sx={{ padding: '10px 8px' }}
@@ -184,8 +186,10 @@ const BmPage = () => {
         open={openModal}
         handleModal={handleModal}
         list={members}
+        initList={memList}
         selectMems={selectMems}
         setSelectMems={setSelectMems}
+        master={mem_code}
       />
     </>
   );

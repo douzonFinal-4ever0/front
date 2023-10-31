@@ -5,8 +5,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
+  Badge,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,12 +21,38 @@ import {
 import Toggle from '../../../../components/common/Toggle';
 import styled from '@emotion/styled';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
+import { palette } from '../../../../theme/palette';
+import axiosInstance from '../../../../utils/axios';
 
-const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
-  // 선택된 토글 버튼 값
-  const [selectBtn, setSelectBtn] = useState('all');
+const BmMemModal = ({
+  open,
+  handleModal,
+  list,
+  initList,
+  selectMems,
+  setSelectMems,
+  master
+}) => {
+  // 적용 대상 리스트에서 선택된 멤버
+  const [checkMemName, setCheckMemName] = useState(null);
   // 전체 리스트에서 선택된 멤머
   const [addMemName, setAddMemName] = useState(null);
+  // 선택된 토글 버튼 값
+  const [selectBtn, setSelectBtn] = useState('all');
+
+  // 토글버튼 데이터
+  const toggleData = [
+    {
+      index: 0,
+      value: 'all',
+      name: '전체'
+    },
+    {
+      index: 1,
+      value: 'search',
+      name: '검색'
+    }
+  ];
 
   // 부서명 추출
   const uniqueDeptNames = new Set();
@@ -49,20 +77,6 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
     members: deptList[index]
   }));
 
-  // 토글버튼 데이터
-  const toggleData = [
-    {
-      index: 0,
-      value: 'all',
-      name: '전체'
-    },
-    {
-      index: 1,
-      value: 'search',
-      name: '검색'
-    }
-  ];
-
   // 토글 버튼 이벤트
   const handleToggleBtn = (e) => {
     setSelectBtn(e.currentTarget.value);
@@ -74,6 +88,63 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
     if (selecMem.length !== 0) {
       setAddMemName(selecMem[0].mem_code);
     }
+  };
+
+  // 선택된 참석자 아이템 클릭 이벤트
+  const handlePtItem = (event, nodeId) => {
+    setCheckMemName(nodeId);
+  };
+
+  // 추가 버튼 이벤트
+  const handleAddBtn = () => {
+    const addMem = list.filter((mem) => mem.mem_code === addMemName);
+    const isExist = selectMems.find(
+      (item) => item.mem_code === addMem[0].mem_code
+    );
+    if (isExist) return;
+    setSelectMems([...selectMems, ...addMem]);
+  };
+
+  // 제외 버튼 이벤트
+  const handleDeleteBtn = () => {
+    const lestMems = selectMems.filter((mem) => mem.name !== checkMemName);
+    setSelectMems([...lestMems]);
+  };
+
+  // 확인 버튼 이벤트
+  const handleConfirm = async () => {
+    const data = {
+      master: master, // 사용자 번호
+      member: addMemName // 지정자 번호
+    };
+
+    // db 추가
+    const res = await axiosInstance.post('/mr/mem/bm', data);
+    console.log(res);
+    handleModal();
+  };
+
+  // 이미 등록된 멤버 표시하는 라벨
+  const InitLabel = ({ code }) => {
+    const res = initList.filter((item) => item.mem_code === code);
+    if (res.length !== 0) {
+      return (
+        <Typography
+          sx={{
+            padding: '2px 4px',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '11px',
+            borderRadius: '2px',
+            backgroundColor: palette.grey['100']
+          }}
+        >
+          등록
+        </Typography>
+      );
+    }
+
+    return null;
   };
 
   const ContentByToggle = () => {
@@ -91,7 +162,22 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
                 {item.members.map((item, index) => (
                   <TreeItem
                     nodeId={item.name}
-                    label={`${item.name} (${item.email})`}
+                    label={
+                      <Stack direction={'row'} gap={1}>
+                        <Typography
+                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                        >
+                          {item.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '13px' }}>
+                          ({item.email})
+                        </Typography>
+                        <InitLabel code={item.mem_code} />
+                      </Stack>
+                    }
+                    sx={{
+                      margin: '4px 0'
+                    }}
                   />
                 ))}
               </TreeItem>
@@ -123,7 +209,7 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h5">즐겨찾기 멤버 추가</Typography>
+          <Typography variant="h5">즐겨찾기 멤버 등록</Typography>
         </DialogTitle>
         <IconButton
           onClick={handleModal}
@@ -168,8 +254,12 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
             xs={2}
           >
             <Stack spacing={1}>
-              <StyledArrowBtn aria-label="add">추가</StyledArrowBtn>
-              <StyledArrowBtn aria-label="delete">제외</StyledArrowBtn>
+              <StyledArrowBtn aria-label="add" onClick={handleAddBtn}>
+                추가
+              </StyledArrowBtn>
+              <StyledArrowBtn aria-label="delete" onClick={handleDeleteBtn}>
+                제외
+              </StyledArrowBtn>
             </Stack>
           </Grid>
 
@@ -188,7 +278,7 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
                 aria-label="file system navigator"
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
-                // onNodeSelect={handlePtItem}
+                onNodeSelect={handlePtItem}
               >
                 {selectMems &&
                   selectMems.map((item, index) => (
@@ -226,7 +316,7 @@ const BmMemModal = ({ open, handleModal, list, selectMems, setSelectMems }) => {
               text={'확인'}
               category={'register'}
               sx={{ padding: '10px 8px' }}
-              // handlebtn={handleConfirm}
+              handlebtn={handleConfirm}
             />
           </Box>
         </Box>
