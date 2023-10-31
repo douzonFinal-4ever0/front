@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { TreeItem, TreeView } from '@mui/x-tree-view';
+import { useState } from 'react';
 
-import styled from '@emotion/styled';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
+  Badge,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -15,25 +18,21 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import Toggle from '../../../../components/common/Toggle';
+import styled from '@emotion/styled';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
+import { palette } from '../../../../theme/palette';
+import axiosInstance from '../../../../utils/axios';
 
-const InnerPtModal = ({
+const BmMemModal = ({
   open,
   handleModal,
   list,
+  initList,
   selectMems,
-  setSelectMems
+  setSelectMems,
+  master
 }) => {
-  const dispatch = useDispatch();
-  const rezData = useSelector(setRezData).payload.mrUser;
-
   // 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
   // 전체 리스트에서 선택된 멤머
@@ -52,11 +51,6 @@ const InnerPtModal = ({
       index: 1,
       value: 'search',
       name: '검색'
-    },
-    {
-      index: 1,
-      value: 'bookmark',
-      name: '즐겨찾기'
     }
   ];
 
@@ -118,11 +112,39 @@ const InnerPtModal = ({
   };
 
   // 확인 버튼 이벤트
-  const handleConfirm = () => {
-    const newRezData = { ...rezData, mr_pt_list: selectMems };
-    dispatch(setRezData({ data: newRezData }));
-    //setSelectMems([]); //초기화
+  const handleConfirm = async () => {
+    const data = {
+      master: master, // 사용자 번호
+      member: addMemName // 지정자 번호
+    };
+
+    // db 추가
+    const res = await axiosInstance.post('/mr/mem/bm', data);
+    console.log(res);
     handleModal();
+  };
+
+  // 이미 등록된 멤버 표시하는 라벨
+  const InitLabel = ({ code }) => {
+    const res = initList.filter((item) => item.mem_code === code);
+    if (res.length !== 0) {
+      return (
+        <Typography
+          sx={{
+            padding: '2px 4px',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '11px',
+            borderRadius: '2px',
+            backgroundColor: palette.grey['100']
+          }}
+        >
+          등록
+        </Typography>
+      );
+    }
+
+    return null;
   };
 
   const ContentByToggle = () => {
@@ -140,7 +162,22 @@ const InnerPtModal = ({
                 {item.members.map((item, index) => (
                   <TreeItem
                     nodeId={item.name}
-                    label={`${item.name} (${item.email})`}
+                    label={
+                      <Stack direction={'row'} gap={1}>
+                        <Typography
+                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                        >
+                          {item.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '13px' }}>
+                          ({item.email})
+                        </Typography>
+                        <InitLabel code={item.mem_code} />
+                      </Stack>
+                    }
+                    sx={{
+                      margin: '4px 0'
+                    }}
                   />
                 ))}
               </TreeItem>
@@ -172,7 +209,7 @@ const InnerPtModal = ({
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h5">참석자 추가</Typography>
+          <Typography variant="h5">즐겨찾기 멤버 등록</Typography>
         </DialogTitle>
         <IconButton
           onClick={handleModal}
@@ -182,6 +219,7 @@ const InnerPtModal = ({
           <CloseIcon />
         </IconButton>
       </Stack>
+
       <DialogContent>
         <Grid container sx={{ display: 'flex', height: '100%' }}>
           <Grid item xs={5}>
@@ -208,12 +246,12 @@ const InnerPtModal = ({
           {/* 버튼 영역 */}
           <Grid
             item
-            xs={2}
             sx={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'
             }}
+            xs={2}
           >
             <Stack spacing={1}>
               <StyledArrowBtn aria-label="add" onClick={handleAddBtn}>
@@ -226,7 +264,7 @@ const InnerPtModal = ({
           </Grid>
 
           {/* 적용 영역 */}
-          <Grid item xs={5} sx={{ paddingTop: '40px' }}>
+          <Grid item sx={{ paddingTop: '40px' }} xs={5}>
             <Typography variant="h6">적용 대상 </Typography>
             <Box
               sx={{
@@ -255,6 +293,7 @@ const InnerPtModal = ({
           </Grid>
         </Grid>
       </DialogContent>
+
       <DialogActions sx={{ paddingBottom: '20px' }}>
         <Box
           sx={{
@@ -286,12 +325,7 @@ const InnerPtModal = ({
   );
 };
 
-export default InnerPtModal;
-
-const StyledListContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-  border: `1px solid ${theme.palette.grey['500']}`
-}));
+export default BmMemModal;
 
 const StyledArrowBtn = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.grey['100']

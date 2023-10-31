@@ -11,5 +11,5 @@ export default MainContainer;
 const StyledMain = styled(Box)(({ theme }) => ({
   padding: PAGE_INNER_PADDING,
   width: '100%',
-  maxWidth: '1300px'
+  maxWidth: '1400px'
 }));

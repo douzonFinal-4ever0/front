@@ -21,22 +21,14 @@ import { palette } from '../../../../theme/palette';
 import styled from '@emotion/styled';
 import MemberListItem from '../list/MemberListItem';
 
-const GroupItem = ({ isDisabled, index, openList, setOpenList }) => {
-  const open = openList[index];
-
-  const handleClick = () => {
-    const updatedOpenList = [...openList];
-    updatedOpenList[index] = !open;
-    setOpenList(updatedOpenList);
-  };
+const GroupItem = ({ isDisabled, index, data }) => {
+  const { bm_group_name, mem_list } = data;
 
   return (
     <Accordion
-      expanded={open}
-      onChange={handleClick}
       sx={{
         boxShadow: 'none',
-        border: `1px solid ${palette.grey['100']}`,
+        border: `1px solid ${palette.grey['300']}`,
         borderRadius: '2px'
       }}
     >
@@ -45,25 +37,34 @@ const GroupItem = ({ isDisabled, index, openList, setOpenList }) => {
         <IconButton>
           <ExpandMoreIcon />
         </IconButton>
-        <Box sx={{ display: 'flex', gap: '50px', paddingLeft: '20px' }}>
-          <ListItemText
-            primary="그룹명이올시다"
-            sx={{ display: 'flex', alignItems: 'center' }}
-          />
-          <ListItemText
-            primary="총 6명"
-            sx={{ display: 'flex', alignItems: 'center' }}
-          />
-          <AvatarGroup
-            renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
-            total={10}
-          >
-            <Avatar alt="Remy Sharp" src={UserProfile} />
-            <Avatar alt="Travis Howard" src={UserProfile} />
-            <Avatar alt="Agnes Walker" src={UserProfile} />
-            <Avatar alt="Trevor Henderson" src={UserProfile} />
-          </AvatarGroup>
-        </Box>
+        <Grid container sx={{ marginLeft: '20px' }}>
+          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+            <ListItemText
+              primary={
+                <Typography fontWeight={700}>{bm_group_name}</Typography>
+              }
+              sx={{ display: 'flex', alignItems: 'center' }}
+            />
+          </Grid>
+          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+            <ListItemText
+              primary={`${mem_list.length}명`}
+              sx={{ display: 'flex', alignItems: 'center' }}
+            />
+          </Grid>
+          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+            <AvatarGroup
+              renderSurplus={(surplus) => (
+                <span>+{surplus.toString()[0]}k</span>
+              )}
+              total={mem_list.length}
+            >
+              {mem_list.map((mem, index) => (
+                <Avatar alt="Remy Sharp" src={UserProfile} key={index} />
+              ))}
+            </AvatarGroup>
+          </Grid>
+        </Grid>
         <StyledStarBtn disabled={isDisabled}>
           <StarRoundedIcon fontSize="large" color="warning" />
         </StyledStarBtn>
@@ -72,19 +73,16 @@ const GroupItem = ({ isDisabled, index, openList, setOpenList }) => {
       {/* 상세 멤버 리스트 */}
       <AccordionDetails>
         <List component="div">
-          <MemberListItem isDisabled={true} />
-          <MemberListItem isDisabled={true} />
-          <MemberListItem isDisabled={true} />
-          <MemberListItem isDisabled={true} />
+          {mem_list.map((item, index) => (
+            <MemberListItem isDisabled={true} data={item} />
+          ))}
         </List>
       </AccordionDetails>
     </Accordion>
   );
 };
 
-const BmGroupSection = () => {
-  const [openList, setOpenList] = useState(Array(12).fill(false)); // 12개의 ListItem를 위한 open 상태 배열
-
+const BmGroupSection = ({ data }) => {
   return (
     <Grid container sx={{ width: '100%', overflowY: 'auto' }}>
       <List
@@ -96,14 +94,8 @@ const BmGroupSection = () => {
           rowGap: '6px'
         }}
       >
-        {openList.map((open, index) => (
-          <GroupItem
-            key={index}
-            isDisabled={true}
-            index={index}
-            openList={openList}
-            setOpenList={setOpenList}
-          />
+        {data.map((item, index) => (
+          <GroupItem key={index} isDisabled={true} index={index} data={item} />
         ))}
       </List>
     </Grid>

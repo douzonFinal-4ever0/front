@@ -13,7 +13,12 @@ import {
 import styled from '@emotion/styled';
 import MemberListItem from '../list/MemberListItem';
 
-const BmMemberSection = ({ data }) => {
+const BmMemberSection = ({
+  data,
+  isModify,
+  deleteMemCodeList,
+  setDeleteMemCodeList
+}) => {
   return (
     <Grid container sx={{ width: '100%', overflowY: 'auto' }}>
       <List
@@ -25,22 +30,15 @@ const BmMemberSection = ({ data }) => {
           rowGap: '6px'
         }}
       >
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
-        <MemberListItem isDisabled={true} />
+        {data.map((item, index) => (
+          <MemberListItem
+            key={index}
+            isDisabled={!isModify}
+            data={item}
+            deleteMemCodeList={deleteMemCodeList}
+            setDeleteMemCodeList={setDeleteMemCodeList}
+          />
+        ))}
       </List>
     </Grid>
   );
