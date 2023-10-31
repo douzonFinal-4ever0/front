@@ -4,17 +4,43 @@ import LinearProgress, {
   linearProgressClasses
 } from '@mui/material/LinearProgress';
 import { Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../utils/axios';
 
-const CarCurrentMaint = () => {
-  const currentMaintList = [
-    { title: '엔진오일 및 필터', cycle: 10000, value: 23.5 },
-    { title: '에어컨 필터', cycle: 10000, value: 23.5 },
-    { title: '와이어 블레이드', cycle: 10000, value: 23.5 },
-    { title: '구동 벨트', cycle: 10000, value: 23.5 }
-  ];
+const CarCurrentMaint = ({ carCode }) => {
+  const [currentMaintList, setCurrentMaintList] = useState([]);
+  useEffect(() => {
+    axiosInstance
+      .get('/manager/car/currentMaint', {
+        params: {
+          car_code: carCode
+        }
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newData = res.data.map((item) => {
+          item.accum_mileage =
+            item.accum_mileage === null ? 0 : item.accum_mileage;
+          item.mileage = item.mileage === null ? 0 : item.mileage;
+          return {
+            title: item.maint_name,
+            cycle: item.cycle,
+            value: ((item.accum_mileage - item.mileage) / item.cycle) * 100
+          };
+        });
+        console.log(newData);
+        setCurrentMaintList(newData);
+      });
+  }, []);
+  // const currentMaintList = [
+  //   { title: '엔진오일 및 필터', cycle: 10000, value: 23.5 },
+  //   { title: '에어컨 필터', cycle: 10000, value: 23.5 },
+  //   { title: '와이어 블레이드', cycle: 10000, value: 23.5 },
+  //   { title: '구동 벨트', cycle: 10000, value: 23.5 }
+  // ];
 
   return (
-    <Box width="500px">
+    <Box width="500px" maxHeight="650px">
       <Stack sx={{ flexGrow: 1 }}>
         <Typography
           textAlign="center"
@@ -50,7 +76,7 @@ const CarCurrentMaint = () => {
               <BorderLinearProgress
                 variant="determinate"
                 value={item.value}
-                customColor="#ef5350"
+                customColor={item.value > 50 ? '#e53935' : '#66bb6a'}
               />
             </Stack>
           );
