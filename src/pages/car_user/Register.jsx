@@ -35,6 +35,7 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
+import { useSelector } from 'react-redux';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -55,10 +56,11 @@ const Register = () => {
     fuel_effciency: null,
     car_address: null
   });
-
+  const currentUser = useSelector((state) => state.user);
+  const mem_code = currentUser.mem_code;
   const [formData, setFormData] = useState({
     memDTO: {
-      mem_code: 'MEM001'
+      mem_code: mem_code
     },
     carDTO: {
       car_code: ''
@@ -86,7 +88,7 @@ const Register = () => {
   const initDest_loc = carRez ? carRez.loc[2].address : '';
 
   const [car_rez_code, setCar_rez_code] = useState(initCar_rez_code);
-  const [mem_code, setMem_code] = useState(initMem_code);
+  // const [mem_code, setMem_code] = useState(initMem_code);
   const [car_code, setCar_code] = useState(initCar_code);
   const [detail, setDetail] = useState(initDetail);
   const [est_mileage, setEst_mileage] = useState(initEst_mileage);
@@ -451,7 +453,9 @@ const Register = () => {
                       variant="outlined"
                       placeholder="이름을 입력하세요"
                       value={
-                        carRez !== null ? carRez.rez.memResponseVO.name : ''
+                        carRez !== null
+                          ? carRez.rez.memResponseVO.name
+                          : currentUser.name
                       }
                     />
                   </Grid>
@@ -489,7 +493,7 @@ const Register = () => {
                       value={
                         carRez !== null
                           ? carRez.rez.memResponseVO.position_name
-                          : ''
+                          : currentUser.position_name
                       }
                     />
                   </Grid>

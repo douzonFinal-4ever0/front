@@ -1,0 +1,123 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\KOSA\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/stompjs @types/sockjs-client
+
+PATH: 
+  C:\Program Files\Java\jdk-11.0.12\bin;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\PuTTY\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.332-1\jre\bin;C:\Program Files\ojdkbuild\java-1.8.0-openjdk-1.8.0.332-1\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\KOSA\AppData\Local\Microsoft\WindowsApps;C:\Users\KOSA\AppData\Local\GitHubDesktop\bin;;C:\Users\KOSA\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\KOSA\AppData\Roaming\npm;C:\Program Files\JetBrains\IntelliJ IDEA 2023.2.1\bin;
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.17.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, copyfile 'C:\Users\KOSA\AppData\Local\Yarn\Cache\v6\npm-@emotion-styled-11.11.0-26b75e1b5a1b7a629d7c0a8b708fbf5a9cdce346-integrity\node_modules\@emotion\styled\package.json' -> 'C:\final_work\front\node_modules\@emotion\styled\package.json'
+
+npm manifest: 
+  {
+    "name": "client",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@ckeditor/ckeditor5-build-classic": "^40.0.0",
+      "@ckeditor/ckeditor5-react": "^6.1.0",
+      "@emotion/cache": "^11.9.3",
+      "@emotion/react": "^11.11.1",
+      "@emotion/styled": "^11.11.0",
+      "@fullcalendar/core": "^6.1.9",
+      "@fullcalendar/daygrid": "^6.1.9",
+      "@fullcalendar/interaction": "^6.1.9",
+      "@fullcalendar/list": "^6.1.9",
+      "@fullcalendar/react": "^6.1.9",
+      "@fullcalendar/resource-timegrid": "^6.1.9",
+      "@fullcalendar/resource-timeline": "^6.1.9",
+      "@fullcalendar/timegrid": "^6.1.9",
+      "@mui/icons-material": "^5.8.4",
+      "@mui/lab": "^5.0.0-alpha.88",
+      "@mui/material": "^5.14.13",
+      "@mui/styled-engine-sc": "^6.0.0-alpha.1",
+      "@mui/system": "^5.8.6",
+      "@mui/utils": "^5.8.6",
+      "@mui/x-data-grid": "^6.16.1",
+      "@mui/x-date-pickers": "^6.16.2",
+      "@mui/x-tree-view": "^6.17.0",
+      "@reduxjs/toolkit": "^1.9.7",
+      "@tabler/icons": "^1.72.0",
+      "apexcharts": "^3.35.3",
+      "axios": "^1.5.1",
+      "dayjs": "^1.11.10",
+      "formik": "^2.2.9",
+      "framer-motion": "^6.3.16",
+      "material-ui-popup-state": "^4.0.1",
+      "prop-types": "^15.8.1",
+      "react": "^18.2.0",
+      "react-apexcharts": "^1.4.0",
+      "react-complex-tree": "^2.2.3",
+      "react-daum-postcode": "^3.1.3",
+      "react-device-detect": "^2.2.2",
+      "react-dom": "^18.2.0",
+      "react-helmet": "^6.1.0",
+      "react-kakao-maps-sdk": "^1.1.21",
+      "react-material-ui-carousel": "^3.4.2",
+      "react-perfect-scrollbar": "^1.5.8",
+      "react-redux": "^8.1.3",
+      "react-router": "6.3.0",
+      "react-router-dom": "^6.16.0",
+      "react-scripts": "^5.0.1",
+      "redux": "^4.2.0",
+      "sockjs-client": "^1.6.1",
+      "stomp-websocket": "^2.3.4-next",
+      "styled-components": "^6.0.9",
+      "yup": "^0.32.11"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "db": "json-server --watch db.json --port 3001"
+    },
+    "babel": {
+      "presets": [
+        "@babel/preset-react"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        "defaults",
+        "not IE 11"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "@babel/core": "^7.21.4",
+      "@babel/eslint-parser": "^7.21.3",
+      "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+      "eslint": "^8.38.0",
+      "eslint-config-prettier": "^8.10.0",
+      "eslint-config-react-app": "^7.0.1",
+      "eslint-plugin-flowtype": "^8.0.3",
+      "eslint-plugin-import": "^2.27.5",
+      "eslint-plugin-jsx-a11y": "^6.7.1",
+      "eslint-plugin-prettier": "^4.2.1",
+      "eslint-plugin-react": "^7.32.2",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "immutable": "^4.3.0",
+      "prettier": "3.0.3",
+      "sass": "^1.53.0"
+    },
+    "proxy": "http://localhost:8081/"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
