@@ -36,8 +36,11 @@ import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
 import { useSelector } from 'react-redux';
+import Spinner from '../../components/common/Spinner';
+import LoadingModal from '../../components/car_user/LoadingModal';
 
 const Register = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const carRez = location.state;
@@ -432,6 +435,7 @@ const Register = () => {
           setEst_mileage(
             (response.features[0].properties.totalDistance / 1000).toFixed(1)
           );
+          setIsLoading(false);
         })
         .catch((err) => console.error(err));
     }
@@ -507,6 +511,7 @@ const Register = () => {
           `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
         )
         .then((res) => {
+          setIsLoading(true);
           const locList = res.data;
           console.log(locList);
           est_mileageCal(locList);
@@ -942,6 +947,7 @@ const Register = () => {
                       value={carRez ? est_mileage : formData.est_mileage}
                     />
                   </Grid>
+                  <LoadingModal open={isLoading} />
                 </Grid>
               </Stack>
             </Item>
