@@ -116,7 +116,6 @@ const BmPage = () => {
       deleteMemCodeList
     });
 
-    console.log(res);
     setIsModify(false);
     // 토스트 메시지 제공
   };
