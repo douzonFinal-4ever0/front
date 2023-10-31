@@ -17,7 +17,7 @@ const Sidebar = (props) => {
   const role = useSelector((state) => state.user.role);
 
   let roleToAdmin = false;
-  if (role === '관리자') {
+  if (role == '관리자') {
     roleToAdmin = true;
     // setRoleToAdmin(true);
   } else {
