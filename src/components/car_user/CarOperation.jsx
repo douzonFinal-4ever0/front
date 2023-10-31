@@ -15,7 +15,13 @@ import {
   TextField,
   Typography,
   Select,
-  MenuItem
+  MenuItem,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  ListItemAvatar,
+  Avatar,
+  List
 } from '@mui/material';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import { useState } from 'react';
@@ -144,8 +150,8 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
         .post(`http://localhost:8081/car_rez/operation`, formData)
         .then((res) => {
           console.log(res.data);
-          // alert('운행 처리 완료');
-          // handleClose();
+          alert('운행 처리 완료');
+          handleClose();
         });
     }
   };
@@ -467,12 +473,35 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     {/* <ImageList sx={1} cols={1} rowHeight={'auto'}>
                   {images.map((item, index) => (
                     <ImageListItem key={index}> */}
-                    {images !== null && (
+                    {/* {images !== null && (
                       <img src={images.src} alt={images.title} loading="lazy" />
-                    )}
+                    )} */}
                     {/* </ImageListItem> */}
                     {/* ))} */}
                     {/* </ImageList> */}
+                    <List dense component="div" role="list">
+                      {formData.expenditureDTO &&
+                        formData.expenditureDTO.map((exp, index) => {
+                          return (
+                            <ListItem key={index}>
+                              <ListItemButton>
+                                <ListItemAvatar>
+                                  {images && (
+                                    <Avatar
+                                      alt={images.title}
+                                      src={images.src}
+                                    />
+                                  )}
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={exp.exp_content}
+                                  secondary={exp.cost + '원'}
+                                />
+                              </ListItemButton>
+                            </ListItem>
+                          );
+                        })}
+                    </List>
                   </Grid>
                 </Grid>
                 <Grid container xs={12} justifyContent="center">

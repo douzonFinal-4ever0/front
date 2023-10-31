@@ -34,7 +34,7 @@ import styled from '@emotion/styled';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Searchbar from '../../components/common/Searchbar';
 import NoRow from '../../components/car_user/NoRow';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Drawer from '../../components/common/Drawer';
 import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 import CarRezDetail from '../../components/car_user/CarRezDetail';
@@ -43,10 +43,12 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import CarOperation from '../../components/car_user/CarOperation';
 import axiosInstance from '../../utils/axios';
+import { useQuery } from 'react-query';
+
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('0');
-  const mem_code = 'MEM001';
+
   const [open, setOpen] = useState(false);
   // const [flag, setFlag] = useState(false);
   const dateFormat = (date) => {
@@ -60,6 +62,33 @@ const Dashboard = () => {
     };
     return preDate.toLocaleString('ko-KR', options);
   };
+  const currentUser = useSelector((state) => state.user);
+  const mem_code = currentUser.mem_code;
+  console.log(currentUser);
+  const { rezData, error } = useQuery(
+    ['rezList', mem_code, range],
+    () => {
+      axiosInstance
+        .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
+        .then((res) => {
+          // console.log(res.data);
+          const rezData = res.data.map((item) => ({
+            ...item,
+            id: item.car_rez_code,
+            start_at: dateFormat(item.start_at),
+            return_at: dateFormat(item.return_at),
+            during:
+              dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+          }));
+          console.log(rezData);
+          setCarRez(rezData);
+          return rezData;
+        });
+    },
+    {
+      staleTime: 1000
+    }
+  );
   const handleOpen = () => {
     setOpen(true);
   };
