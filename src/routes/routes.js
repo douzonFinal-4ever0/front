@@ -80,7 +80,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
       children: [
-        { element: <Navigate to="admin/mr/dashboard" />, index: true },
+        { element: <Navigate to="/mr/dashboard" />, index: true },
         { path: 'MrList', element: <MrAdminMrListPage /> },
         { path: 'MrRegister', element: <MrAdminRegisterPage /> },
         { path: 'Notice', element: <MrAdminNoticePage /> },
@@ -121,8 +121,40 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     }
   ];
-  // accessAdmin을 기반으로 경로를 필터링합니다.
+
   const filteredRoutes = [];
+
+  // 항상 로그인 페이지는 접속 가능
+  filteredRoutes.push({
+    path: '/',
+    children: [
+      { element: <Navigate to="/login" />, index: true },
+      { path: 'login', element: <LoginPage /> }
+    ]
+  });
+
+  if (access === false) {
+    // access가 false인 경우, 로그인 페이지로 리다이렉트
+    <Navigate to="/login" />;
+  } else if (access === true) {
+    if (accessAdmin === false) {
+      // access가 true이고 accessAdmin이 false인 경우, ${isAdminRoute}이 없는 경로만 허용
+      const nonAdminRoutes = routes.filter((route) => {
+        if (isAdminRoute === '') {
+          // isAdminRoute가 비어 있을 때, 빈 문자열이 아닌 경우만 추가
+          return route.path !== '';
+        } else {
+          // isAdminRoute가 비어 있지 않을 때는 포함 여부 확인
+          return !route.path.includes(isAdminRoute);
+        }
+      });
+
+      filteredRoutes.push(...nonAdminRoutes);
+    } else {
+      // access가 true이고 accessAdmin이 true인 경우, 모든 경로 허용
+      filteredRoutes.push(...routes);
+    }
+  }
 
   return useRoutes(routes);
 };

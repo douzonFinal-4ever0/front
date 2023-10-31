@@ -271,7 +271,7 @@ const CarMaint = ({ carCode }) => {
               horizontal: 'left'
             }}
           >
-            <CarCurrentMaint />
+            <CarCurrentMaint carCode={carCode} />
           </Popover>
         </Box>
       </Box>
