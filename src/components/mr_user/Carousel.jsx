@@ -3,15 +3,14 @@ import { Box } from '@mui/material';
 import styled from '@emotion/styled';
 
 const Carousel = ({ data }) => {
-  const list = data.images;
-
   return (
     <MuiCarousel indicators={false} autoPlay={false}>
-      {list.map((item) => (
-        <StyledImageBox key={item.imgCode}>
-          <StyledImage src={item.url} />
-        </StyledImageBox>
-      ))}
+      {data &&
+        data.map((item) => (
+          <StyledImageBox key={item.img_code}>
+            <StyledImage src={item.url} />
+          </StyledImageBox>
+        ))}
     </MuiCarousel>
   );
 };
