@@ -26,6 +26,7 @@ import Label from '../../../../components/common/Label';
 
 import { palette } from '../../../../theme/palette';
 import axiosInstance from '../../../../utils/axios';
+import { useEffect } from 'react';
 
 const BmMemModal = ({
   selectTab, // 멤버, 그룹, 회의실
@@ -40,8 +41,8 @@ const BmMemModal = ({
 }) => {
   // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
-  // (좌측창) 전체 리스트에서 선택된 멤버
-  const [addMemName, setAddMemName] = useState(null);
+  // (좌측창) 전체 리스트에서 선택된 멤버 리스트
+  const [addMemName, setAddMemName] = useState([]);
   // 모달창 그룹명
   const [groupName, setGroupName] = useState('');
   // 선택된 토글 버튼 값
@@ -93,9 +94,13 @@ const BmMemModal = ({
   const handleSelect = (event, nodeIds) => {
     const selecMem = list.filter((mem) => mem.name === nodeIds);
     if (selecMem.length !== 0) {
-      setAddMemName(selecMem[0].mem_code);
+      setAddMemName([...addMemName, selecMem[0].mem_code]);
     }
   };
+
+  useEffect(() => {
+    console.log(addMemName);
+  }, [addMemName]);
 
   // 선택된 참석자 아이템 클릭 이벤트
   const handlePtItem = (event, nodeId) => {

@@ -37,8 +37,10 @@ const InnerPtModal = ({
 
   // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
-  // (좌측창) 전체 리스트에서 선택된 멤버
-  const [addMemName, setAddMemName] = useState(null);
+
+  // (좌측창) 전체 리스트에서 선택된 멤버 리스트
+  const [addMemList, setAddMemList] = useState([]);
+
   // 즐겨찾기 리스트에서 선택된 멤버
   const [addBmMems, setAddBmMems] = useState([]);
 
@@ -94,9 +96,28 @@ const InnerPtModal = ({
 
   // 트리 데이터 아이템 클릭 이벤트
   const handleSelect = (event, nodeIds) => {
-    const selecMem = list.filter((mem) => mem.name === nodeIds);
-    if (selecMem.length !== 0) {
-      setAddMemName(selecMem[0].mem_code);
+    // 그룹명 클릭 오류 방지
+    const groupList = [];
+    result.forEach((group) => groupList.push(group.dept));
+    const isGroup = groupList.filter((item) => item === nodeIds);
+    if (isGroup.length !== 0) return;
+
+    // 클릭된 멤버 정보 찿기
+    const selectMem = list.filter((mem) => mem.name === nodeIds);
+
+    // 멤버 중복 오류 방지
+    addMemList.forEach((item) => {
+      if (item === selectMem.mem_code) return;
+    });
+
+    // 기존에 등록된 멤버 오류 방지
+    const isExist = addMemList.filter((mem) => mem === selectMem[0].mem_code);
+    if (isExist.length !== 0) return;
+
+    // 선택된 멤버 코드 addMemList에 담기
+    if (selectMem.length !== 0) {
+      const res = [...addMemList, selectMem[0].mem_code];
+      setAddMemList(res);
     }
   };
 
@@ -114,19 +135,26 @@ const InnerPtModal = ({
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
     if (selectBtn === 'all') {
-      const addMem = list.filter((mem) => mem.mem_code === addMemName);
-      const isExist = selectMems.find(
-        (item) => item.mem_code === addMem[0].mem_code
-      );
-      if (isExist) return;
-      setSelectMems([...selectMems, ...addMem]);
-      return;
+      // 적용 대상 리스트에 이미 존재하는 멤버일 경우 제외시키기
+      addMemList.forEach((mem) => {
+        const dulicationMem = selectMems.find((item) => item === mem);
+        const newArr = addMemList.filter((item) => item !== dulicationMem);
+        setAddMemList(newArr);
+      });
+
+      // 최종 멤버들
+      const res = [];
+      addMemList.forEach((pickMem) => {
+        const member = list.filter((item) => item.mem_code === pickMem);
+        res.push(...member);
+      });
+      setSelectMems([...res]);
     }
 
-    if (selectBtn === 'bm') {
-      setSelectMems([...selectMems, ...addBmMems]);
-      return;
-    }
+    // if (selectBtn === 'bm') {
+    //   setSelectMems([...selectMems, ...addBmMems]);
+    //   return;
+    // }
   };
 
   // 제외 버튼 이벤트
@@ -140,6 +168,12 @@ const InnerPtModal = ({
     const newRezData = { ...rezData, mr_pt_list: selectMems };
     dispatch(setRezData({ data: newRezData }));
     //setSelectMems([]); //초기화
+    handleModal();
+  };
+
+  // 취소 버튼 이벤트
+  const handleCancelBtn = () => {
+    setAddMemList([]); // 초기화
     handleModal();
   };
 
@@ -307,9 +341,20 @@ const InnerPtModal = ({
                 {selectMems &&
                   selectMems.map((item, index) => (
                     <TreeItem
-                      nodeId={item.name}
-                      label={item.name}
-                      key={index}
+                      nodeId={item.mem_code}
+                      key={item.mem_code}
+                      label={
+                        <Stack direction={'row'} gap={1}>
+                          <Typography
+                            sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                          >
+                            {item.name}
+                          </Typography>
+                          <Typography sx={{ fontSize: '13px' }}>
+                            ({item.email})
+                          </Typography>
+                        </Stack>
+                      }
                     />
                   ))}
               </TreeView>
@@ -332,7 +377,7 @@ const InnerPtModal = ({
               text={'취소'}
               category={'cancel'}
               sx={{ padding: '10px 8px' }}
-              handlebtn={handleModal}
+              handlebtn={handleCancelBtn}
             />
             <RectangleBtn
               type={'button'}

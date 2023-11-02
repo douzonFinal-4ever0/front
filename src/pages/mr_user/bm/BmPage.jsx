@@ -14,12 +14,13 @@ import RectangleBtn from '../../../components/common/RectangleBtn';
 import BmMemModal from './modal/BmMemModal';
 
 const BmPage = () => {
-  // 사용자 정보 (**** 추후 작업 예정)
+  // 사용자 정보
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;
+
   // 삭제할 멤버 번호 리스트
   const [deleteMemCodeList, setDeleteMemCodeList] = useState([]);
-  // 선택한 탭
+  // 선택한 페이지 탭 (멤버/그룹/회의실)
   const [selectTab, setSelectTab] = useState(0);
   // 수정 활성화 여부
   const [isModify, setIsModify] = useState(false);
@@ -30,7 +31,7 @@ const BmPage = () => {
 
   //=====================================================
 
-  // 서버에서 전달받은 멤버 리스트
+  // 서버에서 전달받은 전체 멤버 리스트
   const [members, setMembers] = useState([]);
   // 모달창 적용 대상 리스트
   const [selectMems, setSelectMems] = useState([]);
@@ -81,15 +82,14 @@ const BmPage = () => {
     bmGroupMemApi();
   }, []);
 
-  // 탭 버튼 이벤트
+  // 페이지 탭 버튼 이벤트
   const handleTabClick = (event, newValue) => {
     setSelectTab(newValue);
   };
 
   // 삭제 버튼 이벤트
   const handleDeleteBtn = () => {
-    console.log('수정');
-    // MemItem 수정 활성화 => row 컬러 변경 && 버튼 클릭 활성화 && 확인/취소 버튼
+    console.log('삭제');
     setIsModify(true);
   };
 
