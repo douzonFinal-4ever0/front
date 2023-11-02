@@ -21,13 +21,15 @@ import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
 
 // 서브 사이드바 콘텐츠
-const SubSideContents = ({ setSelectedRows }) => {
+const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
   const [searchInput, setSearchInput] = useState('');
   //const [carCode, setCarCode] = useState('');
   const [rows, setRows] = useState([]);
   useEffect(() => {
     axiosInstance
-      .get('http://localhost:8081/car_rez/availableCars')
+      .get(
+        `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
+      )
       .then((res) => {
         setRows(
           res.data.map((car) => ({

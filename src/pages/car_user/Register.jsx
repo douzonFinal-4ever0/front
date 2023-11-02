@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -330,11 +330,16 @@ const Register = () => {
     if (rezStart_at === null || rezReturn_at === null) {
       alert('날짜를 입력해주세요');
     } else {
-      setOpen(true);
-      console.log('대여일:' + rezStart_at);
-      console.log('반납일: ' + rezReturn_at);
+      console.log('대여일:' + Date.parse(rezStart_at));
+      console.log('반납일: ' + Date.parse(rezStart_at));
+      if (Date.parse(rezStart_at) > Date.parse(rezStart_at)) {
+        alert('대여일이 반납일보다 늦습니다');
+      } else {
+        setOpen(true);
+      }
     }
   };
+
   //modal 닫는 함수
   const handleCloseModal = (reason) => {
     if (reason === 'buttonClick') {
@@ -500,22 +505,53 @@ const Register = () => {
     setDest_loc(initDest_loc);
   }, []);
   useEffect(() => {
-    console.log('asdasdasdasda');
-    console.log(receipt_loc);
-    console.log(return_loc);
-    console.log(addressObj);
-    if ((receipt_loc !== '') & (return_loc !== '') & (addressObj !== '')) {
-      let dest_loc = addressObj.areaAddress + addressObj.townAddress;
-      axiosInstance
-        .get(
-          `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
-        )
-        .then((res) => {
-          setIsLoading(true);
-          const locList = res.data;
-          console.log(locList);
-          est_mileageCal(locList);
-        });
+    if (carRez) {
+      console.log('update');
+      console.log(receipt_loc);
+      console.log(return_loc);
+      console.log(addressObj);
+      console.log(updateData);
+      if (
+        (receipt_loc !== '') &
+        (return_loc !== '') &
+        (updateData.dest_loc !== '')
+      ) {
+        let dest_loc;
+        if ((addressObj.areaAddress === '') & (addressObj.townAddress === '')) {
+          dest_loc = updateData.dest_loc;
+        } else {
+          dest_loc = addressObj.areaAddress + addressObj.townAddress;
+        }
+
+        axiosInstance
+          .get(
+            `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
+          )
+          .then((res) => {
+            setIsLoading(true);
+            const locList = res.data;
+            console.log(locList);
+            est_mileageCal(locList);
+          });
+      }
+    } else {
+      console.log('asdasdasdasda');
+      console.log(receipt_loc);
+      console.log(return_loc);
+      console.log(addressObj);
+      if ((receipt_loc !== '') & (return_loc !== '') & (addressObj !== '')) {
+        let dest_loc = addressObj.areaAddress + addressObj.townAddress;
+        axiosInstance
+          .get(
+            `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
+          )
+          .then((res) => {
+            setIsLoading(true);
+            const locList = res.data;
+            console.log(locList);
+            est_mileageCal(locList);
+          });
+      }
     }
   }, [receipt_loc, return_loc, addressObj]);
   return (
@@ -524,10 +560,10 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <Grid
           container
-          spacing={2}
+          spacing={3}
           style={{ paddingTop: 16, paddingLeft: 16, paddingRight: 16 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
                 <Box
@@ -699,7 +735,11 @@ const Register = () => {
                       handleModal={(e, reason) => handleCloseModal(reason)}
                       modalTitle={'차량 찾기'}
                       content={
-                        <SubSideContents setSelectedRows={setSelectedRows} />
+                        <SubSideContents
+                          setSelectedRows={setSelectedRows}
+                          rezStart_at={rezStart_at}
+                          rezReturn_at={rezReturn_at}
+                        />
                       }
                       buttons={
                         <Grid
@@ -747,7 +787,7 @@ const Register = () => {
             </Item>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
                 <Box
@@ -949,6 +989,36 @@ const Register = () => {
                   </Grid>
                   <LoadingModal open={isLoading} />
                 </Grid>
+              </Stack>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            {' '}
+            <Item>
+              <Stack sx={{ rowGap: '10px' }}>
+                <Box
+                  display="flex"
+                  marginTop="15px"
+                  sx={{
+                    width: '100%',
+                    borderBottom: '3px solid black',
+                    padding: '5px 0px'
+                  }}
+                  mb={1}
+                >
+                  <RectangleIcon
+                    sx={{
+                      color: 'black',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      width: '6px',
+                      height: '6px'
+                    }}
+                  />
+                  <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
+                    운행 예상 정보
+                  </Typography>
+                </Box>
               </Stack>
             </Item>
           </Grid>
