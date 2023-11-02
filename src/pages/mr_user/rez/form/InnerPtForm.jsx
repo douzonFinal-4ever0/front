@@ -37,7 +37,10 @@ const InnerPtForm = () => {
   const [memList, setMemList] = useState([]);
   // 즐겨찾기 그룹
   const [groupList, setGroupList] = useState([]);
-
+  // 전체 멤버 리스트 클릭 시 컬러 활성화 여부
+  const [buttonStates, setButtonStates] = useState([]);
+  // 적용 대상 리스트 클릭 시 컬러 활성화 여부
+  const [isApplyToggle, setIsApplyToggle] = useState([]);
   // 참석자 추가 버튼 이벤트
   const handleInnerPtBtn = async () => {
     // 전체 멤버 조회
@@ -75,6 +78,8 @@ const InnerPtForm = () => {
 
     setMemList([...memResult]);
     setGroupList([...groupedData]);
+    setButtonStates(Array.from({ length: memResult.length }, () => false));
+    setIsApplyToggle(Array.from({ length: mr_pt_list.length }, () => false));
 
     setSelectMems(mr_pt_list);
     setOpenModal(!openModal);
@@ -138,6 +143,10 @@ const InnerPtForm = () => {
         selectMems={selectMems}
         setSelectMems={setSelectMems}
         groupList={groupList}
+        buttonStates={buttonStates}
+        setButtonStates={setButtonStates}
+        isApplyToggle={isApplyToggle}
+        setIsApplyToggle={setIsApplyToggle}
       />
     </>
   );

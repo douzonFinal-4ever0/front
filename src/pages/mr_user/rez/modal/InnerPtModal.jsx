@@ -23,6 +23,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 import Toggle from '../../../../components/common/Toggle';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
+import { palette } from '../../../../theme/palette';
 
 const InnerPtModal = ({
   open,
@@ -30,10 +31,15 @@ const InnerPtModal = ({
   list,
   selectMems,
   setSelectMems,
-  groupList
+  groupList,
+  buttonStates,
+  setButtonStates,
+  isApplyToggle,
+  setIsApplyToggle
 }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
+  const { mr_pt_list } = rezData;
 
   // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState([]);
@@ -96,7 +102,23 @@ const InnerPtModal = ({
 
   // 트리 데이터 아이템 클릭 이벤트
   const handleSelect = (event, nodeIds) => {
-    // 그룹명 클릭 오류 방지
+    // 아이템 클릭 시 컬러 변경
+    const index = list.findIndex((item) => item.name === nodeIds);
+
+    if (index !== -1) {
+      const newButtonStates = [...buttonStates];
+      newButtonStates[index] = !newButtonStates[index];
+      setButtonStates(newButtonStates);
+    }
+
+    // 선택 클릭 해제 시 addMemList 리스트에서 제거
+    if (buttonStates[index]) {
+      const mem = list.filter((item) => item.name === nodeIds);
+      const newArr = [...addMemList].filter((item) => item !== mem[0].mem_code);
+      setAddMemList(newArr);
+    }
+
+    //그룹명 클릭 오류 방지
     const groupList = [];
     result.forEach((group) => groupList.push(group.dept));
     const isGroup = groupList.filter((item) => item === nodeIds);
@@ -115,14 +137,27 @@ const InnerPtModal = ({
     if (isExist.length !== 0) return;
 
     // 선택된 멤버 코드 addMemList에 담기
-    if (selectMem.length !== 0) {
+    if (selectMem.length !== 0 && !buttonStates[index]) {
       const res = [...addMemList, selectMem[0].mem_code];
       setAddMemList(res);
+      setIsApplyToggle([
+        ...isApplyToggle,
+        ...Array.from({ length: res.length }, () => false)
+      ]);
     }
   };
 
   // 적용 대상 아이템 클릭 이벤트
   const handlePtItem = (event, nodeId) => {
+    // 아이템 클릭 시 컬러 변경
+    const index = mr_pt_list.findIndex((item) => item.mem_code === nodeId);
+
+    if (index !== -1) {
+      const newButtonStates = [...isApplyToggle];
+      newButtonStates[index] = !newButtonStates[index];
+      setIsApplyToggle(newButtonStates);
+    }
+
     // 중복 선택 오류 방지
     const res = checkMemName.filter((item) => item === nodeId);
     if (res.length !== 0) return;
@@ -138,53 +173,85 @@ const InnerPtModal = ({
 
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
+    // 1) 전체 토글================================================
     if (selectBtn === 'all') {
       // 적용 대상 리스트에 이미 존재하는 멤버일 경우 제외시키기
-      addMemList.forEach((mem) => {
-        const dulicationMem = selectMems.find((item) => item === mem);
-        const newArr = addMemList.filter((item) => item !== dulicationMem);
-        setAddMemList(newArr);
+      let copyArr = [...addMemList];
+      selectMems.forEach((item) => {
+        const res = copyArr.filter((a) => a !== item.mem_code);
+        copyArr = [...res];
       });
+
+      setAddMemList(copyArr);
 
       // 최종 멤버들
       const res = [];
-      addMemList.forEach((pickMem) => {
+      copyArr.forEach((pickMem) => {
         const member = list.filter((item) => item.mem_code === pickMem);
         res.push(...member);
       });
       setSelectMems([...selectMems, ...res]);
       setAddMemList([]); //초기화
+      setButtonStates(Array.from({ length: list.length }, () => false)); // 초기화
     }
 
-    // if (selectBtn === 'bm') {
-    //   setSelectMems([...selectMems, ...addBmMems]);
-    //   return;
-    // }
+    // 2) 즐겨찾기 토글================================================
+    if (selectBtn === 'bm') {
+      setSelectMems([...selectMems, ...addBmMems]);
+      return;
+    }
   };
 
   // 제외 버튼 이벤트
   const handleDeleteBtn = () => {
     let res = [...selectMems];
+
     checkMemName.forEach((item) => {
       const member = res.filter((mem) => mem.mem_code !== item);
       res = member;
     });
 
     setSelectMems(res);
+    setIsApplyToggle(Array.from({ length: res.length }, () => false));
   };
 
   // 확인 버튼 이벤트
   const handleConfirm = () => {
     const newRezData = { ...rezData, mr_pt_list: selectMems };
+    handleModal();
     dispatch(setRezData({ data: newRezData }));
     //setSelectMems([]); //초기화
-    handleModal();
   };
 
   // 취소 버튼 이벤트
   const handleCancelBtn = () => {
     setAddMemList([]); // 초기화
+    setButtonStates(Array.from({ length: list.length }, () => false)); // 초기화
     handleModal();
+  };
+
+  // 이미 등록된 멤버 표시하는 라벨
+  const InitLabel = ({ code }) => {
+    const res = mr_pt_list.filter((item) => item.mem_code === code);
+
+    if (res.length !== 0) {
+      return (
+        <Typography
+          sx={{
+            padding: '2px 4px',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '11px',
+            borderRadius: '2px',
+            backgroundColor: palette.grey['100']
+          }}
+        >
+          등록
+        </Typography>
+      );
+    }
+
+    return null;
   };
 
   const ContentByToggle = () => {
@@ -198,9 +265,10 @@ const InnerPtModal = ({
             onNodeSelect={handleSelect}
           >
             {result.map((item, index) => (
-              <TreeItem nodeId={item.dept} label={item.dept} key={index}>
+              <TreeItem nodeId={item.dept} label={item.dept} key={item.dept}>
                 {item.members.map((item, index) => (
                   <TreeItem
+                    key={item.mem_code}
                     nodeId={item.name}
                     label={
                       <Stack direction={'row'} gap={1}>
@@ -212,8 +280,16 @@ const InnerPtModal = ({
                         <Typography sx={{ fontSize: '13px' }}>
                           ({item.email})
                         </Typography>
+                        <InitLabel code={item.mem_code} />
                       </Stack>
                     }
+                    sx={{
+                      color: buttonStates[
+                        list.findIndex((i) => i.name === item.name)
+                      ]
+                        ? palette.primary.main
+                        : palette.grey['900']
+                    }}
                   />
                 ))}
               </TreeItem>
@@ -365,6 +441,17 @@ const InnerPtModal = ({
                           </Typography>
                         </Stack>
                       }
+                      sx={{
+                        color:
+                          isApplyToggle &&
+                          isApplyToggle[
+                            mr_pt_list.findIndex(
+                              (i) => i.mem_code === item.mem_code
+                            )
+                          ]
+                            ? palette.primary.main
+                            : palette.grey['900']
+                      }}
                     />
                   ))}
               </TreeView>

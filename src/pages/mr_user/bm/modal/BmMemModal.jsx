@@ -39,6 +39,7 @@ const BmMemModal = ({
   master,
   bmGroupMemApi
 }) => {
+  console.log(initList);
   // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
   // (좌측창) 전체 리스트에서 선택된 멤버 리스트
