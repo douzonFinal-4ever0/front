@@ -36,7 +36,7 @@ const InnerPtModal = ({
   const rezData = useSelector(setRezData).payload.mrUser;
 
   // (우측창) 적용 대상 리스트에서 선택된 멤버
-  const [checkMemName, setCheckMemName] = useState(null);
+  const [checkMemName, setCheckMemName] = useState([]);
 
   // (좌측창) 전체 리스트에서 선택된 멤버 리스트
   const [addMemList, setAddMemList] = useState([]);
@@ -121,15 +121,19 @@ const InnerPtModal = ({
     }
   };
 
+  // 적용 대상 아이템 클릭 이벤트
+  const handlePtItem = (event, nodeId) => {
+    // 중복 선택 오류 방지
+    const res = checkMemName.filter((item) => item === nodeId);
+    if (res.length !== 0) return;
+
+    setCheckMemName([...checkMemName, nodeId]);
+  };
+
   // 즐겨찾기 트리 데이터 클릭 이벤트
   const handleBmGroup = (event, nodeId) => {
     const res = groupList.filter((group) => group.bm_group_name === nodeId);
     setAddBmMems([...res[0].mem_list]);
-  };
-
-  // 선택된 참석자 아이템 클릭 이벤트
-  const handlePtItem = (event, nodeId) => {
-    setCheckMemName(nodeId);
   };
 
   // 추가 버튼 이벤트
@@ -148,7 +152,8 @@ const InnerPtModal = ({
         const member = list.filter((item) => item.mem_code === pickMem);
         res.push(...member);
       });
-      setSelectMems([...res]);
+      setSelectMems([...selectMems, ...res]);
+      setAddMemList([]); //초기화
     }
 
     // if (selectBtn === 'bm') {
@@ -159,8 +164,13 @@ const InnerPtModal = ({
 
   // 제외 버튼 이벤트
   const handleDeleteBtn = () => {
-    const lestMems = selectMems.filter((mem) => mem.name !== checkMemName);
-    setSelectMems([...lestMems]);
+    let res = [...selectMems];
+    checkMemName.forEach((item) => {
+      const member = res.filter((mem) => mem.mem_code !== item);
+      res = member;
+    });
+
+    setSelectMems(res);
   };
 
   // 확인 버튼 이벤트
