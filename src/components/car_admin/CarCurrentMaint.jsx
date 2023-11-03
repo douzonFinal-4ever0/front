@@ -32,12 +32,6 @@ const CarCurrentMaint = ({ carCode }) => {
         setCurrentMaintList(newData);
       });
   }, []);
-  // const currentMaintList = [
-  //   { title: '엔진오일 및 필터', cycle: 10000, value: 23.5 },
-  //   { title: '에어컨 필터', cycle: 10000, value: 23.5 },
-  //   { title: '와이어 블레이드', cycle: 10000, value: 23.5 },
-  //   { title: '구동 벨트', cycle: 10000, value: 23.5 }
-  // ];
 
   return (
     <Box width="500px" maxHeight="650px">
@@ -75,7 +69,7 @@ const CarCurrentMaint = ({ carCode }) => {
               </Box>
               <BorderLinearProgress
                 variant="determinate"
-                value={item.value}
+                value={item.value > 100 ? 100 : item.value}
                 customColor={item.value > 50 ? '#e53935' : '#66bb6a'}
               />
             </Stack>
