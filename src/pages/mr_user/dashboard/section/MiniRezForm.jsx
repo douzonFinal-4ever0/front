@@ -71,16 +71,17 @@ const MiniRezForm = () => {
       tot_pt_ctn
     };
 
-    console.log('버튼 클릭 시작');
-    const res = await axiosInstance.get('/mr/recommend', { params: data });
-    if (!res.data) return;
-    console.log(res);
-    console.log('버튼 클릭 종료');
+    try {
+      const res = await axiosInstance.get('/mr/recommend', { params: data });
+      if (!res.status === 200) return;
 
-    // 리덕스 저장
-    dispatch(setMrRecommendData({ data: res.data }));
-    // 페이지 이동
-    navigation('/mr/rez');
+      // 리덕스 저장
+      dispatch(setMrRecommendData({ data: res.data }));
+      // 페이지 이동
+      navigation('/mr/rez');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
