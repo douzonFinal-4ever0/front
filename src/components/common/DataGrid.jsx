@@ -163,7 +163,11 @@ const DataGrid = ({
     >
       <MuiDataGrid
         sx={{
-          border: palette.grey['500']
+          border: palette.grey['500'],
+          borderRadius: '2px',
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+            outline: 'none !important'
+          }
         }}
         rows={rows}
         columns={columns}

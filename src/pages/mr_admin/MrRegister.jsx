@@ -15,31 +15,9 @@ import axios from 'axios';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
 const MrRegister = () => {
-  // const token = localStorage.getItem('jwtToken'); // localStorage에서 토큰을 가져옴
-
-  // axios.defaults.headers.common['Authorization'] = token;
-  // const [jwtToken, setJwtToken] = useState('');
-  // // JWT 토큰을 localStorage에서 가져오기
-  // useEffect(() => {
-  //   const storedJwtToken = localStorage.getItem('jwtToken');
-  //   if (storedJwtToken) {
-  //     setJwtToken(storedJwtToken);
-  //   }
-  // }, []);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
-  /**탭에 들어가는 데이터 */
-  const tabData = [
-    {
-      title: isEditMode ? '회의실 수정' : '회의실 등록',
-      content: (
-        <MrRegistForm
-          selectedRowData={selectedRowData}
-          isEditMode={isEditMode}
-        />
-      )
-    }
-  ];
+
   const dispatch = useDispatch();
 
   /**오프캔버스 열기 */
@@ -74,7 +52,7 @@ const MrRegister = () => {
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
   const handleMrListUpdate = () => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/mr/mrList')
       .then((res) => {
         const processedData = res.data.map((item) => ({
@@ -94,6 +72,19 @@ const MrRegister = () => {
   useEffect(() => {
     handleMrListUpdate();
   }, []);
+
+  /**탭에 들어가는 데이터 */
+  const tabData = [
+    {
+      title: isEditMode ? '회의실 수정' : '회의실 등록',
+      content: (
+        <MrRegistForm
+          selectedRowData={selectedRowData}
+          isEditMode={isEditMode}
+        />
+      )
+    }
+  ];
   /*---------------------------------------------------------------------------------------------------------*/
   /**데이터 그리드 더블 클릭이벤트 */
   const handleDbClick = (params) => {
@@ -117,7 +108,7 @@ const MrRegister = () => {
               rows={mrList}
               pageSize={10}
               pageSizeOptions={[5, 10]}
-              dbclickEvent={handleDbClick}
+              clickEvent={handleDbClick}
               sx={{ width: 'auto' }}
             />
           </WrapContainer>
