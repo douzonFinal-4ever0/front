@@ -1,15 +1,19 @@
 import { Button, Grid, Modal, Popover, Slide, Typography } from '@mui/material';
 import CarMaintTable from './CarMaintTable';
-import { Box, Container } from '@mui/system';
+import { Box } from '@mui/system';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import RectangleBtn from '../common/RectangleBtn';
 import CarMaintRegister from './CarMaintRegister';
 import { useState, forwardRef } from 'react';
 import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios';
-import DangerousIcon from '@mui/icons-material/Dangerous';
 import CarDeleteModal from './CarDeleteModal';
 import CarCurrentMaint from './CarCurrentMaint';
+import { useDispatch } from 'react-redux';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
 
 const style = {
   position: 'absolute',
@@ -26,7 +30,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CarMaint = ({ carCode }) => {
+const CarMaint = ({ carCode, accum_mileage }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -35,11 +39,28 @@ const CarMaint = ({ carCode }) => {
     handleOpen();
   };
 
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
+  // snackbar 상태 관리 함수 끝
+
   const [maintData, setMaintData] = useState([]);
   const [checkedRow, setCheckedRow] = useState([]);
 
   const handleCompleteBtn = () => {
     // console.log(checkedRow.map((row) => row.id));
+    if (checkedRow.length === 0) {
+      handleSetSnackbarContent('선택된 값이 존재하지 않습니다.');
+      handleOpenSnackbar();
+      return;
+    }
 
     // 오늘 날짜 가져오기
     const today = new Date();
@@ -102,6 +123,11 @@ const CarMaint = ({ carCode }) => {
   // const [isDelete, setIsDelete] = useState(false);
 
   const handleDeleteBtn = () => {
+    if (checkedRow.length === 0) {
+      handleSetSnackbarContent('선택된 값이 존재하지 않습니다.');
+      handleOpenSnackbar();
+      return;
+    }
     // 삭제 알림창 띄우기
     handleDeleteModalOpen();
   };
@@ -156,6 +182,7 @@ const CarMaint = ({ carCode }) => {
           maintData={maintData}
           setMaintData={setMaintData}
           handleModalClose={handleClose}
+          mileage={accum_mileage}
         />
       </Modal>
       <Modal open={deleteModalOpen} onClose={handleDeleteModalClose}>

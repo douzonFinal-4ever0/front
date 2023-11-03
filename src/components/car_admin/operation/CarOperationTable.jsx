@@ -1,60 +1,9 @@
 import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
-import { useEffect } from 'react';
-import axiosInstance from '../../../utils/axios';
-import { useState } from 'react';
-import {
-  Button,
-  Chip,
-  Divider,
-  IconButton,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Chip, Divider, IconButton, Tooltip, Typography } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const CarOperationTable = ({}) => {
-  const [operationData, setOperationData] = useState([]);
-
-  useEffect(() => {
-    axiosInstance
-      .get('/manager/car/operationList')
-      .then((res) => {
-        console.log(res.data);
-        const newData = res.data.map((item, index) => {
-          return {
-            operation_code: item.operation_code,
-            start_at: new Date(item.start_at).toLocaleDateString(),
-            car_info: {
-              car_code: item.car_code,
-              car_name: item.car_name,
-              type: item.type
-            },
-            mem_info: {
-              dept_name: item.dept_name,
-              position_name: item.position_name,
-              name: item.name
-            },
-            purpose: [
-              { reason: '일반업무', distance: item.nomal_biz_mileage },
-              { reason: '출 • 퇴근', distance: item.commute_mileage }
-            ],
-            loc: item.carLocList.map((data) => {
-              return {
-                loc_type: data.loc_type,
-                address: data.address
-              };
-            }),
-            memo: item.memo
-          };
-        });
-        setOperationData(newData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
+const CarOperationTable = ({ operationData }) => {
   const columns = [
     {
       field: 'start_at',
@@ -76,7 +25,7 @@ const CarOperationTable = ({}) => {
           <Chip
             label={params.value.type}
             size="small"
-            sx={{ backgroundColor: '#90caf9', marginRight: '10px' }}
+            sx={{ backgroundColor: '#90caf9', marginRight: '20px' }}
           />
           <Box>
             <Typography variant="subtitle1">{params.value.car_code}</Typography>
@@ -196,7 +145,7 @@ const CarOperationTable = ({}) => {
   return (
     <Box
       sx={{
-        height: 400,
+        maxHeight: 730,
         width: '100%',
         '& .MuiDataGrid-columnHeaders': {
           backgroundColor: '#f0f0f0'

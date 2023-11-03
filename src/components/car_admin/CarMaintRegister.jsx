@@ -35,7 +35,8 @@ const CarMaintRegister = ({
   style,
   maintData,
   setMaintData,
-  handleModalClose
+  handleModalClose,
+  mileage
 }) => {
   const [maintItem, setMaintItem] = useState({
     maintItemList: [],
@@ -86,6 +87,8 @@ const CarMaintRegister = ({
     return () => {};
   }, [cleared]);
 
+  console.log(mileage);
+
   // 등록 데이터
   const [maintRegisterData, setMaintRegisterData] = useState({
     car_code: carCode,
@@ -95,7 +98,8 @@ const CarMaintRegister = ({
     maint_start_at: dayjs(today),
     maint_cost: '',
     pay_method: '법인카드',
-    memo: ''
+    memo: '',
+    mileage: mileage === null ? 0 : mileage
   });
 
   useEffect(() => {
