@@ -16,27 +16,36 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
   Typography
 } from '@mui/material';
 import Toggle from '../../../../components/common/Toggle';
 import styled from '@emotion/styled';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
+import Label from '../../../../components/common/Label';
+
 import { palette } from '../../../../theme/palette';
 import axiosInstance from '../../../../utils/axios';
+import { useEffect } from 'react';
 
 const BmMemModal = ({
+  selectTab, // 멤버, 그룹, 회의실
   open,
   handleModal,
   list,
   initList,
   selectMems,
   setSelectMems,
-  master
+  master,
+  bmGroupMemApi
 }) => {
-  // 적용 대상 리스트에서 선택된 멤버
+  console.log(initList);
+  // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
-  // 전체 리스트에서 선택된 멤머
-  const [addMemName, setAddMemName] = useState(null);
+  // (좌측창) 전체 리스트에서 선택된 멤버 리스트
+  const [addMemName, setAddMemName] = useState([]);
+  // 모달창 그룹명
+  const [groupName, setGroupName] = useState('');
   // 선택된 토글 버튼 값
   const [selectBtn, setSelectBtn] = useState('all');
 
@@ -86,18 +95,35 @@ const BmMemModal = ({
   const handleSelect = (event, nodeIds) => {
     const selecMem = list.filter((mem) => mem.name === nodeIds);
     if (selecMem.length !== 0) {
-      setAddMemName(selecMem[0].mem_code);
+      setAddMemName([...addMemName, selecMem[0].mem_code]);
     }
   };
+
+  useEffect(() => {
+    console.log(addMemName);
+  }, [addMemName]);
 
   // 선택된 참석자 아이템 클릭 이벤트
   const handlePtItem = (event, nodeId) => {
     setCheckMemName(nodeId);
   };
 
+  // 그룹명 인풋 이벤트
+  const handleGroupNameInput = (e) => {
+    setGroupName(e.target.value);
+  };
+
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
     const addMem = list.filter((mem) => mem.mem_code === addMemName);
+
+    // 이미 등록된 사용자일 경우 경고창
+    const res = initList.filter((item) => item.mem_code === addMemName);
+    if (res.length !== 0 && selectTab === 0) {
+      alert('이미 등록된 사용자입니다.');
+      return;
+    }
+
     const isExist = selectMems.find(
       (item) => item.mem_code === addMem[0].mem_code
     );
@@ -113,14 +139,35 @@ const BmMemModal = ({
 
   // 확인 버튼 이벤트
   const handleConfirm = async () => {
+    const list = selectMems.map((item) => item.mem_code);
+
     const data = {
-      master: master, // 사용자 번호
-      member: addMemName // 지정자 번호
+      groupName: groupName,
+      master: master,
+      members: list
     };
 
-    // db 추가
-    const res = await axiosInstance.post('/mr/mem/bm', data);
-    console.log(res);
+    try {
+      const res = await axiosInstance.post('/mr/mem/bm', data);
+      if (res.status === 201) {
+        alert('즐겨찾기 등록 성공하였습니다.');
+        bmGroupMemApi(); // 즐겨찾기 리스트 조회
+        setSelectMems([]); // 적용 대상 리스트 초기화
+        setGroupName(''); // 그룹명 초기화
+        handleModal(); // 모달창 닫기
+      } else {
+        alert('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요 ');
+        handleModal();
+      }
+    } catch (err) {
+      console.log('API 요청 오류 발생');
+    }
+  };
+
+  // 취소 버튼 이벤트
+  const handleCancel = () => {
+    setSelectMems([]); // 적용 대상 리스트 초기화
+    setGroupName(''); // 그룹명 초기화
     handleModal();
   };
 
@@ -172,7 +219,9 @@ const BmMemModal = ({
                         <Typography sx={{ fontSize: '13px' }}>
                           ({item.email})
                         </Typography>
-                        <InitLabel code={item.mem_code} />
+                        {selectTab === 0 ? (
+                          <InitLabel code={item.mem_code} />
+                        ) : null}
                       </Stack>
                     }
                     sx={{
@@ -209,7 +258,9 @@ const BmMemModal = ({
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h5">즐겨찾기 멤버 등록</Typography>
+          <Typography variant="h5">
+            {selectTab == 0 ? '즐겨찾기 멤버 등록' : '즐겨찾기 그룹 등록'}
+          </Typography>
         </DialogTitle>
         <IconButton
           onClick={handleModal}
@@ -221,7 +272,35 @@ const BmMemModal = ({
       </Stack>
 
       <DialogContent>
-        <Grid container sx={{ display: 'flex', height: '100%' }}>
+        {selectTab == 1 ? (
+          <Grid
+            item
+            container
+            sx={{
+              display: 'flex',
+              paddingBottom: '20px',
+              marginBottom: '20px',
+              borderBottom: '1px solid #aaa'
+            }}
+          >
+            <Grid sx={{ display: 'flex', width: '100%' }} xs={5}>
+              <Box sx={{ display: 'flex', width: '100%' }}>
+                <Label
+                  text={'그룹명'}
+                  sx={{ width: '70px', display: 'flex', alignItems: 'center' }}
+                />
+                <TextField
+                  placeholder="그룹명을 입력해주세요"
+                  value={groupName}
+                  onChange={handleGroupNameInput}
+                  sx={{ display: 'flex', flexFlow: 1, width: '100%' }}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        ) : null}
+
+        <Grid item container sx={{ display: 'flex', height: '100%' }}>
           <Grid item xs={5}>
             <Stack sx={{ rowGap: '20px' }}>
               <Toggle
@@ -309,7 +388,7 @@ const BmMemModal = ({
               text={'취소'}
               category={'cancel'}
               sx={{ padding: '10px 8px' }}
-              handlebtn={handleModal}
+              handlebtn={handleCancel}
             />
             <RectangleBtn
               type={'button'}

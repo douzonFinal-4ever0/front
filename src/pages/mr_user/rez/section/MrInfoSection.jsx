@@ -27,9 +27,12 @@ const MrInfoSection = ({ data }) => {
   } = data;
 
   // 요일 number -> string으로 변경
-  const newDays = [];
+  let newDays = [];
+
   if (mr_op_day) {
-    mr_op_day.forEach((item) => newDays.push(convertDayToText(item.day)));
+    const arr = [...mr_op_day];
+    arr.sort((a, b) => a.day - b.day);
+    arr.forEach((item) => newDays.push(convertDayToText(item.day)));
   }
 
   // 즐겨찾기 유무
@@ -45,7 +48,7 @@ const MrInfoSection = ({ data }) => {
       sx={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
     >
       <Box>
-        {/* <Carousel data={data} /> */}
+        <Carousel data={mr_img} />
         <Stack sx={{ padding: '10px 20px 10px', rowGap: '6px' }}>
           <StyledRoomTitleInfoWrap>
             {/* 회의실명 영역 */}

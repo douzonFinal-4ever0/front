@@ -8,8 +8,9 @@ const Toggle = (props) => {
 
   return (
     <ToggleButtonGroup value={selectBtn} exclusive onChange={handleToggleBtn}>
-      {data.map((item) => (
+      {data.map((item, index) => (
         <ToggleButton
+          key={index}
           value={item.value}
           sx={{ border: `1px solid ${palette.grey['500']}`, ...sx }}
         >
