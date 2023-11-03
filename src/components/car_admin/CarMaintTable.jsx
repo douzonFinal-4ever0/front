@@ -14,14 +14,6 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
       headerClassName: 'super-app-theme--header',
       align: 'center'
     },
-    // {
-    //   field: 'created_at',
-    //   headerName: '등록일자',
-    //   width: 128,
-    //   headerAlign: 'center',
-    //   headerClassName: 'super-app-theme--header',
-    //   align: 'center'
-    // },
     {
       field: 'maint_start_at',
       headerName: '정비 시작일',
