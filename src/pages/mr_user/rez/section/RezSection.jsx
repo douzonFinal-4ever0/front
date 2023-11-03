@@ -78,7 +78,15 @@ const RezSection = () => {
       mr_code,
       mr_pt_list
     };
-    const res = await axiosInstance.post('/mr/rez', data);
+
+    try {
+      const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
+      if (res.status === 201) {
+        alert('회의실 예약되었습니다.');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

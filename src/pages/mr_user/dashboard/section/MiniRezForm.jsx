@@ -72,7 +72,9 @@ const MiniRezForm = () => {
     };
 
     try {
-      const res = await axiosInstance.get('/mr/recommend', { params: data });
+      const res = await axiosInstance.axiosInstance.get('/mr/recommend', {
+        params: data
+      });
       if (!res.status === 200) return;
 
       // 리덕스 저장

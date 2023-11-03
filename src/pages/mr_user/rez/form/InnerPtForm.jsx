@@ -44,11 +44,13 @@ const InnerPtForm = () => {
   // 참석자 추가 버튼 이벤트
   const handleInnerPtBtn = async () => {
     // 전체 멤버 조회
-    const res = await axiosInstance.get('/mr/mem');
+    const res = await axiosInstance.axiosInstance.get('/mr/mem');
     setMembers(res.data);
 
     // 즐겨찾기 멤버 조회
-    const bmRes = await axiosInstance.get(`/mr/mem/bm?mem_code=${mem_code}`);
+    const bmRes = await axiosInstance.axiosInstance.get(
+      `/mr/mem/bm?mem_code=${mem_code}`
+    );
     const { data } = bmRes;
 
     // 개별 멤버

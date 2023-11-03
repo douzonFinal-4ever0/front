@@ -45,7 +45,9 @@ const BmPage = () => {
 
   // 즐겨찾기 조회 API
   const bmGroupMemApi = async () => {
-    const res = await axiosInstance.get(`/mr/mem/bm?mem_code=${mem_code}`);
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/mem/bm?mem_code=${mem_code}`
+    );
     const { data } = res;
 
     // 개별 멤버
@@ -97,7 +99,7 @@ const BmPage = () => {
   const handleAddBtn = async () => {
     console.log('추가');
 
-    const res = await axiosInstance.get('/mr/mem');
+    const res = await axiosInstance.axiosInstance.get('/mr/mem');
     setMembers(res.data);
     setOpenModal(!openModal);
   };
@@ -112,7 +114,7 @@ const BmPage = () => {
   const handleConfirmBtn = async () => {
     console.log('확인');
     // 삭제 리스트를 db에 보내서 deleted_at 업데이트 하기
-    const res = await axiosInstance.patch('/mr/mem/bm', {
+    const res = await axiosInstance.axiosInstance.patch('/mr/mem/bm', {
       deleteMemCodeList
     });
 

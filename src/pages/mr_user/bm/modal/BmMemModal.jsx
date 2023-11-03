@@ -148,7 +148,7 @@ const BmMemModal = ({
     };
 
     try {
-      const res = await axiosInstance.post('/mr/mem/bm', data);
+      const res = await axiosInstance.axiosInstance.post('/mr/mem/bm', data);
       if (res.status === 201) {
         alert('즐겨찾기 등록 성공하였습니다.');
         bmGroupMemApi(); // 즐겨찾기 리스트 조회
