@@ -20,8 +20,12 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import Selectbox from '../../components/common/Selectbox';
 import styled from 'styled-components';
 import Label from '../../components/common/Label';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
 const MrNotice = () => {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState('<p>테스트</p>');
@@ -30,6 +34,16 @@ const MrNotice = () => {
   const [template, setTemplate] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const mem_code = useSelector((state) => state.user.mem_code);
+
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
   /**공개 비공개 여부 체크 */
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
@@ -43,8 +57,9 @@ const MrNotice = () => {
   };
   /**공지사랑 등록 버튼 이벤트 */
   const handleClick = () => {
-    axiosInstance.post('/mr/notice', FormtoData).then(() => {
-      alert('공지사항이 등록되었습니다.');
+    axiosInstance.axiosInstance.post('/mr/notice', FormtoData).then(() => {
+      handleOpenSnackbar();
+      handleSetSnackbarContent('공지사항이 등록되었습니다.');
       navigate('../NoticeList');
     });
     // console.log('텍스트:' + editorData);
@@ -67,7 +82,7 @@ const MrNotice = () => {
   };
   /**템플릿을 불러오는 useEffect */
   useEffect(() => {
-    axiosInstance.get('/mr/template').then((res) => {
+    axiosInstance.axiosInstance.get('/mr/template').then((res) => {
       // console.log(res.data);
       setTemplate(res.data);
     });
