@@ -232,7 +232,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       id="aft_mileage"
                       name="aft_mileage"
                       variant="outlined"
-                      type="number"
+                      type="text"
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (

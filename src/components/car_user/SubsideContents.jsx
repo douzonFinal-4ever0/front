@@ -5,6 +5,7 @@ import {
   Grid,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Paper,
   Typography
@@ -20,13 +21,15 @@ import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
 
 // 서브 사이드바 콘텐츠
-const SubSideContents = ({ setSelectedRows }) => {
+const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
   const [searchInput, setSearchInput] = useState('');
   //const [carCode, setCarCode] = useState('');
   const [rows, setRows] = useState([]);
   useEffect(() => {
     axiosInstance
-      .get('http://localhost:8081/car_rez/availableCars')
+      .get(
+        `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
+      )
       .then((res) => {
         setRows(
           res.data.map((car) => ({
@@ -70,19 +73,21 @@ const SubSideContents = ({ setSelectedRows }) => {
               return (
                 <ListItem
                   key={car.id}
-                  onMouseEnter={() => handleHover(index)}
-                  onMouseLeave={handleMouseLeave}
-                  sx={{ background: isHovered === index && '#FFFFFF' }}
+                  // onMouseEnter={() => handleHover(index)}
+                  // onMouseLeave={handleMouseLeave}
+                  // sx={{ background: isHovered === index && '#FFFFFF' }}
                   // {isHovered&&}
                   onClick={(e) =>
                     handleItem(e, car.id, car.car_address, car.car_name)
                   }
                 >
-                  <ListItemText
-                    primary={`${car.id}`}
-                    secondary={`${car.car_name}`}
-                  />
-                  <ListItemText primary={`${car.car_address}`} />
+                  <ListItemButton>
+                    <ListItemText
+                      primary={`${car.id}`}
+                      secondary={`${car.car_name}`}
+                    />
+                    <ListItemText primary={`${car.car_address}`} />
+                  </ListItemButton>
                 </ListItem>
               );
             })}

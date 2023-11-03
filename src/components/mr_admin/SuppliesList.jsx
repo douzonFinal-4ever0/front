@@ -7,7 +7,7 @@ import axiosInstance from '../../utils/axios.js';
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
   useEffect(() => {
-    axiosInstance.get('/sp/spList').then((res) => {
+    axiosInstance.axiosInstance.get('/sp/spList').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.supplies_code

@@ -3,13 +3,14 @@ import base64 from 'base-64';
 import utf8 from 'utf8';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserData } from '../../redux/reducer/userSlice';
+import { useState } from 'react';
 
 const JWTdecode = () => {
   const dispatch = useDispatch();
   const userData = useSelector(setUserData).payload.user;
-
+  const [token, setToken] = useState(localStorage.getItem('jwtToken'));
+  // const token = localStorage.getItem('jwtToken');
   useEffect(() => {
-    const token = localStorage.getItem('jwtToken');
     //토큰 존재 시
     if (token) {
       // JWT 디코딩
@@ -37,7 +38,7 @@ const JWTdecode = () => {
         })
       );
     }
-  }, [dispatch]);
+  }, [token]);
 };
 
 export default JWTdecode;

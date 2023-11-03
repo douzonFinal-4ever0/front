@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -36,8 +36,11 @@ import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
 import { useSelector } from 'react-redux';
+import Spinner from '../../components/common/Spinner';
+import LoadingModal from '../../components/car_user/LoadingModal';
 
 const Register = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const carRez = location.state;
@@ -254,8 +257,10 @@ const Register = () => {
         ...formData,
         [name]: value
       });
+      set(e.target.value);
     }
   };
+
   const handleChangeLoc = (e, set) => {
     if (carRez) {
       set(addressObj.areaAddress + addressObj.townAddress);
@@ -265,8 +270,13 @@ const Register = () => {
         ...formData,
         [name]: value
       });
+      set(addressObj.areaAddress + addressObj.townAddress);
     }
   };
+  // let rezStart_at;
+  // let rezReturn_at;
+  const [rezStart_at, setRezStart_at] = useState(null);
+  const [rezReturn_at, setRezReturn_at] = useState(null);
   const handleTimeChange = (e, name, set) => {
     if (carRez) {
       set(e.$d);
@@ -276,6 +286,12 @@ const Register = () => {
         ...formData,
         [name]: e.$d
       });
+      if (name === 'start_at') {
+        setRezStart_at(e.$d);
+      }
+      if (name === 'return_at') {
+        setRezReturn_at(e.$d);
+      }
     }
   };
   //submit하는 함수
@@ -310,8 +326,20 @@ const Register = () => {
 
   //modal여는 함수
   const handleOpenModal = () => {
-    setOpen(true);
+    console.log(rezStart_at);
+    if (rezStart_at === null || rezReturn_at === null) {
+      alert('날짜를 입력해주세요');
+    } else {
+      console.log('대여일:' + Date.parse(rezStart_at));
+      console.log('반납일: ' + Date.parse(rezStart_at));
+      if (Date.parse(rezStart_at) > Date.parse(rezStart_at)) {
+        alert('대여일이 반납일보다 늦습니다');
+      } else {
+        setOpen(true);
+      }
+    }
   };
+
   //modal 닫는 함수
   const handleCloseModal = (reason) => {
     if (reason === 'buttonClick') {
@@ -338,6 +366,7 @@ const Register = () => {
     } else {
       alert('차량을 선택해주세요');
     }
+
     axiosInstance
       .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
@@ -350,7 +379,75 @@ const Register = () => {
           fuel_effciency: res.data.fuel_effciency,
           car_address: res.data.car_address
         });
+        //차량 위치 저장
+        setReceipt_loc(selectedRows.car_address);
       });
+  };
+
+  const est_mileageCal = (locList) => {
+    if (locList) {
+      const destCoordinate =
+        locList.dest_loc[0].toString() + ',' + locList.dest_loc[1].toString();
+
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
+        },
+        body: JSON.stringify({
+          tollgateFareOption: 16,
+          roadType: 32,
+          directionOption: 1,
+          endX: locList.return_loc[0],
+          endY: locList.return_loc[1],
+          endRpFlag: 'G',
+          reqCoordType: 'WGS84GEO',
+          startX: locList.receipt_loc[0],
+          startY: locList.receipt_loc[1],
+          //gps시간 예약시간으로
+          gpsTime: '20191125153000',
+          speed: 10,
+          uncetaintyP: 1,
+          uncetaintyA: 1,
+          uncetaintyAP: 1,
+          //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
+          carType: 0,
+          // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
+          // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
+          passList: destCoordinate,
+          gpsInfoList:
+            '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
+          detailPosFlag: '2',
+          resCoordType: 'WGS84GEO',
+          sort: 'index'
+        })
+      };
+      fetch(
+        'https://apis.openapi.sk.com/tmap/routes?version=1&callback=function',
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response.features[0].properties.totalDistance);
+          setFormData({
+            ...formData,
+            est_mileage: (
+              response.features[0].properties.totalDistance / 1000
+            ).toFixed(1)
+          });
+          setEst_mileage(
+            (response.features[0].properties.totalDistance / 1000).toFixed(1)
+          );
+          setIsLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
+  };
+
+  const locSelect = (e) => {
+    handleChange(e, setReturn_loc);
   };
   // useLayoutEffect(() => {
   //   if (carRez !== null) {
@@ -407,16 +504,66 @@ const Register = () => {
   useEffect(() => {
     setDest_loc(initDest_loc);
   }, []);
+  useEffect(() => {
+    if (carRez) {
+      console.log('update');
+      console.log(receipt_loc);
+      console.log(return_loc);
+      console.log(addressObj);
+      console.log(updateData);
+      if (
+        (receipt_loc !== '') &
+        (return_loc !== '') &
+        (updateData.dest_loc !== '')
+      ) {
+        let dest_loc;
+        if ((addressObj.areaAddress === '') & (addressObj.townAddress === '')) {
+          dest_loc = updateData.dest_loc;
+        } else {
+          dest_loc = addressObj.areaAddress + addressObj.townAddress;
+        }
+
+        axiosInstance
+          .get(
+            `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
+          )
+          .then((res) => {
+            setIsLoading(true);
+            const locList = res.data;
+            console.log(locList);
+            est_mileageCal(locList);
+          });
+      }
+    } else {
+      console.log('asdasdasdasda');
+      console.log(receipt_loc);
+      console.log(return_loc);
+      console.log(addressObj);
+      if ((receipt_loc !== '') & (return_loc !== '') & (addressObj !== '')) {
+        let dest_loc = addressObj.areaAddress + addressObj.townAddress;
+        axiosInstance
+          .get(
+            `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
+          )
+          .then((res) => {
+            setIsLoading(true);
+            const locList = res.data;
+            console.log(locList);
+            est_mileageCal(locList);
+          });
+      }
+    }
+  }, [receipt_loc, return_loc, addressObj]);
   return (
     <>
       <SubHeader title={'차량 예약'} />
       <form onSubmit={handleSubmit}>
         <Grid
           container
-          spacing={2}
+          spacing={3}
           style={{ paddingTop: 16, paddingLeft: 16, paddingRight: 16 }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
                 <Box
@@ -474,7 +621,7 @@ const Register = () => {
                       value={
                         carRez !== null
                           ? carRez.rez.memResponseVO.deptVO.dept_name
-                          : ''
+                          : currentUser.dept_name
                       }
                     />
                   </Grid>
@@ -588,7 +735,11 @@ const Register = () => {
                       handleModal={(e, reason) => handleCloseModal(reason)}
                       modalTitle={'차량 찾기'}
                       content={
-                        <SubSideContents setSelectedRows={setSelectedRows} />
+                        <SubSideContents
+                          setSelectedRows={setSelectedRows}
+                          rezStart_at={rezStart_at}
+                          rezReturn_at={rezReturn_at}
+                        />
                       }
                       buttons={
                         <Grid
@@ -632,32 +783,11 @@ const Register = () => {
                     />
                   </Grid>
                 </Grid>
-                {/* 예상 주행 거리 */}
-                <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
-                  </StyledLabelGrid>
-                  <Grid item xs={10}>
-                    <TextField
-                      id="est_mileage"
-                      name="est_mileage"
-                      type="number"
-                      onChange={(e) => handleChange(e, setEst_mileage)}
-                      InputProps={{
-                        inputProps: { min: 0 },
-                        endAdornment: (
-                          <InputAdornment position="end">㎞</InputAdornment>
-                        )
-                      }}
-                      value={carRez ? est_mileage : formData.est_mileage}
-                    />
-                  </Grid>
-                </Grid>
               </Stack>
             </Item>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Item>
               <Stack sx={{ rowGap: '10px' }}>
                 <Box
@@ -837,6 +967,58 @@ const Register = () => {
                     />
                   </Grid>
                 </Grid>
+                {/* 예상 주행 거리 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={2}>
+                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={10}>
+                    <TextField
+                      id="est_mileage"
+                      name="est_mileage"
+                      type="text"
+                      onChange={(e) => handleChange(e, setEst_mileage)}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞</InputAdornment>
+                        )
+                      }}
+                      value={carRez ? est_mileage : formData.est_mileage}
+                    />
+                  </Grid>
+                  <LoadingModal open={isLoading} />
+                </Grid>
+              </Stack>
+            </Item>
+          </Grid>
+          <Grid item xs={4}>
+            {' '}
+            <Item>
+              <Stack sx={{ rowGap: '10px' }}>
+                <Box
+                  display="flex"
+                  marginTop="15px"
+                  sx={{
+                    width: '100%',
+                    borderBottom: '3px solid black',
+                    padding: '5px 0px'
+                  }}
+                  mb={1}
+                >
+                  <RectangleIcon
+                    sx={{
+                      color: 'black',
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      width: '6px',
+                      height: '6px'
+                    }}
+                  />
+                  <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
+                    운행 예상 정보
+                  </Typography>
+                </Box>
               </Stack>
             </Item>
           </Grid>
