@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
 import Layout from '../layouts/Layout';
 import Page404 from '../pages/Page404';
 import { useSelector } from 'react-redux';
@@ -33,6 +33,14 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
 
   const routes = [
     {
+      path: '/',
+      children: [
+        { element: <Navigate to="/login" />, index: true },
+        { path: 'login', element: <LoginPage /> },
+        { path: '*', element: <Page404 /> }
+      ]
+    },
+    {
       path: '/mr',
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
@@ -44,8 +52,26 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { path: 'bm', element: <MrUserBmPage /> }
       ]
     },
+    // {
+    //   children: [
+    //     { element: <Navigate to="/" />, index: true },
+    //     { path: '*', element: <Page404 /> }
+    //   ]
+    // },
     {
-      path: `/car/${isAdminRoute}`,
+      path: '/carRez',
+      element: (
+        <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
+      ),
+      children: [
+        { element: <Navigate to="/carRez/dashboard" />, index: true },
+        { path: 'dashboard', element: <CarUserDashboardPage /> },
+        { path: 'reservation', element: <CarUserRegisterPage /> },
+        { path: 'carRezComplete', element: <CarRezCompletePage /> }
+      ]
+    },
+    {
+      path: `/car/admin`,
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
@@ -75,7 +101,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
       ]
     },
     {
-      path: `/mr/${isAdminRoute}`,
+      path: `/mr/admin`,
       element: (
         <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
       ),
@@ -91,70 +117,94 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         },
         { path: 'Test', element: <MrAdminTestPage /> }
       ]
-    },
-    {
-      element: (
-        <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
-      ),
-      children: [
-        { element: <Navigate to="/" />, index: true },
-        { path: '*', element: <Page404 /> }
-      ]
-    },
-    {
-      path: '/carRez',
-      element: (
-        <Layout isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
-      ),
-      children: [
-        { element: <Navigate to="/carRez/dashboard" />, index: true },
-        { path: 'dashboard', element: <CarUserDashboardPage /> },
-        { path: 'reservation', element: <CarUserRegisterPage /> },
-        { path: 'carRezComplete', element: <CarRezCompletePage /> }
-      ]
-    },
-    {
-      path: '/',
-      children: [
-        { element: <Navigate to="/" />, index: true },
-        { path: 'login', element: <LoginPage /> }
-      ]
     }
   ];
 
   const filteredRoutes = [];
+  const navigate = useNavigate();
 
-  // 항상 로그인 페이지는 접속 가능
-  filteredRoutes.push({
-    path: '/',
-    children: [
-      { element: <Navigate to="/login" />, index: true },
-      { path: 'login', element: <LoginPage /> }
-    ]
-  });
+  // // 항상 로그인 페이지는 접속 가능
 
-  if (access === false) {
-    // access가 false인 경우, 로그인 페이지로 리다이렉트
-    <Navigate to="/login" />;
-  } else if (access === true) {
-    if (accessAdmin === false) {
-      // access가 true이고 accessAdmin이 false인 경우, ${isAdminRoute}이 없는 경로만 허용
-      const nonAdminRoutes = routes.filter((route) => {
-        if (isAdminRoute === '') {
-          // isAdminRoute가 비어 있을 때, 빈 문자열이 아닌 경우만 추가
-          return route.path !== '';
-        } else {
-          // isAdminRoute가 비어 있지 않을 때는 포함 여부 확인
-          return !route.path.includes(isAdminRoute);
-        }
-      });
+  // if (access === false) {
+  //   // access가 false인 경우, 로그인 페이지로 리다이렉트
+  //   filteredRoutes.push({
+  //     path: '/',
+  //     children: [
+  //       { element: <Navigate to="/login" />, index: true },
+  //       { path: 'login', element: <LoginPage /> }
+  //     ]
+  //   });
+  // } else if (access === true) {
+  //   if (accessAdmin === false) {
+  //     // access가 true이고 accessAdmin이 false인 경우, ${isAdminRoute}이 없는 경로만 허용
+  //     const nonAdminRoutes = routes.filter((route) => {
+  //       if (isAdminRoute === '') {
+  //         // isAdminRoute가 비어 있을 때, 빈 문자열이 아닌 경우만 추가
+  //         return route.path !== '';
+  //       } else {
+  //         // isAdminRoute가 비어 있지 않을 때는 포함 여부 확인
+  //         return !route.path.includes('admin');
+  //       }
+  //     });
+  //     console.log(
+  //       '-------------------------필터링 과정-----------------------'
+  //     );
+  //     console.log(nonAdminRoutes);
+  //     filteredRoutes.push(...nonAdminRoutes);
+  //   } else {
+  //     // access가 true이고 accessAdmin이 true인 경우, 모든 경로 허용
+  //     filteredRoutes.push(...routes);
+  //   }
+  // }
+  console.log(
+    '--------------------------------기존 라우터--------------------------'
+  );
+  console.log(routes);
+  console.log(
+    '--------------------------------필터 라우터--------------------------'
+  );
+  console.log(filteredRoutes);
+  console.log(
+    '-------------------------------테스트--------------------------------'
+  );
 
-      filteredRoutes.push(...nonAdminRoutes);
-    } else {
-      // access가 true이고 accessAdmin이 true인 경우, 모든 경로 허용
-      filteredRoutes.push(...routes);
-    }
+  // const pathArray = routes.map((route) => route.path);
+  // console.log(pathArray);
+  // console.log(pathArray.includes('/admin'));
+  let filterPath;
+  // 관리자
+  if (access == true && accessAdmin == true) {
+    filterPath = routes;
   }
+  //사용자
+  else if (access == true && accessAdmin == false) {
+    filterPath = routes.filter(
+      (route) => route.path && !route.path.includes('/admin')
+    );
+  }
+  // 로그인 안한 사람
+  else {
+    filterPath =
+      // [
+      //   {
+      //     path: '/',
+      //     children: [
+      //       { element: <Navigate to="/login" />, index: true },
+      //       { path: 'login', element: <LoginPage /> },
+      //       { path: '*', element: <LoginPage /> }
+      //     ]
+      //   }
+      // ];
+
+      routes.filter(
+        (route) =>
+          route.path &&
+          !route.path.includes('/admin') &&
+          !route.path.includes('/mr') &&
+          !route.path.includes('/carRez')
+      );
+  }
+  console.log(filterPath);
 
   return useRoutes(routes);
 };

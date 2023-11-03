@@ -20,7 +20,7 @@ const MrNoticeList = () => {
   /*-----------------------------------공지사항 가져오기------------------------------------------------------ */
   const [noticeList, setNoticeList] = useState([]);
   useEffect(() => {
-    axiosInstance.get('/mr/notice').then((res) => {
+    axiosInstance.axiosInstance.get('/mr/notice').then((res) => {
       const processedData = res.data.map((item) => ({
         ...item,
         id: item.notice_code
@@ -32,7 +32,7 @@ const MrNoticeList = () => {
   /*---------------------------상세 내용으로 이동-------------------------------------------------- */
   const handleClickEvent = (params) => {
     const notice_code = params.row.notice_code;
-    axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
+    axiosInstance.axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
       navigate(`../NoticeDetail/${notice_code}`);
     });
   };

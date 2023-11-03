@@ -11,15 +11,30 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
+import { useDispatch } from 'react-redux';
 
 const MrNoticeDetails = () => {
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   /*------------------------제목 번호 가져오기-------------------------------- */
   const { notice_code } = useParams();
   // console.log(notice_code);
   /*-----------------------선택된 데이터 가져오기---------------------------------*/
   const [selectedNotice, setSelectedNotice] = useState([]);
   useEffect(() => {
-    axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
+    axiosInstance.axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
       setSelectedNotice(res.data);
     });
   }, []);
@@ -46,10 +61,13 @@ const MrNoticeDetails = () => {
 
   /**공지 삭제 이벤트 */
   const handleDeleteNotice = () => {
-    axiosInstance.delete(`mr/notice/delete/${notice_code}`).then((res) => {
-      alert('삭제가 완료되었습니다.');
-      navigate('../NoticeList');
-    });
+    axiosInstance.axiosInstance
+      .delete(`mr/notice/delete/${notice_code}`)
+      .then((res) => {
+        handleOpenSnackbar();
+        handleSetSnackbarContent('삭제가 완료되었습니다.');
+        navigate('../NoticeList');
+      });
   };
 
   return (

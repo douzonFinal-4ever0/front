@@ -18,6 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Label from '../../components/common/Label';
 import LogoImage from '../../assets/images/logo/logo.png';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import JWTdecode from '../../components/common/JWTdecode';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -32,9 +33,12 @@ const Login = () => {
   };
   /**로그인 할때 쓰는 핸들러 */
   const handleLogin = () => {
-    axiosInstance.post('/api/v1/user/login', FormToData).then((res) => {
-      setJwt('Bearer ' + res.data.token);
-    });
+    axiosInstance.axiosInstance
+      .post('/api/v1/user/login', FormToData)
+      .then((res) => {
+        setJwt('Bearer ' + res.data.token);
+      });
+    <JWTdecode />;
   };
   // 엔터 키가 눌렸을 때 실행되는 함수
   const handleKeyPress = (event) => {
@@ -97,7 +101,7 @@ const Login = () => {
                 placeholder="비밀번호를 입력하세요"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
               />
             </Grid>
             <Grid item xs={12}>
@@ -113,7 +117,7 @@ const Login = () => {
                   padding: '14px 12px'
                 }}
                 handlebtn={handleLogin}
-                handleKeyDown={handleLogin}
+                handleKeyDown={handleKeyPress}
               />
             </Grid>
           </Grid>
