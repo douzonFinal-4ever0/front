@@ -30,7 +30,7 @@ import CarDeleteModal from './CarDeleteModal';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HdrAutoOutlinedIcon from '@mui/icons-material/HdrAutoOutlined';
 import axiosInstance from '../../utils/axios';
-import { ConsoleView } from 'react-device-detect';
+import PersonIcon from '@mui/icons-material/Person';
 
 const style = {
   position: 'absolute',
@@ -43,13 +43,7 @@ const style = {
   boxShadow: 24
 };
 
-const CarDetail = ({
-  carCode,
-  carListInfo,
-  setCarListInfo,
-  carCounts,
-  setCarCounts
-}) => {
+const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
   // 수정 모달 관련 변수 및 함수
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -229,7 +223,12 @@ const CarDetail = ({
     setIsShowSelectUser(e.target.value === '모두' ? false : true);
 
     if (e.target.value === '모두') {
-      setCarModifyInfo({ ...carModifyInfo, authority: e.target.value });
+      setLeft([]);
+      setRight(right.concat(left));
+      setCarModifyInfo({
+        ...carModifyInfo,
+        authority: e.target.value
+      });
     } else {
       setCarModifyInfo({
         ...carModifyInfo,
@@ -334,11 +333,27 @@ const CarDetail = ({
             // 리스트에 적용
             const newCarInfo = carListInfo.map((obj) => {
               if (obj.car_code === carModifyInfo.car_code) {
-                return res.data;
+                return {
+                  type: obj.type,
+                  car_name: obj.car_name,
+                  car_code: obj.car_code,
+                  created_at: obj.created_at,
+                  accum_mileage: res.data.accum_mileage,
+                  memo: res.data.carVO.memo,
+                  authority: res.data.carVO.authority,
+                  car_status: res.data.car_status,
+                  dept_name: res.data.carUser.dept_name,
+                  max_capacity: res.data.carVO.max_capacity,
+                  mem_code: res.data.carUser.mem_code,
+                  name: res.data.carUser.name,
+                  position_name: res.data.carUser.position_name
+                };
               }
               return obj;
             });
-            console.log(carListInfo);
+
+            console.log(newCarInfo);
+            setCarListInfo(newCarInfo);
 
             handleClose();
           })
@@ -503,42 +518,6 @@ const CarDetail = ({
                   <Grid item container xs={10} spacing={1}>
                     <Grid item xs={5}>
                       {customList(
-                        left,
-                        <CardHeader
-                          sx={{ px: 2, py: 1 }}
-                          titleTypographyProps={{ variant: 'subtitle1' }}
-                          title="지정 사용자"
-                        />
-                      )}
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Grid container direction="column" alignItems="center">
-                        <Button
-                          item
-                          xs={6}
-                          sx={{ my: 0.5 }}
-                          variant="outlined"
-                          size="small"
-                          onClick={handleCheckedRight}
-                          disabled={leftChecked.length === 0}
-                          aria-label="move selected right"
-                        >
-                          &gt;
-                        </Button>
-                        <Button
-                          sx={{ my: 0.5 }}
-                          variant="outlined"
-                          size="small"
-                          onClick={handleCheckedLeft}
-                          disabled={rightChecked.length === 0}
-                          aria-label="move selected left"
-                        >
-                          &lt;
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={5}>
-                      {customList(
                         filterMemData,
                         <CardHeader
                           sx={{ px: 2, py: 1 }}
@@ -548,6 +527,58 @@ const CarDetail = ({
                               value={inputUser}
                               handleInput={handleInputUser}
                             ></UserSearchBar>
+                          }
+                        />
+                      )}
+                    </Grid>
+                    <Grid item xs={2} display="flex" alignItems="center">
+                      <Grid container direction="column" alignItems="center">
+                        <Button
+                          xs={6}
+                          sx={{ my: 0.5 }}
+                          variant="outlined"
+                          size="small"
+                          onClick={handleCheckedRight}
+                          disabled={leftChecked.length === 0}
+                          aria-label="move selected right"
+                        >
+                          &lt;
+                        </Button>
+                        <Button
+                          sx={{ my: 0.5 }}
+                          variant="outlined"
+                          size="small"
+                          onClick={handleCheckedLeft}
+                          disabled={
+                            rightChecked.length === 0 || left.length >= 1
+                          }
+                          aria-label="move selected left"
+                        >
+                          &gt;
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={5}>
+                      {customList(
+                        left,
+                        <CardHeader
+                          sx={{ px: 2, py: 1 }}
+                          titleTypographyProps={{ variant: 'subtitle1' }}
+                          title={
+                            <Box display="flex">
+                              <PersonIcon
+                                height="35px"
+                                width="35px"
+                                color="#637381"
+                              />
+                              <Typography
+                                variant="subtitle1"
+                                color="#637381"
+                                marginLeft="10px"
+                              >
+                                선택 사용자
+                              </Typography>
+                            </Box>
                           }
                         />
                       )}

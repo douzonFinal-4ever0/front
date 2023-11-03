@@ -38,7 +38,7 @@ const CarInfoTable = ({
     setPage(0);
   };
 
-  const handleClickRow = (event, value) => {
+  const handleClickRow = (event, value, mileage) => {
     setTabData([
       {
         title: '차량 정보',
@@ -54,16 +54,7 @@ const CarInfoTable = ({
       },
       {
         title: '정비 및 지출',
-        content: (
-          <CarMaint
-            setTabData={setTabData}
-            carCode={value}
-            carListInfo={rows}
-            setCarListInfo={setCarListInfo}
-            carCounts={carCounts}
-            setCarCounts={setCarCounts}
-          />
-        )
+        content: <CarMaint carCode={value} accum_mileage={mileage} />
       }
     ]);
     dispatch(openDrawer());
@@ -96,20 +87,31 @@ const CarInfoTable = ({
                   .filter((item) => item.car_name.includes(searchValue))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
+                    row.accum_mileage = `${row.accum_mileage}`;
                     return (
                       <TableRow
                         hover
                         role="checkbox"
                         tabIndex={-1}
                         key={row.code}
+                        sx={{ cursor: 'pointer' }}
                         onClick={(event) => {
-                          handleClickRow(event, row['car_code']);
+                          handleClickRow(
+                            event,
+                            row['car_code'],
+                            row.accum_mileage
+                          );
                         }}
                       >
                         {columns.map((column) => {
                           let value = row[column.id];
                           if (column.id === 'created_at' && value === null) {
                             value = '최근 운행 없음';
+                          } else if (
+                            column.id === 'created_at' &&
+                            value !== null
+                          ) {
+                            value = new Date(value).toLocaleDateString();
                           } else if (column.id === 'memo' && value === null) {
                             value = '-';
                           }
@@ -197,3 +199,7 @@ const CarInfoTable = ({
 };
 
 export default CarInfoTable;
+
+CarInfoTable.defaultProps = {
+  searchValue: ''
+};
