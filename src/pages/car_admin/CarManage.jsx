@@ -20,7 +20,10 @@ import {
   TextField,
   CardHeader,
   Typography,
-  InputAdornment
+  InputAdornment,
+  Paper,
+  FormControl,
+  Select
 } from '@mui/material';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -31,14 +34,13 @@ import styled from '@emotion/styled';
 import Searchbar from '../../components/common/Searchbar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers';
-import CarInfoTable from '../../components/car_admin/CarInfoTable';
+import { DatePicker, datePickerToolbarClasses } from '@mui/x-date-pickers';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import UserSearchBar from '../../components/car_admin/UserSearchBar';
 import cardata from '../../cardata.json';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useDispatch } from 'react-redux';
 import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 import {
@@ -47,6 +49,10 @@ import {
 } from '../../redux/reducer/SnackbarSlice';
 import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios';
+import Selectbox from '../../components/common/Selectbox';
+import PersonIcon from '@mui/icons-material/Person';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import CarInfo from '../../components/car_admin/CarInfo';
 
 // transferList 관련 함수
 function not(a, b) {
@@ -64,9 +70,6 @@ const SubSidebarContent = ({
   setTabData,
   carInfo,
   setCarInfo,
-  deleteCar,
-  carCounts,
-  setCarCounts,
   setFilterValue,
   setSearchValue,
   setSearchInput
@@ -82,14 +85,7 @@ const SubSidebarContent = ({
     setTabData([
       {
         title: '차량 등록',
-        content: (
-          <CarRegisterFrom
-            carInfo={carInfo}
-            setCarInfo={setCarInfo}
-            carCounts={carCounts}
-            setCarCounts={setCarCounts}
-          />
-        )
+        content: <CarRegisterFrom carInfo={carInfo} setCarInfo={setCarInfo} />
       }
     ]);
     handleOpenDrawer();
@@ -97,7 +93,6 @@ const SubSidebarContent = ({
 
   const handleFilterClick = (e, filterValue) => {
     e.stopPropagation();
-    console.log(filterValue);
     setSearchValue('');
     setSearchInput('');
     setFilterValue(filterValue);
@@ -123,7 +118,11 @@ const SubSidebarContent = ({
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={handleClick}>
-            <ListItemText primary={`전체 차량(${carInfo.length})`} />
+            <ListItemText
+              primary={`전체 차량(${
+                carInfo.filter((item) => item.car_status != '삭제됨').length
+              })`}
+            />
           </ListItemButton>
         </ListItem>
         <Collapse in={true} timeout="auto" unmountOnExit>
@@ -139,7 +138,10 @@ const SubSidebarContent = ({
               </ListItemIcon>
               <ListItemText
                 primary={`승용차 (${
-                  carInfo.filter((obj) => obj.type === '승용차').length
+                  carInfo.filter(
+                    (obj) =>
+                      obj.type === '승용차' && obj.car_status !== '삭제됨'
+                  ).length
                 })`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
@@ -155,7 +157,10 @@ const SubSidebarContent = ({
               </ListItemIcon>
               <ListItemText
                 primary={`화물차 (${
-                  carInfo.filter((obj) => obj.type === '화물차').length
+                  carInfo.filter(
+                    (obj) =>
+                      obj.type === '화물차' && obj.car_status !== '삭제됨'
+                  ).length
                 })`}
                 primaryTypographyProps={{ fontSize: '13px' }}
               />
@@ -164,10 +169,14 @@ const SubSidebarContent = ({
         </Collapse>
         <ListItemButton
           onClick={(e) => {
-            handleFilterClick(e, '삭제');
+            handleFilterClick(e, '삭제됨');
           }}
         >
-          <ListItemText primary={`삭제된 차량 (${deleteCar.length})`} />
+          <ListItemText
+            primary={`삭제된 차량 (${
+              carInfo.filter((obj) => obj.car_status === '삭제됨').length
+            })`}
+          />
         </ListItemButton>
       </List>
       {/* </Box> */}
@@ -176,7 +185,7 @@ const SubSidebarContent = ({
 };
 
 // 차량 등록 Drawer 컴포넌트
-const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
+const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
   // carInfo props로 잘 받았는지 확인
   console.log(carInfo);
 
@@ -215,7 +224,11 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
     buy_at: dayjs(today).toISOString(),
     memo: '',
     max_capacity: 0,
-    carDetail: { fuel_effciency: '', accum_mileage: '' },
+    carDetail: {
+      fuel_effciency: '',
+      accum_mileage: '',
+      car_address: '강원특별자치도 춘천시 남산면 버들1길 130'
+    },
     carUser: { mem_code: left[0] ? left[0] : null, car_code: '' }
   });
 
@@ -228,6 +241,10 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
   const [isShowSelectUser, setIsSelectUser] = useState(false);
 
   const handleCarAuthority = (e) => {
+    if (e.target.value === '모두') {
+      setLeft([]);
+      setRight(right.concat(left));
+    }
     setRegisterData({ ...registerData, authority: e.target.value });
     setIsSelectUser(e.target.value === '모두' ? false : true);
   };
@@ -369,6 +386,34 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 
   // datePicker 끝
 
+  // 차량 위치
+  const returnLocList = [
+    {
+      index: 0,
+      key: 0,
+      value: '강원특별자치도 춘천시 남산면 버들1길 130'
+    },
+    {
+      index: 1,
+      key: 1,
+      value: '서울특별시 중구 을지로1가 을지로 29'
+    },
+    {
+      index: 2,
+      key: 2,
+      value: '부산 해운대구 센텀중앙로 79'
+    }
+  ];
+
+  const handleLocChange = (e) => {
+    setRegisterData({
+      ...registerData,
+      carDetail: { ...registerData.carDetail, car_address: e.target.value }
+    });
+  };
+
+  // 차량 위치 끝
+
   // 차량 등록 버튼
   const handleSubmitBtn = async (e) => {
     if (
@@ -378,13 +423,16 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
       registerData.fuel_type === null ||
       registerData.carDetail.fuel_effciency === null ||
       registerData.authority === '' ||
-      registerData.max_capacity === null
+      registerData.max_capacity === null ||
+      registerData.car_address === ''
     ) {
       alert('입력하지 않은 필수값이 있습니다.');
       return;
     }
 
     e.stopPropagation();
+
+    console.log(registerData);
 
     await axiosInstance
       .post('/manager/car/carRegister', registerData)
@@ -404,11 +452,6 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
         const newCarInfo = [...carInfo, res.data];
 
         setCarInfo(newCarInfo);
-        if (res.data.type === '승용차') {
-          setCarCounts({ ...carCounts, corporation: ++carCounts.corporation });
-        } else if (res.data.type === '화물차') {
-          setCarCounts({ ...carCounts, personal: ++carCounts.personal });
-        }
         handleCloseDrawer();
         handleSetSnackbarContent('등록이 완료되었습니다.');
         handleOpenSnackbar();
@@ -788,6 +831,35 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
                 </Box>
               </LocalizationProvider>
             </Grid>
+            <Grid item xs={2}>
+              <FormLabel
+                item
+                id="demo-row-radio-buttons-group-label"
+                sx={{
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                차량 위치
+              </FormLabel>
+            </Grid>
+            <Grid
+              item
+              xs={4}
+              sx={{
+                '& .MuiOutlinedInput-root': { margin: '8px !important' }
+              }}
+            >
+              <Selectbox
+                name="car_address"
+                key={returnLocList.key}
+                value={registerData.carDetail.car_address}
+                handleSelectBox={(e) => handleLocChange(e)}
+                menuList={returnLocList}
+              />
+            </Grid>
           </Grid>
         </Grid>
 
@@ -865,7 +937,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
               {customList(
                 filterMemData,
                 <CardHeader
-                  sx={{ px: 2, py: 1 }}
+                  sx={{ px: 2, py: 1, height: '65px' }}
                   title={
                     <UserSearchBar
                       placeholder={'사용자명 검색'}
@@ -901,7 +973,24 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
               </Grid>
             </Grid>
             <Grid item xs={4}>
-              {customList(left, <Typography></Typography>)}
+              {customList(
+                left,
+                <CardHeader
+                  sx={{ px: 2, py: 1, height: '65px' }}
+                  title={
+                    <Box display="flex">
+                      <PersonIcon height="35px" width="35px" color="#637381" />
+                      <Typography
+                        variant="subtitle1"
+                        color="#637381"
+                        marginLeft="10px"
+                      >
+                        선택 사용자
+                      </Typography>
+                    </Box>
+                  }
+                />
+              )}
             </Grid>
           </Grid>
         ) : null}
@@ -913,7 +1002,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo, carCounts, setCarCounts }) => {
 // 실제 등록 페이지
 const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
   const [carInfo, setCarInfo] = useState([]);
-  const [deleteCar, setDeleteCar] = useState([]);
+
+  // const [deleteCar, setDeleteCar] = useState([]);
   const [tabData, setTabData] = useState([]);
 
   useEffect(() => {
@@ -922,17 +1012,10 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
     }
   }, []);
 
-  // 차량 수
-  const [carCounts, setCarCounts] = useState({
-    total: 0,
-    corporation: 0,
-    personal: 0,
-    delete: 0
-  });
-
   const [filter, setFilterValue] = useState('전체');
 
   const [searchInput, setSearchInput] = useState('');
+  const [searchType, setSearchType] = useState(0);
   const [searchValue, setSearchValue] = useState('');
 
   const handleInput = (e) => {
@@ -941,29 +1024,298 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
   const handleSearchBtn = (e) => {
     e.preventDefault();
     // alert('검색 : ' + searchInput);
-    // 여기서 필터링 해줄 상태를 체크!
-    setSearchValue(searchInput);
+
+    const pattern = /^[0-9]{2,3}[\s]*[가-힣]{1}[\s]*[0-9]{4}$/;
+    if (pattern.test(searchInput)) {
+      setSearchType(0);
+      setSearchValue(searchInput);
+    } else {
+      setSearchType(1);
+      setSearchValue(searchInput);
+    }
+    setSearchInput('');
   };
+
+  // 상세 검색 보내줄 객체
+  const dateNow = new Date();
+  const today = dateNow.toISOString().slice(0, 10);
+
+  const [searchFilter, setSearchFilter] = useState({
+    operation_sdate: null,
+    operation_edate: today,
+    authority: '전체',
+    max_capacity: 0,
+    sdistance: 0,
+    edistance: 150000
+  });
+
+  // 상세 검색 관련 함수
+  const [openSearchDetail, setOpenSearchDetail] = useState(false);
+
+  const handleDetailBtn = () => {
+    setOpenSearchDetail((prev) => !prev);
+  };
+
+  const [cleared, setCleared] = useState(false);
+
+  useEffect(() => {
+    if (cleared) {
+      const timeout = setTimeout(() => {
+        setCleared(false);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+    return () => {};
+  }, [cleared]);
+
+  const handleFilterBtn = () => {
+    console.log(searchFilter);
+    axiosInstance
+      .post('/manager/car/carList', searchFilter)
+      .then((res) => {
+        console.log(res.data);
+        setCarInfo(res.data);
+        // 삭제 차량 수 설정
+      })
+      .catch((error) => {
+        // 에러 발생 시 코드 실행
+        console.log(error);
+      });
+  };
+
+  const handleReturnBtn = () => {
+    setSearchFilter({
+      operation_sdate: null,
+      operation_edate: today,
+      authority: '전체',
+      max_capacity: 0,
+      sdistance: 0,
+      edistance: 150000
+    });
+  };
+
+  const searchDetailForm = (
+    <Paper sx={{ width: '100%', padding: '10px 25px', overflow: 'hidden' }}>
+      <Grid container marginBottom="25px">
+        <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="subtitle2">최근 운행 일자</Typography>
+        </Grid>
+        <Grid item xs={4.5} sx={{ overflow: 'hidden' }}>
+          <Box display="flex">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box>
+                <DemoItem>
+                  <DatePicker
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        height: '40px',
+                        width: '150px'
+                      },
+                      '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
+                    }}
+                    format="YYYY-MM-DD"
+                    value={
+                      searchFilter.operation_sdate
+                        ? dayjs(searchFilter.operation_sdate)
+                        : null
+                    }
+                    onChange={(newValue) => {
+                      console.log(searchFilter.operation_sdate);
+                      setSearchFilter({
+                        ...searchFilter,
+                        operation_sdate: newValue.format('YYYY-MM-DD')
+                      });
+                    }}
+                  />
+                </DemoItem>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  margin: '0px 10px'
+                }}
+              >
+                <Typography variant="h6">-</Typography>
+              </Box>
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box>
+                <DemoItem>
+                  <DatePicker
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        height: '40px',
+                        width: '150px'
+                      },
+                      '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
+                    }}
+                    format="YYYY-MM-DD"
+                    size="small"
+                    value={dayjs(searchFilter.operation_edate)}
+                    onChange={(newValue) => {
+                      console.log(searchFilter.operation_edate);
+                      setSearchFilter({
+                        ...searchFilter,
+                        operation_edate: newValue.format('YYYY-MM-DD')
+                      });
+                    }}
+                  />
+                </DemoItem>
+              </Box>
+            </LocalizationProvider>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
+        >
+          <Typography variant="subtitle2">운행 권한</Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Box
+            sx={{ minWidth: 120, '& .MuiFormControl-root': { width: '130px' } }}
+          >
+            <FormControl
+              sx={{
+                '& .MuiInputBase-root': { width: '130px', height: '40px' }
+              }}
+            >
+              <Select
+                id="demo-simple-select"
+                value={searchFilter.authority}
+                displayEmpty
+                onChange={(e) => {
+                  setSearchFilter({
+                    ...searchFilter,
+                    authority: e.target.value
+                  });
+                }}
+              >
+                <MenuItem value="전체">전체</MenuItem>
+                <MenuItem value="모두">모두</MenuItem>
+                <MenuItem value="지정">지정</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="subtitle2">최대 수용 인원</Typography>
+        </Grid>
+        <Grid item xs={4.5}>
+          <Box sx={{ minWidth: 120, width: '270px' }}>
+            <FormControl
+              fullWidth
+              displayEmpty
+              sx={{
+                '& .MuiInputBase-root': { width: '270px', height: '40px' }
+              }}
+            >
+              <Select
+                id="demo-simple-select"
+                value={searchFilter.max_capacity}
+                onChange={(e) => {
+                  setSearchFilter({
+                    ...searchFilter,
+                    max_capacity: e.target.value
+                  });
+                }}
+              >
+                <MenuItem value={0}>전체</MenuItem>
+                <MenuItem value={1}>5명 이하</MenuItem>
+                <MenuItem value={2}>7명 이상</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
+        >
+          <Typography variant="subtitle2">누적주행거리</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Box
+            sx={{
+              minWidth: 120,
+              display: 'flex',
+              '& .MuiFormControl-root': { width: '130px', height: '40px' }
+            }}
+          >
+            <TextField
+              type="number"
+              InputProps={{
+                inputProps: { min: 0 },
+                endAdornment: <InputAdornment position="end">㎞</InputAdornment>
+              }}
+              sx={{
+                '& .MuiInputBase-root': { width: '130px', height: '40px' }
+              }}
+              value={searchFilter.sdistance}
+              onChange={(e) => {
+                setSearchFilter({ ...searchFilter, sdistance: e.target.value });
+              }}
+            ></TextField>
+            <Typography variant="h6" margin="0px 10px">
+              -
+            </Typography>
+            <TextField
+              type="number"
+              InputProps={{
+                inputProps: { min: 0 },
+                endAdornment: <InputAdornment position="end">㎞</InputAdornment>
+              }}
+              sx={{
+                '& .MuiInputBase-root': { width: '130px', height: '40px' }
+              }}
+              value={searchFilter.edistance}
+              onChange={(e) => {
+                setSearchFilter({ ...searchFilter, edistance: e.target.value });
+              }}
+            ></TextField>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid
+        flexGrow={1}
+        display="flex"
+        justifyContent="center"
+        marginTop="30px"
+      >
+        <Box width="8%" marginRight="25px">
+          <RectangleBtn
+            text="초기화"
+            category="cancel"
+            sx={{ height: '35px', padding: '0px' }}
+            handlebtn={handleReturnBtn}
+          />
+        </Box>
+        <Box width="8%">
+          <RectangleBtn
+            text="적용"
+            category="register"
+            sx={{ height: '35px', padding: '0px' }}
+            handlebtn={handleFilterBtn}
+          />
+        </Box>
+      </Grid>
+    </Paper>
+  );
 
   // car DataGrid 시작
 
   useEffect(() => {
+    console.log(searchFilter);
     axiosInstance
-      .get('/manager/car/carList')
+      .post('/manager/car/carList', searchFilter)
       .then((res) => {
-        const response = res.data;
-        setDeleteCar(response.filter((obj) => obj.car_status === '삭제됨'));
-        setCarInfo(response.filter((obj) => obj.car_status !== '삭제됨'));
-
-        const filteredCor = carInfo.filter((obj) => obj.type === '승용차');
-        const filteredPer = carInfo.filter((obj) => obj.type === '화물차');
-        setCarCounts({
-          ...carCounts,
-          total: response.length,
-          corporation: filteredCor.length,
-          personal: filteredPer.length,
-          delete: deleteCar.length
-        });
+        console.log(res.data);
+        setCarInfo(res.data);
         // 삭제 차량 수 설정
       })
       .catch((error) => {
@@ -972,51 +1324,19 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
       });
   }, []);
 
-  const columns = [
-    { id: 'type', label: '종류', minWidth: 170 },
-    { id: 'car_code', label: '차량 번호', minWidth: 100 },
-    {
-      id: 'car_name',
-      label: '차량명',
-      minWidth: 170,
-      align: 'center'
-    },
-    {
-      id: 'created_at',
-      label: '최근운행',
-      minWidth: 170,
-      align: 'center'
-    },
-    {
-      id: 'accum_mileage',
-      label: '누적주행거리',
-      minWidth: 170,
-      align: 'center'
-    },
-    {
-      id: 'memo',
-      label: '메모',
-      minWidth: 170,
-      align: 'center'
-    }
-  ];
-
   return (
     <>
       {/* 캘린더 이벤트 전달은 객체 배열을 props로 전달하여 표시
             
         */}
       <SubHeader title={'차량'} />
-      <Box sx={{ display: 'flex', height: 'calc(100% - 65px)' }}>
+      <Box sx={{ display: 'flex', height: 'calc(100% - 67px)' }}>
         <SubSidebar
           content={
             <SubSidebarContent
               setTabData={setTabData}
               carInfo={carInfo}
               setCarInfo={setCarInfo}
-              deleteCar={deleteCar}
-              carCounts={carCounts}
-              setCarCounts={setCarCounts}
               setFilterValue={setFilterValue}
               setSearchValue={setSearchValue}
               setSearchInput={setSearchInput}
@@ -1033,28 +1353,61 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
               height: 'auto',
               margin: '0px auto'
             }}
-          >
-            <Box sx={{ width: '40%' }}>
-              <Searchbar
-                placeholder={'차량명 검색'}
-                value={searchInput}
-                handleInputChange={handleInput}
-                handleSearchBtnClick={handleSearchBtn}
-              />
-            </Box>
-          </Stack>
+          ></Stack>
           <StyledContainer>
-            <CarInfoTable
-              columns={columns}
+            <Box
+              sx={{
+                width: '100%',
+                maxWidth: '1200px',
+                height: 'auto',
+                margin: '0px auto',
+                padding: '0px 24px',
+                display: 'flex',
+                justifyContent: 'end'
+              }}
+            >
+              <Button
+                sx={{
+                  color: palette.grey['600'],
+                  border: `1px solid ${palette.grey['500']}`,
+                  borderRadius: '2px',
+                  '&:hover': { backgroundColor: '#ffffff' },
+                  height: '35px',
+                  marginRight: '15px'
+                }}
+                onClick={handleDetailBtn}
+              >
+                검색 상세
+              </Button>
+              <Box sx={{ width: '30%' }}>
+                <Searchbar
+                  placeholder={'차량명 · 차량 번호 · 사용자 검색'}
+                  value={searchInput}
+                  handleInputChange={handleInput}
+                  handleSearchBtnClick={handleSearchBtn}
+                  inputHeight={'35px !important'}
+                />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                maxWidth: '1200px',
+                margin: '15px 0px'
+              }}
+            >
+              <Collapse sx={{ width: '100%' }} in={openSearchDetail}>
+                {searchDetailForm}
+              </Collapse>
+            </Box>
+            <CarInfo
               rows={carInfo}
-              deleteCar={deleteCar}
-              tabData={tabData}
               setTabData={setTabData}
               filter={filter}
               searchValue={searchValue}
+              searchType={searchType}
               setCarListInfo={setCarInfo}
-              carCounts={carCounts}
-              setCarCounts={setCarCounts}
             />
           </StyledContainer>
         </Box>
