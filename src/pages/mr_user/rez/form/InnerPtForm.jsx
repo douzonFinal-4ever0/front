@@ -30,6 +30,7 @@ const InnerPtForm = () => {
 
   // 모달창 오픈
   const [openModal, setOpenModal] = useState(false);
+  // ------------------------------------------------------------
   // 참석자 리스트
   const [ptList, setPtList] = useState([]);
   // 전체 사용자 리스트
@@ -40,6 +41,9 @@ const InnerPtForm = () => {
   const [isToggleMemList, setIsToggletMemList] = useState([]);
   // 적용 대상 토글 데이터
   const [isToggleApplyList, setIsToggleApplyList] = useState([]);
+  // ------------------------------------------------------------
+  // 즐겨찾기 그룹
+  const [bmGroupList, setBmGroupList] = useState([]);
 
   useEffect(() => {
     getMembersApi(); // 전체 사용자 리스트 조회
@@ -71,7 +75,7 @@ const InnerPtForm = () => {
       // console.log(res);
       if (res.status !== 200) return;
       //  즐겨찾기 그룹 리스트 업데이트
-      //setBmGroupList(res.data);
+      setBmGroupList(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -84,6 +88,10 @@ const InnerPtForm = () => {
 
   // 참석자 추가 버튼 이벤트
   const handleInnerPtBtn = async () => {
+    if (bmGroupList.length === 0) {
+      getBmMemberApi(mem_code);
+    }
+
     handleModalOpen();
   };
 
@@ -125,10 +133,28 @@ const InnerPtForm = () => {
                   <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>
                     {mem.name}
                   </Typography>
+                  <Typography
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px'
+                    }}
+                  >
+                    {mem.position_name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px'
+                    }}
+                  >
+                    |{' '}
+                    {mem.deptVO === undefined
+                      ? mem.dept_name
+                      : mem.deptVO.dept_name}
+                  </Typography>
                 </Stack>
-              }
-              secondary={
-                <Typography sx={{ fontSize: '14px' }}>{mem.email}</Typography>
               }
             />
           </ListItem>
@@ -160,6 +186,8 @@ const InnerPtForm = () => {
         setIsToggletMemList={setIsToggletMemList}
         isToggleApplyList={isToggleApplyList}
         setIsToggleApplyList={setIsToggleApplyList}
+        bmGroupList={bmGroupList}
+        setBmGroupList={setBmGroupList}
       />
     </>
   );

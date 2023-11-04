@@ -59,63 +59,101 @@ const SelectContainer = ({
   isToggleMemList,
   setIsToggletMemList,
   applyMemberList,
-  ptList
+  ptList,
+  bmGroupList,
+  tempGroupList,
+  setTempGroupList
 }) => {
+  // ****************[START] 조직도 데이터 변환 *************************
+  // 부서명 추출
+  const uniqueDeptNames = new Set();
+  totalMemberList &&
+    totalMemberList.forEach((user) => {
+      if (user.deptVO && user.deptVO['dept_name']) {
+        uniqueDeptNames.add(user.deptVO['dept_name']);
+      }
+    });
+
+  // 부서명 리스트 생성
+  const listByDeptName = Array.from(uniqueDeptNames);
+
+  // 부서별 사원 리스트 생성
+  const listByDeptUser = [];
+  listByDeptName &&
+    listByDeptName.forEach((i) => {
+      const dept = totalMemberList.filter(
+        (user) => user.deptVO['dept_name'] === i
+      );
+      listByDeptUser.push(dept);
+    });
+
+  // 트리 데이터 형식으로 변환
+  const treeData = listByDeptName.map((item, index) => ({
+    dept: item,
+    members: listByDeptUser[index]
+  }));
+  // ****************[END] 조직도 데이터 변환 *************************
+
+  // ****************[START] 즐겨찾기 데이터 변환 *************************
+
+  // 개별 멤버
+  const memResult = bmGroupList.filter((item) => item.bm_group_name === null);
+  // 그룹 & 그룹 멤버
+  const groupResult = bmGroupList.filter((item) => item.bm_group_name !== null);
+
+  // 그룹핑
+  const groupedData = [];
+  groupResult.forEach((item) => {
+    const { bm_group_name, ...rest } = item;
+
+    // 해당 bm_group_code가 이미 존재하는지 확인
+    const existingGroup = groupedData.find(
+      (group) => group.bm_group_name === bm_group_name
+    );
+
+    if (existingGroup) {
+      // 이미 존재하는 경우 mem_list 배열에 추가
+      existingGroup.mem_list.push(rest);
+    } else {
+      // 새로운 그룹 생성
+      const newGroup = { bm_group_name, mem_list: [rest] };
+      groupedData.push(newGroup);
+    }
+  });
+  // ****************[END] 즐겨찾기 데이터 변환 *************************
+
+  // [조직도] 트리 아이템 클릭 이벤트
+  const handleTreeItemClick = (e, nodeId) => {
+    // 부서명 클릭 시 오류 처리
+    if (listByDeptName.includes(nodeId)) return;
+
+    // 토글 상태 변경
+    const findIndex = totalMemberList.findIndex(
+      (mem) => mem.mem_code === nodeId
+    );
+    const copyIsToggleList = [...isToggleMemList];
+    copyIsToggleList[findIndex] = !isToggleMemList[findIndex];
+    setIsToggletMemList(copyIsToggleList);
+
+    if (!isToggleMemList[findIndex]) {
+      // 임시 선택 멤버 리스트에 추가
+      setTempSelectMemLsit([...tempSelectMemList, nodeId]);
+    } else {
+      const res = tempSelectMemList.filter((mem) => mem === nodeId);
+      if (res.length !== 0) {
+        const newArr = tempSelectMemList.filter((mem) => mem !== nodeId);
+        setTempSelectMemLsit(newArr);
+      }
+    }
+  };
+
+  // [즐겨찾기 그룹] 트리 아이템 클릭 이벤트
+  const handleBmGroupTreeClick = (e, nodeId) => {
+    setTempGroupList([...tempGroupList, nodeId]);
+  };
+
   switch (tab) {
     case 'all':
-      // 부서명 추출
-      const uniqueDeptNames = new Set();
-      totalMemberList &&
-        totalMemberList.forEach((user) => {
-          if (user.deptVO && user.deptVO['dept_name']) {
-            uniqueDeptNames.add(user.deptVO['dept_name']);
-          }
-        });
-
-      // 부서명 리스트 생성
-      const listByDeptName = Array.from(uniqueDeptNames);
-
-      // 부서별 사원 리스트 생성
-      const listByDeptUser = [];
-      listByDeptName &&
-        listByDeptName.forEach((i) => {
-          const dept = totalMemberList.filter(
-            (user) => user.deptVO['dept_name'] === i
-          );
-          listByDeptUser.push(dept);
-        });
-
-      // 트리 데이터 형식으로 변환
-      const treeData = listByDeptName.map((item, index) => ({
-        dept: item,
-        members: listByDeptUser[index]
-      }));
-
-      // 트리 아이템 클릭 이벤트
-      const handleTreeItemClick = (e, nodeId) => {
-        // 부서명 클릭 시 오류 처리
-        if (listByDeptName.includes(nodeId)) return;
-
-        // 토글 상태 변경
-        const findIndex = totalMemberList.findIndex(
-          (mem) => mem.mem_code === nodeId
-        );
-        const copyIsToggleList = [...isToggleMemList];
-        copyIsToggleList[findIndex] = !isToggleMemList[findIndex];
-        setIsToggletMemList(copyIsToggleList);
-
-        if (!isToggleMemList[findIndex]) {
-          // 임시 선택 멤버 리스트에 추가
-          setTempSelectMemLsit([...tempSelectMemList, nodeId]);
-        } else {
-          const res = tempSelectMemList.filter((mem) => mem === nodeId);
-          if (res.length !== 0) {
-            const newArr = tempSelectMemList.filter((mem) => mem !== nodeId);
-            setTempSelectMemLsit(newArr);
-          }
-        }
-      };
-
       // 사용자 트리 아이템
       const TreeLabel = ({ userTree }) => {
         const findIndex = totalMemberList.findIndex(
@@ -192,11 +230,65 @@ const SelectContainer = ({
         </StyledContainer>
       );
     case 'search':
-      return <Box>검색</Box>;
+      return (
+        <StyledContainer>
+          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}> 검색</Box>
+        </StyledContainer>
+      );
     case 'bmGroup':
-      return <Box>그룹</Box>;
+      const BmGroupMemLabel = ({ memTree }) => {
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '2px 20px'
+            }}
+          >
+            <Stack direction={'row'} gap={'4px'}>
+              <StyledUserName>{memTree.name}</StyledUserName>
+              <StyledUserEmail>{memTree.position_name}</StyledUserEmail>
+            </Stack>
+          </Box>
+        );
+      };
+
+      return (
+        <StyledContainer>
+          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+            <TreeView
+              aria-label="customized"
+              defaultExpanded={['1']}
+              defaultCollapseIcon={<MinusSquare />}
+              defaultExpandIcon={<PlusSquare />}
+              onNodeSelect={handleBmGroupTreeClick}
+              sx={{
+                overflowX: 'hidden'
+              }}
+            >
+              {groupedData &&
+                groupedData.map((bmGroup, index) => (
+                  <StyledTreeItem
+                    nodeId={bmGroup.bm_group_name}
+                    label={bmGroup.bm_group_name}
+                    key={index}
+                    sx={{}}
+                  >
+                    {bmGroup.mem_list.map((memTree, index) => (
+                      <BmGroupMemLabel memTree={memTree} />
+                    ))}
+                  </StyledTreeItem>
+                ))}
+            </TreeView>
+          </Box>
+        </StyledContainer>
+      );
     case 'bmMember':
-      return <Box>멤버</Box>;
+      return (
+        <StyledContainer>
+          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}> 멤버</Box>
+        </StyledContainer>
+      );
     default:
       return;
   }
@@ -209,7 +301,9 @@ const ApplyContainer = ({
   isToggleApplyList,
   setIsToggleApplyList,
   tempApplyMemList,
-  setTempApplyMemList
+  setTempApplyMemList,
+  applyBmGroupList,
+  setApplyBmGroupList
 }) => {
   switch (tab) {
     case 'all':
@@ -277,7 +371,75 @@ const ApplyContainer = ({
     case 'search':
       return <Box>검색</Box>;
     case 'bmGroup':
-      return <Box>그룹</Box>;
+      // 그룹 & 그룹 멤버
+      const groupResult = applyBmGroupList.filter(
+        (item) => item.bm_group_name !== null
+      );
+
+      // 그룹핑
+      const groupedData = [];
+      groupResult.forEach((item) => {
+        const { bm_group_name, ...rest } = item;
+
+        // 해당 bm_group_code가 이미 존재하는지 확인
+        const existingGroup = groupedData.find(
+          (group) => group.bm_group_name === bm_group_name
+        );
+
+        if (existingGroup) {
+          // 이미 존재하는 경우 mem_list 배열에 추가
+          existingGroup.mem_list.push(rest);
+        } else {
+          // 새로운 그룹 생성
+          const newGroup = { bm_group_name, mem_list: [rest] };
+          groupedData.push(newGroup);
+        }
+      });
+
+      const BmGroupMemLabel = ({ memTree }) => {
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '2px 20px'
+            }}
+          >
+            <Stack direction={'row'} gap={'4px'}>
+              <StyledUserName>{memTree.name}</StyledUserName>
+              <StyledUserEmail>{memTree.position_name}</StyledUserEmail>
+            </Stack>
+          </Box>
+        );
+      };
+
+      return (
+        <StyledContainer>
+          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+            <TreeView
+              aria-label="customized"
+              defaultExpanded={['1']}
+              defaultCollapseIcon={<MinusSquare />}
+              defaultExpandIcon={<PlusSquare />}
+              defaultEndIcon={<CircleIcon />}
+              sx={{ overflowX: 'hidden' }}
+            >
+              {groupedData &&
+                groupedData.map((group, index) => (
+                  <StyledTreeItem
+                    nodeId={group.bm_group_name}
+                    label={group.bm_group_name}
+                    key={index}
+                  >
+                    {group.mem_list.map((memTree, index) => (
+                      <BmGroupMemLabel memTree={memTree} />
+                    ))}
+                  </StyledTreeItem>
+                ))}
+            </TreeView>
+          </Box>
+        </StyledContainer>
+      );
     case 'bmMember':
       return <Box>멤버</Box>;
     default:
@@ -298,14 +460,22 @@ const PtModal = ({
   isToggleMemList,
   setIsToggletMemList,
   isToggleApplyList,
-  setIsToggleApplyList
+  setIsToggleApplyList,
+  bmGroupList,
+  setBmGroupList
 }) => {
+  console.log(ptList);
   // 좌측 탭 메뉴 (토글)
   const [selectTab, setSelectTab] = useState('all');
   // 선택된 사용자 임시 리스트 (*적용 대상에 추가되기 전 선택된 사용자들)
   const [tempSelectMemList, setTempSelectMemLsit] = useState([]);
   // 선택된 적용대상 임시 리스트 (*참석자 완료리스트에 추가되기 전 선택된 적용대상들)
   const [tempApplyMemList, setTempApplyMemList] = useState([]);
+
+  // 즐겨찾기 적용대상 리스트
+  const [applyBmGroupList, setApplyBmGroupList] = useState([]);
+  // 선택된 즐겨찾기 그룹 임시 리스트
+  const [tempGroupList, setTempGroupList] = useState([]);
 
   // 좌측 토글 메뉴 클릭 이벤트
   const handleToggleClick = (e) => {
@@ -314,23 +484,39 @@ const PtModal = ({
 
   // 추가 버튼 클릭 이벤트
   const handleAddBtn = () => {
-    let list = [];
-    tempSelectMemList &&
-      tempSelectMemList.forEach((mem) => {
-        const res = totalMemberList.filter((i) => i.mem_code === mem);
-        if (res.length !== 0) {
-          list.push(...res);
-        }
+    if (selectTab === 'all') {
+      let list = [];
+      tempSelectMemList &&
+        tempSelectMemList.forEach((mem) => {
+          const res = totalMemberList.filter((i) => i.mem_code === mem);
+          if (res.length !== 0) {
+            list.push(...res);
+          }
+        });
+
+      // 적용 대상 리스트 업데이트
+      setApplyMemberList(list);
+      // 적용 대상 리스트 수만큼 토글 리스트 생성
+      setIsToggleApplyList(Array.from({ length: list.length }, () => false));
+      // 토글 리스트 값 생성
+      setIsToggletMemList(
+        Array.from({ length: totalMemberList.length }, () => false)
+      );
+    }
+
+    if (selectTab === 'bmGroup') {
+      let list = [];
+      tempGroupList.forEach((group) => {
+        bmGroupList.forEach((data) => {
+          if (data.bm_group_name === group) {
+            list.push(data);
+          }
+        });
       });
 
-    // 적용 대상 리스트 업데이트
-    setApplyMemberList(list);
-    // 적용 대상 리스트 수만큼 토글 리스트 생성
-    setIsToggleApplyList(Array.from({ length: list.length }, () => false));
-    // 토글 리스트 값 생성
-    setIsToggletMemList(
-      Array.from({ length: totalMemberList.length }, () => false)
-    );
+      setApplyBmGroupList(list); // 데이터 업데이트
+      setTempGroupList([]); //초기화
+    }
   };
 
   // 제외 버튼 클릭 이벤트
@@ -354,15 +540,27 @@ const PtModal = ({
   const handleCancelBtn = () => {
     // 적용 대상 리스트 초기화
     setApplyMemberList(ptList);
+    setApplyBmGroupList([]);
+
     // 임시 리스트 초기화
     setTempSelectMemLsit([]);
     setTempApplyMemList([]);
+    setTempGroupList([]);
 
     handleModal();
   };
 
+  // 확인 버튼 클릭 이벤트
   const handleConfirmBtn = () => {
-    setPtList(applyMemberList);
+    // 조직도 적용 대상에 데이터가 있는 경우
+    if (applyMemberList.length !== 0) {
+      setPtList(applyMemberList);
+    }
+
+    if (applyBmGroupList.length !== 0) {
+      setPtList(applyBmGroupList);
+    }
+
     handleModal();
   };
 
@@ -407,6 +605,9 @@ const PtModal = ({
                 setIsToggletMemList={setIsToggletMemList}
                 applyMemberList={applyMemberList}
                 ptList={ptList}
+                bmGroupList={bmGroupList}
+                tempGroupList={tempGroupList}
+                setTempGroupList={setTempGroupList}
               />
             </Stack>
           </Grid>
@@ -444,6 +645,8 @@ const PtModal = ({
                 setIsToggleApplyList={setIsToggleApplyList}
                 tempApplyMemList={tempApplyMemList}
                 setTempApplyMemList={setTempApplyMemList}
+                applyBmGroupList={applyBmGroupList}
+                setApplyBmGroupList={setApplyBmGroupList}
               />
             </Stack>
           </Grid>
@@ -501,42 +704,6 @@ const PlusSquare = (props) => {
   );
 };
 
-const SolidSquareIcon = (props) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <rect width="24" height="24" rx="2" ry="2" />
-    </svg>
-  );
-};
-
-const SquareIcon = (props) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-    </svg>
-  );
-};
-
 function CircleIcon(props) {
   return (
     <svg
@@ -583,7 +750,7 @@ const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
   },
   [`& .${treeItemClasses.group}`]: {
     marginLeft: 15,
-    paddingLeft: 18,
+    paddingLeft: 10,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`
   }
 }));
