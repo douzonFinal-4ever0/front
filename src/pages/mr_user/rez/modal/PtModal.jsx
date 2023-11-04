@@ -62,7 +62,10 @@ const SelectContainer = ({
   ptList,
   bmGroupList,
   tempGroupList,
-  setTempGroupList
+  setTempGroupList,
+  setIsToggleBmMemList,
+  tempBmMemList,
+  setTempBmMemList
 }) => {
   // ****************[START] 조직도 데이터 변환 *************************
   // 부서명 추출
@@ -150,6 +153,11 @@ const SelectContainer = ({
   // [즐겨찾기 그룹] 트리 아이템 클릭 이벤트
   const handleBmGroupTreeClick = (e, nodeId) => {
     setTempGroupList([...tempGroupList, nodeId]);
+  };
+
+  // [즐겨찾기 멤버] 트리 아이템 클릭 이벤트]
+  const handleBmMemTreeClick = (e, nodeId) => {
+    setTempBmMemList([...tempBmMemList, nodeId]);
   };
 
   switch (tab) {
@@ -284,9 +292,46 @@ const SelectContainer = ({
         </StyledContainer>
       );
     case 'bmMember':
+      const MemLabel = ({ memTree }) => {
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: '2px 0px'
+            }}
+          >
+            <Stack direction={'row'} gap={'4px'}>
+              <StyledUserName>{memTree.name}</StyledUserName>
+              <StyledUserEmail>{memTree.position_name}</StyledUserEmail>
+              <StyledUserEmail>| {memTree.dept_name}</StyledUserEmail>
+            </Stack>
+          </Box>
+        );
+      };
       return (
         <StyledContainer>
-          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}> 멤버</Box>
+          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+            <TreeView
+              aria-label="customized"
+              defaultExpanded={['1']}
+              defaultEndIcon={<CircleIcon />}
+              onNodeSelect={handleBmMemTreeClick}
+              sx={{
+                overflowX: 'hidden'
+              }}
+            >
+              {memResult &&
+                memResult.map((mem, index) => (
+                  <StyledTreeItem
+                    nodeId={mem.mem_code}
+                    label={<MemLabel memTree={mem} />}
+                    key={index}
+                    sx={{}}
+                  />
+                ))}
+            </TreeView>
+          </Box>
         </StyledContainer>
       );
     default:
@@ -307,6 +352,7 @@ const ApplyContainer = ({
 }) => {
   switch (tab) {
     case 'all':
+    case 'bmMember':
       const handleApplyTreeItem = (e, nodeId) => {
         // 토글 상태 변경
         const findIndex = applyMemberList.findIndex(
@@ -440,8 +486,7 @@ const ApplyContainer = ({
           </Box>
         </StyledContainer>
       );
-    case 'bmMember':
-      return <Box>멤버</Box>;
+
     default:
       return;
   }
@@ -462,7 +507,8 @@ const PtModal = ({
   isToggleApplyList,
   setIsToggleApplyList,
   bmGroupList,
-  setBmGroupList
+  setBmGroupList,
+  setIsToggleBmMemList
 }) => {
   console.log(ptList);
   // 좌측 탭 메뉴 (토글)
@@ -476,6 +522,8 @@ const PtModal = ({
   const [applyBmGroupList, setApplyBmGroupList] = useState([]);
   // 선택된 즐겨찾기 그룹 임시 리스트
   const [tempGroupList, setTempGroupList] = useState([]);
+  // 선택된 즐겨찾기 멤버 임시 리스트
+  const [tempBmMemList, setTempBmMemList] = useState([]);
 
   // 좌측 토글 메뉴 클릭 이벤트
   const handleToggleClick = (e) => {
@@ -517,6 +565,20 @@ const PtModal = ({
       setApplyBmGroupList(list); // 데이터 업데이트
       setTempGroupList([]); //초기화
     }
+
+    if (selectTab === 'bmMember') {
+      let list = [];
+      tempBmMemList &&
+        tempBmMemList.forEach((mem) => {
+          const res = totalMemberList.filter((i) => i.mem_code === mem);
+          if (res.length !== 0) {
+            list.push(...res);
+          }
+        });
+
+      // 적용 대상 리스트 업데이트
+      setApplyMemberList(list);
+    }
   };
 
   // 제외 버튼 클릭 이벤트
@@ -541,11 +603,13 @@ const PtModal = ({
     // 적용 대상 리스트 초기화
     setApplyMemberList(ptList);
     setApplyBmGroupList([]);
+    setBmGroupList([]);
 
     // 임시 리스트 초기화
     setTempSelectMemLsit([]);
     setTempApplyMemList([]);
     setTempGroupList([]);
+    setTempBmMemList([]);
 
     handleModal();
   };
@@ -608,6 +672,9 @@ const PtModal = ({
                 bmGroupList={bmGroupList}
                 tempGroupList={tempGroupList}
                 setTempGroupList={setTempGroupList}
+                setIsToggleBmMemList={setIsToggleBmMemList}
+                tempBmMemList={tempBmMemList}
+                setTempBmMemList={setTempBmMemList}
               />
             </Stack>
           </Grid>

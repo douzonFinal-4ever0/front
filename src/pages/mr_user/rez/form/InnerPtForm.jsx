@@ -44,6 +44,8 @@ const InnerPtForm = () => {
   // ------------------------------------------------------------
   // 즐겨찾기 그룹
   const [bmGroupList, setBmGroupList] = useState([]);
+  // 즐겨찾기 멤버 토글 데이터
+  const [isToggleBmMemList, setIsToggleBmMemList] = useState([]);
 
   useEffect(() => {
     getMembersApi(); // 전체 사용자 리스트 조회
@@ -188,6 +190,7 @@ const InnerPtForm = () => {
         setIsToggleApplyList={setIsToggleApplyList}
         bmGroupList={bmGroupList}
         setBmGroupList={setBmGroupList}
+        setIsToggleBmMemList={setIsToggleBmMemList}
       />
     </>
   );
