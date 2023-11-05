@@ -88,18 +88,22 @@ export const times = [
 export const meetingTypes = [
   {
     index: 0,
-    value: '프로젝트 회의'
+    value: '프로젝트회의'
   },
   {
     index: 1,
-    value: '컨퍼런스'
+    value: '화상회의'
+  },
+  {
+    index: 2,
+    value: '미팅'
   },
   {
     index: 3,
-    value: '화상 회의'
+    value: '프레젠테이션'
   },
   {
-    index: 4,
-    value: '정기 회의'
+    index: 3,
+    value: '컨퍼런스'
   }
 ];
