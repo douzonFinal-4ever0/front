@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  mr_List: [] // 즐겨찾기 회의실 리스트
+  mr_list: [] // 즐겨찾기 회의실 리스트
 };
 
 const bmSlice = createSlice({
@@ -10,7 +10,7 @@ const bmSlice = createSlice({
   reducers: {
     setBmData(state, action) {
       const { data } = action.payload;
-      return { ...state, data };
+      return { ...state, mr_list: [...data] };
     }
   }
 });
