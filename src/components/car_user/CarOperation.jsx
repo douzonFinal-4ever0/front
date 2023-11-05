@@ -64,7 +64,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
   };
   useEffect(() => {
     if (open) {
-      axiosInstance
+      axiosInstance.axiosInstance
         .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
         .then((res) => {
           console.log(res.data);
@@ -116,7 +116,6 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     resetExp();
     setFormData((preState) => {
       const newState = { ...preState };
-
       newState.expenditureDTO = [...expList, exp];
       console.log(newState);
       return newState;
@@ -146,11 +145,12 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     } else {
       // console.log(expList2);
       console.log(formData);
-      axiosInstance
+      axiosInstance.axiosInstance
         .post(`http://localhost:8081/car_rez/operation`, formData)
         .then((res) => {
           console.log(res.data);
           alert('운행 처리 완료');
+          setExpList([]);
           handleClose();
         });
     }
@@ -165,7 +165,6 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
   /**이미지가 리스트에 추가가 되는 이벤트 */
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -240,7 +239,8 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                         )
                       }}
                       defaultValue={
-                        formData.aft_mileage && formData.aft_mileage
+                        formData.aft_mileage.toFixed(1) &&
+                        formData.aft_mileage.toFixed(1)
                       }
                       onChange={hanldeFormData}
                       // value={
