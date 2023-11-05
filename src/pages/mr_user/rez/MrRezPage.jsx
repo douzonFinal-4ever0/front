@@ -7,6 +7,7 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
 // -------------------------------------------------------------
 import { setMrRecommendData } from '../../../redux/reducer/MrRecommendSlice';
+import { setBmData } from '../../../redux/reducer/BmSlice';
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import RecommendSection from './section/RecommendSection';
@@ -17,7 +18,9 @@ import SubHeader from '../../../components/common/SubHeader';
 const MrRezPage = () => {
   const navigation = useNavigate();
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
+  const bmData = useSelector(setBmData).payload.bm;
   const { list } = mrRecommendData;
+  const { mr_list } = bmData;
 
   const [selectMrCard, setSelectMrCard] = useState({});
 
