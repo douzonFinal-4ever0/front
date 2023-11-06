@@ -18,8 +18,7 @@ import {
   Typography
 } from '@mui/material';
 import { Box, Container } from '@mui/system';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import styled from '@emotion/styled';
 import Label from '../common/Label';
@@ -31,6 +30,11 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HdrAutoOutlinedIcon from '@mui/icons-material/HdrAutoOutlined';
 import axiosInstance from '../../utils/axios';
 import PersonIcon from '@mui/icons-material/Person';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
+import { useDispatch } from 'react-redux';
 
 const style = {
   position: 'absolute',
@@ -44,6 +48,17 @@ const style = {
 };
 
 const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
+  const dispatch = useDispatch();
+
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   // 수정 모달 관련 변수 및 함수
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -64,9 +79,13 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
 
   const carDeleteBtn = () => {
     console.log(carCode);
-    axiosInstance.put('/manager/car/carDelete', carCode).then((res) => {
-      console.log(res.data);
-    });
+    axiosInstance.axiosInstance
+      .put('/manager/car/carDelete', carCode)
+      .then((res) => {
+        console.log(res.data);
+        handleSetSnackbarContent('삭제가 완료되었습니다.');
+        handleOpenSnackbar();
+      });
   };
 
   const [carInfo, setCarInfo] = useState({
@@ -240,7 +259,7 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
 
   useEffect(() => {
     console.log(carCode);
-    axiosInstance
+    axiosInstance.axiosInstance
       .get(`/manager/car/carGetOne`, {
         params: {
           car_code: carCode
@@ -262,7 +281,7 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
   // 차량 상세 수정
   const handleModifyBtn = () => {
     // 모달창 오픈
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/manager/memList')
       .then((res) => {
         carInfo.carUser !== null
@@ -316,10 +335,10 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
   const clickModifyBtn = () => {
     console.log(carModifyInfo);
     // 수정 axios 처리
-    axiosInstance
+    axiosInstance.axiosInstance
       .put('/manager/car/carModify', carModifyInfo)
       .then(() => {
-        axiosInstance
+        axiosInstance.axiosInstance
           .get(`/manager/car/carGetOne`, {
             params: {
               car_code: carModifyInfo.car_code
@@ -331,30 +350,28 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
             setCarInfo(res.data);
 
             // 리스트에 적용
-            const newCarInfo = carListInfo.map((obj) => {
-              if (obj.car_code === carModifyInfo.car_code) {
-                return {
-                  type: obj.type,
-                  car_name: obj.car_name,
-                  car_code: obj.car_code,
-                  created_at: obj.created_at,
-                  accum_mileage: res.data.accum_mileage,
-                  memo: res.data.carVO.memo,
-                  authority: res.data.carVO.authority,
-                  car_status: res.data.car_status,
-                  dept_name: res.data.carUser.dept_name,
-                  max_capacity: res.data.carVO.max_capacity,
-                  mem_code: res.data.carUser.mem_code,
-                  name: res.data.carUser.name,
-                  position_name: res.data.carUser.position_name
-                };
+
+            const updatedItem = [...carListInfo];
+            const modifyCar = carListInfo.find(
+              (item) => item.car_code === carModifyInfo.car_code
+            );
+            if (modifyCar) {
+              modifyCar.accum_mileage = res.data.accum_mileage;
+              modifyCar.memo = res.data.carVO.memo;
+              modifyCar.authority = res.data.carVO.authority;
+              modifyCar.car_status = res.data.car_status;
+              modifyCar.max_capacity = res.data.carVO.max_capacity;
+              if (modifyCar.authority !== '모두') {
+                modifyCar.dept_name = res.data.carUser.dept_name;
+                modifyCar.mem_code = res.data.carUser.mem_code;
+                modifyCar.name = res.data.carUser.name;
+                modifyCar.position_name = res.data.carUser.position_name;
               }
-              return obj;
-            });
+              setCarListInfo(updatedItem);
+            }
 
-            console.log(newCarInfo);
-            setCarListInfo(newCarInfo);
-
+            handleSetSnackbarContent('수정이 완료되었습니다.');
+            handleOpenSnackbar();
             handleClose();
           })
           .catch((error) => {

@@ -10,14 +10,9 @@ import {
   Box,
   Chip,
   Toolbar,
-  IconButton,
-  Popper,
-  Fade,
   Paper,
   Typography,
   Card,
-  CardContent,
-  Grid,
   Switch,
   Badge,
   Button
@@ -33,7 +28,6 @@ import UserProfile from '../../assets/images/user/user-round.svg';
 import LogoImage from '../../assets/images/logo/logo.png';
 import { palette } from '../../theme/palette';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { minHeight } from '@mui/system';
 
 const Header = (props) => {
   const user = useSelector(setUserData).payload.user;

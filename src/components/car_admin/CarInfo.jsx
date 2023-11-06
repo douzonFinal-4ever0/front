@@ -196,6 +196,7 @@ const CarInfo = ({
   ];
 
   const filteredRows = rows.filter((item) => {
+    const lowerSearchValue = searchValue.toLowerCase();
     if (searchType === 0) {
       // 차량 코드로 검색
       return item.car_code.includes(searchValue);
@@ -203,8 +204,9 @@ const CarInfo = ({
       // 다른 경우 (차량명 또는 사용자 이름으로 검색)
       console.log(item);
       return item.authority === '지정'
-        ? item.car_name.includes(searchValue) || item.name.includes(searchValue)
-        : item.car_name.includes(searchValue);
+        ? item.car_name.toLowerCase().includes(lowerSearchValue) ||
+            item.name.includes(searchValue)
+        : item.car_name.toLowerCase().includes(lowerSearchValue);
     }
   });
 
@@ -218,7 +220,7 @@ const CarInfo = ({
   return (
     <Box
       sx={{
-        height: 650,
+        height: 'auto',
         width: '100%',
         '& .MuiDataGrid-columnHeaders': {
           backgroundColor: '#f0f0f0'

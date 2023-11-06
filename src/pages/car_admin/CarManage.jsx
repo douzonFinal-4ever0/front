@@ -251,7 +251,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
 
   // axios로 사용자 정보 불러오기
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/manager/memList')
       .then((res) => {
         setRight(res.data);
@@ -434,24 +434,44 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
 
     console.log(registerData);
 
-    await axiosInstance
+    await axiosInstance.axiosInstance
       .post('/manager/car/carRegister', registerData)
       .then((res) => {})
       .catch((error) => {
         // 에러 발생 시 코드 실행
         console.log(error);
       });
-    axiosInstance
+    axiosInstance.axiosInstance
       .get(`/manager/car/carListGetOne`, {
         params: {
-          car_code: registerData.car_code
+          mem_code: registerData.carUser.mem_code
         }
       })
       .then((res) => {
         // console.log(res);
-        const newCarInfo = [...carInfo, res.data];
+        // const newCarInfo = [...carInfo, res.data];
+        const newCarInfo = {
+          type: registerData.type,
+          car_name: registerData.car_name,
+          car_code: registerData.car_code,
+          created_at: null,
+          accum_mileage: registerData.carDetail.accum_mileage,
+          memo: registerData.memo,
+          car_status: '사용가능',
+          authority: registerData.authority,
+          max_capacity: registerData.max_capacity,
+          mem_code: registerData.carUser.mem_code,
+          position_name: res.data.position_name,
+          name: res.data.name,
+          dept_name: res.data.dept_name
+        };
+        const updatedItems = [...carInfo];
+        // 새로운 객체를 배열의 앞에 추가
+        updatedItems.unshift(newCarInfo);
 
-        setCarInfo(newCarInfo);
+        // 새로운 배열 상태로 설정
+        setCarInfo(updatedItems);
+        // setCarInfo([...carInfo, newCarInfo]);
         handleCloseDrawer();
         handleSetSnackbarContent('등록이 완료되었습니다.');
         handleOpenSnackbar();
@@ -1071,7 +1091,7 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
 
   const handleFilterBtn = () => {
     console.log(searchFilter);
-    axiosInstance
+    axiosInstance.axiosInstance
       .post('/manager/car/carList', searchFilter)
       .then((res) => {
         console.log(res.data);
@@ -1311,7 +1331,7 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
 
   useEffect(() => {
     console.log(searchFilter);
-    axiosInstance
+    axiosInstance.axiosInstance
       .post('/manager/car/carList', searchFilter)
       .then((res) => {
         console.log(res.data);
@@ -1330,7 +1350,7 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
             
         */}
       <SubHeader title={'차량'} />
-      <Box sx={{ display: 'flex', height: 'calc(100% - 67px)' }}>
+      <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar
           content={
             <SubSidebarContent
@@ -1342,24 +1362,15 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
               setSearchInput={setSearchInput}
             />
           }
-          widthP={20}
+          widthP={15}
         />
         <Drawer width={1150} tabData={tabData} />
-        <Box sx={{ width: '100%', padding: 3 }}>
-          <Stack
-            sx={{
-              width: '100%',
-              maxWidth: '1200px',
-              height: 'auto',
-              margin: '0px auto'
-            }}
-          ></Stack>
+        <Box flexGrow={1} sx={{ padding: 3, overflow: 'auto' }}>
           <StyledContainer>
             <Box
               sx={{
                 width: '100%',
                 maxWidth: '1200px',
-                height: 'auto',
                 margin: '0px auto',
                 padding: '0px 24px',
                 display: 'flex',
@@ -1422,7 +1433,6 @@ const StyledContainer = styled(Container)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
   width: '100%',
   height: 'auto',
-  marginTop: '20px',
   padding: '20px',
   borderRadius: 10
 }));

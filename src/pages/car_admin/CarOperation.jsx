@@ -13,6 +13,7 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
+  Modal,
   Paper,
   Select,
   TextField,
@@ -26,9 +27,55 @@ import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import dayjs, { Dayjs } from 'dayjs';
 import { subDays } from 'date-fns';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import MileageLogModal from '../../components/car_admin/operation/MileageLogModal';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3
+};
 
 const CarOperationPage = () => {
   const [searchInput, setSearchInput] = useState('');
+  const [searchType, setSearchType] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleInput = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  // 모달 관련 함수
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleSearchBtn = (e) => {
+    e.preventDefault();
+    // alert('검색 : ' + searchInput);
+
+    const pattern = /^[0-9]{2,3}[\s]*[가-힣]{1}[\s]*[0-9]*$/i;
+    if (pattern.test(searchInput)) {
+      setSearchType(0);
+      setSearchValue(searchInput);
+    } else {
+      setSearchType(1);
+      setSearchValue(searchInput);
+    }
+    setSearchInput('');
+  };
 
   const dateNow = new Date();
   const today = dateNow.toISOString().slice(0, 10);
@@ -44,22 +91,11 @@ const CarOperationPage = () => {
     sdistance: 0,
     edistance: 1000
   });
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleInput = (e) => {
-    setSearchInput(e.target.value);
-  };
-  const handleSearchBtn = (e) => {
-    e.preventDefault();
-    // alert('검색 : ' + searchInput);
-    // 여기서 필터링 해줄 상태를 체크!
-    setSearchValue(searchInput);
-  };
 
   const [operationData, setOperationData] = useState([]);
 
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .post('/manager/car/operationList', searchFilter)
       .then((res) => {
         console.log(res.data);
@@ -112,7 +148,7 @@ const CarOperationPage = () => {
 
   const handleFilterBtn = () => {
     console.log(searchFilter);
-    axiosInstance
+    axiosInstance.axiosInstance
       .post('/manager/car/operationList', searchFilter)
       .then((res) => {
         console.log(res.data);
@@ -381,44 +417,84 @@ const CarOperationPage = () => {
     setOpenSearchDetail((prev) => !prev);
   };
 
+  const handleOperationDownBtn = () => {
+    handleModalOpen();
+  };
+
   return (
-    <>
+    <Box sx={{ height: '85%' }}>
+      <Modal
+        open={modalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <MileageLogModal handleModalClose={handleModalClose} style={style} />
+      </Modal>
       <SubHeader title={'운행 내역'} />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
         <StyledMain>
-          <Box sx={{ width: '100%', padding: 3, backgroundColor: '#ffffff' }}>
+          <Box
+            sx={{
+              width: '100%',
+              padding: 3,
+              backgroundColor: '#ffffff'
+            }}
+          >
             <Box
               sx={{
                 width: '100%',
                 maxWidth: '1200px',
-                height: 'auto',
                 margin: '0px auto',
                 padding: '0px 24px',
                 display: 'flex',
-                justifyContent: 'end'
+                justifyContent: 'space-between'
               }}
             >
-              <Button
-                sx={{
-                  color: palette.grey['600'],
-                  border: `1px solid ${palette.grey['500']}`,
-                  borderRadius: '2px',
-                  '&:hover': { backgroundColor: '#ffffff' },
-                  height: '35px',
-                  marginRight: '15px'
-                }}
-                onClick={handleDetailBtn}
-              >
-                검색 상세
-              </Button>
-              <Box sx={{ width: '30%' }}>
-                <Searchbar
-                  placeholder={'차량명 검색'}
-                  value={searchInput}
-                  handleInputChange={handleInput}
-                  handleSearchBtnClick={handleSearchBtn}
-                  inputHeight={'35px !important'}
-                />
+              <Box>
+                <Button
+                  sx={{
+                    color: '#ffffff',
+                    backgroundColor: '#114c96',
+                    borderRadius: '4px',
+                    '&:hover': { backgroundColor: '#4873aa' },
+                    height: '35px',
+                    marginRight: '15px'
+                  }}
+                  endIcon={<FileDownloadIcon />}
+                  onClick={handleOperationDownBtn}
+                >
+                  운행일지 다운로드
+                </Button>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Button
+                  sx={{
+                    color: palette.grey['600'],
+                    border: `1px solid ${palette.grey['500']}`,
+                    borderRadius: '2px',
+                    '&:hover': { backgroundColor: '#ffffff' },
+                    height: '35px',
+                    marginRight: '15px'
+                  }}
+                  onClick={handleDetailBtn}
+                >
+                  검색 상세
+                </Button>
+                <Box flexGrow={1}>
+                  <Searchbar
+                    placeholder={'차량명 · 차량 번호 · 사용자 검색'}
+                    value={searchInput}
+                    handleInputChange={handleInput}
+                    handleSearchBtnClick={handleSearchBtn}
+                    inputHeight={'35px !important'}
+                  />
+                </Box>
               </Box>
             </Box>
             <Box
@@ -435,12 +511,17 @@ const CarOperationPage = () => {
               </Collapse>
             </Box>
             <StyledContainer>
-              <CarOperationTable operationData={operationData} />
+              <CarOperationTable
+                operationData={operationData}
+                searchValue={searchValue}
+                searchType={searchType}
+                setOperationData={setOperationData}
+              />
             </StyledContainer>
           </Box>
         </StyledMain>
       </Box>
-    </>
+    </Box>
   );
 };
 
@@ -455,8 +536,7 @@ const StyledMain = styled(Box)(({ theme }) => ({
 const StyledContainer = styled(Container)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
   width: '100%',
-  minHeight: '630px',
-  height: 'auto',
+  overflow: 'auto',
   padding: '20px',
   borderRadius: 10
 }));

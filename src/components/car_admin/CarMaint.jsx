@@ -91,7 +91,7 @@ const CarMaint = ({ carCode, accum_mileage }) => {
 
     let updatedMaintData = [...maintData];
 
-    axiosInstance
+    axiosInstance.axiosInstance
       .post(`/manager/car/maintCarStatusModify`, maintModify)
       .then((res) => {
         checkedRow.forEach((rowToCheck) => {
@@ -139,7 +139,7 @@ const CarMaint = ({ carCode, accum_mileage }) => {
       car_code: carCode
     };
 
-    axiosInstance
+    axiosInstance.axiosInstance
       .post(`/manager/car/maintRecordDelete`, maintDelete)
       .then((res) => {
         const updatedMaintData = maintData.filter((data) => {
@@ -168,6 +168,13 @@ const CarMaint = ({ carCode, accum_mileage }) => {
   const currentMaintopen = Boolean(anchorEl);
   const id = currentMaintopen ? 'simple-popover' : undefined;
 
+  const [maintCode, setMaintCode] = useState('');
+
+  const handleMaintClick = (code) => {
+    setMaintCode(code);
+    handleOpen();
+  };
+
   return (
     <>
       <Modal
@@ -183,6 +190,8 @@ const CarMaint = ({ carCode, accum_mileage }) => {
           setMaintData={setMaintData}
           handleModalClose={handleClose}
           mileage={accum_mileage}
+          maint_code={maintCode}
+          handleCurrentMaintClose={handleCurrentMaintClose}
         />
       </Modal>
       <Modal open={deleteModalOpen} onClose={handleDeleteModalClose}>
@@ -298,7 +307,10 @@ const CarMaint = ({ carCode, accum_mileage }) => {
               horizontal: 'left'
             }}
           >
-            <CarCurrentMaint carCode={carCode} />
+            <CarCurrentMaint
+              carCode={carCode}
+              handleMaintClick={handleMaintClick}
+            />
           </Popover>
         </Box>
       </Box>
