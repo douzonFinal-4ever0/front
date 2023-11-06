@@ -68,7 +68,7 @@ const Dashboard = () => {
   const { rezData, error } = useQuery(
     ['rezList', mem_code, range],
     () => {
-      axiosInstance
+      axiosInstance.axiosInstance
         .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
         .then((res) => {
           // console.log(res.data);
@@ -96,7 +96,7 @@ const Dashboard = () => {
     setOpen(false);
   };
   // useEffect(() => {
-  //   axiosInstance
+  //   axiosInstance.axiosInstance
   //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}`)
   //     .then((res) => {
   //       console.log(res.data);
@@ -112,7 +112,7 @@ const Dashboard = () => {
   //     });
   // }, []);
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
       .then((res) => {
         console.log(res.data);
@@ -162,7 +162,7 @@ const Dashboard = () => {
 
     const [rows, setRows] = useState([]);
     useEffect(() => {
-      axiosInstance
+      axiosInstance.axiosInstance
         .get(`http://localhost:8081/car_rez/searchCarList`)
         .then((res) => {
           setRows(res.data);
@@ -326,7 +326,7 @@ const Dashboard = () => {
   // });
   const handleRange = (e) => {
     setRange(e.target.value);
-    // axiosInstance.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
+    // axiosInstance.axiosInstance.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
   //오프캔버스 관련
   const dispatch = useDispatch();
@@ -365,52 +365,57 @@ const Dashboard = () => {
 
   return (
     <>
-      <SubHeader title={'차량 예약 조회'} />
-      <CarOperation
-        rezCode={selectedRezCode}
-        open={open}
-        handleClose={handleClose}
-      />
+      {(rezData !== null) &
+      (
+        <div>
+          <SubHeader title={'차량 예약 조회'} />
+          <CarOperation
+            rezCode={selectedRezCode}
+            open={open}
+            handleClose={handleClose}
+          />
 
-      <Box sx={{ display: 'flex', height: '95%' }}>
-        <SubSidebar widthP={30} content={<SubSideContents />} />
-        <MainContainer>
-          <WrapContainer bgcolor={'#fff'}>
-            {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}> */}
-            <Select
-              labelId="demo-simple-select-filled-label"
-              id="demo-simple-select-filled"
-              displayEmpty
-              value={range}
-              inputProps={{ 'aria-label': 'Without label' }}
-              onChange={handleRange}
-              sx={{ minWidth: 120, mb: 1 }}
-            >
-              <MenuItem value={'0'}>
-                <em>전체</em>
-              </MenuItem>
-              <MenuItem value={'1'}>미처리</MenuItem>
-              <MenuItem value={'2'}>확정</MenuItem>
-              <MenuItem value={'4'}>취소</MenuItem>
-              <MenuItem value={'3'}>완료</MenuItem>
-            </Select>
+          <Box sx={{ display: 'flex', height: '95%' }}>
+            <SubSidebar widthP={30} content={<SubSideContents />} />
+            <MainContainer>
+              <WrapContainer bgcolor={'#fff'}>
+                {/* <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}> */}
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  displayEmpty
+                  value={range}
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  onChange={handleRange}
+                  sx={{ minWidth: 120, mb: 1 }}
+                >
+                  <MenuItem value={'0'}>
+                    <em>전체</em>
+                  </MenuItem>
+                  <MenuItem value={'1'}>미처리</MenuItem>
+                  <MenuItem value={'2'}>확정</MenuItem>
+                  <MenuItem value={'4'}>취소</MenuItem>
+                  <MenuItem value={'3'}>완료</MenuItem>
+                </Select>
 
-            <DataGrid
-              rows={carRez}
-              columns={colums}
-              width="100%"
-              height={'auto'}
-              pageSize={5}
-              pageSizeOptions={[5, 10]}
-              checkbox={false}
-              disableRow={false}
-              // clickEvent={handleClick}
-              dbclickEvent={handleDbClick}
-            />
-          </WrapContainer>
-        </MainContainer>
-      </Box>
-      {flag && <Drawer width={'100vh'} tabData={tabData} />}
+                <DataGrid
+                  rows={carRez}
+                  columns={colums}
+                  width="100%"
+                  height={'auto'}
+                  pageSize={5}
+                  pageSizeOptions={[5, 10]}
+                  checkbox={false}
+                  disableRow={false}
+                  // clickEvent={handleClick}
+                  dbclickEvent={handleDbClick}
+                />
+              </WrapContainer>
+            </MainContainer>
+          </Box>
+          {flag && <Drawer width={'100vh'} tabData={tabData} />}
+        </div>
+      )}
     </>
   );
 };
