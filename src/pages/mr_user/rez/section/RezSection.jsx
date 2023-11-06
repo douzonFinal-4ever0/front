@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../../utils/axios';
 
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
@@ -25,9 +26,14 @@ import InnerPtForm from '../form/InnerPtForm';
 import styled from '@emotion/styled';
 import OutterPtForm from '../form/OutterPtForm';
 import SuppliesForm from '../form/SuppliesForm';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../../../redux/reducer/SnackbarSlice';
 
-const RezSection = () => {
+const RezSection = ({ selectMrCard }) => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   // 회의실 예약 리덕스 데이터
@@ -41,11 +47,14 @@ const RezSection = () => {
     mr_pt_list
   } = rezData;
   // 사용자 리덕스 데이터
-  const { mem_code, name } = userData;
+  const { mem_code, name, dept_name, position_name } = userData;
+
   // 열린 Accordion 표시
   const [expanded, setExpanded] = useState('rez');
   // 예약버튼 활성화 여부
   const [isDisabled, setisDisabled] = useState(true);
+  // 참석자 리스트
+  const [ptList, setPtList] = useState([]);
 
   useEffect(() => {
     if (
@@ -64,25 +73,41 @@ const RezSection = () => {
 
   // Accordion 활성화 표시 이벤트
   const handleChange = (panel) => (event, isExpanded) => {
+    if (ptList.length !== 0) {
+      setPtList(ptList);
+    } else if (rezData.mr_pt_list.length === 1) {
+      setPtList(rezData.mr_pt_list);
+    }
+
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
   };
 
   // 예약 버튼 이벤트
   const handleBtnSubmit = async (e) => {
     e.preventDefault();
-    const mr_code = 'R022'; // *임시로 회의실 코드 지정
-    const mr_pt_list = [mem_code]; // *임시로 회의 참석자 리스트 예약자만 지정
+
     const data = {
       ...rezData,
       mem_code,
-      mr_code,
-      mr_pt_list
+      mr_pt_list: ptList,
+      mr_code: selectMrCard.mr_code
     };
 
+    dispatch(setRezData({ data }));
     try {
       const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
       if (res.status === 201) {
-        alert('회의실 예약되었습니다.');
+        handleSetSnackbarContent('회의실 예약되었습니다. ');
+        handleOpenSnackbar();
+        navigation('/mr/dashboard');
       }
     } catch (err) {
       console.log(err);
@@ -142,7 +167,7 @@ const RezSection = () => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <InnerPtForm />
+                <InnerPtForm ptList={ptList} setPtList={setPtList} />
               </AccordionDetails>
             </Accordion>
 
@@ -201,6 +226,7 @@ const RezSection = () => {
           <RectangleBtn
             type={'submit'}
             text={'예약하기'}
+            category={'register'}
             isDisabled={isDisabled ? true : false}
           />
         </Stack>

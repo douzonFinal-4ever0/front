@@ -348,8 +348,14 @@ const ApplyContainer = ({
   tempApplyMemList,
   setTempApplyMemList,
   applyBmGroupList,
-  setApplyBmGroupList
+  setApplyBmGroupList,
+  ptList,
+  setApplyMemberList
 }) => {
+  useEffect(() => {
+    setApplyMemberList(ptList);
+  }, []);
+
   switch (tab) {
     case 'all':
     case 'bmMember':
@@ -510,7 +516,6 @@ const PtModal = ({
   setBmGroupList,
   setIsToggleBmMemList
 }) => {
-  console.log(ptList);
   // 좌측 탭 메뉴 (토글)
   const [selectTab, setSelectTab] = useState('all');
   // 선택된 사용자 임시 리스트 (*적용 대상에 추가되기 전 선택된 사용자들)
@@ -543,7 +548,7 @@ const PtModal = ({
         });
 
       // 적용 대상 리스트 업데이트
-      setApplyMemberList(list);
+      setApplyMemberList([...applyMemberList, ...list]);
       // 적용 대상 리스트 수만큼 토글 리스트 생성
       setIsToggleApplyList(Array.from({ length: list.length }, () => false));
       // 토글 리스트 값 생성
@@ -708,12 +713,14 @@ const PtModal = ({
               <ApplyContainer
                 tab={selectTab}
                 applyMemberList={applyMemberList}
+                setApplyMemberList={setApplyMemberList}
                 isToggleApplyList={isToggleApplyList}
                 setIsToggleApplyList={setIsToggleApplyList}
                 tempApplyMemList={tempApplyMemList}
                 setTempApplyMemList={setTempApplyMemList}
                 applyBmGroupList={applyBmGroupList}
                 setApplyBmGroupList={setApplyBmGroupList}
+                ptList={ptList}
               />
             </Stack>
           </Grid>

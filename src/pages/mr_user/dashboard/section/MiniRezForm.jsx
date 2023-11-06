@@ -26,7 +26,7 @@ const MiniRezForm = () => {
   const userData = useSelector(setUserData).payload.user;
   const rezData = useSelector(setRezData).payload.mrUser;
   // 사용자 데이터
-  const { mem_code } = userData;
+  const { name, position_name, mem_code, dept_name } = userData;
   // 회의실 예약 데이터
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
@@ -67,6 +67,17 @@ const MiniRezForm = () => {
   // 예약 버튼 이벤트
   const handleRezBtnSubmit = async (e) => {
     e.preventDefault();
+
+    const userDefaultMrPt = {
+      mem_code,
+      name,
+      dept_name,
+      position_name
+    };
+
+    const newRezData = { ...rezData, mr_pt_list: [userDefaultMrPt] };
+    dispatch(setRezData({ data: newRezData }));
+
     const data = {
       mem_code, // 사용자 번호
       m_type, // 회의 종류

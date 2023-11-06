@@ -14,6 +14,7 @@ import SubHeader from '../../../components/common/SubHeader';
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import MiniRezForm from './section/MiniRezForm';
+import { useCallback } from 'react';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -21,11 +22,11 @@ const DashboardPage = () => {
   const bmData = useSelector(setBmData).payload.bm;
 
   // 리덕스 데이터
-  const { name, position_name, mem_code } = userData;
+  const { name, position_name, mem_code, dept_name } = userData;
   const { mr_list } = bmData;
 
   useEffect(() => {
-    getBmMrApi();
+    //getBmMrApi();
   }, []);
 
   const getBmMrApi = async () => {

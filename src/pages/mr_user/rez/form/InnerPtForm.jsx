@@ -22,7 +22,7 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
-const InnerPtForm = () => {
+const InnerPtForm = ({ ptList, setPtList }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
@@ -31,8 +31,7 @@ const InnerPtForm = () => {
   // 모달창 오픈
   const [openModal, setOpenModal] = useState(false);
   // ------------------------------------------------------------
-  // 참석자 리스트
-  const [ptList, setPtList] = useState([]);
+
   // 전체 사용자 리스트
   const [totalMemberList, setTotalMemberList] = useState([]);
   // 적용 대상 리스트
@@ -108,20 +107,35 @@ const InnerPtForm = () => {
 
   // 참석자 카드 리스트 컴포넌트
   const PtCardList = ({ data }) => {
+    const masterCode = mem_code;
+
     return (
       <List sx={{ width: '100%' }}>
         {data.map((mem, index) => (
           <ListItem
             key={index}
             secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                tabIndex={index}
-                onClick={handleCardDeleteBtn}
-              >
-                <DeleteForeverRoundedIcon />
-              </IconButton>
+              mem.mem_code === masterCode ? (
+                <Box
+                  sx={{
+                    padding: '4px',
+                    fontSize: '12px',
+                    backgroundColor: palette.grey['300'],
+                    borderRadius: '2px'
+                  }}
+                >
+                  예약자
+                </Box>
+              ) : (
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  tabIndex={index}
+                  onClick={handleCardDeleteBtn}
+                >
+                  <DeleteForeverRoundedIcon />
+                </IconButton>
+              )
             }
           >
             <ListItemAvatar>
@@ -151,7 +165,7 @@ const InnerPtForm = () => {
                       fontSize: '14px'
                     }}
                   >
-                    |{' '}
+                    |
                     {mem.deptVO === undefined
                       ? mem.dept_name
                       : mem.deptVO.dept_name}
