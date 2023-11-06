@@ -3,7 +3,7 @@ import { getFormattedDate } from '../../utils/formatDate';
 
 const initialState = {
   m_name: '', // 회의명
-  m_type: '프로젝트 회의', // 회의 종류,
+  m_type: '프로젝트회의', // 회의 종류,
   rez_date: getFormattedDate(), // 예약 날짜(Default: 현재 날짜)
   rez_start_time: '09:00', // 예약 시작 시간
   rez_end_time: '09:30', // 예약 종료 시간

@@ -4,6 +4,7 @@ import DrawerReducer from './reducer/DrawerSlice';
 import SnackbarReducer from './reducer/SnackbarSlice';
 import userReducer from './reducer/userSlice';
 import mrRecommendReducer from './reducer/MrRecommendSlice';
+import bmReducer from './reducer/BmSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     mrUser: mrUserReducer,
     drawer: DrawerReducer,
     snackbar: SnackbarReducer,
-    mrRecommend: mrRecommendReducer
+    mrRecommend: mrRecommendReducer,
+    bm: bmReducer
   }
 });
 

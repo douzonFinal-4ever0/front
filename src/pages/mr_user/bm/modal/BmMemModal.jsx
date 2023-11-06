@@ -39,7 +39,6 @@ const BmMemModal = ({
   master,
   bmGroupMemApi
 }) => {
-  console.log(initList);
   // (우측창) 적용 대상 리스트에서 선택된 멤버
   const [checkMemName, setCheckMemName] = useState(null);
   // (좌측창) 전체 리스트에서 선택된 멤버 리스트
@@ -99,10 +98,6 @@ const BmMemModal = ({
     }
   };
 
-  useEffect(() => {
-    console.log(addMemName);
-  }, [addMemName]);
-
   // 선택된 참석자 아이템 클릭 이벤트
   const handlePtItem = (event, nodeId) => {
     setCheckMemName(nodeId);
@@ -115,6 +110,7 @@ const BmMemModal = ({
 
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
+    console.log(333);
     const addMem = list.filter((mem) => mem.mem_code === addMemName);
 
     // 이미 등록된 사용자일 경우 경고창
@@ -148,7 +144,7 @@ const BmMemModal = ({
     };
 
     try {
-      const res = await axiosInstance.post('/mr/mem/bm', data);
+      const res = await axiosInstance.axiosInstance.post('/mr/mem/bm', data);
       if (res.status === 201) {
         alert('즐겨찾기 등록 성공하였습니다.');
         bmGroupMemApi(); // 즐겨찾기 리스트 조회
