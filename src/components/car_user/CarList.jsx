@@ -10,7 +10,7 @@ const CarList = ({ setSelectedRows }) => {
   //const [alertOpen, setAlertOpen] = useState(true);
 
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('http://localhost:8081/car_rez/availableCars')
       .then((res) => {
         setCarList(
