@@ -83,7 +83,7 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
   // const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/manager/car/maintOneCarRecordList', {
         params: {
           car_code: carCode
@@ -144,7 +144,12 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
         }}
         pageSizeOptions={[5, 10]}
         checkboxSelection
-        sx={{ borderRadius: '2px' }}
+        sx={{
+          borderRadius: '2px',
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+            outline: 'none !important'
+          }
+        }}
         onRowSelectionModelChange={(selectionModel) => {
           // 선택된 행의 ID 및 maint_start_at 속성을 추출해서 배열로 저장
           const selectedRowsData = selectionModel.map((selectedId) => {
