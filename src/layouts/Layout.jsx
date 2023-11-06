@@ -82,8 +82,9 @@ const StyledRoot = styled('div')({
 const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
   paddingTop: '110px',
   flexGrow: 1,
-  overflow: 'auto',
-  minHeight: '100%',
+  overflow: 'hidden',
+  // minHeight: '100%',
+  height: 'auto',
   paddingBottom: 0,
   width: '100%',
   paddingLeft: isSidebarOpen ? '280px' : '0',
