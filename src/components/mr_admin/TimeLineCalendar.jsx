@@ -57,21 +57,21 @@ const TimeLineCalendar = ({ events, resources }) => {
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next',
+          left: 'prev,next,today',
           center: 'title',
-          right:
-            'resourceTimeGridDay,resourceTimelineDay,resourceTimelineMonth,listWeek'
+          right: 'resourceTimelineDay,listWeek'
+          // resourceTimeGridDay,resourceTimelineMonth
         }}
         views={{
-          resourceTimeGridDay: {
-            buttonText: '회의실'
-          },
+          // resourceTimeGridDay: {
+          //   buttonText: '회의실'
+          // },
           resourceTimelineDay: {
             buttonText: '시간대'
           },
-          resourceTimelineMonth: {
-            buttonText: '월'
-          },
+          // resourceTimelineMonth: {
+          //   buttonText: '월'
+          // },
           listWeek: {
             buttonText: '리스트'
           }
