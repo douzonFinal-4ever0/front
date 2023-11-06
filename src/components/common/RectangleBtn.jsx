@@ -8,7 +8,8 @@ const RectangleBtn = ({
   sx,
   handlebtn,
   category,
-  handleKeyDown
+  handleKeyDown,
+  isDisabled
 }) => {
   const fontColor = () => {
     switch (category) {
@@ -57,6 +58,7 @@ const RectangleBtn = ({
       fontcolor={fontColor(category)}
       bgcolor={bgColor(category)}
       bghovercolor={bgHoverColor(category)}
+      isDisabled={isDisabled}
     >
       <Typography sx={{ fontWeight: 'bold' }}>{text}</Typography>
     </StyledBtn>
@@ -66,16 +68,23 @@ const RectangleBtn = ({
 export default RectangleBtn;
 
 const StyledBtn = styled(Button)(
-  ({ theme, sx, fontcolor, category, bgcolor, bghovercolor }) => ({
+  ({ theme, sx, fontcolor, category, bgcolor, bghovercolor, isDisabled }) => ({
     padding: '18px 16px',
     width: '100%',
-    backgroundColor:
-      category !== undefined ? bgcolor : theme.palette.grey['700'],
     color: category !== undefined ? fontcolor : theme.palette.common.white,
     border: category === 'cancel' ? '1px solid #dfdfdf' : 'none',
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+    backgroundColor: isDisabled
+      ? '#ddd'
+      : category !== undefined
+      ? bgcolor
+      : theme.palette.grey['700'],
     '&:hover': {
-      backgroundColor:
-        category !== undefined ? bghovercolor : theme.palette.grey['800']
+      backgroundColor: isDisabled
+        ? '#ddd'
+        : category !== undefined
+        ? bghovercolor
+        : theme.palette.grey['800']
     },
     ...sx
   })
