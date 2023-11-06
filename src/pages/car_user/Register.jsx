@@ -339,13 +339,14 @@ const Register = () => {
       }
     }
   };
-
   //modal 닫는 함수
   const handleCloseModal = (reason) => {
     if (reason === 'buttonClick') {
       // 특정 버튼을 클릭한 경우의 처리
       console.log('사용자가 버튼을 클릭하여 모달이 닫힘');
     }
+
+    // socket.emit('disconnect_with_info', currentName);
     setOpen(false);
   };
   //차량 선택 후 처리
@@ -739,47 +740,13 @@ const Register = () => {
                           setSelectedRows={setSelectedRows}
                           rezStart_at={rezStart_at}
                           rezReturn_at={rezReturn_at}
+                          carSelect={carSelect}
+                          setOpen={setOpen}
                         />
                       }
-                      buttons={
-                        <Grid
-                          container
-                          xs={12}
-                          sx={{ m: '10px 0px' }}
-                          justifyContent="center"
-                          spacing={2}
-                        >
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              borderColor: '#BEBEBE',
-                              backgroundColor: '#ffffff',
-                              ':hover': {
-                                backgroundColor: '#ffffff',
-                                borderColor: '#BEBEBE'
-                              },
-                              margin: '0px 4px'
-                            }}
-                            onClick={handleCloseModal}
-                          >
-                            취소
-                          </Button>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              borderColor: '#BEBEBE',
-                              ':hover': {
-                                backgroundColor: '#2065D1',
-                                borderColor: '#BEBEBE'
-                              },
-                              margin: '0px 4px'
-                            }}
-                            onClick={carSelect}
-                          >
-                            선택
-                          </Button>
-                        </Grid>
-                      }
+                      // buttons={
+
+                      // }
                     />
                   </Grid>
                 </Grid>
