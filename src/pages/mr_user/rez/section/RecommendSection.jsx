@@ -172,14 +172,20 @@ const RecommendSection = ({ data, selectMrCard, handleCardClick }) => {
 
 export default RecommendSection;
 
-const ContainerWithScroll = styled('div')(() => ({
+const ContainerWithScroll = styled('div')(({ theme }) => ({
   height: '800px',
   overflowY: 'scroll',
   display: 'flex',
   flexDirection: 'column',
   scrollbarWidth: 'none',
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: theme.palette.grey['500'],
+    borderRadius: '10px'
+  },
   '&::-webkit-scrollbar': {
-    display: 'none'
+    width: '10px',
+    backgroundColor: '#eee',
+    borderRadius: '10px'
   }
 }));
 
