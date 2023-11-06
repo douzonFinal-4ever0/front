@@ -36,7 +36,9 @@ const CarMaintRegister = ({
   maintData,
   setMaintData,
   handleModalClose,
-  mileage
+  mileage,
+  maint_code,
+  handleCurrentMaintClose
 }) => {
   const [maintItem, setMaintItem] = useState({
     maintItemList: [],
@@ -55,7 +57,7 @@ const CarMaintRegister = ({
 
   // 정비 내역, 정비 업체 axios 요청
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/manager/car/getMaintItem')
       .then((res) => {
         console.log(res.data);
@@ -92,7 +94,7 @@ const CarMaintRegister = ({
   // 등록 데이터
   const [maintRegisterData, setMaintRegisterData] = useState({
     car_code: carCode,
-    maint_item_code: '',
+    maint_item_code: maint_code,
     mc_code: '',
     mem_code: 'MEM001',
     maint_start_at: dayjs(today),
@@ -127,7 +129,7 @@ const CarMaintRegister = ({
     }
 
     console.log(maintRegisterData);
-    axiosInstance
+    axiosInstance.axiosInstance
       .post('/manager/car/maintRecordRegister', maintRegisterData)
       .then((res) => {
         console.log(res.data);
@@ -157,6 +159,7 @@ const CarMaintRegister = ({
         setMaintData([...maintData, newData]);
 
         // 모달창 내리고, 등록 완료 snackbar 보여주기
+        handleCurrentMaintClose();
         handleModalClose();
         handleSetSnackbarContent('등록이 완료되었습니다.');
         handleOpenSnackbar();
@@ -456,3 +459,7 @@ const StyledLabelGrid = styled(Grid)(({ theme }) => ({
   justifyContent: 'flex-end',
   alignItems: 'center'
 }));
+
+CarMaintRegister.defaultProps = {
+  maint_code: ''
+};

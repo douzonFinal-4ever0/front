@@ -6,11 +6,12 @@ import LinearProgress, {
 import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
+import { style } from '@mui/system';
 
-const CarCurrentMaint = ({ carCode }) => {
+const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
   const [currentMaintList, setCurrentMaintList] = useState([]);
   useEffect(() => {
-    axiosInstance
+    axiosInstance.axiosInstance
       .get('/manager/car/currentMaint', {
         params: {
           car_code: carCode
@@ -23,9 +24,11 @@ const CarCurrentMaint = ({ carCode }) => {
             item.accum_mileage === null ? 0 : item.accum_mileage;
           item.mileage = item.mileage === null ? 0 : item.mileage;
           return {
+            maint_item_code: item.maint_item_code,
             title: item.maint_name,
             cycle: item.cycle,
-            value: ((item.accum_mileage - item.mileage) / item.cycle) * 100
+            value: ((item.accum_mileage - item.mileage) / item.cycle) * 100,
+            over: item.accum_mileage - (item.mileage + item.cycle)
           };
         });
         console.log(newData);
@@ -58,7 +61,11 @@ const CarCurrentMaint = ({ carCode }) => {
         </Box>
         {currentMaintList.map((item) => {
           return (
-            <Stack padding="20px 25px">
+            <StyledStack
+              onClick={() => {
+                handleMaintClick(item.maint_item_code);
+              }}
+            >
               <Box display="flex" padding="5px 0px">
                 <Typography variant="body2" width="50%">
                   {item.title}
@@ -72,7 +79,14 @@ const CarCurrentMaint = ({ carCode }) => {
                 value={item.value > 100 ? 100 : item.value}
                 customColor={item.value > 50 ? '#e53935' : '#66bb6a'}
               />
-            </Stack>
+              {item.over >= 0 && (
+                <Box display="flex" justifyContent="end" padding="0px 7px">
+                  <Typography variant="subtitle2" color="#e53935">
+                    {item.over}km 초과
+                  </Typography>
+                </Box>
+              )}
+            </StyledStack>
           );
         })}
       </Stack>
@@ -95,3 +109,15 @@ const BorderLinearProgress = styled(LinearProgress)(
     }
   })
 );
+
+const StyledStack = styled(Stack)(({ theme }) => ({
+  cursor: 'pointer',
+  borderRadius: '4px',
+  padding: '10px 15px',
+  margin: '10px 10px',
+  transition: 'box-shadow 0.3s', // 트랜지션 추가
+  '&:hover': {
+    backgroundColor: '#f5f5f5',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)' // 호버 시 그림자 변경
+  }
+}));
