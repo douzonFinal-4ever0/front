@@ -118,7 +118,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*----------------------------회의실 키워드------------------------*/
   //회의실 키워드 선택 값
   const [selectedTags, setSelectedTags] = useState(initialSelectedTags);
-  const [newselectedTags, setNewSelectedTags] = useState([{}]);
+  const [newselectedTags, setNewSelectedTags] = useState([]);
   /**회의실 키워드 선택된 값 */
   const handleTagSelect = (tags) => {
     setSelectedTags(tags);
@@ -173,7 +173,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       .catch(console.error);
   };
 
-  console.log(initialMr_Img);
+  // console.log(initialMr_Img);
   /**이미지 삭제 */
   const handleImageDelete = (index) => {
     const newImages = [...images];

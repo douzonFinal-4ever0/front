@@ -5,12 +5,29 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
 import { useState } from 'react';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
+import { useDispatch } from 'react-redux';
+
 const TimeLineCalendar = ({ events, resources }) => {
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   const [currentView, setCurrentView] = useState('resourceTimeline');
   // console.log(events[0].title);
   const handleEventClick = (info) => {
     // console.log(info.event.title);
-    alert(info.event.title);
+    handleOpenSnackbar();
+    handleSetSnackbarContent(info.event.title);
     // dayGridPlugin 페이지로 전환
     setCurrentView('dayGrid');
     /**클릭한 이벤트의 시작 날짜를 가져옴 */
