@@ -4,8 +4,11 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import axiosInstance from '../../utils/axios.js';
+import { MenuItem, Select } from '@mui/material';
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
+  const [spType, setSpType] = useState('');
+  const [selectedSpList, setSelectedSpList] = useState([]);
   useEffect(() => {
     axiosInstance.axiosInstance.get('/sp/spList').then((res) => {
       const processedData = res.data.map((item) => ({
@@ -15,21 +18,51 @@ const SuppliesList = () => {
       setSpList(processedData);
     });
   }, []);
-  const handleDbClick = (params) => {
+  const handleClick = (params) => {
     // params 객체를 통해 선택된 행의 데이터에 접근
     const selectedRowData = params.row;
-    console.log('selectedRowData: ', selectedRowData);
+
+    // 이미 선택된 행인지 확인
+    const isSelected = selectedSpList.some(
+      (item) => item.id === selectedRowData.id
+    );
+
+    if (isSelected) {
+      // 이미 선택된 항목이면 선택 해제
+      setSelectedSpList((prevSelected) =>
+        prevSelected.filter((item) => item.id !== selectedRowData.id)
+      );
+    } else {
+      // 선택되지 않은 항목이면 선택 추가
+      setSelectedSpList((prevSelected) => [...prevSelected, selectedRowData]);
+    }
+  };
+  console.log(selectedSpList);
+  const handleChange = (event) => {
+    setSpType(event.target.value);
   };
   return (
-    <DataGrid
-      columns={columns}
-      rows={SpList}
-      pageSize={10}
-      pageSizeOptions={[5, 10]}
-      dbclickEvent={handleDbClick}
-      sx={{ width: 'auto' }}
-      checkbox={true}
-    />
+    <>
+      <Select
+        value={spType}
+        placeholder="회의실 분류를 선택하세요"
+        onChange={handleChange}
+        sx={{ width: 'auto' }}
+      >
+        <MenuItem value="편의시설">편의시설</MenuItem>
+        <MenuItem value="음향장비">음향장비</MenuItem>
+        <MenuItem value="영상장비">영상장비</MenuItem>
+      </Select>
+      <DataGrid
+        columns={columns}
+        rows={SpList}
+        pageSize={10}
+        pageSizeOptions={[5, 10]}
+        clickEvent={handleClick}
+        sx={{ width: 'auto' }}
+        checkbox={true}
+      />
+    </>
   );
 };
 

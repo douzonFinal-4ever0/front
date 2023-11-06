@@ -34,6 +34,7 @@ import Editor from '../../components/mr_admin/Editor';
 import JWTdecode from '../../components/common/JWTdecode';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import ImageUpload from '../../components/mr_admin/ImageUpload';
+import SuppliesList from '../../components/mr_admin/SuppliesList.jsx';
 const DashBoard = () => {
   const navigate = useNavigate();
   const handleLogOut = () => {
@@ -102,7 +103,8 @@ const DashBoard = () => {
         <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              <ImageUpload />
+              <SuppliesList />
+              {/* <ImageUpload /> */}
               {/* <JWTdecode /> */}
               {/* 이미지 리스트 */}
               {/* <img src="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/25942229-e8e1-41ed-9fd1-98168eb36e7e-d1.jpg"></img> */}
