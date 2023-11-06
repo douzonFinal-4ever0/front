@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import base64 from 'base-64';
+import utf8 from 'utf8';
 
 import styled from '@emotion/styled';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 
+import axiosInstance from '../../../utils/axios';
 import { PAGE_INNER_PADDING } from '../../../config';
 import { setUserData } from '../../../redux/reducer/userSlice';
+import { setBmData } from '../../../redux/reducer/BmSlice';
 import SubHeader from '../../../components/common/SubHeader';
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
@@ -14,9 +18,45 @@ import MiniRezForm from './section/MiniRezForm';
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const userData = useSelector(setUserData).payload.user;
+  const bmData = useSelector(setBmData).payload.bm;
 
-  // 사용자 리덕스 데이터
-  const { name, position_name } = userData;
+  // 리덕스 데이터
+  const { name, position_name, mem_code } = userData;
+  const { mr_list } = bmData;
+
+  useEffect(() => {
+    getBmMrApi();
+  }, []);
+
+  const getBmMrApi = async () => {
+    try {
+      // 토큰 디코딩
+      const token = localStorage.getItem('jwtToken');
+
+      // JWT 디코딩
+      let payload = token.substring(
+        token.indexOf('.') + 1,
+        token.lastIndexOf('.')
+      );
+      //base64  디코딩
+      const bytes = base64.decode(payload);
+      //한글 디코딩
+      const text = utf8.decode(bytes);
+      const userInfo = JSON.parse(text);
+      const mem_code = userInfo.userCode;
+
+      // 즐겨찾기 데이터 API 요청 (*추후 대시보드에서 즐겨찾기 회의실 리스트 보여줄 예정이라 일단 추가함)
+      const res = await axiosInstance.axiosInstance.get(
+        `/mr/bm?mem_code=${mem_code}`
+      );
+      if (res.status !== 200) return;
+      const { data } = res;
+
+      dispatch(setBmData({ data: data }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>

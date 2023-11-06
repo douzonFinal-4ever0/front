@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import { times } from '../../../../config';
 import { meetingTypes } from '../../../../config';
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { setUserData } from '../../../../redux/reducer/userSlice';
 import { setMrRecommendData } from '../../../../redux/reducer/MrRecommendSlice';
 import WrapContainer from '../../../../components/mr_user/WrapContainer';
 import Label from '../../../../components/common/Label';
@@ -22,8 +23,11 @@ const MiniRezForm = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
 
+  const userData = useSelector(setUserData).payload.user;
   const rezData = useSelector(setRezData).payload.mrUser;
-  // 예약 리덕스 데이터
+  // 사용자 데이터
+  const { mem_code } = userData;
+  // 회의실 예약 데이터
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
 
@@ -64,18 +68,21 @@ const MiniRezForm = () => {
   const handleRezBtnSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      m_type,
-      rez_date,
-      rez_start_time,
-      rez_end_time,
-      tot_pt_ctn
+      mem_code, // 사용자 번호
+      m_type, // 회의 종류
+      rez_date, // 예약 날짜
+      rez_start_time, // 예약 시작 시간
+      rez_end_time, // 예약 종료 시간
+      tot_pt_ctn // 총 인원수
     };
 
     try {
-      const res = await axiosInstance.get('/mr/recommend', { params: data });
+      const res = await axiosInstance.axiosInstance.get('/mr/recommend', {
+        params: data
+      });
       if (!res.status === 200) return;
 
-      // 리덕스 저장
+      // 추천된 회의실 정보를 리덕스 저장
       dispatch(setMrRecommendData({ data: res.data }));
       // 페이지 이동
       navigation('/mr/rez');

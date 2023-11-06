@@ -19,6 +19,7 @@ import RectangleBtn from '../common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
+import { useQuery } from 'react-query';
 
 // 서브 사이드바 콘텐츠
 const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
@@ -26,20 +27,46 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
   //const [carCode, setCarCode] = useState('');
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    axiosInstance
-      .get(
-        `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
-      )
-      .then((res) => {
-        setRows(
-          res.data.map((car) => ({
-            id: car.carVO.car_code,
-            car_name: car.carVO.car_name,
-            car_address: car.car_address
-          }))
-        );
-      });
-  }, []);
+    // axiosInstance.axiosInstance
+    //   .get(
+    //     `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setRows(
+    //       res.data.map((car) => ({
+    //         id: car.car_code,
+    //         car_name: car.car_name,
+    //         car_address: car.car_address,
+    //         car_status: car.car_status
+    //       }))
+    //     );
+    //   });
+  }, [rows]);
+
+  const { cars, error } = useQuery(
+    ['availableCars', rezStart_at, rezReturn_at],
+    () => {
+      axiosInstance.axiosInstance
+        .get(
+          `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
+        )
+        .then((res) => {
+          console.log(res.data);
+          setRows(
+            res.data.map((car) => ({
+              id: car.car_code,
+              car_name: car.car_name,
+              car_address: car.car_address,
+              car_status: car.car_status
+            }))
+          );
+        });
+    },
+    {
+      staleTime: 1000
+    }
+  );
   const handleInput = (e) => {
     setSearchInput(e.target.value);
   };
@@ -53,6 +80,14 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
   const handleItem = (e, car_code, car_address, car_name) => {
     //setCarCode(car_code);
     setSelectedRows({ car_code, car_address, car_name });
+    axiosInstance.axiosInstance
+      .get(`http://localhost:8081/car_rez/selectedCar/${car_code}`)
+      .then((res) => {
+        //다른 차량 선택시 선택됨 해제 필요
+        if (res.status !== 200) {
+          alert('에러 발생');
+        }
+      });
   };
   // hover
   const [isHovered, setIsHovered] = useState(null);
@@ -81,12 +116,15 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
                     handleItem(e, car.id, car.car_address, car.car_name)
                   }
                 >
-                  <ListItemButton>
+                  <ListItemButton disabled={car.car_status === '선택됨'}>
                     <ListItemText
                       primary={`${car.id}`}
                       secondary={`${car.car_name}`}
                     />
-                    <ListItemText primary={`${car.car_address}`} />
+                    <ListItemText
+                      primary={`${car.car_address}`}
+                      secondary={`${car.car_status}`}
+                    />
                   </ListItemButton>
                 </ListItem>
               );

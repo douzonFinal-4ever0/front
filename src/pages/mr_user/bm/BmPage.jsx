@@ -22,8 +22,6 @@ const BmPage = () => {
   const [deleteMemCodeList, setDeleteMemCodeList] = useState([]);
   // 선택한 페이지 탭 (멤버/그룹/회의실)
   const [selectTab, setSelectTab] = useState(0);
-  // 수정 활성화 여부
-  const [isModify, setIsModify] = useState(false);
   // 즐겨찾기 멤버
   const [memList, setMemList] = useState([]);
   // 즐겨찾기 그룹
@@ -45,7 +43,9 @@ const BmPage = () => {
 
   // 즐겨찾기 조회 API
   const bmGroupMemApi = async () => {
-    const res = await axiosInstance.get(`/mr/mem/bm?mem_code=${mem_code}`);
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/mem/bm?mem_code=${mem_code}`
+    );
     const { data } = res;
 
     // 개별 멤버
@@ -90,14 +90,13 @@ const BmPage = () => {
   // 삭제 버튼 이벤트
   const handleDeleteBtn = () => {
     console.log('삭제');
-    setIsModify(true);
   };
 
   // 등록 버튼 이벤트
   const handleAddBtn = async () => {
     console.log('추가');
 
-    const res = await axiosInstance.get('/mr/mem');
+    const res = await axiosInstance.axiosInstance.get('/mr/mem');
     setMembers(res.data);
     setOpenModal(!openModal);
   };
@@ -105,19 +104,30 @@ const BmPage = () => {
   // 수정 취소 버튼 이벤트
   const handleCancelBtn = () => {
     console.log('취소');
-    setIsModify(false);
   };
 
   // 수정 확인 버튼 이벤트
   const handleConfirmBtn = async () => {
     console.log('확인');
     // 삭제 리스트를 db에 보내서 deleted_at 업데이트 하기
-    const res = await axiosInstance.patch('/mr/mem/bm', {
+    const res = await axiosInstance.axiosInstance.patch('/mr/mem/bm', {
       deleteMemCodeList
     });
 
-    setIsModify(false);
     // 토스트 메시지 제공
+  };
+
+  const registerName = (selectTab) => {
+    switch (selectTab) {
+      case 0:
+        return '멤버 등록';
+      case 1:
+        return '그룹 등록';
+      case 2:
+        return '회의실 등록';
+      default:
+        return;
+    }
   };
 
   return (
@@ -145,20 +155,20 @@ const BmPage = () => {
               >
                 <Box>
                   <RectangleBtn
-                    text={isModify ? '취소' : '삭제'}
+                    text={'삭제'}
                     type={'button'}
                     category={'cancel'}
                     sx={{ padding: '10px 8px' }}
-                    handlebtn={isModify ? handleCancelBtn : handleDeleteBtn}
+                    handlebtn={handleDeleteBtn}
                   />
                 </Box>
                 <Box>
                   <RectangleBtn
-                    text={isModify ? '확인' : '등록'}
+                    text={registerName(selectTab)}
                     type={'button'}
                     category={'register'}
                     sx={{ padding: '10px 8px' }}
-                    handlebtn={isModify ? handleConfirmBtn : handleAddBtn}
+                    handlebtn={handleAddBtn}
                   />
                 </Box>
               </Stack>
@@ -166,7 +176,6 @@ const BmPage = () => {
             <CustomTabPanel value={selectTab} index={0}>
               <BmMemberSection
                 data={memList}
-                isModify={isModify}
                 deleteMemCodeList={deleteMemCodeList}
                 setDeleteMemCodeList={setDeleteMemCodeList}
               />
