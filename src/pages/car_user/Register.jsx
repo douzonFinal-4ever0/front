@@ -312,7 +312,7 @@ const Register = () => {
       flag++;
     }
     if (flag === 0) {
-      axiosInstance
+      axiosInstance.axiosInstance
         .post('http://localhost:8081/car_rez/rezSave', formData)
         .then((res) => {
           let data = res.data;
@@ -331,8 +331,8 @@ const Register = () => {
       alert('날짜를 입력해주세요');
     } else {
       console.log('대여일:' + Date.parse(rezStart_at));
-      console.log('반납일: ' + Date.parse(rezStart_at));
-      if (Date.parse(rezStart_at) > Date.parse(rezStart_at)) {
+      console.log('반납일: ' + Date.parse(rezReturn_at));
+      if (Date.parse(rezStart_at) > Date.parse(rezReturn_at)) {
         alert('대여일이 반납일보다 늦습니다');
       } else {
         setOpen(true);
@@ -367,7 +367,7 @@ const Register = () => {
       alert('차량을 선택해주세요');
     }
 
-    axiosInstance
+    axiosInstance.axiosInstance
       .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
         setCarDetail({
@@ -478,7 +478,7 @@ const Register = () => {
   // 예약 정보 수정
   const updateRez = () => {
     console.log(updateData);
-    axiosInstance
+    axiosInstance.axiosInstance
       .patch('http://localhost:8081/car_rez/carRezDetail', updateData)
       .then((res) => {
         // console.log('수정완료', res.data);
@@ -523,7 +523,7 @@ const Register = () => {
           dest_loc = addressObj.areaAddress + addressObj.townAddress;
         }
 
-        axiosInstance
+        axiosInstance.axiosInstance
           .get(
             `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
           )
@@ -541,7 +541,7 @@ const Register = () => {
       console.log(addressObj);
       if ((receipt_loc !== '') & (return_loc !== '') & (addressObj !== '')) {
         let dest_loc = addressObj.areaAddress + addressObj.townAddress;
-        axiosInstance
+        axiosInstance.axiosInstance
           .get(
             `http://localhost:8081/car_rez/findRoute/${receipt_loc}/${return_loc}/${dest_loc}`
           )
