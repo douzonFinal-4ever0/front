@@ -18,11 +18,13 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Progress from '../../../../components/mr_user/Progress';
+import { useState } from 'react';
 
 const MiniRezForm = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const userData = useSelector(setUserData).payload.user;
   const rezData = useSelector(setRezData).payload.mrUser;
   // 사용자 데이터
@@ -88,6 +90,7 @@ const MiniRezForm = () => {
     };
 
     try {
+      setIsLoading(true);
       const res = await axiosInstance.axiosInstance.get('/mr/recommend', {
         params: data
       });
@@ -95,6 +98,7 @@ const MiniRezForm = () => {
 
       // 추천된 회의실 정보를 리덕스 저장
       dispatch(setMrRecommendData({ data: res.data }));
+      setIsLoading(false);
       // 페이지 이동
       navigation('/mr/rez');
     } catch (err) {
@@ -200,6 +204,7 @@ const MiniRezForm = () => {
           </Box>
         </Grid>
       </Box>
+      <Progress open={isLoading} />
     </WrapContainer>
   );
 };

@@ -42,6 +42,7 @@
     "framer-motion": "^6.3.16",
     "material-ui-popup-state": "^4.0.1",
     "prop-types": "^15.8.1",
+    "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-complex-tree": "^2.2.3",
