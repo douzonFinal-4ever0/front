@@ -6,152 +6,230 @@ import axiosInstance from '../../../../utils/axios';
 
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { palette } from '../../../../theme/palette';
-import InnterPtModal from '../modal/InnerPtModal';
-
+import PtModal from '../modal/PtModal';
 import {
   Avatar,
   Box,
-  ListItem,
   IconButton,
   List,
+  ListItem,
   ListItemAvatar,
-  ListItemText
+  ListItemButton,
+  ListItemText,
+  Stack,
+  Typography
 } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ClearIcon from '@mui/icons-material/Clear';
+import ImageIcon from '@mui/icons-material/Image';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 const InnerPtForm = () => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
-  const { mr_pt_list } = rezData;
   const { mem_code } = userData;
 
   // 모달창 오픈
   const [openModal, setOpenModal] = useState(false);
-  // 서버에서 전달받은 멤버 리스트
-  const [members, setMembers] = useState([]);
-  // 모달창 적용 대상 리스트
-  const [selectMems, setSelectMems] = useState([]);
-  // 즐겨찾기 멤버
-  const [memList, setMemList] = useState([]);
+  // ------------------------------------------------------------
+  // 참석자 리스트
+  const [ptList, setPtList] = useState([]);
+  // 전체 사용자 리스트
+  const [totalMemberList, setTotalMemberList] = useState([]);
+  // 적용 대상 리스트
+  const [applyMemberList, setApplyMemberList] = useState([]);
+  // 전체 사용자  토글 데이터
+  const [isToggleMemList, setIsToggletMemList] = useState([]);
+  // 적용 대상 토글 데이터
+  const [isToggleApplyList, setIsToggleApplyList] = useState([]);
+  // ------------------------------------------------------------
   // 즐겨찾기 그룹
-  const [groupList, setGroupList] = useState([]);
-  // 전체 멤버 리스트 클릭 시 컬러 활성화 여부
-  const [buttonStates, setButtonStates] = useState([]);
-  // 적용 대상 리스트 클릭 시 컬러 활성화 여부
-  const [isApplyToggle, setIsApplyToggle] = useState([]);
-  // 참석자 추가 버튼 이벤트
-  const handleInnerPtBtn = async () => {
-    // 전체 멤버 조회
-    const res = await axiosInstance.axiosInstance.get('/mr/mem');
-    setMembers(res.data);
+  const [bmGroupList, setBmGroupList] = useState([]);
+  // 즐겨찾기 멤버 토글 데이터
+  const [isToggleBmMemList, setIsToggleBmMemList] = useState([]);
 
-    // 즐겨찾기 멤버 조회
-    const bmRes = await axiosInstance.axiosInstance.get(
-      `/mr/mem/bm?mem_code=${mem_code}`
-    );
-    const { data } = bmRes;
+  useEffect(() => {
+    getMembersApi(); // 전체 사용자 리스트 조회
+  }, []);
 
-    // 개별 멤버
-    const memResult = data.filter((item) => item.bm_group_name === null);
-    // 그룹 & 그룹 멤버
-    const groupResult = data.filter((item) => item.bm_group_name !== null);
+  // 전체 사용자 데이터 받는 API
+  const getMembersApi = async () => {
+    try {
+      const res = await axiosInstance.axiosInstance.get('/mr/mem');
+      if (res.status !== 200) return;
 
-    // 그룹핑
-    const groupedData = [];
-    groupResult.forEach((item) => {
-      const { bm_group_name, ...rest } = item;
-
-      // 해당 bm_group_code가 이미 존재하는지 확인
-      const existingGroup = groupedData.find(
-        (group) => group.bm_group_name === bm_group_name
+      // 전체 사용자 리스트 업데이트
+      setTotalMemberList(res.data);
+      // 선택 토글 리스트 값 생성
+      setIsToggletMemList(
+        Array.from({ length: totalMemberList.length }, () => false)
       );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-      if (existingGroup) {
-        // 이미 존재하는 경우 mem_list 배열에 추가
-        existingGroup.mem_list.push(rest);
-      } else {
-        // 새로운 그룹 생성
-        const newGroup = { bm_group_name, mem_list: [rest] };
-        groupedData.push(newGroup);
-      }
-    });
-
-    setMemList([...memResult]);
-    setGroupList([...groupedData]);
-    setButtonStates(Array.from({ length: memResult.length }, () => false));
-    setIsApplyToggle(Array.from({ length: mr_pt_list.length }, () => false));
-
-    setSelectMems(mr_pt_list);
-    setOpenModal(!openModal);
+  // 즐겨찾기 데이터 받는 API
+  const getBmMemberApi = async (mem_code) => {
+    try {
+      const res = await axiosInstance.axiosInstance.get(
+        `/mr/mem/bm?mem_code=${mem_code}`
+      );
+      // console.log(res);
+      if (res.status !== 200) return;
+      //  즐겨찾기 그룹 리스트 업데이트
+      setBmGroupList(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // 모달창 오픈 이벤트
-  const handleModal = () => {
+  const handleModalOpen = () => {
     setOpenModal(!openModal);
   };
 
-  // 멤버 삭제 버튼 이벤트
-  const handleDeleteMem = (e) => {
-    const lestMems = mr_pt_list.filter(
-      (user) => user.mem_code !== mr_pt_list[e.currentTarget.tabIndex].mem_code
-    );
-    const newRezData = { ...rezData, mr_pt_list: lestMems };
-    dispatch(setRezData({ data: newRezData }));
+  // 참석자 추가 버튼 이벤트
+  const handleInnerPtBtn = async () => {
+    if (bmGroupList.length === 0) {
+      getBmMemberApi(mem_code);
+    }
+
+    handleModalOpen();
   };
 
-  const MemList = ({ list }) => {
+  // 참석자 카드 삭제 버튼 이벤트
+  const handleCardDeleteBtn = (e) => {
+    const index = e.currentTarget.tabIndex;
+    const copyList = [...ptList];
+    copyList.splice(index, 1);
+    setPtList(copyList);
+    setApplyMemberList(copyList);
+  };
+
+  // 참석자 카드 리스트 컴포넌트
+  const PtCardList = ({ data }) => {
     return (
-      <Box>
-        <List>
-          {list.map((user, index) => (
-            <ListItem>
-              <ListItemAvatar>
-                <Avatar>
-                  <AccountCircleIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={user.name} />
+      <List sx={{ width: '100%' }}>
+        {data.map((mem, index) => (
+          <ListItem
+            key={index}
+            secondaryAction={
               <IconButton
-                tabIndex={index}
                 edge="end"
                 aria-label="delete"
-                onClick={handleDeleteMem}
+                tabIndex={index}
+                onClick={handleCardDeleteBtn}
               >
-                <ClearIcon />
+                <DeleteForeverRoundedIcon />
               </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+            }
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <ImageIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Stack direction={'row'} gap={1}>
+                  <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>
+                    {mem.name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px'
+                    }}
+                  >
+                    {mem.position_name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '14px'
+                    }}
+                  >
+                    |{' '}
+                    {mem.deptVO === undefined
+                      ? mem.dept_name
+                      : mem.deptVO.dept_name}
+                  </Typography>
+                </Stack>
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
     );
   };
 
   return (
     <>
-      {mr_pt_list.length !== 0 ? <MemList list={mr_pt_list} /> : null}
+      {ptList && <PtCardList data={ptList} />}
       <RectangleBtn
         type={'button'}
         text={'참석자 추가'}
         sx={{ padding: '14px 12px', backgroundColor: palette.grey['500'] }}
         handlebtn={handleInnerPtBtn}
       />
-      <InnterPtModal
+      <PtModal
         open={openModal}
-        handleModal={handleModal}
-        list={members}
-        ptList={mr_pt_list}
-        selectMems={selectMems}
-        setSelectMems={setSelectMems}
-        groupList={groupList}
-        buttonStates={buttonStates}
-        setButtonStates={setButtonStates}
-        isApplyToggle={isApplyToggle}
-        setIsApplyToggle={setIsApplyToggle}
+        handleModal={handleModalOpen}
+        userCode={mem_code}
+        ptList={ptList}
+        setPtList={setPtList}
+        totalMemberList={totalMemberList}
+        setTotalMemberList={setTotalMemberList}
+        applyMemberList={applyMemberList}
+        setApplyMemberList={setApplyMemberList}
+        isToggleMemList={isToggleMemList}
+        setIsToggletMemList={setIsToggletMemList}
+        isToggleApplyList={isToggleApplyList}
+        setIsToggleApplyList={setIsToggleApplyList}
+        bmGroupList={bmGroupList}
+        setBmGroupList={setBmGroupList}
+        setIsToggleBmMemList={setIsToggleBmMemList}
       />
     </>
   );
 };
 
 export default InnerPtForm;
+
+// // 전체 멤버 조회
+// const res = await axiosInstance.axiosInstance.get('/mr/mem');
+// setMembers(res.data);
+// // 즐겨찾기 멤버 조회
+// const bmRes = await axiosInstance.axiosInstance.get(
+//   `/mr/mem/bm?mem_code=${mem_code}`
+// );
+// const { data } = bmRes;
+// // 개별 멤버
+// const memResult = data.filter((item) => item.bm_group_name === null);
+// // 그룹 & 그룹 멤버
+// const groupResult = data.filter((item) => item.bm_group_name !== null);
+// // 그룹핑
+// const groupedData = [];
+// groupResult.forEach((item) => {
+//   const { bm_group_name, ...rest } = item;
+//   // 해당 bm_group_code가 이미 존재하는지 확인
+//   const existingGroup = groupedData.find(
+//     (group) => group.bm_group_name === bm_group_name
+//   );
+//   if (existingGroup) {
+//     // 이미 존재하는 경우 mem_list 배열에 추가
+//     existingGroup.mem_list.push(rest);
+//   } else {
+//     // 새로운 그룹 생성
+//     const newGroup = { bm_group_name, mem_list: [rest] };
+//     groupedData.push(newGroup);
+//   }
+// });
+// setMemList([...memResult]);
+// setGroupList([...groupedData]);
+// setButtonStates(Array.from({ length: memResult.length }, () => false));
+// setIsApplyToggle(Array.from({ length: mr_pt_list.length }, () => false));
+// setSelectMems(mr_pt_list);
+// setOpenModal(!openModal);
