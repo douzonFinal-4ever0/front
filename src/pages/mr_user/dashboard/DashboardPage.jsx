@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import base64 from 'base-64';
 import utf8 from 'utf8';
 
@@ -14,18 +15,24 @@ import SubHeader from '../../../components/common/SubHeader';
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import MiniRezForm from './section/MiniRezForm';
+import { useCallback } from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
+import QRcode from '../../../components/mr_user/QRcode';
+import Spinner from '../../../components/common/Spinner';
+import Progress from '../../../components/mr_user/Progress';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
   const userData = useSelector(setUserData).payload.user;
   const bmData = useSelector(setBmData).payload.bm;
 
   // 리덕스 데이터
-  const { name, position_name, mem_code } = userData;
+  const { name, position_name, mem_code, dept_name } = userData;
   const { mr_list } = bmData;
 
   useEffect(() => {
-    getBmMrApi();
+    //getBmMrApi();
   }, []);
 
   const getBmMrApi = async () => {

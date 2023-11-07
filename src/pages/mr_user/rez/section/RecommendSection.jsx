@@ -20,7 +20,42 @@ import Tag from '../../../../components/mr_user/Tag';
 import { palette } from '../../../../theme/palette';
 
 const MrCard = ({ data, selectMrCard, handleCardClick }) => {
-  const { mr_code, mr_name, location, maximum_capacity, mr_keyword } = data;
+  const { mr_code, mr_name, location, maximum_capacity, mr_keyword, priority } =
+    data;
+  let score = priority;
+
+  const convertScore = () => {
+    const itemWeights = [1, 10, 100, 1000];
+    let itemCounts = {};
+
+    for (let i = itemWeights.length - 1; i >= 0; i--) {
+      let itemWeight = itemWeights[i];
+      let itemCount = Math.floor(score / itemWeight);
+      itemCounts[`item${i + 1}`] = itemCount;
+      score -= itemCount * itemWeight;
+    }
+    const tags = [];
+
+    if (itemCounts.item4 == 1) {
+      tags.push({ tag: '즐겨찾기' });
+    }
+
+    if (itemCounts.item3 == 1) {
+      tags.push({ tag: '최근이용한' });
+    }
+
+    if (itemCounts.item2 == 1) {
+      tags.push({ tag: '가까운' });
+    }
+
+    if (itemCounts.item1 == 1) {
+      tags.push({ tag: '주제적합' });
+    }
+
+    return tags;
+  };
+
+  const cardTags = convertScore();
 
   return (
     <StyledCard
@@ -63,20 +98,23 @@ const MrCard = ({ data, selectMrCard, handleCardClick }) => {
               }
             }}
           >
-            {mr_keyword.map((item) => (
-              <Tag
-                key={item.keyword_code}
-                text={item.keyword_name}
-                isHashTag={true}
-                sx={{ backgroundColor: palette.grey['500'], fontSize: '12px' }}
-              />
-            ))}
+            {cardTags &&
+              cardTags.map((item) => (
+                <Tag
+                  key={item.tag}
+                  text={item.tag}
+                  isHashTag={true}
+                  sx={{
+                    backgroundColor: palette.grey['500'],
+                    fontSize: '12px'
+                  }}
+                />
+              ))}
           </Stack>
         </Stack>
       </CardContent>
     </StyledCard>
   );
-  return <></>;
 };
 
 const MrCardList = ({ data, selectMrCard, handleCardClick }) => {
@@ -134,14 +172,20 @@ const RecommendSection = ({ data, selectMrCard, handleCardClick }) => {
 
 export default RecommendSection;
 
-const ContainerWithScroll = styled('div')(() => ({
+const ContainerWithScroll = styled('div')(({ theme }) => ({
   height: '800px',
   overflowY: 'scroll',
   display: 'flex',
   flexDirection: 'column',
   scrollbarWidth: 'none',
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: theme.palette.grey['500'],
+    borderRadius: '10px'
+  },
   '&::-webkit-scrollbar': {
-    display: 'none'
+    width: '10px',
+    backgroundColor: '#eee',
+    borderRadius: '10px'
   }
 }));
 

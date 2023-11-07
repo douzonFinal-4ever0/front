@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getFormattedDate } from '../../utils/formatDate';
 
 const initialState = {
+  mr_code: '', // 회의실 번호
   m_name: '', // 회의명
   m_type: '프로젝트회의', // 회의 종류,
   rez_date: getFormattedDate(), // 예약 날짜(Default: 현재 날짜)

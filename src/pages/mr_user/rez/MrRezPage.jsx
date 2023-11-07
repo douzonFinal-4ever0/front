@@ -18,10 +18,9 @@ import SubHeader from '../../../components/common/SubHeader';
 const MrRezPage = () => {
   const navigation = useNavigate();
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
-  const bmData = useSelector(setBmData).payload.bm;
   const { list } = mrRecommendData;
-  const { mr_list } = bmData;
 
+  // 선택한 회의실 카드 정보
   const [selectMrCard, setSelectMrCard] = useState({});
 
   // 새로고침 시 대시보드로 리다이렉트
@@ -91,7 +90,11 @@ const MrRezPage = () => {
                       <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
                       Step 3 - 예약 정보 입력
                     </StyledStepText>
-                    {list.length !== 0 ? <RezSection /> : '데이터 없음'}
+                    {list.length !== 0 ? (
+                      <RezSection selectMrCard={selectMrCard} />
+                    ) : (
+                      '데이터 없음'
+                    )}
                   </Stack>
                 </Grid>
               </Grid>

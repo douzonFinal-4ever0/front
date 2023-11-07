@@ -18,15 +18,17 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Progress from '../../../../components/mr_user/Progress';
+import { useState } from 'react';
 
 const MiniRezForm = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const userData = useSelector(setUserData).payload.user;
   const rezData = useSelector(setRezData).payload.mrUser;
   // 사용자 데이터
-  const { mem_code } = userData;
+  const { name, position_name, mem_code, dept_name } = userData;
   // 회의실 예약 데이터
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
@@ -67,6 +69,17 @@ const MiniRezForm = () => {
   // 예약 버튼 이벤트
   const handleRezBtnSubmit = async (e) => {
     e.preventDefault();
+
+    const userDefaultMrPt = {
+      mem_code,
+      name,
+      dept_name,
+      position_name
+    };
+
+    const newRezData = { ...rezData, mr_pt_list: [userDefaultMrPt] };
+    dispatch(setRezData({ data: newRezData }));
+
     const data = {
       mem_code, // 사용자 번호
       m_type, // 회의 종류
@@ -77,6 +90,7 @@ const MiniRezForm = () => {
     };
 
     try {
+      setIsLoading(true);
       const res = await axiosInstance.axiosInstance.get('/mr/recommend', {
         params: data
       });
@@ -84,6 +98,7 @@ const MiniRezForm = () => {
 
       // 추천된 회의실 정보를 리덕스 저장
       dispatch(setMrRecommendData({ data: res.data }));
+      setIsLoading(false);
       // 페이지 이동
       navigation('/mr/rez');
     } catch (err) {
@@ -189,6 +204,7 @@ const MiniRezForm = () => {
           </Box>
         </Grid>
       </Box>
+      <Progress open={isLoading} />
     </WrapContainer>
   );
 };
