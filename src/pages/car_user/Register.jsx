@@ -38,7 +38,7 @@ import axiosInstance from '../../utils/axios';
 import { useSelector } from 'react-redux';
 import Spinner from '../../components/common/Spinner';
 import LoadingModal from '../../components/car_user/LoadingModal';
-
+import socketIOClient from 'socket.io-client';
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -61,6 +61,7 @@ const Register = () => {
   });
   const currentUser = useSelector((state) => state.user);
   const mem_code = currentUser.mem_code;
+  const currentName = currentUser.name;
   const [formData, setFormData] = useState({
     memDTO: {
       mem_code: mem_code
@@ -100,6 +101,8 @@ const Register = () => {
   const [receipt_loc, setReceipt_loc] = useState(initReceipt_loc);
   const [return_loc, setReturn_loc] = useState(initReturn_loc);
   const [dest_loc, setDest_loc] = useState(initDest_loc);
+  const [est_time, setEst_time] = useState(null);
+  const [est_cost, setEst_cost] = useState(null);
 
   //입력시 변환
   const handleCarCode = (e) => {
@@ -319,11 +322,12 @@ const Register = () => {
           data.start_at = dateFormat(res.data.start_at);
           data.return_at = dateFormat(res.data.return_at);
           console.log('예약 완료 : ' + dateFormat(res.data.start_at));
+          socket.emit('disconnect_with_info', currentName);
           navigate('../carRezComplete', { state: data });
         });
     }
   };
-
+  const [socket, setSocket] = useState(null);
   //modal여는 함수
   const handleOpenModal = () => {
     console.log(rezStart_at);
@@ -335,7 +339,11 @@ const Register = () => {
       if (Date.parse(rezStart_at) > Date.parse(rezReturn_at)) {
         alert('대여일이 반납일보다 늦습니다');
       } else {
-        setOpen(true);
+        const newSocket = socketIOClient('http://localhost:4000'); // 서버 주소로 변경
+        setSocket(newSocket);
+        if (socket) {
+          setOpen(true);
+        }
       }
     }
   };
@@ -346,7 +354,6 @@ const Register = () => {
       console.log('사용자가 버튼을 클릭하여 모달이 닫힘');
     }
 
-    // socket.emit('disconnect_with_info', currentName);
     setOpen(false);
   };
   //차량 선택 후 처리
@@ -441,6 +448,8 @@ const Register = () => {
           setEst_mileage(
             (response.features[0].properties.totalDistance / 1000).toFixed(1)
           );
+          setEst_time(response.features[0].properties.totalTime);
+          setEst_cost(response.features[0].properties.totalFare);
           setIsLoading(false);
         })
         .catch((err) => console.error(err));
@@ -592,10 +601,10 @@ const Register = () => {
                 </Box>
                 {/* 이름 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'mem_code'} text={'이름'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="mem_code"
                       variant="outlined"
@@ -611,10 +620,10 @@ const Register = () => {
 
                 {/* 부서 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'dpt_name'} text={'부서'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="dpt_name"
                       variant="outlined"
@@ -630,10 +639,10 @@ const Register = () => {
 
                 {/* 직급 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'position_name'} text={'직급'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="position_name"
                       variant="outlined"
@@ -648,10 +657,10 @@ const Register = () => {
                 </Grid>
                 {/* 목적 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'detail'} text={'목적'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'detail'} text={'목적 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="detail"
                       name="detail"
@@ -664,10 +673,10 @@ const Register = () => {
                 </Grid>
                 {/* 대여 날짜 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'start_at'} text={'대여 날짜'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'start_at'} text={'대여 날짜 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TimeField
                       withMonth={true}
                       label={'대여 날짜'}
@@ -681,10 +690,10 @@ const Register = () => {
                 </Grid>
                 {/* 반납 날짜 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'return_at'} text={'반납 날짜'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'return_at'} text={'반납 날짜 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TimeField
                       withMonth={true}
                       label={'반납 날짜'}
@@ -698,33 +707,36 @@ const Register = () => {
                 </Grid>
                 {/* 목적지 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'dest'} text={'목적지'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'dest'} text={'목적지 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={8}>
-                    <TextField
-                      id="dest"
-                      name="dest_loc"
-                      type="text"
-                      onChange={(e) => handleChangeLoc(e, setDest_loc)}
-                      value={carRez ? dest_loc : formData.dest_loc}
-                      readOnly
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
+                  <Grid item xs={9}>
                     <DaumPost setAddressObj={setAddressObj} />
+                  </Grid>
+                  <Grid item container xs={12} spacing={2}>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={9}>
+                      <TextField
+                        id="dest"
+                        name="dest_loc"
+                        type="text"
+                        onChange={(e) => handleChangeLoc(e, setDest_loc)}
+                        value={carRez ? dest_loc : formData.dest_loc}
+                        readOnly
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
                 {/* 차량 찾기 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'detail'} text={'차량 찾기'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'detail'} text={'차량 찾기 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     {/* <Button onClick={handleOpenModal}>차량 찾기</Button> */}
                     <RectangleBtn
                       type={'button'}
-                      text={'차량 찾기'}
+                      text={'차량 검색'}
                       sx={{
                         padding: '14px 12px',
                         backgroundColor: palette.grey['500']
@@ -742,6 +754,7 @@ const Register = () => {
                           rezReturn_at={rezReturn_at}
                           carSelect={carSelect}
                           setOpen={setOpen}
+                          socket={socket}
                         />
                       }
                       // buttons={
@@ -783,10 +796,10 @@ const Register = () => {
 
                 {/* 차종 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'car_name'} text={'차종'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="car_name"
                       type="text"
@@ -800,10 +813,10 @@ const Register = () => {
                 </Grid>
                 {/* 차량 번호 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'car_code'} text={'차량 번호'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="car_code"
                       name="car_code"
@@ -819,10 +832,10 @@ const Register = () => {
                 </Grid>
                 {/* 누적 주행 거리 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'accum_mileage'} text={'누적주행거리'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="accum_mileage"
                       type="text"
@@ -842,10 +855,10 @@ const Register = () => {
                 </Grid>
                 {/* 권한 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'authority'} text={'권한'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="authority"
                       type="text"
@@ -859,10 +872,10 @@ const Register = () => {
                 </Grid>
                 {/* 유종 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'fuel_type'} text={'유종'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="fuel_type"
                       type="text"
@@ -876,10 +889,10 @@ const Register = () => {
                 </Grid>
                 {/* 연비 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'fuel_effciency'} text={'연비'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="fuel_effciency"
                       type="text"
@@ -899,10 +912,10 @@ const Register = () => {
                 </Grid>
                 {/* 인수지 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'receipt_loc'} text={'인수지'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="receipt_loc"
                       name="receipt_loc"
@@ -918,10 +931,10 @@ const Register = () => {
                 </Grid>
                 {/* 반납지 */}
                 <Grid item container spacing={2}>
-                  <StyledLabelGrid item xs={2}>
-                    <Label htmlFor={'return_loc'} text={'반납지'} />
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'return_loc'} text={'반납지 *'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <Selectbox
                       name="return_loc"
                       key={returnLocList.key}
@@ -936,10 +949,10 @@ const Register = () => {
                 </Grid>
                 {/* 예상 주행 거리 */}
                 <Grid item container xs={12} spacing={2}>
-                  <StyledLabelGrid item xs={2}>
+                  <StyledLabelGrid item xs={3}>
                     <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
                   </StyledLabelGrid>
-                  <Grid item xs={10}>
+                  <Grid item xs={9}>
                     <TextField
                       id="est_mileage"
                       name="est_mileage"
@@ -986,6 +999,73 @@ const Register = () => {
                     운행 예상 정보
                   </Typography>
                 </Box>
+                {/* 예상 주행 거리 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'est_mileage'} text={'예상주행거리'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="est_mileage"
+                      name="est_mileage"
+                      type="text"
+                      onChange={(e) => handleChange(e, setEst_mileage)}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">㎞</InputAdornment>
+                        )
+                      }}
+                      value={carRez ? est_mileage : formData.est_mileage}
+                    />
+                  </Grid>
+                </Grid>
+                {/* 예상 주행 시간 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'est_time'} text={'예상주행시간'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="est_time"
+                      type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.car_name
+                      }
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">분</InputAdornment>
+                        )
+                      }}
+                      value={est_time / 60}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
+                {/* 예상 주행 요금 */}
+                <Grid item container xs={12} spacing={2}>
+                  <StyledLabelGrid item xs={3}>
+                    <Label htmlFor={'est_cost'} text={'예상주행요금'} />
+                  </StyledLabelGrid>
+                  <Grid item xs={9}>
+                    <TextField
+                      id="est_cost"
+                      type="text"
+                      defaultValue={
+                        carRez && carRez.rez.carDetailResponseVO.carVO.car_name
+                      }
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        endAdornment: (
+                          <InputAdornment position="end">원</InputAdornment>
+                        )
+                      }}
+                      value={est_cost}
+                      readOnly
+                    />
+                  </Grid>
+                </Grid>
               </Stack>
             </Item>
           </Grid>
@@ -994,7 +1074,6 @@ const Register = () => {
           {carRez !== null ? (
             <Button
               variant="contained"
-              color="success"
               style={{ marginRight: '10px' }}
               onClick={updateRez}
             >
@@ -1003,7 +1082,6 @@ const Register = () => {
           ) : (
             <Button
               variant="contained"
-              color="success"
               style={{ marginRight: '10px' }}
               type="submit"
             >
@@ -1011,8 +1089,8 @@ const Register = () => {
             </Button>
           )}
 
-          <Button variant="outlined" color="error">
-            Error
+          <Button variant="contained" color="error">
+            취소
           </Button>
         </BottomBox>
       </form>

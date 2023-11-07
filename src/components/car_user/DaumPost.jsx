@@ -63,7 +63,7 @@ function DaumPost({ setAddressObj, setFormData, formData }) {
     // </Button>
     <RectangleBtn
       type={'button'}
-      text={'찾기'}
+      text={'목적지 검색'}
       sx={{
         padding: '14px 12px',
         backgroundColor: palette.grey['500']
