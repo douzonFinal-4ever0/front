@@ -25,7 +25,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../components/common/RectangleBtn';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { subDays } from 'date-fns';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MileageLogModal from '../../components/car_admin/operation/MileageLogModal';
@@ -35,9 +35,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   boxShadow: 24,
   pt: 2,
   px: 4,
