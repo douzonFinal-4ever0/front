@@ -107,7 +107,7 @@ const RezSection = ({ selectMrCard, recentMNames }) => {
       if (res.status === 201) {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
-        navigation('/mr/dashboard');
+        navigation('/mr/rez/confirm');
       }
     } catch (err) {
       console.log(err);
