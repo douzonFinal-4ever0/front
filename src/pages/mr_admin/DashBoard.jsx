@@ -35,6 +35,9 @@ import JWTdecode from '../../components/common/JWTdecode';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import ImageUpload from '../../components/mr_admin/ImageUpload';
 import SuppliesList from '../../components/mr_admin/SuppliesList.jsx';
+import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 const DashBoard = () => {
   const navigate = useNavigate();
   const handleLogOut = () => {
@@ -103,7 +106,9 @@ const DashBoard = () => {
         <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              <SuppliesList />
+              <ExcelImport />
+              {/* <SuppliesList /> */}
+
               {/* <ImageUpload /> */}
               {/* <JWTdecode /> */}
               {/* 이미지 리스트 */}
@@ -138,7 +143,7 @@ const DashBoard = () => {
                 <MenuItem value="중회의실">중회의실</MenuItem>
                 <MenuItem value="대회의실">대회의실</MenuItem>
               </Select> */}
-              <Button onClick={handleLogOut}>로그아웃</Button>
+              {/* <Button onClick={handleLogOut}>로그아웃</Button> */}
             </Container>
           </WrapContainer>
         </MainContainer2>

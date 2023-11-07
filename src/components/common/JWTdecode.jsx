@@ -33,7 +33,8 @@ const JWTdecode = () => {
             name: userInfo.userNm,
             position_name: userInfo.userPosition,
             dept_name: userInfo.userDeptNm,
-            role: userInfo.userRole
+            role: userInfo.userRole,
+            email: userInfo.userEmail
           }
         })
       );
