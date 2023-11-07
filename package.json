@@ -64,7 +64,8 @@
     "styled-components": "^6.0.9",
     "utf8": "^3.0.0",
     "ws": "^8.14.2",
-    "xlsx": "^0.17.5",
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0",
     "yup": "^0.32.11"
   },
   "scripts": {
