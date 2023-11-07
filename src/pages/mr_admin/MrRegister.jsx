@@ -14,6 +14,8 @@ import DataGrid from '../../components/common/DataGrid';
 import axios from 'axios';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import SuppliesList from '../../components/mr_admin/SuppliesList.jsx';
+import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
 const MrRegister = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
@@ -83,7 +85,13 @@ const MrRegister = () => {
           isEditMode={isEditMode}
         />
       )
-    }
+    },
+    !isEditMode
+      ? {
+          title: '엑셀 등록',
+          content: <ExcelImport />
+        }
+      : ''
   ];
   /*---------------------------------------------------------------------------------------------------------*/
   /**데이터 그리드 더블 클릭이벤트 */
