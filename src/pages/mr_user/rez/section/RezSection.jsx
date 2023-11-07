@@ -31,7 +31,7 @@ import {
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
 
-const RezSection = ({ selectMrCard }) => {
+const RezSection = ({ selectMrCard, recentMNames }) => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
   const rezData = useSelector(setRezData).payload.mrUser;
@@ -141,7 +141,7 @@ const RezSection = ({ selectMrCard }) => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <RezForm />
+                <RezForm recentMNames={recentMNames} />
               </AccordionDetails>
             </Accordion>
 
