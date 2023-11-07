@@ -8,6 +8,7 @@ import {
   ListItemButton,
   ListItemText,
   Paper,
+  TextField,
   Typography
 } from '@mui/material';
 import axios from 'axios';
@@ -20,53 +21,154 @@ import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
 import { useQuery } from 'react-query';
+import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
+
+//통신
+const socket = io.connect('http://localhost:4000');
 
 // 서브 사이드바 콘텐츠
-const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
+const SubSideContents = ({
+  setSelectedRows,
+  rezStart_at,
+  rezReturn_at,
+  carSelect,
+  setOpen
+}) => {
   const [searchInput, setSearchInput] = useState('');
   //const [carCode, setCarCode] = useState('');
   const [rows, setRows] = useState([]);
+  //통신
+  const [state, setState] = useState({ message: '', name: '' });
+  const [chat, setChat] = useState([]);
+  const currentUser = useSelector((state) => state.user);
+  const currentName = currentUser.name;
+  const [userNum, setUserNum] = useState(0);
+  const [selected, setSelected] = useState();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
   useEffect(() => {
-    // axiosInstance.axiosInstance
-    //   .get(
-    //     `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
-    //   )
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     setRows(
-    //       res.data.map((car) => ({
-    //         id: car.car_code,
-    //         car_name: car.car_name,
-    //         car_address: car.car_address,
-    //         car_status: car.car_status
-    //       }))
-    //     );
-    //   });
-  }, [rows]);
+    //통신 연결
+    const Token = getJwtToken();
+    console.log(rezStart_at + '');
+    console.log(typeof rezStart_at);
+    console.log(Token);
+    socket.emit('user', currentName);
+    socket.on('users', (currentUsers) => {
+      console.log(currentUsers);
+    });
+    socket.emit('init', {
+      rows,
+      currentName,
+      rezStart_at,
+      rezReturn_at,
+      Token,
+      setRows
+    });
+    socket.on('cars', (cars) => {
+      console.log(cars);
+      setRows(
+        cars.map((car) => ({
+          id: car.car_code,
+          car_name: car.car_name,
+          car_address: car.car_address,
+          car_status: car.car_status
+        }))
+      );
+    });
+    socket.on('currentCnt', (cnt) => {
+      console.log(cnt);
+      setUserNum(cnt);
+    });
+    socket.on('Upcars', (cars) => {
+      console.log('up');
+      console.log(cars);
+      setRows(
+        cars.map((car) => ({
+          id: car.car_code,
+          car_name: car.car_name,
+          car_address: car.car_address,
+          car_status: car.car_status
+        }))
+      );
+    });
+    socket.on('selected', (mapAsJSON) => {
+      // console.log(mapAsJSON);
+      const mapData = new Map(JSON.parse(mapAsJSON));
+      // console.log(mapData);
+      // const valuesArray = Array.from(mapData.values());
+      // const updateRows = rows.map((car) => {
+      //   if (valuesArray.includes(car.car_code)) {
+      //     return { ...car, car_status: '선택됨' };
+      //   }
+      //   return car;
+      // });
+      // setRows(updateRows);
+      //선택된 차
+      if (mapData.get(currentName)) {
+        setSelected(mapData.get(currentName));
+      }
+      // setSelectedUser(selectedUser);
+    });
+  }, []);
+  // useEffect(() => {
+  //   console.log(currentName);
 
-  const { cars, error } = useQuery(
-    ['availableCars', rezStart_at, rezReturn_at],
-    () => {
-      axiosInstance.axiosInstance
-        .get(
-          `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
-        )
-        .then((res) => {
-          console.log(res.data);
-          setRows(
-            res.data.map((car) => ({
-              id: car.car_code,
-              car_name: car.car_name,
-              car_address: car.car_address,
-              car_status: car.car_status
-            }))
-          );
-        });
-    },
-    {
-      staleTime: 1000
+  //   socket.on('users', (currentUsers) => {
+  //     console.log('클라이언트:' + currentUsers);
+  //   });
+  // }, []);
+  const onTextChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+  const onMessageSubmit = (e) => {
+    e.preventDefault();
+    const { name, message } = state;
+    socket.emit('message', { name, message });
+    setState({ message: '', name });
+  };
+  const renderChat = () => {
+    return chat.map(({ name, message }, index) => (
+      <div key={index}>
+        <h3>
+          {name}:<span>{message}</span>
+        </h3>
+      </div>
+    ));
+  };
+  //modal 닫는 함수
+  const handleCloseModal = (reason) => {
+    if (reason === 'buttonClick') {
+      // 특정 버튼을 클릭한 경우의 처리
+      console.log('사용자가 버튼을 클릭하여 모달이 닫힘');
     }
-  );
+    socket.emit('disconnect_with_info', currentName);
+    setOpen(false);
+  };
+  // const { cars, error } = useQuery(
+  //   ['availableCars', rezStart_at, rezReturn_at],
+  //   () => {
+  //     axiosInstance.axiosInstance
+  //       .get(
+  //         `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`
+  //       )
+  //       .then((res) => {
+  //         console.log(res.data);
+  //         setRows(
+  //           res.data.map((car) => ({
+  //             id: car.car_code,
+  //             car_name: car.car_name,
+  //             car_address: car.car_address,
+  //             car_status: car.car_status
+  //           }))
+  //         );
+  //       });
+  //   },
+  //   {
+  //     staleTime: 1000
+  //   }
+  // );
   const handleInput = (e) => {
     setSearchInput(e.target.value);
   };
@@ -80,14 +182,10 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
   const handleItem = (e, car_code, car_address, car_name) => {
     //setCarCode(car_code);
     setSelectedRows({ car_code, car_address, car_name });
-    axiosInstance.axiosInstance
-      .get(`http://localhost:8081/car_rez/selectedCar/${car_code}`)
-      .then((res) => {
-        //다른 차량 선택시 선택됨 해제 필요
-        if (res.status !== 200) {
-          alert('에러 발생');
-        }
-      });
+    //선택된 차량 비활성화
+    socket.emit('selected', { car_code, currentName });
+
+    //다른 차량 선택시 선택됨 해제 필요
   };
   // hover
   const [isHovered, setIsHovered] = useState(null);
@@ -184,6 +282,11 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
           차량 검색
         </Typography>
       </Box> */}
+      <Typography variant="body">동시 접속자 : {userNum}명</Typography>
+      <br />
+      <Typography variant="body">
+        선택한 차량 : {selected ? selected : '없음'}
+      </Typography>
       <Searchbar
         width={'100%'}
         placeholder={'차종을 입력하세요'}
@@ -191,10 +294,48 @@ const SubSideContents = ({ setSelectedRows, rezStart_at, rezReturn_at }) => {
         handleInputChange={handleInput}
         handleSearchBtn={handleSearchBtn}
       />
+
       <Divider />
       <Paper className="MuiPaper-rounded2" width={'100%'}>
         <CarList rows={filterCarData} />
       </Paper>
+      <Grid
+        container
+        xs={12}
+        sx={{ m: '10px 0px' }}
+        justifyContent="center"
+        spacing={2}
+      >
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: '#BEBEBE',
+            backgroundColor: '#ffffff',
+            ':hover': {
+              backgroundColor: '#ffffff',
+              borderColor: '#BEBEBE'
+            },
+            margin: '0px 4px'
+          }}
+          onClick={handleCloseModal}
+        >
+          취소
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            borderColor: '#BEBEBE',
+            ':hover': {
+              backgroundColor: '#2065D1',
+              borderColor: '#BEBEBE'
+            },
+            margin: '0px 4px'
+          }}
+          onClick={carSelect}
+        >
+          선택
+        </Button>
+      </Grid>
     </Box>
   );
 };
