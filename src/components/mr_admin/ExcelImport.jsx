@@ -15,11 +15,7 @@ import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 function ExcelImport() {
   const [tableData, setTableData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  //   const [mr_op_day, setMr_op_day] = useState([]);
-  const [mr_name, setMr_name] = useState('');
-  const [location, setLocation] = useState('');
-  const [maximum_capacity, setMaximum_capacity] = useState(0);
-  const [mr_type, setMr_type] = useState('');
+  const [selectedRowsArray, setSelectedRowsArray] = useState([]);
   /*-------------------------------------알림-----------------------------------------------*/
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
@@ -57,28 +53,6 @@ function ExcelImport() {
           ...row // 기존 열 데이터 유지
         }));
 
-        /**회의실명 추출 */
-        const mrName = excelData.map((row) => row['회의실명']);
-        // setMr_name(mrName);
-
-        /**회의실 위치 추출 */
-        const mrLocation = excelData.map((row) => row['위치']);
-        // setLocation(mrLocation);
-
-        /**최대 수용 인원 추출 */
-        const maxCapacity = excelData.map((row) => row['최대 수용 인원']);
-        // setMaximum_capacity(maxCapacity);
-
-        /**운영 요일 추출 */
-        const days = excelData.map((row) => row['요일'].split(','));
-        // setMr_op_day(mr_op_day);
-
-        /**회의실 유형 추출 */
-        const mrType = excelData.map((row) => row['회의실 분류']);
-
-        // 추출된 데이터를 처리하거나 표시
-        // console.log(dataWithIds);
-
         // 테이블 데이터 설정
         setTableData(dataWithIds);
       };
@@ -89,21 +63,33 @@ function ExcelImport() {
   const handleRowClick = (row) => {
     setSelectedRow(row);
   };
+  /*----------------------------체크박스 누른 데이터--------------------------------------------*/
+  const handleDataGridSelectionChange = (selectedRowsData) => {
+    console.log(selectedRowsData);
+    setSelectedRowsArray(selectedRowsData);
+  };
+  console.log('엑셀 import에서 받아온 데이터 : ', selectedRowsArray);
 
-  const excelName = selectedRow?.row?.회의실명;
-  const excelType = selectedRow?.row?.분류;
-  const excelMax_capacity = selectedRow?.row?.인원;
-  const excelDays = selectedRow?.row?.요일.split(',');
-
+  /*--------------------------------------------------------------------------------*/
+  //   console.log(selectedRowsArray[0]?.회의실명);
+  //   const excelName = selectedRow?.row?.회의실명;
+  //   const excelType = selectedRow?.row?.분류;
+  //   const excelMax_capacity = selectedRow?.row?.인원;
+  //   const excelDays = selectedRow?.row?.요일.split(',');
+  //   const excelLocation = selectedRow?.row?.위치;
+  //   const excelMr_keyword = selectedRow?.row?.태그?.split(',');
+  const excelName = selectedRowsArray[0]?.회의실명;
+  const excelType = selectedRowsArray[0]?.분류;
+  const excelMax_capacity = selectedRowsArray[0]?.인원;
+  const excelDays = selectedRowsArray[0]?.요일.split(',');
+  const excelLocation = selectedRowsArray[0]?.위치;
   /** 요일을 0 또는 1로 매핑하여 초기 데이터 생성*/
   const mr_op_day = weekDays?.map((day) => ({
     day: weekDays.indexOf(day), // 요일 자체를 유지
     status: excelDays?.includes(day) ? 0 : 1 // 엑셀 데이터에 해당 요일이 있으면 0, 없으면 1로 설정
   }));
 
-  const excelLocation = selectedRow?.row?.위치;
-
-  const excelMr_keyword = selectedRow?.row?.태그?.split(',');
+  const excelMr_keyword = selectedRowsArray[0]?.태그?.split(',');
   /**회의실 태그 */
   const mr_keyword = excelMr_keyword
     ? excelMr_keyword.map((keyword) => ({
@@ -112,17 +98,16 @@ function ExcelImport() {
     : [];
   //   console.log(excelMax_capacity);
 
-  console.log('선택된 행 데이터: ', selectedRow);
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
-    // console.log(FormToData);
-    axiosInstance.axiosInstance
-      .post('/mr/mrRegister', FormToData)
-      .then((res) => {
-        handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
-        handleOpenSnackbar();
-        handleCloseDrawer();
-      });
+    console.log(FormToData);
+    // axiosInstance.axiosInstance
+    //   .post('/mr/mrRegister', FormToData)
+    //   .then((res) => {
+    //     handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
+    //     handleOpenSnackbar();
+    //     handleCloseDrawer();
+    //   });
   };
   /**등록시 필요한 데이터 */
   const FormToData = {
@@ -166,6 +151,7 @@ function ExcelImport() {
         clickEvent={handleRowClick}
         sx={{ width: 'auto' }}
         checkbox={true}
+        onSelectionChange={handleDataGridSelectionChange}
       />
       <RectangleBtn
         category={'register'}

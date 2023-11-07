@@ -107,7 +107,7 @@ const DashBoard = () => {
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <ExcelImport />
-              {/* <SuppliesList /> */}
+              <SuppliesList />
 
               {/* <ImageUpload /> */}
               {/* <JWTdecode /> */}

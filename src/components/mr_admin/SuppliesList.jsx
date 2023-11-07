@@ -4,7 +4,12 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import axiosInstance from '../../utils/axios.js';
-import { MenuItem, Select } from '@mui/material';
+import { Button, Grid, MenuItem, Select } from '@mui/material';
+import RectangleBtn from '../common/RectangleBtn.jsx';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
+import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
   const [spType, setSpType] = useState('');
@@ -44,25 +49,37 @@ const SuppliesList = () => {
   // console.log(SpList);
   return (
     <>
-      <Select
-        value={spType}
-        placeholder="회의실 분류를 선택하세요"
-        onChange={handleChange}
-        sx={{ width: 'auto' }}
-      >
-        <MenuItem value="편의시설">편의시설</MenuItem>
-        <MenuItem value="음향장비">음향장비</MenuItem>
-        <MenuItem value="영상장비">영상장비</MenuItem>
-      </Select>
-      <DataGrid
-        columns={columns}
-        rows={SpList}
-        pageSize={10}
-        pageSizeOptions={[5, 10]}
-        clickEvent={handleClick}
-        sx={{ width: 'auto' }}
-        checkbox={true}
-      />
+      <Grid container>
+        <Grid item container spacing={2}>
+          <Grid item xs={4}>
+            <Button startIcon={<VideocamOutlinedIcon />} sx={{ width: '100%' }}>
+              영상장비
+            </Button>
+            <RectangleBtn startIcon={<VideocamOutlinedIcon />} />
+          </Grid>
+          <Grid item xs={4}>
+            <Button startIcon={<VolumeUpOutlinedIcon />} sx={{ width: '100%' }}>
+              음향장비
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
+            <Button startIcon={<ArticleOutlinedIcon />} sx={{ width: '100%' }}>
+              편의시설
+            </Button>
+          </Grid>
+          <Grid xs={12}>
+            <DataGrid
+              columns={columns}
+              rows={SpList}
+              pageSize={10}
+              pageSizeOptions={[5, 10]}
+              clickEvent={handleClick}
+              sx={{ width: 'auto' }}
+              checkbox={true}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   );
 };
