@@ -23,7 +23,7 @@ import SectionTitle from '../../../components/mr_user/SectionTitle';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import { palette } from '../../../theme/palette';
 
-const MrRezConfirmationPage = () => {
+const MrRezConfirmPage = () => {
   const rezData = useSelector(setRezData).payload.mrUser;
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
   const {
@@ -395,7 +395,7 @@ const MrRezConfirmationPage = () => {
   );
 };
 
-export default MrRezConfirmationPage;
+export default MrRezConfirmPage;
 
 const StyledDoneIcon = styled(CheckCircleRoundedIcon)(({ theme }) => ({
   width: '60px',
