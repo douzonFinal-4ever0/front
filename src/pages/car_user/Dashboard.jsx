@@ -365,8 +365,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {(rezData !== null) &
-      (
+      {carRez !== null && (
         <div>
           <SubHeader title={'차량 예약 조회'} />
           <CarOperation

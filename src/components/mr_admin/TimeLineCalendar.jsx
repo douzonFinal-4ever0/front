@@ -10,6 +10,12 @@ import {
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
 import { useDispatch } from 'react-redux';
+import Modal from '../common/Modal';
+import { Box, IconButton } from '@mui/material';
+import SuppliesList from './SuppliesList';
+import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection';
+import axiosInstance from '../../utils/axios.js';
 
 const TimeLineCalendar = ({ events, resources }) => {
   const dispatch = useDispatch();
@@ -32,6 +38,10 @@ const TimeLineCalendar = ({ events, resources }) => {
     setCurrentView('dayGrid');
     /**클릭한 이벤트의 시작 날짜를 가져옴 */
     const eventDate = info.event.start;
+    console.log(info.event._def.resourceIds[0]);
+    axiosInstance.axiosInstance.get('/mr/mrList').then((res) => {
+      console.log(res.data);
+    });
     info.view.calendar.gotoDate(eventDate);
   };
 
@@ -41,8 +51,29 @@ const TimeLineCalendar = ({ events, resources }) => {
     startTime: '9:00', // 시작 시간
     endTime: '22:00' // 종료 시간
   };
+  const [open, setOpen] = useState(false);
+  /** 모달창 열림닫힘 이벤트*/
+  const handleModal = () => setOpen(!open);
+
+  const ModalContentExample = () => {
+    return (
+      <Box>
+        <MrInfoSection data={resources} />
+      </Box>
+    );
+  };
+
   return (
     <div>
+      <IconButton
+        component="label"
+        variant="contained"
+        color="secondary"
+        size="large"
+        onClick={handleModal}
+      >
+        <ControlPointOutlinedIcon />
+      </IconButton>
       <FullCalendar
         plugins={[
           dayGridPlugin,
@@ -57,21 +88,21 @@ const TimeLineCalendar = ({ events, resources }) => {
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next',
+          left: 'prev,next,today',
           center: 'title',
-          right:
-            'resourceTimeGridDay,resourceTimelineDay,resourceTimelineMonth,listWeek'
+          right: 'resourceTimelineDay,listWeek'
+          // resourceTimeGridDay,resourceTimelineMonth
         }}
         views={{
-          resourceTimeGridDay: {
-            buttonText: '회의실'
-          },
+          // resourceTimeGridDay: {
+          //   buttonText: '회의실'
+          // },
           resourceTimelineDay: {
             buttonText: '시간대'
           },
-          resourceTimelineMonth: {
-            buttonText: '월'
-          },
+          // resourceTimelineMonth: {
+          //   buttonText: '월'
+          // },
           listWeek: {
             buttonText: '리스트'
           }
@@ -84,11 +115,18 @@ const TimeLineCalendar = ({ events, resources }) => {
         navLinks="true"
         resourceAreaColumns={[
           {
-            field: resources.title, // This should match the field name in your 'resources' data
-            width: 150 // Set the width as per your requirement
+            field: resources.title,
+            width: 150
           }
         ]}
         // eventColor="blue"
+      />
+
+      <Modal
+        open={open}
+        modalTitle={'회의실'}
+        handleModal={handleModal}
+        content={<ModalContentExample />}
       />
     </div>
   );

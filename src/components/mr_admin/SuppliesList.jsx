@@ -41,6 +41,7 @@ const SuppliesList = () => {
   const handleChange = (event) => {
     setSpType(event.target.value);
   };
+  // console.log(SpList);
   return (
     <>
       <Select
