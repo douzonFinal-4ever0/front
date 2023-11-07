@@ -152,29 +152,8 @@ const DataGrid = ({
   disableRow,
   clickEvent,
   dbclickEvent,
-  onRowSelectionModelChange,
-  selectedRows,
   onSelectionChange
 }) => {
-  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
-
-  // onRowSelectionModelChange 이벤트 핸들러
-  const handleRowSelectionModelChange = (newRowSelectionModel) => {
-    setRowSelectionModel(newRowSelectionModel);
-    const selectedRowsData = getSelectedRowsData(newRowSelectionModel);
-    if (onSelectionChange) {
-      onSelectionChange(selectedRowsData);
-    }
-  };
-
-  // 선택된 행의 데이터를 가져오는 함수
-  const getSelectedRowsData = () => {
-    const selectedRowsData = rowSelectionModel.map((rowId) => {
-      const row = rows.find((row) => row.id === rowId);
-      return row;
-    });
-    return selectedRowsData;
-  };
   return (
     <Box
       sx={{
@@ -204,10 +183,6 @@ const DataGrid = ({
         disableRowSelectionOnClick={disableRow}
         onRowClick={clickEvent}
         onRowDoubleClick={dbclickEvent}
-        onRowSelectionModelChange={handleRowSelectionModelChange}
-        rowSelectionModel={rowSelectionModel}
-        {...rows}
-        getSelectedRowsData={getSelectedRowsData}
         slots={{ noRowsOverlay: CustomNoRowsOverlay }}
       />
     </Box>

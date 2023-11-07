@@ -14,6 +14,8 @@ const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
   const [spType, setSpType] = useState('');
   const [selectedSpList, setSelectedSpList] = useState([]);
+  const [filteredSpList, setFilteredSpList] = useState([]); // 추가: 필터링된 목록 상태
+
   useEffect(() => {
     axiosInstance.axiosInstance.get('/sp/spList').then((res) => {
       const processedData = res.data.map((item) => ({
@@ -21,6 +23,7 @@ const SuppliesList = () => {
         id: item.supplies_code
       }));
       setSpList(processedData);
+      setFilteredSpList(processedData); // 처음에는 전체 목록을 표시
     });
   }, []);
   const handleClick = (params) => {
@@ -43,34 +46,77 @@ const SuppliesList = () => {
     }
   };
   console.log(selectedSpList);
-  const handleChange = (event) => {
-    setSpType(event.target.value);
-  };
+
   // console.log(SpList);
+  const allList = () => {
+    setFilteredSpList(SpList);
+  };
+  const handleFilterByType = (type) => {
+    // 선택한 유형에 따라 SpList 필터링
+    const filteredList = SpList.filter((item) => item.type === type);
+    setFilteredSpList(filteredList);
+  };
+
   return (
     <>
-      <Grid container>
+      <Grid spacing={1}>
         <Grid item container spacing={2}>
-          <Grid item xs={4}>
-            <Button startIcon={<VideocamOutlinedIcon />} sx={{ width: '100%' }}>
-              영상장비
-            </Button>
-            <RectangleBtn startIcon={<VideocamOutlinedIcon />} />
+          <Grid item xs={3}>
+            <RectangleBtn
+              startIcon={<ArticleOutlinedIcon />}
+              text={'전체'}
+              sx={{
+                padding: '14px 12px',
+                width: '100%'
+              }}
+              handlebtn={allList}
+            />
           </Grid>
-          <Grid item xs={4}>
-            <Button startIcon={<VolumeUpOutlinedIcon />} sx={{ width: '100%' }}>
-              음향장비
-            </Button>
+          <Grid item xs={3}>
+            <RectangleBtn
+              startIcon={<VolumeUpOutlinedIcon />}
+              category={'delete'}
+              text={'음향장비'}
+              sx={{
+                padding: '14px 12px',
+                width: '100%'
+              }}
+              handlebtn={() => handleFilterByType('음향장비')}
+            />
           </Grid>
-          <Grid item xs={4}>
-            <Button startIcon={<ArticleOutlinedIcon />} sx={{ width: '100%' }}>
-              편의시설
-            </Button>
+
+          <Grid item xs={3}>
+            <RectangleBtn
+              startIcon={<VideocamOutlinedIcon />}
+              category={'register'}
+              text={'영상장비'}
+              sx={{
+                padding: '14px 12px',
+                width: '100%'
+              }}
+              handlebtn={() => handleFilterByType('영상장비')}
+            />
           </Grid>
-          <Grid xs={12}>
+
+          <Grid item xs={3}>
+            <RectangleBtn
+              startIcon={<ArticleOutlinedIcon />}
+              text={'편의시설'}
+              sx={{
+                padding: '14px 12px',
+                width: '100%',
+                backgroundColor: '#8bc34a', // 원하는 색상으로 변경
+                '&:hover': {
+                  backgroundColor: '#689f38' // 마우스 호버 시의 색상 변경
+                }
+              }}
+              handlebtn={() => handleFilterByType('편의시설')}
+            />
+          </Grid>
+          <Grid item xs={12}>
             <DataGrid
               columns={columns}
-              rows={SpList}
+              rows={filteredSpList}
               pageSize={10}
               pageSizeOptions={[5, 10]}
               clickEvent={handleClick}
