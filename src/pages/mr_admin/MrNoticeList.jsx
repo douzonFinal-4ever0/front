@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import SubHeader from '../../components/common/SubHeader';
 import { Box } from '@mui/system';
-import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import { Button, Container, Stack, TextField } from '@mui/material';
-import axios from 'axios';
+import { Container } from '@mui/material';
 import { useState } from 'react';
 import DataGrid from '../../components/common/DataGrid';
 import { useNavigate } from 'react-router-dom';
@@ -20,21 +18,31 @@ const MrNoticeList = () => {
   /*-----------------------------------공지사항 가져오기------------------------------------------------------ */
   const [noticeList, setNoticeList] = useState([]);
   useEffect(() => {
-    axiosInstance.axiosInstance.get('/mr/notice').then((res) => {
-      const processedData = res.data.map((item) => ({
-        ...item,
-        id: item.notice_code
-      }));
-      setNoticeList(processedData);
-      // console.log(res.data);
-    });
+    axiosInstance.axiosInstance
+      .get('/mr/notice')
+      .then((res) => {
+        const processedData = res.data.map((item) => ({
+          ...item,
+          id: item.notice_code
+        }));
+        setNoticeList(processedData);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
   /*---------------------------상세 내용으로 이동-------------------------------------------------- */
   const handleClickEvent = (params) => {
     const notice_code = params.row.notice_code;
-    axiosInstance.axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
-      navigate(`../NoticeDetail/${notice_code}`);
-    });
+    axiosInstance.axiosInstance
+      .get(`/mr/notice/${notice_code}`)
+      .then((res) => {
+        navigate(`../NoticeDetail/${notice_code}`);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
 
   return (

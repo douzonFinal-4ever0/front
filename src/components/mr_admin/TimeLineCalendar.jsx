@@ -1,23 +1,20 @@
-import React from 'react';
-import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
-import { useState } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
-import { useDispatch } from 'react-redux';
-import Modal from '../common/Modal';
-import { Box, IconButton } from '@mui/material';
-import SuppliesList from './SuppliesList';
-import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
-import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection';
 import axiosInstance from '../../utils/axios.js';
+import Modal from '../common/Modal';
 
 const TimeLineCalendar = ({ events, resources }) => {
+  const [mrResources, setMrResources] = useState({});
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
@@ -38,11 +35,19 @@ const TimeLineCalendar = ({ events, resources }) => {
     setCurrentView('dayGrid');
     /**클릭한 이벤트의 시작 날짜를 가져옴 */
     const eventDate = info.event.start;
-    console.log(info.event._def.resourceIds[0]);
-    axiosInstance.axiosInstance.get('/mr/mrList').then((res) => {
-      console.log(res.data);
-    });
+    const mr_code = info.event._def.resourceIds[0];
+    // console.log(info.event._def.resourceIds[0]);
+    axiosInstance.axiosInstance
+      .get(`/mr/${mr_code}`)
+      .then((res) => {
+        // console.log(res.data);
+        setMrResources(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
     info.view.calendar.gotoDate(eventDate);
+    handleModal();
   };
 
   const businessHours = {
@@ -56,24 +61,11 @@ const TimeLineCalendar = ({ events, resources }) => {
   const handleModal = () => setOpen(!open);
 
   const ModalContentExample = () => {
-    return (
-      <Box>
-        <MrInfoSection data={resources} />
-      </Box>
-    );
+    return <MrInfoSection data={mrResources} />;
   };
 
   return (
     <div>
-      <IconButton
-        component="label"
-        variant="contained"
-        color="secondary"
-        size="large"
-        onClick={handleModal}
-      >
-        <ControlPointOutlinedIcon />
-      </IconButton>
       <FullCalendar
         plugins={[
           dayGridPlugin,

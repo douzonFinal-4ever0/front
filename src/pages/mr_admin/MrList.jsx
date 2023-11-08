@@ -1,43 +1,45 @@
-import React from 'react';
-import { useState } from 'react';
-import TimeField from '../../components/common/TimeField';
-import { Stack, display } from '@mui/system';
-import { Container, Grid, Paper, styled, Box, Button } from '@mui/material';
-import Calendar from '../../components/common/Calendar';
-import SubSidebar from '../../components/common/SubSidebar';
-import SubHeader from '../../components/common/SubHeader';
-import axios from 'axios';
-import MainContainer from '../../components/mr_user/MainContainer';
-import WrapContainer from '../../components/mr_user/WrapContainer';
+import { Box, Grid, Paper, styled } from '@mui/material';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { useEffect } from 'react';
-import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
-import axiosInstance from '../../utils/axios.js';
+import React, { useEffect, useState } from 'react';
+import SubHeader from '../../components/common/SubHeader';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
+import WrapContainer from '../../components/mr_user/WrapContainer';
+import axiosInstance from '../../utils/axios.js';
 const MrList = () => {
   const [value, setValue] = useState(dayjs().minute(0));
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    axiosInstance.axiosInstance.get('/mr/mrRez').then((res) => {
-      setRezList(res.data);
-      const newEvents = res.data.map((rez) => ({
-        title: rez.m_name,
-        start: rez.rez_start_time,
-        end: rez.rez_end_time,
-        resourceId: rez.mr[0].mr_code,
-        description: rez.m_name
-      }));
+    axiosInstance.axiosInstance
+      .get('/mr/mrRez')
+      .then((res) => {
+        setRezList(res.data);
+        const newEvents = res.data.map((rez) => ({
+          title: rez.m_name,
+          start: rez.rez_start_time,
+          end: rez.rez_end_time,
+          resourceId: rez.mr[0].mr_code,
+          description: rez.m_name
+        }));
 
-      setEvents(newEvents);
-    });
-    axiosInstance.axiosInstance.get('/mr/mrList').then((res) => {
-      const mrList = res.data.map((rez) => ({
-        id: rez.mr_code,
-        title: rez.mr_name
-      }));
-      setMrList(mrList);
-    });
+        setEvents(newEvents);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+    axiosInstance.axiosInstance
+      .get('/mr/mrList')
+      .then((res) => {
+        const mrList = res.data.map((rez) => ({
+          id: rez.mr_code,
+          title: rez.mr_name
+        }));
+        setMrList(mrList);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
 
   const [rezList, setRezList] = useState([]);

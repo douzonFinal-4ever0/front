@@ -1,36 +1,51 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { Paper, styled, Box, Button, Grid, Divider } from '@mui/material';
-import Calendar from '../../components/common/Calendar';
+import {
+  Box,
+  Grid,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  ListItemIcon
+} from '@mui/material';
 import SubSidebar from '../../components/common/SubSidebar';
 import SubHeader from '../../components/common/SubHeader';
 import MrRegistForm from '../../components/mr_admin/MrRegistForm';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import Drawer from '../../components/common/Drawer';
-import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { openDrawer } from '../../redux/reducer/DrawerSlice';
+import { useDispatch } from 'react-redux';
 import DataGrid from '../../components/common/DataGrid';
-import axios from 'axios';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
-import SuppliesList from '../../components/mr_admin/SuppliesList.jsx';
 import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
+import { Circle } from '@mui/icons-material';
+
 const MrRegister = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
 
   const dispatch = useDispatch();
+  // const meetingRooms = useSelector((state) => state.mrList.meetingRooms);
 
   /**오프캔버스 열기 */
   const handleOpenDrawer = () => {
     dispatch(openDrawer());
   };
-  /**오프캔버스 닫기 */
-  const handleCloseDrawer = () => {
-    dispatch(closeDrawer());
-  };
-  const SubContent = () => {
+  const SubContent = ({ mrList, setMrList }) => {
+    const handleFilterClick = (type) => {
+      const filteredList = mrList.filter((item) => item.mr_type === type);
+      setFilteredMrList(filteredList);
+    };
+    const handleClick = () => {
+      setFilteredMrList(mrList);
+      console.log('전체 회의실');
+      console.log(filteredMrList);
+    };
     return (
       <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
         <RectangleBtn
@@ -43,6 +58,88 @@ const MrRegister = () => {
           }}
           handlebtn={handleMrRegistClick}
         />
+        <Divider />
+        <Box sx={{ width: '100%' }}>
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleClick}>
+                <ListItemText primary={`전체 회의실(${mrList.length})`} />
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={true} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleFilterClick('미팅룸');
+                    console.log('미팅룸');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle sx={{ width: '15px !important' }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`미팅룸 (${
+                      mrList.filter((obj) => obj.mr_type === '미팅룸').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleFilterClick('소회의실');
+                    console.log('소회의실');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle color="primary" sx={{ width: '15px !important' }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`소회의실 (${
+                      mrList.filter((obj) => obj.mr_type === '소회의실').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleFilterClick('중회의실');
+                    console.log('중회의실');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle color="error" sx={{ width: '15px !important' }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`중회의실 (${
+                      mrList.filter((obj) => obj.mr_type === '중회의실').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleFilterClick('대회의실');
+                    console.log('대회의실');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle color="success" sx={{ width: '15px !important' }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`대회의실 (${
+                      mrList.filter((obj) => obj.mr_type === '대회의실').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </List>
+        </Box>
       </Grid>
     );
   };
@@ -53,6 +150,8 @@ const MrRegister = () => {
   };
   /*------------------------------데이터 그리드에 전달할 정보------------------------------------------*/
   const [mrList, setMrList] = useState([]);
+  const [filteredMrList, setFilteredMrList] = useState([]);
+
   const handleMrListUpdate = () => {
     axiosInstance.axiosInstance
       .get('/mr/mrList')
@@ -61,9 +160,10 @@ const MrRegister = () => {
           ...item,
           id: item.mr_code,
           is_opened: item.is_opened === 0 ? '활성' : '비활성',
-          is_used: item.is_used === 0 ? '사용중' : '대기중'
+          is_used: item.is_used === 0 ? '사용중' : '비어있음'
         }));
         setMrList(processedData);
+        setFilteredMrList(processedData);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -108,12 +208,15 @@ const MrRegister = () => {
     <>
       <SubHeader title={'회의실'} />
       <Box sx={{ display: 'flex', height: '95%' }}>
-        <SubSidebar widthP={20} content={<SubContent />} />
+        <SubSidebar
+          widthP={20}
+          content={<SubContent mrList={mrList} setMrList={setMrList} />}
+        />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
             <DataGrid
               columns={columns}
-              rows={mrList}
+              rows={filteredMrList}
               pageSize={10}
               pageSizeOptions={[5, 10]}
               clickEvent={handleDbClick}

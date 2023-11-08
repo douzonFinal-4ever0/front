@@ -37,6 +37,7 @@ import ImageUpload from '../../components/mr_admin/ImageUpload';
 import SuppliesList from '../../components/mr_admin/SuppliesList.jsx';
 import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ZipFileImport from '../../components/mr_admin/ZipFileImport.jsx';
 
 const DashBoard = () => {
   const navigate = useNavigate();
@@ -106,8 +107,9 @@ const DashBoard = () => {
         <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              <ExcelImport />
-              <SuppliesList />
+              <ZipFileImport />
+              {/* <ExcelImport /> */}
+              {/* <SuppliesList /> */}
 
               {/* <ImageUpload /> */}
               {/* <JWTdecode /> */}

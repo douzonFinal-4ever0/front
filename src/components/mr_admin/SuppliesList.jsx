@@ -1,14 +1,11 @@
-import React from 'react';
-import DataGrid from '../../components/common/DataGrid';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import axiosInstance from '../../utils/axios.js';
-import { Button, Grid, MenuItem, Select } from '@mui/material';
-import RectangleBtn from '../common/RectangleBtn.jsx';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+import { Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import DataGrid from '../../components/common/DataGrid';
+import axiosInstance from '../../utils/axios.js';
+import RectangleBtn from '../common/RectangleBtn.jsx';
 
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
@@ -17,14 +14,19 @@ const SuppliesList = () => {
   const [filteredSpList, setFilteredSpList] = useState([]); // 추가: 필터링된 목록 상태
 
   useEffect(() => {
-    axiosInstance.axiosInstance.get('/sp/spList').then((res) => {
-      const processedData = res.data.map((item) => ({
-        ...item,
-        id: item.supplies_code
-      }));
-      setSpList(processedData);
-      setFilteredSpList(processedData); // 처음에는 전체 목록을 표시
-    });
+    axiosInstance.axiosInstance
+      .get('/sp/spList')
+      .then((res) => {
+        const processedData = res.data.map((item) => ({
+          ...item,
+          id: item.supplies_code
+        }));
+        setSpList(processedData);
+        setFilteredSpList(processedData); // 처음에는 전체 목록을 표시
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
   const handleClick = (params) => {
     // params 객체를 통해 선택된 행의 데이터에 접근
