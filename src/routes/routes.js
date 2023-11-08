@@ -50,6 +50,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { path: 'dashboard', element: <MrUserDashboardPage /> },
         { path: 'rez', element: <MrUserMrRezPage /> },
         { path: 'rez/confirm', element: <MrUserMrRezConfirmPage /> },
+        { path: 'rez/history', element: <MrUserMrRezHistory /> },
         { path: 'bm', element: <MrUserBmPage /> }
       ]
     },
@@ -222,6 +223,10 @@ const MrUserMrRezPage = Loadable(
 
 const MrUserMrRezConfirmPage = Loadable(
   lazy(() => import('../pages/mr_user/rez/MrRezConfirmPage'))
+);
+
+const MrUserMrRezHistory = Loadable(
+  lazy(() => import('../pages/mr_user/rez_history/MrRezHistoryPage'))
 );
 
 const MrUserBmPage = Loadable(lazy(() => import('../pages/mr_user/bm/BmPage')));
