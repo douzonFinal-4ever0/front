@@ -9,7 +9,6 @@ const Tag = ({ text, isHashTag, sx }) => {
 export default Tag;
 
 const StyledChip = styled(Chip)(({ theme, sx }) => ({
-  borderRadius: '8px',
   backgroundColor: theme.palette.grey['700'],
   color: theme.palette.common.white,
   ...sx

@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
           // });
           cars = res.data;
           cars.map((car) => (car.car_status = '사용가능'));
-
+          console.log(cars);
           io.emit('cars', cars);
         })
         .catch((error) => {
@@ -65,6 +65,7 @@ io.on('connection', (socket) => {
     }
   );
   socket.on('selected', ({ car_code, currentName }) => {
+    console.log('selected');
     if (selectedUser.get(currentName)) {
       //선택한게 있을때
       //전에 선택한 차량
@@ -84,14 +85,15 @@ io.on('connection', (socket) => {
     console.log(selectedUser);
     console.log(car_code);
     cars.map((car) => {
-      console.log(car);
-
+      // console.log(car);
       if (car_code === car.car_code) {
         car.car_status = '선택됨';
         console.log(car);
       }
     });
+    const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
     // console.log(cars);
+    io.emit('selected', jsonObject);
     io.emit('Upcars', cars);
   });
 });
