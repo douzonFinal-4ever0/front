@@ -8,11 +8,12 @@ const MultiTimePicker = ({
   onChange,
   name
 }) => {
+  console.log(value);
   return (
     <DateTimePicker
       label={label}
       format="YYYY-MM-DD HH:mm"
-      defaultValue={value}
+      value={value}
       showDaysOutsideCurrentMonth
       skipDisabled
       shouldDisableTime={shouldDisableTime}

@@ -65,7 +65,7 @@ const CarRezDetail = ({ rezCode }) => {
   }, []);
 
   const cancelRez = () => {
-    axios
+    axiosInstance.axiosInstance
       .delete(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
       .then((res) => {
         if (res.status === 204) {

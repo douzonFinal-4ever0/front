@@ -9,9 +9,11 @@ import TimePickerClock from './TimePickerClock';
 import MultiTimePicker from './MultiTimePicker';
 
 const TimeField = ({ withMonth, label, onChange, name, timeValue }) => {
-  const inputTimeValue = timeValue ? timeValue : '';
+  const inputTimeValue = timeValue !== null ? dayjs(timeValue) : null;
+  console.log(inputTimeValue);
   /**date time picker 써야할때 쓰는거 */
-  const [value, setValue] = useState(dayjs(inputTimeValue));
+  // const [value, setValue] = useState(inputTimeValue);
+  const value = inputTimeValue;
   /*-----------------------------------------------------------------------*/
 
   /**시간과 분을 필터링 할 때 쓰는거*/
