@@ -31,7 +31,7 @@ import {
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
 
-const RezSection = ({ selectMrCard }) => {
+const RezSection = ({ selectMrCard, recentMNames }) => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
   const rezData = useSelector(setRezData).payload.mrUser;
@@ -107,7 +107,7 @@ const RezSection = ({ selectMrCard }) => {
       if (res.status === 201) {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
-        navigation('/mr/dashboard');
+        navigation('/mr/rez/confirm');
       }
     } catch (err) {
       console.log(err);
@@ -141,7 +141,7 @@ const RezSection = ({ selectMrCard }) => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <RezForm />
+                <RezForm recentMNames={recentMNames} />
               </AccordionDetails>
             </Accordion>
 

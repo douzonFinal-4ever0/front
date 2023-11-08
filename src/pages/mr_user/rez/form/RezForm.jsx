@@ -12,7 +12,8 @@ import {
   FormControlLabel,
   Switch,
   Typography,
-  Stack
+  Stack,
+  Chip
 } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -24,15 +25,22 @@ import { palette } from '../../../../theme/palette';
 import { times, meetingTypes } from '../../../../config';
 import Selectbox from '../../../../components/common/Selectbox';
 
-const RezForm = () => {
+const RezForm = ({ recentMNames }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
 
-  // 회의 목적 이벤트
+  // 회의명 입력 이벤트
   const handleMName = (e) => {
     const newRezData = { ...rezData, m_name: e.target.value };
+    dispatch(setRezData({ data: newRezData }));
+  };
+
+  // 회의명 태그 클릭 이벤트
+  const handleMNameChip = (e) => {
+    const value = e.target.textContent;
+    const newRezData = { ...rezData, m_name: value };
     dispatch(setRezData({ data: newRezData }));
   };
 
@@ -70,8 +78,8 @@ const RezForm = () => {
   };
 
   return (
-    <Grid container spacing={1}>
-      {/* 회의 목적 */}
+    <Grid container spacing={1.5}>
+      {/* 회의명 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
           <Label htmlFor={'m_name'} text={'회의명'} />
@@ -91,6 +99,28 @@ const RezForm = () => {
           />
         </Grid>
       </Grid>
+      <Grid item container>
+        <StyledLabelGrid item xs={3}></StyledLabelGrid>
+        <Grid item xs={9}>
+          <Stack
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: '4px'
+            }}
+          >
+            {recentMNames &&
+              recentMNames.map((item) => (
+                <StyledChip
+                  label={item}
+                  size="small"
+                  onClick={handleMNameChip}
+                />
+              ))}
+          </Stack>
+        </Grid>
+      </Grid>
 
       {/* 회의 종류 */}
       <Grid item container spacing={2}>
@@ -107,14 +137,14 @@ const RezForm = () => {
       </Grid>
 
       {/* 반복 예약 토글 */}
-      <Grid item container sx={{ justifyContent: 'flex-end' }}>
+      {/* <Grid item container sx={{ justifyContent: 'flex-end' }}>
         <StyledSwitchLabel
           value="start"
           control={<Switch />}
           label="정기 예약"
           labelPlacement="start"
         />
-      </Grid>
+      </Grid> */}
 
       {/* 예약 일자 */}
       <Grid item container spacing={2}>
@@ -123,7 +153,7 @@ const RezForm = () => {
         </StyledLabelGrid>
         <Grid item xs={9}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
+            <DemoContainer components={['DatePicker']} sx={{ paddingTop: '0' }}>
               <DatePicker
                 onChange={handleDatePick}
                 format="YYYY-MM-DD"
@@ -195,5 +225,15 @@ const StyledSwitchLabel = styled(FormControlLabel)(({ theme }) => ({
 const StyledSelect = styled(Select)(({ theme }) => ({
   '&.MuiInputBase-root': {
     width: '100%'
+  }
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+  marginBottom: '6px',
+  '&.MuiChip-root': {
+    borderRadius: '20px',
+    fontSize: '12px',
+    color: '#000',
+    backgroundColor: '#eee'
   }
 }));
