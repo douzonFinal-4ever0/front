@@ -3,8 +3,9 @@ import { Box, Container } from '@mui/system';
 import { PAGE_INNER_PADDING } from '../../config';
 import SubHeader from '../../components/common/SubHeader';
 import Calendar from '../../components/common/Calendar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Test from '../../components/car_admin/Test';
+import axiosInstance from '../../utils/axios';
 
 const CarRezPage = () => {
   // Drawer안에 들어갈 컴포넌트 내용
@@ -20,9 +21,32 @@ const CarRezPage = () => {
       content: <Test contents={component2} />
     }
   ];
+
+  // 예약 정보
+  const [rezData, setRezData] = useState([]);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    axiosInstance.axiosInstance
+      .get('/manager/car/rezListGetAll')
+      .then((res) => {
+        console.log(res.data);
+        setRezData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // useEffect(() => {
+
+  // }, [rezData]);
+
+  // 하나씩 읽어서 하루에 몇 개의 예약이있는지 알아보기.
+
   return (
     <>
-      <SubHeader title={'예약 내역'} />
+      <SubHeader title={'차량 예약 조회'} />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <StyledMain>
           <Box sx={{ width: '100%', padding: 3, backgroundColor: '#ffffff' }}>

@@ -226,7 +226,7 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
     max_capacity: 0,
     carDetail: {
       fuel_effciency: '',
-      accum_mileage: '',
+      accum_mileage: 0,
       car_address: '강원특별자치도 춘천시 남산면 버들1길 130'
     },
     carUser: { mem_code: left[0] ? left[0] : null, car_code: '' }
@@ -441,41 +441,71 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
         // 에러 발생 시 코드 실행
         console.log(error);
       });
-    axiosInstance.axiosInstance
-      .get(`/manager/car/carListGetOne`, {
-        params: {
-          mem_code: registerData.carUser.mem_code
-        }
-      })
-      .then((res) => {
-        // console.log(res);
-        // const newCarInfo = [...carInfo, res.data];
-        const newCarInfo = {
-          type: registerData.type,
-          car_name: registerData.car_name,
-          car_code: registerData.car_code,
-          created_at: null,
-          accum_mileage: registerData.carDetail.accum_mileage,
-          memo: registerData.memo,
-          car_status: '사용가능',
-          authority: registerData.authority,
-          max_capacity: registerData.max_capacity,
-          mem_code: registerData.carUser.mem_code,
-          position_name: res.data.position_name,
-          name: res.data.name,
-          dept_name: res.data.dept_name
-        };
-        const updatedItems = [...carInfo];
-        // 새로운 객체를 배열의 앞에 추가
-        updatedItems.unshift(newCarInfo);
 
-        // 새로운 배열 상태로 설정
-        setCarInfo(updatedItems);
-        // setCarInfo([...carInfo, newCarInfo]);
-        handleCloseDrawer();
-        handleSetSnackbarContent('등록이 완료되었습니다.');
-        handleOpenSnackbar();
-      });
+    // 지정사용자인 경우, 사원의 정보를 가져와서 List에 보여줌.
+    if (registerData.authority === '지정') {
+      axiosInstance.axiosInstance
+        .get(`/manager/car/carListGetOne`, {
+          params: {
+            mem_code: registerData.carUser.mem_code
+          }
+        })
+        .then((res) => {
+          // console.log(res);
+          // const newCarInfo = [...carInfo, res.data];
+          const newCarInfo = {
+            type: registerData.type,
+            car_name: registerData.car_name,
+            car_code: registerData.car_code,
+            created_at: null,
+            accum_mileage: registerData.carDetail.accum_mileage,
+            memo: registerData.memo,
+            car_status: '사용가능',
+            authority: registerData.authority,
+            max_capacity: registerData.max_capacity,
+            mem_code: registerData.carUser.mem_code,
+            position_name: res.data.position_name,
+            name: res.data.name,
+            dept_name: res.data.dept_name
+          };
+          const updatedItems = [...carInfo];
+          // 새로운 객체를 배열의 앞에 추가
+          updatedItems.unshift(newCarInfo);
+
+          // 새로운 배열 상태로 설정
+          setCarInfo(updatedItems);
+          // setCarInfo([...carInfo, newCarInfo]);
+          handleCloseDrawer();
+          handleSetSnackbarContent('등록이 완료되었습니다.');
+          handleOpenSnackbar();
+        });
+    } else {
+      const newCarInfo = {
+        type: registerData.type,
+        car_name: registerData.car_name,
+        car_code: registerData.car_code,
+        created_at: null,
+        accum_mileage: registerData.carDetail.accum_mileage,
+        memo: registerData.memo,
+        car_status: '사용가능',
+        authority: registerData.authority,
+        max_capacity: registerData.max_capacity,
+        mem_code: '',
+        position_name: '',
+        name: '',
+        dept_name: ''
+      };
+      const updatedItems = [...carInfo];
+      // 새로운 객체를 배열의 앞에 추가
+      updatedItems.unshift(newCarInfo);
+
+      // 새로운 배열 상태로 설정
+      setCarInfo(updatedItems);
+      // setCarInfo([...carInfo, newCarInfo]);
+      handleCloseDrawer();
+      handleSetSnackbarContent('등록이 완료되었습니다.');
+      handleOpenSnackbar();
+    }
   };
 
   return (
