@@ -9,7 +9,8 @@ const RectangleBtn = ({
   handlebtn,
   category,
   handleKeyDown,
-  isDisabled
+  isDisabled,
+  startIcon
 }) => {
   const fontColor = () => {
     switch (category) {
@@ -59,6 +60,7 @@ const RectangleBtn = ({
       bgcolor={bgColor(category)}
       bghovercolor={bgHoverColor(category)}
       isDisabled={isDisabled}
+      startIcon={startIcon}
     >
       <Typography sx={{ fontWeight: 'bold' }}>{text}</Typography>
     </StyledBtn>

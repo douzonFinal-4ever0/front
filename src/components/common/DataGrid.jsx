@@ -150,9 +150,9 @@ const DataGrid = ({
   pageSizeOptions,
   checkbox,
   disableRow,
-  selectedRows,
   clickEvent,
-  dbclickEvent
+  dbclickEvent,
+  onSelectionChange
 }) => {
   return (
     <Box

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Button } from '@mui/material';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import DataGrid from '../common/DataGrid';
+// import DataGrid from '../common/DataGrid';
 import RectangleBtn from '../common/RectangleBtn';
 import axiosInstance from '../../utils/axios.js';
 import {
@@ -11,15 +11,11 @@ import {
 } from '../../redux/reducer/SnackbarSlice';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { DataGrid } from '@mui/x-data-grid';
+import { palette } from '../../theme/palette';
 
 function ExcelImport() {
   const [tableData, setTableData] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
-  //   const [mr_op_day, setMr_op_day] = useState([]);
-  const [mr_name, setMr_name] = useState('');
-  const [location, setLocation] = useState('');
-  const [maximum_capacity, setMaximum_capacity] = useState(0);
-  const [mr_type, setMr_type] = useState('');
   /*-------------------------------------알림-----------------------------------------------*/
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
@@ -57,28 +53,6 @@ function ExcelImport() {
           ...row // 기존 열 데이터 유지
         }));
 
-        /**회의실명 추출 */
-        const mrName = excelData.map((row) => row['회의실명']);
-        // setMr_name(mrName);
-
-        /**회의실 위치 추출 */
-        const mrLocation = excelData.map((row) => row['위치']);
-        // setLocation(mrLocation);
-
-        /**최대 수용 인원 추출 */
-        const maxCapacity = excelData.map((row) => row['최대 수용 인원']);
-        // setMaximum_capacity(maxCapacity);
-
-        /**운영 요일 추출 */
-        const days = excelData.map((row) => row['요일'].split(','));
-        // setMr_op_day(mr_op_day);
-
-        /**회의실 유형 추출 */
-        const mrType = excelData.map((row) => row['회의실 분류']);
-
-        // 추출된 데이터를 처리하거나 표시
-        // console.log(dataWithIds);
-
         // 테이블 데이터 설정
         setTableData(dataWithIds);
       };
@@ -86,52 +60,66 @@ function ExcelImport() {
     }
   };
   /**테이블의 row를 클릭하면 생기는 이벤트 */
-  const handleRowClick = (row) => {
-    setSelectedRow(row);
+  /*----------------------------체크박스 누른 데이터--------------------------------------------*/
+  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    setRowSelectionModel(newRowSelectionModel);
   };
 
-  const excelName = selectedRow?.row?.회의실명;
-  const excelType = selectedRow?.row?.분류;
-  const excelMax_capacity = selectedRow?.row?.인원;
-  const excelDays = selectedRow?.row?.요일.split(',');
+  // 선택된 행의 데이터를 가져오는 함수
+  const getSelectedRowsData = () => {
+    const selectedRowsData = rowSelectionModel.map((rowId) => {
+      const row = tableData.find((row) => row.id === rowId);
+      return row;
+    });
+    return selectedRowsData;
+  };
+  const selectedArray = getSelectedRowsData();
+  /*--------------------------------------------------------------------------------*/
 
-  /** 요일을 0 또는 1로 매핑하여 초기 데이터 생성*/
-  const mr_op_day = weekDays?.map((day) => ({
-    day: weekDays.indexOf(day), // 요일 자체를 유지
-    status: excelDays?.includes(day) ? 0 : 1 // 엑셀 데이터에 해당 요일이 있으면 0, 없으면 1로 설정
-  }));
-
-  const excelLocation = selectedRow?.row?.위치;
-
-  const excelMr_keyword = selectedRow?.row?.태그?.split(',');
-  /**회의실 태그 */
-  const mr_keyword = excelMr_keyword
-    ? excelMr_keyword.map((keyword) => ({
-        keyword_name: keyword
-      }))
-    : [];
-  //   console.log(excelMax_capacity);
-
-  console.log('선택된 행 데이터: ', selectedRow);
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
-    // console.log(FormToData);
-    axiosInstance.axiosInstance
-      .post('/mr/mrRegister', FormToData)
-      .then((res) => {
-        handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
-        handleOpenSnackbar();
-        handleCloseDrawer();
-      });
-  };
-  /**등록시 필요한 데이터 */
-  const FormToData = {
-    mr_name: excelName,
-    maximum_capacity: excelMax_capacity,
-    location: excelLocation,
-    mr_type: excelType,
-    mr_op_day,
-    mr_keyword
+    selectedArray.forEach((selectedItem) => {
+      const excelName = selectedItem?.회의실명;
+      const excelType = selectedItem?.분류;
+      const excelMax_capacity = selectedItem?.인원;
+      const excelDays = selectedItem?.요일?.split(',');
+      const excelLocation = selectedItem?.위치;
+
+      /** 요일을 0 또는 1로 매핑하여 초기 데이터 생성*/
+      const mr_op_day = weekDays?.map((day) => ({
+        day: weekDays.indexOf(day), // 요일 자체를 유지
+        status: excelDays?.includes(day) ? 0 : 1 // 엑셀 데이터에 해당 요일이 있으면 0, 없으면 1로 설정
+      }));
+
+      const excelMr_keyword = selectedItem?.태그?.split(',');
+      /**회의실 태그 */
+      const mr_keyword = excelMr_keyword
+        ? excelMr_keyword.map((keyword) => ({
+            keyword_name: keyword
+          }))
+        : [];
+
+      /** 등록시 필요한 데이터*/
+      const FormToData = {
+        mr_name: excelName,
+        maximum_capacity: excelMax_capacity,
+        location: excelLocation,
+        mr_type: excelType,
+        mr_op_day,
+        mr_keyword
+      };
+
+      console.log(FormToData);
+
+      // axiosInstance.axiosInstance
+      //   .post('/mr/mrRegister', FormToData)
+      //   .then((res) => {
+      //     handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
+      //     handleOpenSnackbar();
+      //     handleCloseDrawer();
+      //   });
+    });
   };
 
   return (
@@ -159,13 +147,27 @@ function ExcelImport() {
         </Button>
       </label>
       <DataGrid
-        columns={columns}
+        sx={{
+          border: palette.grey['500'],
+          borderRadius: '2px',
+          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+            outline: 'none !important'
+          },
+          width: 'auto'
+        }}
         rows={tableData}
-        pageSize={10}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10
+            }
+          }
+        }}
         pageSizeOptions={[5, 10]}
-        clickEvent={handleRowClick}
-        sx={{ width: 'auto' }}
-        checkbox={true}
+        checkboxSelection
+        onRowSelectionModelChange={handleRowSelectionModelChange}
+        rowSelectionModel={rowSelectionModel}
       />
       <RectangleBtn
         category={'register'}

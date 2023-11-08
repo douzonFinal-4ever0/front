@@ -188,6 +188,57 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
+
+  const ModalActionBtns = () => {
+    const handleSaveBtn = () => {
+      handleModal();
+      console.log('save 누름');
+    };
+    const handleCancelBtn = () => {
+      handleModal();
+      console.log('cancel 누름');
+    };
+
+    return (
+      <Grid
+        container
+        xs={12}
+        sx={{ m: '10px 0px' }}
+        justifyContent="center"
+        spacing={2}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            borderColor: '#BEBEBE',
+            ':hover': {
+              backgroundColor: '#2065D1',
+              borderColor: '#BEBEBE'
+            },
+            margin: '0px 4px'
+          }}
+          onClick={handleSaveBtn}
+        >
+          수정
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: '#BEBEBE',
+            backgroundColor: '#ffffff',
+            ':hover': {
+              backgroundColor: '#ffffff',
+              borderColor: '#BEBEBE'
+            },
+            margin: '0px 4px'
+          }}
+          onClick={handleCancelBtn}
+        >
+          취소
+        </Button>
+      </Grid>
+    );
+  };
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
@@ -629,32 +680,8 @@ const VisuallyHiddenInput = styled('input')({
 });
 const daysOfWeek = ['월', '화', '수', '목', '금'];
 
-const ModalActionBtns = () => {
-  const handleSaveBtn = () => {
-    console.log('save 누름');
-  };
-  const handleCancelBtn = () => {
-    console.log('cancel 누름');
-  };
-
-  return (
-    <Box>
-      <Button color="primary" onClick={handleSaveBtn}>
-        Save
-      </Button>
-      <Button color="secondary" onClick={handleCancelBtn}>
-        Cancel
-      </Button>
-    </Box>
-  );
-};
-
 const ModalContentExample = () => {
-  return (
-    <Box>
-      <SuppliesList />
-    </Box>
-  );
+  return <SuppliesList />;
 };
 const StyledLabelGrid = styled(Grid)(({ theme }) => ({
   display: 'flex',
