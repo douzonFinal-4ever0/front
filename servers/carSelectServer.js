@@ -35,11 +35,12 @@ io.on('connection', (socket) => {
 
   socket.on(
     'init',
-    ({ rows, currentName, rezStart_at, rezReturn_at, Token, setRows }) => {
+    ({ rows, mem_code, rezStart_at, rezReturn_at, Token, setRows }) => {
+      console.log(mem_code);
       // GET 요청 보내기
       axios
         .get(
-          `http://localhost:8081/car_rez/availableCars/${rezStart_at}/${rezReturn_at}`,
+          `http://localhost:8081/car_rez/availableCars/${mem_code}/${rezStart_at}/${rezReturn_at}`,
           {
             headers: {
               Authorization: Token
@@ -52,6 +53,7 @@ io.on('connection', (socket) => {
           // cars = res.data.map((car) => {
           //   car.car_status = '선택가능';
           // });
+          console.log(res.data);
           cars = res.data;
           cars.map((car) => (car.car_status = '사용가능'));
           console.log(cars);

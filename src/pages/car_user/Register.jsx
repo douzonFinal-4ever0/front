@@ -1262,7 +1262,7 @@ const Register = () => {
                         <RectangleBtn
                           // type={'submit'}
                           text={'수정'}
-                          category={'register'}
+                          category={'modify'}
                           sx={{ padding: '14px 12px' }}
                           handlebtn={updateRez}
                         />
@@ -1285,40 +1285,11 @@ const Register = () => {
                       />
                     </Grid>
                   </Grid>
-                  {/* <BottomBox>
-                    {carRez !== null ? (
-                      <RectangleBtn
-                        // type={'submit'}
-                        text={'수정'}
-                        category={'register'}
-                        sx={{ padding: '14px 12px' }}
-                        handlebtn={updateRez}
-                      />
-                    ) : (
-                      <RectangleBtn
-                        type={'submit'}
-                        text={'예약'}
-                        category={'register'}
-                        sx={{ padding: '14px 12px' }}
-                      />
-                    )}
-
-                    <RectangleBtn
-                      // type={'submit'}
-                      text={'초기화'}
-                      category={'cancel'}
-                      sx={{ padding: '14px 12px' }}
-                      // handlebtn={updateRez}
-                    />
-                  </BottomBox> */}
                 </Stack>
-                {/* </Item> */}
               </Grid>
             </Grid>
           </WrapContainer>
         </MainContainer>
-        {/* </Item>
-        </Grid> */}
       </form>
     </>
   );

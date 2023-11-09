@@ -8,7 +8,6 @@ const MultiTimePicker = ({
   onChange,
   name
 }) => {
-  console.log(value);
   return (
     <DateTimePicker
       label={label}

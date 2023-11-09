@@ -10,7 +10,7 @@ import MultiTimePicker from './MultiTimePicker';
 
 const TimeField = ({ withMonth, label, onChange, name, timeValue }) => {
   const inputTimeValue = timeValue !== null ? dayjs(timeValue) : null;
-  console.log(inputTimeValue);
+
   /**date time picker 써야할때 쓰는거 */
   // const [value, setValue] = useState(inputTimeValue);
   const value = inputTimeValue;
