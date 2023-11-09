@@ -65,15 +65,6 @@ const TimeLineCalendar = ({ events, resources }) => {
 
   return (
     <div>
-      <IconButton
-        component="label"
-        variant="contained"
-        color="secondary"
-        size="large"
-        onClick={handleModal}
-      >
-        <ControlPointOutlinedIcon />
-      </IconButton>
       <FullCalendar
         plugins={[
           dayGridPlugin,
@@ -94,15 +85,15 @@ const TimeLineCalendar = ({ events, resources }) => {
           // resourceTimeGridDay,resourceTimelineMonth
         }}
         views={{
-          // resourceTimeGridDay: {
-          //   buttonText: '회의실'
-          // },
+          resourceTimeGridDay: {
+            buttonText: '회의실'
+          },
           resourceTimelineDay: {
             buttonText: '시간대'
           },
-          // resourceTimelineMonth: {
-          //   buttonText: '월'
-          // },
+          resourceTimelineMonth: {
+            buttonText: '월'
+          },
           listWeek: {
             buttonText: '리스트'
           }
@@ -121,25 +112,8 @@ const TimeLineCalendar = ({ events, resources }) => {
         ]}
         // eventColor="blue"
       />
-
-      <Modal
-        open={open}
-        modalTitle={'회의실'}
-        handleModal={handleModal}
-        content={<ModalContentExample />}
-      />
     </div>
   );
 };
 
 export default TimeLineCalendar;
-
-// [
-//     // 이벤트 데이터를 설정
-//     {
-//       title: 'title 1',
-//       start: '2023-10-19 12:00:00',
-//       end: '2023-10-19 14:00:00'
-//     },
-//     { title: '이벤트 2', date: '2023-10-28' }
-//   ]

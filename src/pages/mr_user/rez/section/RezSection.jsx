@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../../../../utils/axios';
 
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
@@ -31,7 +31,9 @@ import {
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
 
-const RezSection = ({ selectMrCard, recentMNames }) => {
+const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
+  const location = useLocation();
+  const currentURL = location.pathname;
   const dispatch = useDispatch();
   const navigation = useNavigate();
   const rezData = useSelector(setRezData).payload.mrUser;
@@ -141,7 +143,7 @@ const RezSection = ({ selectMrCard, recentMNames }) => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <RezForm recentMNames={recentMNames} />
+                <RezForm recentMNames={recentMNames} isReadOnly={isReadOnly} />
               </AccordionDetails>
             </Accordion>
 
@@ -223,12 +225,14 @@ const RezSection = ({ selectMrCard, recentMNames }) => {
               </AccordionDetails>
             </Accordion>
           </Box>
-          <RectangleBtn
-            type={'submit'}
-            text={'예약하기'}
-            category={'register'}
-            isDisabled={isDisabled ? true : false}
-          />
+          {currentURL === '/mr/rez/history' ? null : (
+            <RectangleBtn
+              type={'submit'}
+              text={'예약하기'}
+              category={'register'}
+              isDisabled={isDisabled ? true : false}
+            />
+          )}
         </Stack>
       </StyledForm>
     </Box>

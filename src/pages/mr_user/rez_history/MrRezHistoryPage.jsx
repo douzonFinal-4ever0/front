@@ -17,15 +17,118 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
+import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
 // -------------------------------------------------------------
+import axiosInstance from '../../../utils/axios';
+import { setUserData } from '../../../redux/reducer/userSlice';
 import MainContainer from '../../../components/mr_user/MainContainer';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import SubHeader from '../../../components/common/SubHeader';
+import MrRezCalendar from './section/MrRezCalendar';
+import { palette } from '../../../theme/palette';
 
 const MrRezHistoryPage = () => {
+  const userData = useSelector(setUserData).payload.user;
+  const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
+  const [rezList, setRezList] = useState([]); // 전체 예약 리스트
+  const [events, setEvents] = useState([]); // 캘린더 이벤트
+
+  useEffect(() => {
+    getMrRezApi();
+  }, []);
+
+  const getMrRezApi = async () => {
+    try {
+      // 참석자로 지정된 회의 예약 조회
+      const resByPt = await axiosInstance.axiosInstance.get(
+        `/mr/rez/pt?mem_code=${userData.mem_code}`
+      );
+      if (resByPt.status !== 200) return;
+
+      // 예약자로 설정된 회의 예약 조회
+      const res = await axiosInstance.axiosInstance.get(
+        `/mr/rez?mem_code=${userData.mem_code}`
+      );
+      if (res.status !== 200) return;
+
+      // only 참석자 리스트
+      const lestPtList = resByPt.data.filter(
+        (itemPt) =>
+          !res.data.some(
+            (itemMaster) => itemMaster.mr_rez_code === itemPt.mr_rez_code
+          )
+      );
+
+      // 참석자 & 예약자 role 속성 추가
+      lestPtList.forEach((rez) => {
+        rez.role = '참석자';
+      });
+      res.data.forEach((rez) => {
+        rez.role = '예약자';
+      });
+
+      const data = [...lestPtList, ...res.data];
+      console.log(data);
+
+      let list = [];
+      // 오늘 예약 현황 추출
+      const today = getToday();
+      data.forEach((rez) => {
+        if (rez.rez_start_time.includes(today)) {
+          const startTime = getTime(rez.rez_start_time);
+          const endTime = getTime(rez.rez_end_time);
+          const time = `${startTime} - ${endTime}`;
+          const newRez = [{ ...rez, newTime: time }];
+          list.push(...newRez);
+        }
+      });
+
+      // 이름 시간 순으로 정렬
+      list.sort(
+        (a, b) => new Date(a.rez_start_time) - new Date(b.rez_start_time)
+      );
+      // 오늘 예약 현황 업데이트
+      setTodayRezList(list);
+
+      // 전체 예약 현황 업데이트
+      setRezList(data);
+
+      const newEvents = data.map((rez) => ({
+        title: `${rez.m_name} [${rez.mr.mr_name}] <${rez.role}>`,
+        start: rez.rez_start_time,
+        end: rez.rez_end_time,
+        id: rez.mr_rez_code,
+        borderColor: rez.role === '예약자' ? '#0288d1' : '#81c789'
+      }));
+
+      setEvents(newEvents);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 현재 날짜 구하기
+  const getToday = () => {
+    let today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+
+    return year + '-' + month + '-' + day;
+  };
+
+  // 시간 포맷에 맞게 추출
+  const getTime = (time) => {
+    const timeRegex = /\d{2}:\d{2}/; // 정규 표현식 패턴 (HH:mm)
+    const match = time.match(timeRegex);
+    if (match) {
+      return match[0];
+    }
+  };
+
   return (
     <>
-      <SubHeader title="예약현황" />
+      <SubHeader title="MY 회의실 예약" />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <MainContainer>
           <Grid container spacing={2}>
@@ -51,74 +154,66 @@ const MrRezHistoryPage = () => {
             <Grid item container spacing={2}>
               <Grid item xs={9}>
                 <WrapContainer bgcolor={'#fff'}>
-                  <Typography variant="subtitle1">
-                    내 회의실 예약 현황
+                  <Typography variant="h6" sx={{ marginBottom: '30px' }}>
+                    전체 예약 현황
                   </Typography>
+                  <MrRezCalendar events={events} data={rezList} />
                 </WrapContainer>
               </Grid>
 
               {/* 오늘 회의실 예약 일정 */}
-              <Grid item xs={3}>
-                <WrapContainer bgcolor={'#fff'}>
-                  <Typography variant="subtitle1">오늘 예약 현황</Typography>
+              <Grid item xs={3} sx={{ minHeight: '564px' }}>
+                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
+                  <Typography variant="h6">오늘 예약 현황</Typography>
                   <Timeline
                     sx={{
+                      height: '100%',
                       [`& .${timelineItemClasses.root}:before`]: {
                         flex: 0,
                         padding: 0
                       }
                     }}
                   >
-                    <TimelineItem>
-                      <TimelineSeparator>
-                        <TimelineDot />
-                        <TimelineConnector />
-                      </TimelineSeparator>
-                      <TimelineContent>
-                        <Typography variant="subtitle1" component="div">
-                          09:00 ~ 11:30
+                    {todayRezList ? (
+                      todayRezList.map((item, index) => (
+                        <TimelineItem key={index}>
+                          <TimelineSeparator>
+                            <TimelineDot />
+                            <TimelineConnector />
+                          </TimelineSeparator>
+                          <TimelineContent>
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              sx={{ color: palette.primary.main }}
+                            >
+                              {item.newTime}
+                            </Typography>
+                            <Typography variant="subtitle1" component="div">
+                              {item.m_name}
+                            </Typography>
+                            <Typography variant="body2">
+                              {item.mr && item.mr.mr_name}
+                            </Typography>
+                          </TimelineContent>
+                        </TimelineItem>
+                      ))
+                    ) : (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%'
+                        }}
+                      >
+                        <StyledNoCalendarIcon />
+                        <Typography variant="body2" sx={{ color: '#666' }}>
+                          오늘 일정이 없습니다
                         </Typography>
-                        <Typography variant="subtitle1" component="div">
-                          개발1팀 회의
-                        </Typography>
-                        <Typography variant="body2">
-                          소회의실 A - 201
-                        </Typography>
-                      </TimelineContent>
-                    </TimelineItem>
-                    <TimelineItem>
-                      <TimelineSeparator>
-                        <TimelineDot />
-                        <TimelineConnector />
-                      </TimelineSeparator>
-                      <TimelineContent>
-                        <Typography variant="subtitle1" component="div">
-                          09:00 ~ 11:30
-                        </Typography>
-                        <Typography variant="subtitle1" component="div">
-                          포인트 기능 개발 회의
-                        </Typography>
-                        <Typography variant="body2">
-                          소회의실 A - 201
-                        </Typography>
-                      </TimelineContent>
-                    </TimelineItem>
-                    <TimelineItem>
-                      <TimelineSeparator>
-                        <TimelineDot />
-                      </TimelineSeparator>
-                      <TimelineContent>
-                        <Typography variant="subtitle1" component="div">
-                          09:00 ~ 11:30
-                        </Typography>
-                        <Typography variant="subtitle1" component="div">
-                          위하고 TF 회의
-                        </Typography>
-                        <Typography variant="body2">
-                          소회의실 A - 201
-                        </Typography>
-                      </TimelineContent>
-                    </TimelineItem>
+                      </Box>
+                    )}
                   </Timeline>
                 </WrapContainer>
               </Grid>
@@ -131,3 +226,7 @@ const MrRezHistoryPage = () => {
 };
 
 export default MrRezHistoryPage;
+
+const StyledNoCalendarIcon = styled(EventBusyRoundedIcon)(() => ({
+  color: '#666'
+}));
