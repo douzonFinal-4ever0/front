@@ -59,7 +59,7 @@ const MrMostTimeChart = ({ width, height }) => {
           0, 0
         ],
         type: 'bar',
-        barWidth: '50%',
+        barWidth: '60%',
         name: '건 수'
       }
     ]
