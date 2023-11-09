@@ -1,33 +1,33 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
-import { styled } from '@mui/material/styles';
 import {
-  Stack,
   AppBar,
-  Box,
-  Chip,
-  Toolbar,
-  Paper,
-  Typography,
-  Card,
-  Switch,
   Badge,
-  Button
+  Box,
+  Button,
+  Card,
+  Chip,
+  Paper,
+  Stack,
+  Switch,
+  Toolbar,
+  Typography
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 // @icons -------------------------------------------
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import Avatar from '@mui/material/Avatar';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import Avatar from '@mui/material/Avatar';
 // ------------------------------------------------------
-import { HEADER_HIEGHT } from '../../config';
-import UserProfile from '../../assets/images/user/user-round.svg';
-import LogoImage from '../../assets/images/logo/logo.png';
-import { palette } from '../../theme/palette';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import LogoImage from '../../assets/images/logo/logo.png';
+import UserProfile from '../../assets/images/user/user-round.svg';
+import { HEADER_HIEGHT } from '../../config';
+import { palette } from '../../theme/palette';
 
 const Header = (props) => {
   const user = useSelector(setUserData).payload.user;
@@ -45,6 +45,7 @@ const Header = (props) => {
   };
   const navigate = useNavigate();
   const handleLogOut = () => {
+    localStorage.removeItem('jwtToken');
     navigate('/login');
   };
 

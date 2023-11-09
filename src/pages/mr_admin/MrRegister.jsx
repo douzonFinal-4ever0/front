@@ -1,29 +1,30 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import { Circle } from '@mui/icons-material';
 import {
   Box,
-  Grid,
+  Chip,
+  Collapse,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
-  Collapse,
-  ListItemIcon
+  Typography
 } from '@mui/material';
-import SubSidebar from '../../components/common/SubSidebar';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import DataGrid from '../../components/common/DataGrid';
+import Drawer from '../../components/common/Drawer';
+import RectangleBtn from '../../components/common/RectangleBtn';
 import SubHeader from '../../components/common/SubHeader';
+import SubSidebar from '../../components/common/SubSidebar';
+import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
 import MrRegistForm from '../../components/mr_admin/MrRegistForm';
 import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import Drawer from '../../components/common/Drawer';
 import { openDrawer } from '../../redux/reducer/DrawerSlice';
-import { useDispatch } from 'react-redux';
-import DataGrid from '../../components/common/DataGrid';
 import axiosInstance from '../../utils/axios.js';
-import RectangleBtn from '../../components/common/RectangleBtn';
-import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
-import { Circle } from '@mui/icons-material';
 
 const MrRegister = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -41,6 +42,7 @@ const MrRegister = () => {
       const filteredList = mrList.filter((item) => item.mr_type === type);
       setFilteredMrList(filteredList);
     };
+
     const handleClick = () => {
       setFilteredMrList(mrList);
       console.log('전체 회의실');
@@ -63,6 +65,9 @@ const MrRegister = () => {
           <List>
             <ListItem disablePadding>
               <ListItemButton onClick={handleClick}>
+                <ListItemIcon>
+                  <Circle sx={{ width: '15px !important', color: '#bdbdbd' }} />
+                </ListItemIcon>
                 <ListItemText primary={`전체 회의실(${mrList.length})`} />
               </ListItemButton>
             </ListItem>
@@ -76,7 +81,9 @@ const MrRegister = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <Circle sx={{ width: '15px !important' }} />
+                    <Circle
+                      sx={{ width: '15px !important', color: '#ffecb3' }}
+                    />
                   </ListItemIcon>
                   <ListItemText
                     primary={`미팅룸 (${
@@ -93,7 +100,9 @@ const MrRegister = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <Circle color="primary" sx={{ width: '15px !important' }} />
+                    <Circle
+                      sx={{ width: '15px !important', color: '#bbdefb' }}
+                    />
                   </ListItemIcon>
                   <ListItemText
                     primary={`소회의실 (${
@@ -110,7 +119,9 @@ const MrRegister = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <Circle color="error" sx={{ width: '15px !important' }} />
+                    <Circle
+                      sx={{ width: '15px !important', color: '#dcedc8' }}
+                    />
                   </ListItemIcon>
                   <ListItemText
                     primary={`중회의실 (${
@@ -127,7 +138,9 @@ const MrRegister = () => {
                   }}
                 >
                   <ListItemIcon>
-                    <Circle color="success" sx={{ width: '15px !important' }} />
+                    <Circle
+                      sx={{ width: '15px !important', color: '#f3e5f5' }}
+                    />
                   </ListItemIcon>
                   <ListItemText
                     primary={`대회의실 (${
@@ -214,14 +227,23 @@ const MrRegister = () => {
         />
         <MainContainer>
           <WrapContainer bgcolor={'#fff'}>
-            <DataGrid
-              columns={columns}
-              rows={filteredMrList}
-              pageSize={10}
-              pageSizeOptions={[5, 10]}
-              clickEvent={handleDbClick}
-              sx={{ width: 'auto' }}
-            />
+            <Box
+              sx={{
+                width: '100%',
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: '#f0f0f0'
+                }
+              }}
+            >
+              <DataGrid
+                columns={columns}
+                rows={filteredMrList}
+                pageSize={10}
+                pageSizeOptions={[5, 10]}
+                clickEvent={handleDbClick}
+                sx={{ width: 'auto' }}
+              />
+            </Box>
           </WrapContainer>
         </MainContainer>
       </Box>
@@ -236,15 +258,155 @@ export default MrRegister;
 
 /**데이터 그리드에 들어가는 헤더(열) 부분 */
 const columns = [
-  { field: 'mr_code', headerName: '번호', width: 120 },
-  { field: 'mr_name', headerName: '회의실 이름', width: 160 },
-  { field: 'mr_type', headerName: '분류', width: 160 },
+  {
+    field: 'mr_type',
+    headerName: '분류',
+    width: 120,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box display="flex" alignItems="center">
+        {params.row.mr_type === '미팅룸' && (
+          <Chip
+            label={params.row.mr_type}
+            size="small"
+            sx={{
+              backgroundColor: '#ffecb3',
+              color: '#000000'
+            }}
+          />
+          // <Circle sx={{ width: '15px !important' }} />
+        )}
+        {params.row.mr_type === '소회의실' && (
+          <Chip
+            label={params.row.mr_type}
+            size="small"
+            sx={{
+              backgroundColor: '#bbdefb',
+              color: '#000000'
+            }}
+          />
+          // <Circle color="primary" sx={{ width: '15px !important' }} />
+        )}
+        {params.row.mr_type === '중회의실' && (
+          <Chip
+            label={params.row.mr_type}
+            size="small"
+            sx={{
+              backgroundColor: '#dcedc8',
+              color: '#000000'
+            }}
+          />
+          // <Circle color="error" sx={{ width: '15px !important' }} />
+        )}
+        {params.row.mr_type === '대회의실' && (
+          <Chip
+            label={params.row.mr_type}
+            size="small"
+            sx={{
+              backgroundColor: '#f3e5f5',
+              color: '#000000'
+            }}
+          />
+          // <Circle color="success" sx={{ width: '15px !important' }} />
+        )}
+      </Box>
+    )
+  },
+  {
+    field: 'mr_code',
+    headerName: '회의실 번호',
+    width: 120,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.id}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'mr_name',
+    headerName: '회의실 이름',
+    width: 180,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.row.mr_name}</Typography>
+      </Box>
+    )
+  },
+
   {
     field: 'location',
     headerName: '위치',
-    width: 160
+    width: 200,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.row.location}</Typography>
+      </Box>
+    )
   },
-  { field: 'maximum_capacity', headerName: '최대 인원', width: 160 },
-  { field: 'is_opened', headerName: '개방 여부', width: 160 },
-  { field: 'is_used', headerName: '사용중', width: 160 }
+  {
+    field: 'maximum_capacity',
+    headerName: '최대 인원',
+    width: 160,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.row.maximum_capacity}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'is_opened',
+    headerName: '개방 여부',
+    width: 160,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        {params.row.is_opened === '활성' && (
+          <Circle sx={{ width: '15px !important', color: '#76ff03' }} />
+        )}
+        {params.row.is_opened === '비활성' && (
+          <Circle sx={{ width: '15px !important', color: '#ff1744' }} />
+        )}
+        <Typography variant="body1" sx={{ pl: '10px' }}>
+          {params.row.is_opened}
+        </Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'is_used',
+    headerName: '사용중',
+    width: 160,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        {params.row.is_used === '사용중' && (
+          <Circle sx={{ width: '15px !important', color: '#76ff03' }} />
+        )}
+        {params.row.is_used === '비어있음' && (
+          <Circle sx={{ width: '15px !important', color: '#bdbdbd' }} />
+        )}
+        <Typography variant="body1" sx={{ pl: '10px' }}>
+          {params.row.is_used}
+        </Typography>
+      </Box>
+    )
+  }
 ];

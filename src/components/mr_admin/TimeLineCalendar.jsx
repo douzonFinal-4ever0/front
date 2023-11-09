@@ -3,6 +3,7 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection';
@@ -61,7 +62,11 @@ const TimeLineCalendar = ({ events, resources }) => {
   const handleModal = () => setOpen(!open);
 
   const ModalContentExample = () => {
-    return <MrInfoSection data={mrResources} />;
+    return (
+      <Box sx={{ width: '500px' }}>
+        <MrInfoSection data={mrResources} />
+      </Box>
+    );
   };
 
   return (

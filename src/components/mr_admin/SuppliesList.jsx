@@ -1,7 +1,7 @@
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
-import { Grid } from '@mui/material';
+import { Box, Chip, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import DataGrid from '../../components/common/DataGrid';
 import axiosInstance from '../../utils/axios.js';
@@ -116,15 +116,24 @@ const SuppliesList = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <DataGrid
-              columns={columns}
-              rows={filteredSpList}
-              pageSize={10}
-              pageSizeOptions={[5, 10]}
-              clickEvent={handleClick}
-              sx={{ width: 'auto' }}
-              checkbox={true}
-            />
+            <Box
+              sx={{
+                width: '100%',
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: '#f0f0f0'
+                }
+              }}
+            >
+              <DataGrid
+                columns={columns}
+                rows={filteredSpList}
+                pageSize={10}
+                pageSizeOptions={[5, 10]}
+                clickEvent={handleClick}
+                sx={{ width: 'auto' }}
+                checkbox={true}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Grid>
@@ -135,12 +144,90 @@ const SuppliesList = () => {
 export default SuppliesList;
 
 const columns = [
-  { field: 'supplies_code', headerName: '번호', width: 80 },
-  { field: 'supplies_name', headerName: '비품 이름', width: 140 },
-  { field: 'stock_amount', headerName: '재고', width: 80 },
   {
     field: 'type',
     headerName: '유형',
-    width: 140
+    width: 100,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Box display="flex" alignItems="center">
+          {params.row.type === '음향장비' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#ffcdd2',
+                color: '#000000'
+              }}
+            />
+          )}
+          {params.row.type === '영상장비' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#bbdefb',
+                color: '#000000'
+              }}
+            />
+          )}
+          {params.row.type === '편의시설' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#dcedc8',
+                color: '#000000'
+              }}
+            />
+          )}
+        </Box>
+      </Box>
+    )
+  },
+  {
+    field: 'supplies_code',
+    headerName: '번호',
+    width: 80,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.id}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'supplies_name',
+    headerName: '비품 이름',
+    width: 180,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.row.supplies_name}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'stock_amount',
+    headerName: '재고',
+    width: 100,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">
+          {params.row.stock_amount}
+          {params.row.unit}
+        </Typography>
+      </Box>
+    )
   }
 ];
