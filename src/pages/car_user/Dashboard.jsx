@@ -49,14 +49,22 @@ import axiosInstance from '../../utils/axios';
 import { useQuery } from 'react-query';
 import CreateChip from '../../components/car_user/CreateChip';
 import DateSelect from '../../components/car_user/DateSelect';
+import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../../components/car_user/LoadingModal';
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('0');
-
+  const navigate = useNavigate();
+  const [dateFilter, setDateFilter] = useState({
+    startDate: 0,
+    endDate: 0
+  });
   const [open, setOpen] = useState(false);
+  const [dateRange, setDateRange] = useState(0);
   // const [flag, setFlag] = useState(false);
-  const dateFormat = (date) => {
+  function dateFormat(date) {
     const preDate = new Date(date);
     const options = {
       year: 'numeric',
@@ -66,32 +74,56 @@ const Dashboard = () => {
       minute: '2-digit'
     };
     return preDate.toLocaleString('ko-KR', options);
-  };
+  }
   const currentUser = useSelector((state) => state.user);
   const mem_code = currentUser.mem_code;
   console.log(currentUser);
   const { rezData, error } = useQuery(
-    ['rezList', mem_code, range],
+    ['rezList', mem_code, range, dateRange, dateFilter],
     () => {
+      let startAt = 0;
+      let endAt = 0;
+      //상세설정 보기가 아닐경우 초기화
+      if (dateRange !== 4) {
+        startAt = 0;
+        endAt = 0;
+      }
+      if (dateFilter.startDate !== 0 && dateFilter.endDate !== 0) {
+        startAt = dateFilter.startDate;
+        endAt = dateFilter.endDate;
+        setDateRange(4);
+      }
+      setIsLoading(true);
       axiosInstance.axiosInstance
-        .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
+        .get(
+          `http://localhost:8081/car_rez/rezList/${mem_code}/${range}/${dateRange}/${startAt}/${endAt}`
+        )
         .then((res) => {
-          // console.log(res.data);
-          const rezData = res.data.map((item) => ({
-            ...item,
-            id: item.car_rez_code,
-            start_at: dateFormat(item.start_at),
-            return_at: dateFormat(item.return_at),
-            // during:
-            //   dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
-            during: {
+          console.log(res.data);
+          console.log(range);
+          console.log(dateRange);
+          const data = res.data;
+          if (data) {
+            const rezData = data.map((item) => ({
+              ...item,
+              id: item.car_rez_code,
               start_at: dateFormat(item.start_at),
-              return_at: dateFormat(item.return_at)
-            }
-          }));
-          console.log(rezData);
-          setCarRez(rezData);
-          return rezData;
+              return_at: dateFormat(item.return_at),
+              during: {
+                start_at: dateFormat(item.start_at),
+                return_at: dateFormat(item.return_at)
+              }
+            }));
+            console.log(rezData);
+            setCarRez(rezData);
+            setIsLoading(false);
+            return rezData;
+          } else {
+            console.log(data);
+          }
+          if ((res.data = null)) {
+            alert('에러발생');
+          }
         });
     },
     {
@@ -120,26 +152,26 @@ const Dashboard = () => {
   //       setCarRez(rezData);
   //     });
   // }, []);
-  useEffect(() => {
-    axiosInstance.axiosInstance
-      .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
-      .then((res) => {
-        console.log(res.data);
-        const rezData = res.data.map((item) => ({
-          ...item,
-          id: item.car_rez_code,
-          start_at: dateFormat(item.start_at),
-          return_at: dateFormat(item.return_at),
-          // during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
-          during: {
-            start_at: dateFormat(item.start_at),
-            return_at: dateFormat(item.return_at)
-          }
-        }));
-        console.log(rezData);
-        setCarRez(rezData);
-      });
-  }, [range]);
+  // useEffect(() => {
+  //   axiosInstance.axiosInstance
+  //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       const rezData = res.data.map((item) => ({
+  //         ...item,
+  //         id: item.car_rez_code,
+  //         start_at: dateFormat(item.start_at),
+  //         return_at: dateFormat(item.return_at),
+  //         // during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+  //         during: {
+  //           start_at: dateFormat(item.start_at),
+  //           return_at: dateFormat(item.return_at)
+  //         }
+  //       }));
+  //       console.log(rezData);
+  //       setCarRez(rezData);
+  //     });
+  // }, [range]);
 
   // const createChip = (params) => {
   //   if (params.row.rez_status === '1') {
@@ -212,6 +244,9 @@ const Dashboard = () => {
             type={'button'}
             text={'차량 예약'}
             sx={{ padding: '14px 12px', backgroundColor: palette.grey['500'] }}
+            handlebtn={() => {
+              navigate('../reservation');
+            }}
           />
         </Grid>
         <Divider />
@@ -240,7 +275,11 @@ const Dashboard = () => {
         </Select>
         <Paper className="MuiPaper-rounded2" width={'100%'}>
           {/* <CarList rows={filterCarData} /> */}
-          <DateSelect />
+          <DateSelect
+            setDateRange={setDateRange}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+          />
         </Paper>
       </Box>
     );
@@ -283,7 +322,7 @@ const Dashboard = () => {
     {
       field: 'during2',
       headerName: '일자',
-      width: 300,
+      width: 250,
       description: '예약 기간',
       editable: false,
       renderCell: (params) => {
@@ -389,7 +428,7 @@ const Dashboard = () => {
     {
       field: 'detail',
       headerName: '목적',
-      width: 110,
+      width: 160,
       description: '사량 사용 목적',
       editable: false,
       renderCell: (params) => (
@@ -541,7 +580,7 @@ const Dashboard = () => {
             open={open}
             handleClose={handleClose}
           />
-
+          <LoadingModal open={isLoading} />
           <Box sx={{ display: 'flex', height: '95%' }}>
             <SubSidebar widthP={30} content={<SubSideContents />} />
             <MainContainer>
@@ -565,6 +604,40 @@ const Dashboard = () => {
                   <MenuItem value={'5'}>완료</MenuItem>
                   <MenuItem value={'3'}>확정</MenuItem>
                 </Select>
+                <Box padding="0px 4px">
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    paddingTop="2px"
+                  >
+                    <Typography variant="subtitle2" marginRight="15px">
+                      기간 :
+                    </Typography>
+                    {/* <Tooltip title={params.row.start_at} placement="top-start"> */}
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '300px' // 원하는 최대 너비 설정
+                      }}
+                    >
+                      {dateRange === 0
+                        ? '전체'
+                        : dateRange == 1
+                        ? '오늘'
+                        : dateRange == 2
+                        ? '일주일 전까지'
+                        : dateRange == 3
+                        ? '한달 전까지'
+                        : dateRange == 4
+                        ? `${dateFilter.startDate} - ${dateFilter.endDate}`
+                        : ''}
+                    </Typography>
+                    {/* </Tooltip> */}
+                  </Box>
+                </Box>
                 <Box
                   sx={{
                     width: '100%',
