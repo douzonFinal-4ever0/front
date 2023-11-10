@@ -43,6 +43,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
     "http": "^0.0.1-security",
+    "jszip": "^3.10.1",
     "material-ui-popup-state": "^4.0.1",
     "node": "^21.1.0",
     "node-localstorage": "^3.0.5",
