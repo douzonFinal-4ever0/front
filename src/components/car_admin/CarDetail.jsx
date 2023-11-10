@@ -388,19 +388,6 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ ...style, width: 750 }}>
           <Box sx={{ pt: 2, px: 4, pb: 3, bgcolor: 'background.paper' }}>
-            <Box>
-              <Typography
-                sx={{
-                  paddingTop: '2px',
-                  paddingBottom: '2px'
-                }}
-                variant="h5"
-                id="parent-modal-title"
-              >
-                차량 수정
-              </Typography>
-            </Box>
-            <Divider />
             <Box
               display="flex"
               marginTop="15px"
@@ -420,7 +407,7 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
                 }}
               />
               <Typography variant="subtitle1" sx={{ marginLeft: '10px' }}>
-                기본 정보
+                차량 수정
               </Typography>
             </Box>
             {/* input Form */}

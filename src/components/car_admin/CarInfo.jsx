@@ -251,7 +251,8 @@ const CarInfo = ({
           borderRadius: '2px',
           '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
             outline: 'none !important'
-          }
+          },
+          '& .MuiDataGrid-row': { cursor: 'pointer' }
         }}
         onRowClick={(row) => {
           handleClickRow(row.row.car_code, row.row.accum_mileage);

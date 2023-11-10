@@ -9,7 +9,7 @@ import { openDrawer, closeDrawer } from '../../redux/reducer/DrawerSlice';
 // width : drawer 너비
 // drawerState와 toggleDrawer : car_admin의 Example 페이지 참고
 // tabData : title 과 content 를 key 값으로 가지는 객체의 배열을 생성
-const Drawer = ({ width, tabData }) => {
+const Drawer = ({ width, tabData, sx }) => {
   const isDrawerOpen = useSelector((state) => state.drawer.isDrawerOpen);
   const dispatch = useDispatch();
 
@@ -36,6 +36,7 @@ const Drawer = ({ width, tabData }) => {
           anchor={'right'}
           open={isDrawerOpen}
           onClose={handleCloseDrawer}
+          sx={sx}
         >
           {list('right')}
         </MuiDrawer>
