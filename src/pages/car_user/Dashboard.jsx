@@ -1,6 +1,6 @@
 import CommonTable from '../../components/car_admin/CarInfoTable';
 import DataGrid from '../../components/common/DataGrid';
-
+import DoneIcon from '@mui/icons-material/Done';
 import { useState, useEffect } from 'react';
 import Chip from '@mui/material/Chip';
 import SubHeader from '../../components/common/SubHeader';
@@ -12,6 +12,7 @@ import {
   Divider,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   List,
   ListItem,
@@ -25,7 +26,9 @@ import {
   Stack,
   Table,
   TableBody,
-  TableContainer
+  TableContainer,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import MainContainer from '../../components/mr_user/MainContainer';
 import { Container } from '@mui/system';
@@ -44,6 +47,8 @@ import { palette } from '../../theme/palette';
 import CarOperation from '../../components/car_user/CarOperation';
 import axiosInstance from '../../utils/axios';
 import { useQuery } from 'react-query';
+import CreateChip from '../../components/car_user/CreateChip';
+import DateSelect from '../../components/car_user/DateSelect';
 
 const Dashboard = () => {
   const [carRez, setCarRez] = useState([]);
@@ -77,8 +82,12 @@ const Dashboard = () => {
             id: item.car_rez_code,
             start_at: dateFormat(item.start_at),
             return_at: dateFormat(item.return_at),
-            during:
-              dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+            // during:
+            //   dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+            during: {
+              start_at: dateFormat(item.start_at),
+              return_at: dateFormat(item.return_at)
+            }
           }));
           console.log(rezData);
           setCarRez(rezData);
@@ -121,27 +130,31 @@ const Dashboard = () => {
           id: item.car_rez_code,
           start_at: dateFormat(item.start_at),
           return_at: dateFormat(item.return_at),
-          during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+          // during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
+          during: {
+            start_at: dateFormat(item.start_at),
+            return_at: dateFormat(item.return_at)
+          }
         }));
         console.log(rezData);
         setCarRez(rezData);
       });
   }, [range]);
 
-  const createChip = (params) => {
-    if (params.row.rez_status === '1') {
-      return <Chip label="미처리" color="primary" variant="outlined" />;
-    }
-    if (params.row.rez_status === '2') {
-      return <Chip label="확정" color="success" variant="outlined" />;
-    }
-    if (params.row.rez_status === '3') {
-      return <Chip label="완료" variant="outlined" />;
-    }
-    if (params.row.rez_status === '4') {
-      return <Chip label="취소" color="error" variant="outlined" />;
-    }
-  };
+  // const createChip = (params) => {
+  //   if (params.row.rez_status === '1') {
+  //     return <Chip label="미처리" color="primary" variant="outlined" />;
+  //   }
+  //   if (params.row.rez_status === '2') {
+  //     return <Chip label="확정" color="success" variant="outlined" />;
+  //   }
+  //   if (params.row.rez_status === '3') {
+  //     return <Chip label="완료" variant="outlined" />;
+  //   }
+  //   if (params.row.rez_status === '4') {
+  //     return <Chip label="취소" color="error" variant="outlined" />;
+  //   }
+  // };
 
   // const colums =[
   //   {
@@ -158,26 +171,26 @@ const Dashboard = () => {
   // ];
   // 서브 사이드바 콘텐츠
   const SubSideContents = () => {
-    const [searchInput, setSearchInput] = useState('');
+    // const [searchInput, setSearchInput] = useState('');
 
-    const [rows, setRows] = useState([]);
-    useEffect(() => {
-      axiosInstance.axiosInstance
-        .get(`http://localhost:8081/car_rez/searchCarList`)
-        .then((res) => {
-          setRows(res.data);
-        });
-    }, []);
-    const handleInput = (e) => {
-      setSearchInput(e.target.value);
-    };
-    const filterCarData = rows.filter((item) =>
-      item['car_name'].includes(searchInput)
-    );
+    // const [rows, setRows] = useState([]);
+    // useEffect(() => {
+    //   axiosInstance.axiosInstance
+    //     .get(`http://localhost:8081/car_rez/searchCarList`)
+    //     .then((res) => {
+    //       setRows(res.data);
+    //     });
+    // }, []);
+    // const handleInput = (e) => {
+    //   setSearchInput(e.target.value);
+    // };
+    // const filterCarData = rows.filter((item) =>
+    //   item['car_name'].includes(searchInput)
+    // );
     // 검색 클릭 이벤트
-    const handleSearchBtn = (e) => {
-      e.preventDefault();
-    };
+    // const handleSearchBtn = (e) => {
+    //   e.preventDefault();
+    // };
     return (
       <Box
         sx={{
@@ -187,7 +200,7 @@ const Dashboard = () => {
           '& .MuiPaper-rounded2': {
             mt: 1,
             backgroundColor: '#f5f5f5',
-            height: '60vh'
+            height: '64.5vh'
           }
         }}
       >
@@ -202,15 +215,32 @@ const Dashboard = () => {
           />
         </Grid>
         <Divider />
-        <Searchbar
+        {/* <Searchbar
           width={'100%'}
           placeholder={'차종을 입력하세요'}
           value={searchInput}
           handleInput={handleInput}
           handleSearchBtn={handleSearchBtn}
-        />
+        /> */}
+        <Select
+          labelId="demo-simple-select-filled-label"
+          id="demo-simple-select-filled"
+          displayEmpty
+          value={range}
+          inputProps={{ 'aria-label': 'Without label' }}
+          onChange={handleRange}
+          sx={{ width: '100%', mt: 1 }}
+        >
+          <MenuItem value={'0'}>
+            <em>전체</em>
+          </MenuItem>
+          <MenuItem value={'1'}>예약일</MenuItem>
+          <MenuItem value={'2'}>대여일</MenuItem>
+          <MenuItem value={'3'}>반납일</MenuItem>
+        </Select>
         <Paper className="MuiPaper-rounded2" width={'100%'}>
-          <CarList rows={filterCarData} />
+          {/* <CarList rows={filterCarData} /> */}
+          <DateSelect />
         </Paper>
       </Box>
     );
@@ -248,43 +278,135 @@ const Dashboard = () => {
       width: 100,
       description: '예약 상태',
       editable: false,
-      renderCell: (params) => createChip(params)
+      renderCell: (params) => <CreateChip params={params.row.rez_status} />
     },
     {
-      field: 'during',
+      field: 'during2',
       headerName: '일자',
       width: 300,
       description: '예약 기간',
       editable: false,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'pre-line' }}>{params.value}</div>
-      )
-      // valueGetter: (params) =>
-      //   `${params.row.start_at} - ${params.row.return_at}`
+      renderCell: (params) => {
+        // <div style={{ whiteSpace: 'pre-line' }}>{params.value}</div>
+        return (
+          <Box width="100%">
+            {/* {params.map((item) => {
+              return ( */}
+            <Box sx={{ backgroundColor: '#f5f5f5' }} padding="0px 4px">
+              <Box display="flex" justifyContent="center" paddingTop="2px">
+                <Typography variant="subtitle2" marginRight="15px">
+                  대여일
+                </Typography>
+                {/* <Tooltip title={params.row.start_at} placement="top-start"> */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '300px' // 원하는 최대 너비 설정
+                  }}
+                >
+                  {params.row.start_at}
+                </Typography>
+                {/* </Tooltip> */}
+              </Box>
+              <Divider sx={{ backgroundColor: '#616161' }} />
+            </Box>
+            <Box sx={{ backgroundColor: '#f5f5f5' }} padding="0px 4px">
+              <Box display="flex" justifyContent="center" paddingTop="2px">
+                <Typography variant="subtitle2" marginRight="15px">
+                  반납일
+                </Typography>
+                {/* <Tooltip title={params.row.return_at} placement="top-start"> */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '300px' // 원하는 최대 너비 설정
+                  }}
+                >
+                  {params.row.return_at}
+                </Typography>
+                {/* </Tooltip> */}
+              </Box>
+              <Divider sx={{ backgroundColor: '#616161' }} />
+            </Box>
+            {/* );
+             })} */}
+          </Box>
+        );
+      }
     },
     {
       field: 'mem/dept',
       headerName: '이름/부서',
-      width: 150,
+      width: 110,
       description: '예약자 이름, 부서',
       editable: false,
-      valueGetter: (params) => `${params.row.name} / ${params.row.dept_name}`
+      // valueGetter: (params) => `${params.row.name} / ${params.row.dept_name}`
+      renderCell: (params) => (
+        <Box width="100%">
+          <Typography variant="subtitle1">{params.row.name}</Typography>
+          <Typography variant="body2">{`${params.row.dept_name}`}</Typography>
+        </Box>
+      )
     },
     {
       field: 'car_name/code',
       headerName: '차종/차번호',
-      width: 200,
+      width: 250,
       description: '예약 차량 이름, 번호',
       editable: false,
-      valueGetter: (params) =>
-        `${params.row.car_name} / ${params.row.car_code} ${params.row.type}`
+      // valueGetter: (params) =>
+      //   `${params.row.car_name} / ${params.row.car_code} ${params.row.type}`
+      renderCell: (params) => (
+        <Box display="flex" width="100%" alignItems="center">
+          <Chip
+            label={params.row.type}
+            size="small"
+            sx={{ backgroundColor: '#90caf9', marginRight: '10px' }}
+          />
+          <Box>
+            <Typography variant="subtitle1">{params.row.car_code}</Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '240px' // 원하는 최대 너비 설정
+              }}
+            >
+              {params.row.car_name}
+            </Typography>
+          </Box>
+        </Box>
+      )
     },
     {
       field: 'detail',
       headerName: '목적',
-      width: 100,
+      width: 110,
       description: '사량 사용 목적',
-      editable: false
+      editable: false,
+      renderCell: (params) => (
+        <Tooltip title={params.row.detail} placement="top-start">
+          <Typography
+            variant="body2"
+            sx={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: '100px' // 원하는 최대 너비 설정
+            }}
+          >
+            {params.row.detail}
+          </Typography>
+        </Tooltip>
+      )
     },
     {
       field: 'action',
@@ -298,23 +420,69 @@ const Dashboard = () => {
           console.log(Data.rez_status);
           handleOpen();
         };
-        return (
-          <>
-            {Data.rez_status !== '3' ? (
-              <Button
-                onClick={(e) => {
-                  handleClick(e);
-                }}
-              >
-                운행완료
-              </Button>
-            ) : Data.rez_status !== '4' ? (
-              '처리 완료'
-            ) : (
-              ''
-            )}
-          </>
-        );
+        if (Data.rez_status === '4' || Data.rez_status === '1') {
+          return (
+            <Button
+              onClick={(e) => {
+                handleClick(e);
+              }}
+            >
+              운행완료
+            </Button>
+          );
+        } else if (Data.rez_status === '5') {
+          return (
+            <Box display="flex" width="100%" alignItems="center">
+              <DoneIcon color="primary" />
+              <Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '240px' // 원하는 최대 너비 설정
+                  }}
+                >
+                  처리 완료
+                </Typography>
+              </Box>
+            </Box>
+          );
+        }
+
+        // return (
+        //   <>
+        //     {Data.rez_status === '4' || Data.rez_status === '1' ? (
+        //       <Button
+        //         onClick={(e) => {
+        //           handleClick(e);
+        //         }}
+        //       >
+        //         운행완료
+        //       </Button>
+        //     ) : Data.rez_status === '5' ? (
+        //       <Box display="flex" width="100%" alignItems="center">
+        //         <DoneIcon color="primary" />
+        //         <Box>
+        //           <Typography
+        //             variant="body2"
+        //             sx={{
+        //               whiteSpace: 'nowrap',
+        //               overflow: 'hidden',
+        //               textOverflow: 'ellipsis',
+        //               maxWidth: '240px' // 원하는 최대 너비 설정
+        //             }}
+        //           >
+        //             처리 완료
+        //           </Typography>
+        //         </Box>
+        //       </Box>
+        //     ) : (
+        //       ''
+        //     )}
+        //   </>
+        // );
       }
     }
   ];
@@ -392,23 +560,32 @@ const Dashboard = () => {
                     <em>전체</em>
                   </MenuItem>
                   <MenuItem value={'1'}>미처리</MenuItem>
-                  <MenuItem value={'2'}>확정</MenuItem>
-                  <MenuItem value={'4'}>취소</MenuItem>
-                  <MenuItem value={'3'}>완료</MenuItem>
+                  <MenuItem value={'4'}>운행중</MenuItem>
+                  <MenuItem value={'2'}>취소</MenuItem>
+                  <MenuItem value={'5'}>완료</MenuItem>
+                  <MenuItem value={'3'}>확정</MenuItem>
                 </Select>
-
-                <DataGrid
-                  rows={carRez}
-                  columns={colums}
-                  width="100%"
-                  height={'auto'}
-                  pageSize={5}
-                  pageSizeOptions={[5, 10]}
-                  checkbox={false}
-                  disableRow={false}
-                  // clickEvent={handleClick}
-                  dbclickEvent={handleDbClick}
-                />
+                <Box
+                  sx={{
+                    width: '100%',
+                    '& .MuiDataGrid-columnHeaders': {
+                      backgroundColor: '#f0f0f0'
+                    }
+                  }}
+                >
+                  <DataGrid
+                    rows={carRez}
+                    columns={colums}
+                    width="100%"
+                    height={'auto'}
+                    pageSize={10}
+                    pageSizeOptions={[10, 15]}
+                    checkbox={false}
+                    disableRow={false}
+                    clickEvent={handleDbClick}
+                    // dbclickEvent={handleDbClick}
+                  />
+                </Box>
               </WrapContainer>
             </MainContainer>
           </Box>
