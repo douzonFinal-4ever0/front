@@ -226,7 +226,7 @@ const MrUserMrRezPage = Loadable(
 );
 
 const MrUserMrRezConfirmPage = Loadable(
-  lazy(() => import('../pages/mr_user/rez/MrRezConfirmPage'))
+  lazy(() => import('../pages/mr_user/rez_confirm/MrRezConfirmPage'))
 );
 
 const MrUserMrRezHistory = Loadable(

@@ -25,7 +25,7 @@ import { palette } from '../../../../theme/palette';
 import { times, meetingTypes } from '../../../../config';
 import Selectbox from '../../../../components/common/Selectbox';
 
-const RezForm = ({ recentMNames }) => {
+const RezForm = ({ recentMNames, isReadOnly }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =

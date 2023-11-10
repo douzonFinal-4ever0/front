@@ -106,12 +106,8 @@ const MrInfoSection = ({ data }) => {
           <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
             <StyledRoomTagsWrap>
               {mr_keyword &&
-                mr_keyword.map((tag) => (
-                  <Tag
-                    key={tag.keyword_code}
-                    text={tag.keyword_name}
-                    isHashTag={true}
-                  />
+                mr_keyword.map((tag, index) => (
+                  <Tag key={index} text={tag.keyword_name} isHashTag={true} />
                 ))}
             </StyledRoomTagsWrap>
           </Stack>
