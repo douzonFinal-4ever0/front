@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Collapse,
@@ -26,6 +29,7 @@ import { useQuery } from 'react-query';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import LoadingModal from './LoadingModal';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 //통신
 // const socket = io.connect('http://localhost:4000');
@@ -48,6 +52,7 @@ const SubSideContents = ({
   const [chat, setChat] = useState([]);
   const currentUser = useSelector((state) => state.user);
   const currentName = currentUser.name;
+  const mem_code = currentUser.mem_code;
   const [userNum, setUserNum] = useState(0);
   const [selected, setSelected] = useState();
   const [openGroup, setOpenGroup] = useState('');
@@ -66,7 +71,7 @@ const SubSideContents = ({
     });
     socket.emit('init', {
       rows,
-      currentName,
+      mem_code,
       rezStart_at,
       rezReturn_at,
       Token,
@@ -152,6 +157,10 @@ const SubSideContents = ({
   // };
   const groupedCarData = [
     {
+      groupName: '지정 차량',
+      items: rows.filter((item) => item['authority'].includes('지정'))
+    },
+    {
       groupName: '승용차',
       items: rows.filter((item) => item['type'].includes('승용차'))
     },
@@ -160,13 +169,7 @@ const SubSideContents = ({
       items: rows.filter((item) => item['type'].includes('화물차'))
     }
   ];
-  // const filterCarData = rows.filter((item) => {
-  //   item['car_name'].includes(searchInput);
-  // });
-  // 검색 클릭 이벤트
-  // const handleSearchBtn = (e) => {
-  //   e.preventDefault();
-  // };
+
   const handleItem = (e, car_code, car_address, car_name) => {
     //setCarCode(car_code);
     setSelectedRows({ car_code, car_address, car_name });
@@ -175,17 +178,7 @@ const SubSideContents = ({
 
     //다른 차량 선택시 선택됨 해제 필요
   };
-  // const carSelect2 = () => {
-  //   socket
-  // };
-  // // hover
-  // const [isHovered, setIsHovered] = useState(null);
-  // const handleHover = (index) => {
-  //   setIsHovered(index);
-  // };
-  // const handleMouseLeave = () => {
-  //   setIsHovered(null);
-  // };
+
   useEffect(() => {
     // openGroup 상태가 변경될 때 실행되는 효과
     // 다른 그룹은 모두 닫히도록 상태를 업데이트
@@ -211,29 +204,6 @@ const SubSideContents = ({
       return (
         <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
           {/* <List dense component="div" role="list">
-            {rows.map((car, index) => {
-              return (
-                <ListItem
-                  key={car.car_code}
-                  onClick={(e) =>
-                    handleItem(e, car.car_code, car.car_address, car.car_name)
-                  }
-                >
-                  <ListItemButton disabled={car.car_status === '선택됨'}>
-                    <ListItemText
-                      primary={`${car.car_code}`}
-                      secondary={`${car.car_name}`}
-                    />
-                    <ListItemText
-                      primary={`${car.car_address}`}
-                      secondary={`${car.car_status}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List> */}
-          <List dense component="div" role="list">
             {groupedCarData.map((group, index) => {
               const isGroupOpen = openGroup === group.groupName;
               return (
@@ -270,7 +240,49 @@ const SubSideContents = ({
                 </div>
               );
             })}
-          </List>
+          </List> */}
+          {groupedCarData.map((group, index) => {
+            console.log(group.groupName);
+            return (
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>{group.groupName}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <List dense component="div" role="list">
+                    {group.items.map((car, index) => (
+                      <ListItem
+                        key={index}
+                        onClick={(e) =>
+                          handleItem(
+                            e,
+                            car.car_code,
+                            car.car_address,
+                            car.car_name
+                          )
+                        }
+                      >
+                        <ListItemButton disabled={car.car_status === '선택됨'}>
+                          <ListItemText
+                            primary={`${car.car_code}`}
+                            secondary={`${car.car_name}`}
+                          />
+                          <ListItemText
+                            primary={`${car.car_address}`}
+                            secondary={`${car.car_status}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
         </div>
       );
     }
