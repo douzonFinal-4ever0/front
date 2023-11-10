@@ -1,9 +1,7 @@
 import React from 'react';
 import SubHeader from '../../components/common/SubHeader';
-import { Box, Button, Collapse, Fade, Grid, IconButton } from '@mui/material';
-import MainContainer from '../../components/mr_user/MainContainer';
+import { Box, Fade, Grid, IconButton } from '@mui/material';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import DataGrid from '../../components/common/DataGrid';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axios';
@@ -34,9 +32,14 @@ const MrNoticeDetails = () => {
   /*-----------------------선택된 데이터 가져오기---------------------------------*/
   const [selectedNotice, setSelectedNotice] = useState([]);
   useEffect(() => {
-    axiosInstance.axiosInstance.get(`/mr/notice/${notice_code}`).then((res) => {
-      setSelectedNotice(res.data);
-    });
+    axiosInstance.axiosInstance
+      .get(`/mr/notice/${notice_code}`)
+      .then((res) => {
+        setSelectedNotice(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
   // console.log(selectedNotice);
 
@@ -67,6 +70,9 @@ const MrNoticeDetails = () => {
         handleOpenSnackbar();
         handleSetSnackbarContent('삭제가 완료되었습니다.');
         navigate('../NoticeList');
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
   };
 
