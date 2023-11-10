@@ -2,7 +2,7 @@ import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 
 const MrContrastChart = ({ width, height }) => {
-  const colors = ['#5470C6', '#EE6666'];
+  const colors = ['#7cb342', '#2196f3'];
   const option = {
     color: colors,
     tooltip: {

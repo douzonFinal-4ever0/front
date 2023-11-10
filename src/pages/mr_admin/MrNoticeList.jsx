@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import SubHeader from '../../components/common/SubHeader';
-import { Box } from '@mui/system';
-import WrapContainer from '../../components/mr_user/WrapContainer';
 import { Container } from '@mui/material';
-import { useState } from 'react';
-import DataGrid from '../../components/common/DataGrid';
+import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axios.js';
+import DataGrid from '../../components/common/DataGrid';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import SubHeader from '../../components/common/SubHeader';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import WrapContainer from '../../components/mr_user/WrapContainer';
+import axiosInstance from '../../utils/axios.js';
 const MrNoticeList = () => {
   /*-------------------------------------url 이동---------------------------------------------------*/
   const navigate = useNavigate();
@@ -53,14 +52,24 @@ const MrNoticeList = () => {
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
               <div style={{ height: 'auto', width: '100%' }}>
-                <DataGrid
-                  columns={columns}
-                  rows={noticeList}
-                  pageSize={10}
-                  pageSizeOptions={[5, 10]}
-                  //   disableRow={false}
-                  clickEvent={handleClickEvent}
-                />
+                <Box
+                  sx={{
+                    width: '100%',
+                    '& .MuiDataGrid-columnHeaders': {
+                      backgroundColor: '#f0f0f0'
+                    },
+                    border: '1px solid'
+                  }}
+                >
+                  <DataGrid
+                    columns={columns}
+                    rows={noticeList}
+                    pageSize={10}
+                    pageSizeOptions={[5, 10]}
+                    //   disableRow={false}
+                    clickEvent={handleClickEvent}
+                  />
+                </Box>
               </div>
               <RectangleBtn
                 category={'register'}

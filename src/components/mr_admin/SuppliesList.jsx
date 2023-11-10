@@ -121,7 +121,8 @@ const SuppliesList = () => {
                 width: '100%',
                 '& .MuiDataGrid-columnHeaders': {
                   backgroundColor: '#f0f0f0'
-                }
+                },
+                border: '1px solid'
               }}
             >
               <DataGrid

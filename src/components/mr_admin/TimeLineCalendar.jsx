@@ -1,3 +1,4 @@
+import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
@@ -78,6 +79,7 @@ const TimeLineCalendar = ({ events, resources }) => {
           resourceTimeGridPlugin,
           listPlugin
         ]}
+        locale={koLocale} // 한국어 설정
         initialView={currentView}
         nowIndicator={true}
         businessHours={businessHours}

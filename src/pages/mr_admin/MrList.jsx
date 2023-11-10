@@ -10,6 +10,7 @@ import axiosInstance from '../../utils/axios.js';
 const MrList = () => {
   const [value, setValue] = useState(dayjs().minute(0));
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     axiosInstance.axiosInstance
       .get('/mr/mrRez')
