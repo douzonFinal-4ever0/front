@@ -32,6 +32,7 @@ const MrRezHistoryPage = () => {
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
   const [rezList, setRezList] = useState([]); // 전체 예약 리스트
   const [events, setEvents] = useState([]); // 캘린더 이벤트
+  const [master, setMaster] = useState([]); // 회의 예약자 정보
 
   useEffect(() => {
     getMrRezApi();
@@ -67,8 +68,10 @@ const MrRezHistoryPage = () => {
         rez.role = '예약자';
       });
 
+      console.log(lestPtList);
+
+      // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];
-      console.log(data);
 
       let list = [];
       // 오늘 예약 현황 추출
@@ -87,11 +90,24 @@ const MrRezHistoryPage = () => {
       list.sort(
         (a, b) => new Date(a.rez_start_time) - new Date(b.rez_start_time)
       );
+
       // 오늘 예약 현황 업데이트
       setTodayRezList(list);
 
+      // 마스터 정보 찾기
+      const masterRes = await axiosInstance.axiosInstance.get('/mr/mem');
+      if (masterRes.status !== 200) return;
+      const newData = [...data];
+
+      data.forEach((item, index) => {
+        const findMem = masterRes.data.filter(
+          (mem) => mem.mem_code === item.mem_code
+        );
+        newData[index] = { ...item, master: findMem[0] };
+      });
+
       // 전체 예약 현황 업데이트
-      setRezList(data);
+      setRezList(newData);
 
       const newEvents = data.map((rez) => ({
         title: `${rez.m_name} [${rez.mr.mr_name}] <${rez.role}>`,
@@ -129,98 +145,6 @@ const MrRezHistoryPage = () => {
   return (
     <>
       <SubHeader title="MY 회의실 예약" />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <MainContainer>
-          <Grid container spacing={2}>
-            <Grid item container xs={12}>
-              <WrapContainer bgcolor={'#fff'}>
-                <Grid container sx={{ height: '200px' }}>
-                  <Grid item xs={3}>
-                    이번주 회의실 예약 횟수
-                  </Grid>
-                  <Grid item xs={3}>
-                    평균 회의실 이용 시간
-                  </Grid>
-                  <Grid item xs={3}>
-                    dasd
-                  </Grid>
-                  <Grid item xs={3}>
-                    dasd
-                  </Grid>
-                </Grid>
-              </WrapContainer>
-            </Grid>
-
-            <Grid item container spacing={2}>
-              <Grid item xs={9}>
-                <WrapContainer bgcolor={'#fff'}>
-                  <Typography variant="h6" sx={{ marginBottom: '30px' }}>
-                    전체 예약 현황
-                  </Typography>
-                  <MrRezCalendar events={events} data={rezList} />
-                </WrapContainer>
-              </Grid>
-
-              {/* 오늘 회의실 예약 일정 */}
-              <Grid item xs={3} sx={{ minHeight: '564px' }}>
-                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
-                  <Typography variant="h6">오늘 예약 현황</Typography>
-                  <Timeline
-                    sx={{
-                      height: '100%',
-                      [`& .${timelineItemClasses.root}:before`]: {
-                        flex: 0,
-                        padding: 0
-                      }
-                    }}
-                  >
-                    {todayRezList ? (
-                      todayRezList.map((item, index) => (
-                        <TimelineItem key={index}>
-                          <TimelineSeparator>
-                            <TimelineDot />
-                            <TimelineConnector />
-                          </TimelineSeparator>
-                          <TimelineContent>
-                            <Typography
-                              variant="subtitle1"
-                              component="div"
-                              sx={{ color: palette.primary.main }}
-                            >
-                              {item.newTime}
-                            </Typography>
-                            <Typography variant="subtitle1" component="div">
-                              {item.m_name}
-                            </Typography>
-                            <Typography variant="body2">
-                              {item.mr && item.mr.mr_name}
-                            </Typography>
-                          </TimelineContent>
-                        </TimelineItem>
-                      ))
-                    ) : (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%'
-                        }}
-                      >
-                        <StyledNoCalendarIcon />
-                        <Typography variant="body2" sx={{ color: '#666' }}>
-                          오늘 일정이 없습니다
-                        </Typography>
-                      </Box>
-                    )}
-                  </Timeline>
-                </WrapContainer>
-              </Grid>
-            </Grid>
-          </Grid>
-        </MainContainer>
-      </Box>
     </>
   );
 };

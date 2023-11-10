@@ -15,13 +15,43 @@ import MrInfoSection from '../../rez/section/MrInfoSection';
 import RezSection from '../../rez/section/RezSection';
 import { useState } from 'react';
 import RezInfo from '../../rez_confirm/section/RezInfo';
+import { useEffect } from 'react';
+import axiosInstance from '../../../../utils/axios';
 
 const RezDetailModal = ({ open, handleModal, data, isModify }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
 
-  console.log(data);
+  // useEffect(() => {
+  //   // 예약자 정보 가져오기
+  //   const getMemAllApi = async () => {
+  //     try {
+  //       const res = await axiosInstance.axiosInstance.get('/mr/mem');
+  //       if (res.status !== 200) return;
+  //       const findMem = res.data.filter(
+  //         (mem) => mem.mem_code === data.mem_code
+  //       );
+  //       setMaster(findMem);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   getMemAllApi();
+  // }, []);
+
   const handleCancelBtn = () => {
     handleModal();
+  };
+
+  const detailInfo = {
+    m_name: data && data.m_name,
+    mr_name: data.mr && data.mr.mr_name,
+    location: data.mr && data.mr.location,
+    rez_date: data && data.rez_start_time,
+    rez_start_time: data && data.rez_start_time,
+    rez_end_time: data && data.rez_end_time,
+    master: data && data.master,
+    created_at: data && data.created_at
   };
 
   const handleConfirmBtn = () => {};
@@ -55,13 +85,7 @@ const RezDetailModal = ({ open, handleModal, data, isModify }) => {
             {isModify ? (
               <RezSection data={data.mr} isReadOnly={isReadOnly} />
             ) : (
-              <RezInfo
-                mr_name={data.mr && data.mr.mr_name}
-                location={data.mr && data.mr.location}
-                rez_date={data && data.rez_start_time}
-                rez_start_time={data && data.rez_start_time}
-                rez_end_time={data && data.rez_end_time}
-              />
+              <RezInfo data={detailInfo} />
             )}
           </Grid>
         </Grid>
@@ -79,18 +103,20 @@ const RezDetailModal = ({ open, handleModal, data, isModify }) => {
           <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
             <RectangleBtn
               type={'button'}
-              text={'취소'}
+              text={data.role === '예약자' ? '취소' : '확인'}
               category={'cancel'}
               sx={{ padding: '10px 8px' }}
               handlebtn={handleCancelBtn}
             />
-            <RectangleBtn
-              type={'button'}
-              text={'확인'}
-              category={'register'}
-              sx={{ padding: '10px 8px' }}
-              handlebtn={handleConfirmBtn}
-            />
+            {data.role === '예약자' ? (
+              <RectangleBtn
+                type={'button'}
+                text={'수정'}
+                category={'register'}
+                sx={{ padding: '10px 8px' }}
+                handlebtn={handleConfirmBtn}
+              />
+            ) : null}
           </Box>
         </Box>
       </DialogActions>
