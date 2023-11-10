@@ -1,14 +1,11 @@
-import React from 'react';
-import DataGrid from '../../components/common/DataGrid';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import axiosInstance from '../../utils/axios.js';
-import { Button, Grid, MenuItem, Select } from '@mui/material';
-import RectangleBtn from '../common/RectangleBtn.jsx';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+import { Box, Chip, Grid, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import DataGrid from '../../components/common/DataGrid';
+import axiosInstance from '../../utils/axios.js';
+import RectangleBtn from '../common/RectangleBtn.jsx';
 
 const SuppliesList = () => {
   const [SpList, setSpList] = useState([]);
@@ -17,14 +14,19 @@ const SuppliesList = () => {
   const [filteredSpList, setFilteredSpList] = useState([]); // 추가: 필터링된 목록 상태
 
   useEffect(() => {
-    axiosInstance.axiosInstance.get('/sp/spList').then((res) => {
-      const processedData = res.data.map((item) => ({
-        ...item,
-        id: item.supplies_code
-      }));
-      setSpList(processedData);
-      setFilteredSpList(processedData); // 처음에는 전체 목록을 표시
-    });
+    axiosInstance.axiosInstance
+      .get('/sp/spList')
+      .then((res) => {
+        const processedData = res.data.map((item) => ({
+          ...item,
+          id: item.supplies_code
+        }));
+        setSpList(processedData);
+        setFilteredSpList(processedData); // 처음에는 전체 목록을 표시
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
   const handleClick = (params) => {
     // params 객체를 통해 선택된 행의 데이터에 접근
@@ -114,15 +116,25 @@ const SuppliesList = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <DataGrid
-              columns={columns}
-              rows={filteredSpList}
-              pageSize={10}
-              pageSizeOptions={[5, 10]}
-              clickEvent={handleClick}
-              sx={{ width: 'auto' }}
-              checkbox={true}
-            />
+            <Box
+              sx={{
+                width: '100%',
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: '#f0f0f0'
+                },
+                border: '1px solid'
+              }}
+            >
+              <DataGrid
+                columns={columns}
+                rows={filteredSpList}
+                pageSize={10}
+                pageSizeOptions={[5, 10]}
+                clickEvent={handleClick}
+                sx={{ width: 'auto' }}
+                checkbox={true}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Grid>
@@ -133,12 +145,90 @@ const SuppliesList = () => {
 export default SuppliesList;
 
 const columns = [
-  { field: 'supplies_code', headerName: '번호', width: 80 },
-  { field: 'supplies_name', headerName: '비품 이름', width: 140 },
-  { field: 'stock_amount', headerName: '재고', width: 80 },
   {
     field: 'type',
     headerName: '유형',
-    width: 140
+    width: 100,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Box display="flex" alignItems="center">
+          {params.row.type === '음향장비' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#ffcdd2',
+                color: '#000000'
+              }}
+            />
+          )}
+          {params.row.type === '영상장비' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#bbdefb',
+                color: '#000000'
+              }}
+            />
+          )}
+          {params.row.type === '편의시설' && (
+            <Chip
+              label={params.row.type}
+              size="small"
+              sx={{
+                backgroundColor: '#dcedc8',
+                color: '#000000'
+              }}
+            />
+          )}
+        </Box>
+      </Box>
+    )
+  },
+  {
+    field: 'supplies_code',
+    headerName: '번호',
+    width: 80,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.id}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'supplies_name',
+    headerName: '비품 이름',
+    width: 180,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">{params.row.supplies_name}</Typography>
+      </Box>
+    )
+  },
+  {
+    field: 'stock_amount',
+    headerName: '재고',
+    width: 100,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center',
+    renderCell: (params) => (
+      <Box alignItems="center" display="flex">
+        <Typography variant="body1">
+          {params.row.stock_amount}
+          {params.row.unit}
+        </Typography>
+      </Box>
+    )
   }
 ];

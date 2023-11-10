@@ -1,24 +1,19 @@
 import {
-  Box,
-  Button,
   Checkbox,
   Container,
   Grid,
-  Input,
   Paper,
   TextField,
   styled
 } from '@mui/material';
-import { setUserData } from '../../redux/reducer/userSlice';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import axiosInstance from '../../utils/axios';
 import { Link, useNavigate } from 'react-router-dom';
-import Label from '../../components/common/Label';
 import LogoImage from '../../assets/images/logo/logo.png';
-import RectangleBtn from '../../components/common/RectangleBtn';
 import JWTdecode from '../../components/common/JWTdecode';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import { setUserData } from '../../redux/reducer/userSlice';
+import axiosInstance from '../../utils/axios';
 
 const Login = () => {
   const dispatch = useDispatch();

@@ -1,48 +1,41 @@
-import * as React from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
 import {
-  Box,
   Button,
   Checkbox,
   Collapse,
   FormControl,
   FormControlLabel,
+  Grid,
   IconButton,
-  InputLabel,
   MenuItem,
   Paper,
   Radio,
   RadioGroup,
   Select,
-  Stack,
   TextField,
-  Typography,
-  styled,
-  Grid
+  styled
 } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import dayjs from 'dayjs';
+import * as React from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import TimeField from '../../components/common/TimeField';
-import MrTag from './MrTag';
-import Modal from '../common/Modal';
-import DashBoard from '../../pages/mr_admin/DashBoard';
-import axios from 'axios';
+import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
-import { useDispatch } from 'react-redux';
-import { closeDrawer } from '../../redux/reducer/DrawerSlice';
-import Label from '../common/Label';
-import { palette } from '../../theme/palette';
-import dayjs from 'dayjs';
-import SuppliesList from './SuppliesList';
-import { useEffect } from 'react';
 import axiosInstance from '../../utils/axios.js';
+import Label from '../common/Label';
+import Modal from '../common/Modal';
 import RectangleBtn from '../common/RectangleBtn';
+import MrTag from './MrTag';
+import SuppliesList from './SuppliesList';
+
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
   // console.log(isEditMode);
@@ -170,7 +163,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         // handleSetSnackbarContent('이미지가 업로드 완료되었습니다!');
         // handleOpenSnackbar();
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
 
   // console.log(initialMr_Img);
@@ -294,6 +289,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
   };
   /**회의실 수정 버튼 클릭 이벤트 */
@@ -305,6 +303,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
   };
   /**회의실 비활성화 버튼 클릭 이벤트 */
@@ -315,6 +316,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
   };
 
