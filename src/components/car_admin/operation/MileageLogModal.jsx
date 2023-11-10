@@ -1,4 +1,4 @@
-import { Autocomplete, Button, ImageListItem, Paper } from '@mui/material';
+import { Autocomplete, Button, Collapse, ImageListItem } from '@mui/material';
 import axiosInstance from '../../../utils/axios';
 import { useEffect, useState } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
@@ -22,6 +22,11 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../../redux/reducer/SnackbarSlice';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import JSZip from 'jszip';
 
 const MileageLogModal = ({ style, handleModalClose }) => {
   const dateNow = new Date();
@@ -30,6 +35,8 @@ const MileageLogModal = ({ style, handleModalClose }) => {
   const dateBefore = subMonths(new Date(), 1);
   const before = dateBefore.toISOString().slice(0, 10); // Day.js 객체로 변경
 
+  const [radioStatus, setRadioStatus] = useState('1');
+  const [openSearchCar, setOpenSearchCar] = useState(false);
   const [autoCompleteValue, setAutoCompleteValue] = useState(null);
 
   const [mileageLogData, setMileageLogData] = useState({
@@ -38,6 +45,7 @@ const MileageLogModal = ({ style, handleModalClose }) => {
     sdate: before,
     edate: today
   });
+  const [isExistOperaion, setIsExistOperation] = useState(true);
 
   const [carOptions, setCarOptions] = useState([]);
 
@@ -52,13 +60,22 @@ const MileageLogModal = ({ style, handleModalClose }) => {
     dispatch(setSnackbarContent(content));
   };
 
+  const handleRadioChange = (event) => {
+    setRadioStatus(event.target.value);
+    if (event.target.value === '1') {
+      setOpenSearchCar(false);
+      setMileageLogData({ ...mileageLogData, car_code: '' });
+    } else {
+      setOpenSearchCar(true);
+    }
+  };
+
   const imageUrl = process.env.PUBLIC_URL + '/mileageLog.jpg';
 
   useEffect(() => {
     axiosInstance.axiosInstance
       .get('/manager/car/carListGetAll')
       .then((res) => {
-        console.log(res.data);
         setCarOptions(res.data);
       })
       .catch((error) => {
@@ -68,7 +85,7 @@ const MileageLogModal = ({ style, handleModalClose }) => {
 
   const handleMileageDownloadBtn = () => {
     if (
-      mileageLogData.car_code === '' ||
+      radioStatus === '' ||
       mileageLogData.sdate === null ||
       mileageLogData.edate === null
     ) {
@@ -77,6 +94,17 @@ const MileageLogModal = ({ style, handleModalClose }) => {
       return;
     }
 
+    if (radioStatus === '1') {
+      allCarSave();
+    } else {
+      if (mileageLogData.car_code === '') {
+        return;
+      }
+      selectedCarSave();
+    }
+  };
+
+  const selectedCarSave = () => {
     axiosInstance.axiosInstance
       .get('/manager/car/operationListOne', {
         params: {
@@ -87,6 +115,11 @@ const MileageLogModal = ({ style, handleModalClose }) => {
       })
       .then((res) => {
         console.log(res.data);
+        if (res.data.length === 0) {
+          setIsExistOperation(false);
+        } else {
+          setIsExistOperation(true);
+        }
         downloadMileageLog(
           res.data,
           mileageLogData.car_code,
@@ -98,140 +131,301 @@ const MileageLogModal = ({ style, handleModalClose }) => {
       });
   };
 
-  const downloadMileageLog = (result, car_code, car_name) => {
+  const allCarSave = async () => {
+    const zip = new JSZip();
+    try {
+      const res = await axiosInstance.axiosInstance.get(
+        '/manager/car/isExistOperaion'
+      );
+      console.log(res.data); // 운행 내역이 있는 차량 전체를 가져옴
+      const promises = res.data.map(async (data) => {
+        try {
+          const response = await axiosInstance.axiosInstance.get(
+            '/manager/car/operationListOne',
+            {
+              params: {
+                car_code: data,
+                sdate: mileageLogData.sdate,
+                edate: mileageLogData.edate
+              }
+            }
+          );
+          // 하나씩 엑셀 파일로 만들어서 리턴하는 코드 여기서 실행
+          const car_name = response.data[0].car_name;
+          const excelData = await saveExcelFile(response.data, data, car_name);
+          zip.file(`운행일지_${data}.xlsx`, excelData);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      // 모든 엑셀 파일 생성 및 zip 파일로 압축
+      await Promise.all(promises);
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, `${format(dateNow, 'yyMMdd')}_국세청운행기록부.zip`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // result -> 한 차량의 운행 정보 리스트
+  const saveExcelFile = (result, car_code, car_name) => {
+    // 엑셀 파일 저장 로직 시작
     const excelFilePath = process.env.PUBLIC_URL + '/test.xlsx';
-
     // 현재 년도의 첫날과 마지막 날을 Date 객체로 생성
-    const startDate = new Date(dateNow.getFullYear(), 0, 1); // 0은 1월을 나타냄
-    const endDate = new Date(dateNow.getFullYear(), 11, 31); // 11은 12월을 나타냄
-
+    const startDate = new Date(dateNow.getFullYear(), 0, 1);
+    const endDate = new Date(dateNow.getFullYear(), 11, 31);
     // Date 객체를 원하는 형식으로 문자열로 변환
     const startDateString = startDate.toLocaleDateString('ko-KR');
     const endDateString = endDate.toLocaleDateString('ko-KR');
-
-    fetch(excelFilePath)
-      .then((response) => response.arrayBuffer())
-      .then((data) => {
-        const readOptions = {
-          type: 'array',
-          cellStyles: true
-        };
-        const workbook = XLSX.read(data, readOptions);
-
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-
-        // 셀에 데이터 저장
-        sheet['H2'] = { v: startDateString, startDateString };
-        sheet['H5'] = { v: endDateString, h: endDateString };
-        sheet['AQ2'] = { v: '더존비즈온', h: '더존비즈온' };
-        sheet['AQ4'] = { v: '123-45-67890', h: '123-45-67890' };
-        sheet['A9'] = { v: car_name, h: car_name };
-        sheet['K9'] = { v: car_code, h: car_code };
-
-        result.map((item, index) => {
-          const num = 15;
-          console.log(num + index);
-          sheet[`A${num + index}`] = {
-            v: new Date(item.created_at).toLocaleDateString(),
-            h: new Date(item.created_at).toLocaleDateString()
+    return new Promise((resolve, reject) => {
+      fetch(excelFilePath)
+        .then((response) => response.arrayBuffer())
+        .then((data) => {
+          const readOptions = {
+            type: 'array',
+            cellStyles: true
           };
-          sheet[`F${num + index}`] = {
-            v: item.dept_name,
-            h: item.dept_name
-          };
-          sheet[`J${num + index}`] = { v: item.name, h: item.name };
-          sheet[`N${num + index}`] = {
-            v: Math.floor(item.bef_mileage),
-            t: 'n',
-            h: Math.floor(item.bef_mileage)
-          };
-          sheet[`T${num + index}`] = {
-            v: Math.floor(item.aft_mileage),
-            t: 'n',
-            h: Math.floor(item.aft_mileage)
-          };
-          sheet[`Z${num + index}`] = {
-            v: Math.floor(item.distance),
-            t: 'n',
-            h: Math.floor(item.distance)
-          };
-          sheet[`AF${num + index}`] = {
-            v: Math.floor(item.commute_mileage),
-            t: 'n',
-            h: Math.floor(item.commute_mileage)
-          };
-          sheet[`AL${num + index}`] = {
-            v: Math.floor(item.nomal_biz_mileage),
-            t: 'n',
-            h: Math.floor(item.nomal_biz_mileage)
-          };
-        });
-
-        // 스타일 지정
-        const array = [
-          'A2',
-          'H3',
-          'AK2',
-          'AK4',
-          'A8',
-          'K8',
-          'A11',
-          'A12',
-          'F12',
-          'F13',
-          'J13',
-          'N12',
-          'N13',
-          'T13',
-          'Z13',
-          'AF13',
-          'AF14',
-          'AL14',
-          'AR13',
-          'N51',
-          'AF51',
-          'AR51'
-        ];
-        array.map((item) => {
-          const currentValue = sheet[item].v; // 값
-          const currentToolTip = sheet[item].h; // 툴팁
-          sheet[item] = {
-            v: currentValue,
-            h: currentToolTip,
+          const workbook = XLSX.read(data, readOptions);
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          // 셀에 데이터 저장
+          sheet['H2'] = { v: startDateString, startDateString };
+          sheet['H5'] = { v: endDateString, h: endDateString };
+          sheet['AQ2'] = { v: '더존비즈온', h: '더존비즈온' };
+          sheet['AQ4'] = { v: '123-45-67890', h: '123-45-67890' };
+          sheet['A9'] = { v: car_name, h: car_name };
+          sheet['K9'] = { v: car_code, h: car_code };
+          result.map((item, index) => {
+            const num = 15;
+            sheet[`A${num + index}`] = {
+              v: new Date(item.created_at).toLocaleDateString(),
+              h: new Date(item.created_at).toLocaleDateString()
+            };
+            sheet[`F${num + index}`] = {
+              v: item.dept_name,
+              h: item.dept_name
+            };
+            sheet[`J${num + index}`] = { v: item.name, h: item.name };
+            sheet[`N${num + index}`] = {
+              v: Math.floor(item.bef_mileage),
+              t: 'n',
+              h: Math.floor(item.bef_mileage)
+            };
+            sheet[`T${num + index}`] = {
+              v: Math.floor(item.aft_mileage),
+              t: 'n',
+              h: Math.floor(item.aft_mileage)
+            };
+            sheet[`Z${num + index}`] = {
+              v: Math.floor(item.distance),
+              t: 'n',
+              h: Math.floor(item.distance)
+            };
+            sheet[`AF${num + index}`] = {
+              v: Math.floor(item.commute_mileage),
+              t: 'n',
+              h: Math.floor(item.commute_mileage)
+            };
+            sheet[`AL${num + index}`] = {
+              v: Math.floor(item.nomal_biz_mileage),
+              t: 'n',
+              h: Math.floor(item.nomal_biz_mileage)
+            };
+          });
+          // 스타일 지정
+          const array = [
+            'A2',
+            'H3',
+            'AK2',
+            'AK4',
+            'A8',
+            'K8',
+            'A11',
+            'A12',
+            'F12',
+            'F13',
+            'J13',
+            'N12',
+            'N13',
+            'T13',
+            'Z13',
+            'AF13',
+            'AF14',
+            'AL14',
+            'AR13',
+            'N51',
+            'AF51',
+            'AR51'
+          ];
+          array.map((item) => {
+            const currentValue = sheet[item].v; // 값
+            const currentToolTip = sheet[item].h; // 툴팁
+            sheet[item] = {
+              v: currentValue,
+              h: currentToolTip,
+              s: {
+                font: { sz: 10 },
+                alignment: { horizontal: 'center', vertical: 'center' }
+              }
+            };
+          });
+          const currentP2Value = sheet['P2'].v;
+          const currentP2ToolTip = sheet['P2'].h;
+          sheet['P2'] = {
+            v: currentP2Value,
+            h: currentP2ToolTip,
             s: {
-              font: { sz: 10 },
+              font: { bold: true, sz: 18 },
               alignment: { horizontal: 'center', vertical: 'center' }
             }
           };
+          const writeOptions = {
+            bookType: 'xlsx',
+            type: 'array',
+            bookSST: false
+          };
+          const workbookData = XLSX.write(workbook, writeOptions);
+          const blob = new Blob([workbookData], {
+            type: 'application/octet-stream'
+          });
+          resolve(blob); // Promise를 사용하여 blob 반환
+        })
+        .catch((error) => {
+          console.error('Error loading the Excel file:', error);
         });
+    });
+  };
 
-        const currentP2Value = sheet['P2'].v;
-        const currentP2ToolTip = sheet['P2'].h;
-        sheet['P2'] = {
-          v: currentP2Value,
-          h: currentP2ToolTip,
-          s: {
-            font: { bold: true, sz: 18 },
-            alignment: { horizontal: 'center', vertical: 'center' }
-          }
-        };
-
-        const writeOptions = {
-          bookType: 'xlsx',
-          type: 'array',
-          bookSST: false
-        };
-
-        const workbookData = XLSX.write(workbook, writeOptions);
-        const blob = new Blob([workbookData], {
-          type: 'application/octet-stream'
+  // 한 차량의 운행 내역을 엑셀파일로 저장
+  const downloadMileageLog = (result, car_code, car_name) => {
+    // 차량의 운행 정보가 있는지 판단
+    if (isExistOperaion) {
+      // // 엑셀 파일 저장 로직 시작
+      const excelFilePath = process.env.PUBLIC_URL + '/test.xlsx';
+      // // 현재 년도의 첫날과 마지막 날을 Date 객체로 생성
+      const startDate = new Date(dateNow.getFullYear(), 0, 1);
+      const endDate = new Date(dateNow.getFullYear(), 11, 31);
+      // // Date 객체를 원하는 형식으로 문자열로 변환
+      const startDateString = startDate.toLocaleDateString('ko-KR');
+      const endDateString = endDate.toLocaleDateString('ko-KR');
+      fetch(excelFilePath)
+        .then((response) => response.arrayBuffer())
+        .then((data) => {
+          const readOptions = {
+            type: 'array',
+            cellStyles: true
+          };
+          const workbook = XLSX.read(data, readOptions);
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          // 셀에 데이터 저장
+          sheet['H2'] = { v: startDateString, startDateString };
+          sheet['H5'] = { v: endDateString, h: endDateString };
+          sheet['AQ2'] = { v: '더존비즈온', h: '더존비즈온' };
+          sheet['AQ4'] = { v: '123-45-67890', h: '123-45-67890' };
+          sheet['A9'] = { v: car_name, h: car_name };
+          sheet['K9'] = { v: car_code, h: car_code };
+          result.map((item, index) => {
+            const num = 15;
+            console.log(num + index);
+            sheet[`A${num + index}`] = {
+              v: new Date(item.created_at).toLocaleDateString(),
+              h: new Date(item.created_at).toLocaleDateString()
+            };
+            sheet[`F${num + index}`] = {
+              v: item.dept_name,
+              h: item.dept_name
+            };
+            sheet[`J${num + index}`] = { v: item.name, h: item.name };
+            sheet[`N${num + index}`] = {
+              v: Math.floor(item.bef_mileage),
+              t: 'n',
+              h: Math.floor(item.bef_mileage)
+            };
+            sheet[`T${num + index}`] = {
+              v: Math.floor(item.aft_mileage),
+              t: 'n',
+              h: Math.floor(item.aft_mileage)
+            };
+            sheet[`Z${num + index}`] = {
+              v: Math.floor(item.distance),
+              t: 'n',
+              h: Math.floor(item.distance)
+            };
+            sheet[`AF${num + index}`] = {
+              v: Math.floor(item.commute_mileage),
+              t: 'n',
+              h: Math.floor(item.commute_mileage)
+            };
+            sheet[`AL${num + index}`] = {
+              v: Math.floor(item.nomal_biz_mileage),
+              t: 'n',
+              h: Math.floor(item.nomal_biz_mileage)
+            };
+          });
+          // 스타일 지정
+          const array = [
+            'A2',
+            'H3',
+            'AK2',
+            'AK4',
+            'A8',
+            'K8',
+            'A11',
+            'A12',
+            'F12',
+            'F13',
+            'J13',
+            'N12',
+            'N13',
+            'T13',
+            'Z13',
+            'AF13',
+            'AF14',
+            'AL14',
+            'AR13',
+            'N51',
+            'AF51',
+            'AR51'
+          ];
+          array.map((item) => {
+            const currentValue = sheet[item].v; // 값
+            const currentToolTip = sheet[item].h; // 툴팁
+            sheet[item] = {
+              v: currentValue,
+              h: currentToolTip,
+              s: {
+                font: { sz: 10 },
+                alignment: { horizontal: 'center', vertical: 'center' }
+              }
+            };
+          });
+          const currentP2Value = sheet['P2'].v;
+          const currentP2ToolTip = sheet['P2'].h;
+          sheet['P2'] = {
+            v: currentP2Value,
+            h: currentP2ToolTip,
+            s: {
+              font: { bold: true, sz: 18 },
+              alignment: { horizontal: 'center', vertical: 'center' }
+            }
+          };
+          const writeOptions = {
+            bookType: 'xlsx',
+            type: 'array',
+            bookSST: false
+          };
+          const workbookData = XLSX.write(workbook, writeOptions);
+          const blob = new Blob([workbookData], {
+            type: 'application/octet-stream'
+          });
+          saveAs(blob, `${format(dateNow, 'yyMMdd')}_국세청운행기록부.xlsx`);
+        })
+        .catch((error) => {
+          console.error('Error loading the Excel file:', error);
         });
-        saveAs(blob, `${format(dateNow, 'yyMMdd')}_국세청운행기록부.xlsx`);
-      })
-      .catch((error) => {
-        console.error('Error loading the Excel file:', error);
-      });
+    }
   };
 
   return (
@@ -282,63 +476,108 @@ const MileageLogModal = ({ style, handleModalClose }) => {
           </Box>
         </Box>
         <Box display="flex" height="auto" padding="25px 0px">
-          <Grid container xs={8} spacing={2} height="fit-content">
+          <Grid
+            container
+            xs={8}
+            spacing={2}
+            height="fit-content"
+            sx={{
+              '& .MuiFormControl-root': {
+                backgroundColor: '#ffffff'
+              }
+            }}
+          >
             <StyledLabelGrid item xs={2.5}>
               <Label htmlFor={'carMaint'} text={'차량 선택'} />
             </StyledLabelGrid>
             <Grid item xs={8.8}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={carOptions}
-                value={autoCompleteValue}
-                onChange={(event, newValue, clear) => {
-                  if (clear === 'clear') {
-                    setAutoCompleteValue(null);
-                    setMileageLogData({
-                      ...mileageLogData,
-                      car_code: '',
-                      car_name: ''
-                    });
-                  } else {
-                    setAutoCompleteValue(newValue);
-                    setMileageLogData({
-                      ...mileageLogData,
-                      car_code: newValue.car_code,
-                      car_name: newValue.car_name
-                    });
-                  }
-                }}
-                getOptionLabel={(option) => option.car_code}
-                noOptionsText="검색한 차량이 존재하지 않습니다"
-                renderOption={(props, option) => (
-                  <Box component="li" display="flex" {...props}>
-                    <Typography variant="subtitle2" marginRight="4px">
-                      {option.car_code}
-                    </Typography>
-                    <Typography variant="caption">{option.car_name}</Typography>
-                  </Box>
-                )}
-                sx={{
-                  width: 'auto',
-                  '& .MuiInputBase-root': {
-                    height: '40px',
-                    backgroundColor: '#ffffff'
-                  },
-                  '& .MuiOutlinedInput-input': {
-                    padding: '8px 10px !important'
-                  }
-                }}
-                PopoverProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 200
-                    }
-                  }
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
+              <FormControl>
+                <RadioGroup
+                  row
+                  name="row-radio-buttons-group"
+                  value={radioStatus}
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel
+                    value={1}
+                    control={<Radio />}
+                    label="전체 차량"
+                  />
+                  <FormControlLabel
+                    value={2}
+                    control={<Radio />}
+                    label="선택 차량"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Grid>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'end' }}>
+              <Collapse
+                sx={{
+                  width: '75%',
+                  marginRight: '20px',
+                  '& .MuiInputBase-root': {
+                    backgroundColor: '#eef2f6 !important'
+                  }
+                }}
+                in={openSearchCar}
+              >
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={carOptions}
+                  value={autoCompleteValue}
+                  onChange={(event, newValue, clear) => {
+                    if (clear === 'clear') {
+                      setAutoCompleteValue(null);
+                      setMileageLogData({
+                        ...mileageLogData,
+                        car_code: '',
+                        car_name: ''
+                      });
+                    } else {
+                      setAutoCompleteValue(newValue);
+                      setMileageLogData({
+                        ...mileageLogData,
+                        car_code: newValue.car_code,
+                        car_name: newValue.car_name
+                      });
+                    }
+                  }}
+                  getOptionLabel={(option) => option.car_code}
+                  noOptionsText="검색한 차량이 존재하지 않습니다"
+                  renderOption={(props, option) => (
+                    <Box component="li" display="flex" {...props}>
+                      <Typography variant="subtitle2" marginRight="4px">
+                        {option.car_code}
+                      </Typography>
+                      <Typography variant="caption">
+                        {option.car_name}
+                      </Typography>
+                    </Box>
+                  )}
+                  sx={{
+                    width: 'auto',
+                    '& .MuiInputBase-root': {
+                      height: '40px',
+                      backgroundColor: '#ffffff'
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      padding: '8px 10px !important'
+                    }
+                  }}
+                  PopoverProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: 200
+                      }
+                    }
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Collapse>
+            </Grid>
+
             <StyledLabelGrid item xs={2.5}>
               <Label htmlFor={'carMaint'} text={'기간 선택'} />
             </StyledLabelGrid>
