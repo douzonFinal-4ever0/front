@@ -1,23 +1,23 @@
+import styled from '@emotion/styled';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
 // @mui -------------------------------------------
 import {
+  Button,
+  Collapse,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse,
-  Button,
   Stack
 } from '@mui/material';
 // @icons -------------------------------------------
 import {
-  MeetingRoomOutlined,
-  DirectionsCarFilledOutlined,
   ContentPaste,
+  DirectionsCarFilledOutlined,
+  KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
-  KeyboardArrowDownOutlined
+  MeetingRoomOutlined
 } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
 
@@ -64,7 +64,8 @@ const MenuList = (props) => {
       icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '회의실', url: '/mr/admin/MrRegister' },
-        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' }
+        { index: 2, title: '회의실 예약 상황', url: '/mr/admin/MrList' },
+        { index: 3, title: '회의실 통계', url: '/mr/admin/MrStatistics' }
       ]
     },
     {

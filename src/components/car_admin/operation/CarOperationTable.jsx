@@ -189,7 +189,8 @@ const CarOperationTable = ({
           '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
             outline: 'none !important'
           },
-          overflowX: 'auto'
+          overflowX: 'auto',
+          '& .MuiDataGrid-row': { cursor: 'pointer' }
         }}
         rowHeight={90}
       />

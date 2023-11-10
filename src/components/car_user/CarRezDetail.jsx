@@ -65,7 +65,7 @@ const CarRezDetail = ({ rezCode }) => {
   }, []);
 
   const cancelRez = () => {
-    axios
+    axiosInstance.axiosInstance
       .delete(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
       .then((res) => {
         if (res.status === 204) {
@@ -216,7 +216,7 @@ const CarRezDetail = ({ rezCode }) => {
               >
                 기본 정보
               </Typography>
-              {(rezData.rez_status !== null) & (rezData.rez_status !== '3') ? (
+              {rezData.rez_status !== null && rezData.rez_status !== '5' ? (
                 <Grid
                   container
                   xs={12}
@@ -224,7 +224,7 @@ const CarRezDetail = ({ rezCode }) => {
                   justifyContent="right"
                   spacing={2}
                 >
-                  {rezData.rez_status !== '1' ? (
+                  {rezData.rez_status !== '1' && rezData.rez_status !== '4' ? (
                     <Button
                       sx={{
                         backgroundColor: '#607d8b',
@@ -239,7 +239,6 @@ const CarRezDetail = ({ rezCode }) => {
                   ) : (
                     ''
                   )}
-
                   <Button
                     sx={{
                       backgroundColor: '#607d8b',
@@ -251,16 +250,6 @@ const CarRezDetail = ({ rezCode }) => {
                   >
                     예약 취소
                   </Button>
-                  {/* <Button
-                    sx={{
-                      backgroundColor: '#607d8b',
-                      ':hover': { backgroundColor: '#455a64' },
-                      margin: '0px 4px'
-                    }}
-                    variant="contained"
-                  >
-                    운행 완료
-                  </Button> */}
                 </Grid>
               ) : (
                 ''

@@ -1,25 +1,14 @@
 import React, { useEffect } from 'react';
 import Editor from '../../components/mr_admin/Editor';
 import SubHeader from '../../components/common/SubHeader';
-import {
-  Box,
-  TextField,
-  Container,
-  Select,
-  MenuItem,
-  FormControl,
-  Grid
-} from '@mui/material';
+import { TextField, Select, MenuItem, Grid } from '@mui/material';
 import { useState } from 'react';
 import OnOffSwitch from '../../components/mr_admin/OnOffSwitch';
-import MainContainer from '../../components/mr_user/MainContainer';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import { Form, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../../components/common/RectangleBtn';
-import Selectbox from '../../components/common/Selectbox';
 import styled from 'styled-components';
-import Label from '../../components/common/Label';
 import { useDispatch, useSelector } from 'react-redux';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import {
@@ -57,11 +46,16 @@ const MrNotice = () => {
   };
   /**공지사랑 등록 버튼 이벤트 */
   const handleClick = () => {
-    axiosInstance.axiosInstance.post('/mr/notice', FormtoData).then(() => {
-      handleOpenSnackbar();
-      handleSetSnackbarContent('공지사항이 등록되었습니다.');
-      navigate('../NoticeList');
-    });
+    axiosInstance.axiosInstance
+      .post('/mr/notice', FormtoData)
+      .then(() => {
+        handleOpenSnackbar();
+        handleSetSnackbarContent('공지사항이 등록되었습니다.');
+        navigate('../NoticeList');
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
     // console.log('텍스트:' + editorData);
     // console.log('공개 여부: ' + isPublic); // OnOff 스위치 상태 출력
   };
@@ -82,10 +76,15 @@ const MrNotice = () => {
   };
   /**템플릿을 불러오는 useEffect */
   useEffect(() => {
-    axiosInstance.axiosInstance.get('/mr/template').then((res) => {
-      // console.log(res.data);
-      setTemplate(res.data);
-    });
+    axiosInstance.axiosInstance
+      .get('/mr/template')
+      .then((res) => {
+        // console.log(res.data);
+        setTemplate(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   }, []);
 
   return (
