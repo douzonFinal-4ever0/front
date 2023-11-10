@@ -6,9 +6,11 @@ import {
   ListItemText,
   Stack,
   Typography,
-  Box
+  Box,
+  Avatar
 } from '@mui/material';
 import styled from '@emotion/styled';
+import QRcode from '../../../../components/mr_user/QRcode';
 
 const RezInfo = ({ data }) => {
   const { pathname } = useLocation();
@@ -21,9 +23,9 @@ const RezInfo = ({ data }) => {
     rez_start_time,
     rez_end_time,
     master,
-    created_at
+    created_at,
+    pt_list
   } = data;
-
   return (
     <Box
       component={'section'}
@@ -32,8 +34,7 @@ const RezInfo = ({ data }) => {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        borderRadius: '8px',
-        overflow: 'auto'
+        borderRadius: '8px'
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: '10px' }}>
@@ -93,7 +94,8 @@ const RezInfo = ({ data }) => {
                   <ListItem>
                     <ListItemText>
                       <Typography variant="subtitle1">
-                        {master.name} {master.position_name}
+                        {master.name} {master.position_name}(
+                        {master.deptVO.dept_name})
                       </Typography>
                     </ListItemText>
                   </ListItem>
@@ -286,17 +288,69 @@ const RezInfo = ({ data }) => {
               }}
             >
               <Stack direction={'row'}>
-                <Grid item xs={5}>
+                <Grid item xs={12}>
                   <ListItem className="infoTitle">
-                    <ListItemText primary="예약자" />
+                    <ListItemText primary="참석자" />
                   </ListItem>
+                  <ListItemText sx={{ padding: '10px ' }}>
+                    {pt_list.map((mem, index) => (
+                      <Stack direction={'row'} sx={{ marginBottom: '10px' }}>
+                        <Avatar />
+                        <Typography
+                          key={index}
+                          variant="subtitle1"
+                          sx={{
+                            marginLeft: '10px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {mem.memVO.name} {mem.memVO.position_name} (
+                          {mem.memVO.deptVO.dept_name})
+                        </Typography>
+                      </Stack>
+                    ))}
+                  </ListItemText>
                 </Grid>
-                <Grid item xs={7}>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant="subtitle1">{'에스더씨'}</Typography>
-                    </ListItemText>
+              </Stack>
+            </Grid>
+          </Box>
+        </Box>
+
+        {/* QR 코드 */}
+        <Box>
+          <Typography variant="subtitle1" sx={{ margin: '16px 0 8px' }}>
+            QR 코드 정보
+          </Typography>
+          <Box>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                '& .infoTitle': {
+                  backgroundColor: '#eeeeee'
+                },
+                '& .MuiListItem-gutters': {
+                  borderBottom: '1px solid #bdbdbd',
+                  borderTop: '1px solid #bdbdbd'
+                }
+              }}
+            >
+              <Stack direction={'row'}>
+                <Grid item xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="QR 코드" />
                   </ListItem>
+                  <ListItemText
+                    sx={{
+                      padding: '10px ',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <QRcode srcValue={'http://www.naver.com'} />
+                  </ListItemText>
                 </Grid>
               </Stack>
             </Grid>
@@ -308,12 +362,3 @@ const RezInfo = ({ data }) => {
 };
 
 export default RezInfo;
-
-const StyledStepText = styled(Typography)(({ theme }) => ({
-  paddingBottom: '6px',
-  display: 'flex',
-  alignItems: 'center',
-  fontSize: '18px',
-  fontWeight: 'bold',
-  borderBottom: '3px solid black'
-}));

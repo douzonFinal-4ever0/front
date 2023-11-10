@@ -17,6 +17,7 @@ import { useState } from 'react';
 import RezInfo from '../../rez_confirm/section/RezInfo';
 import { useEffect } from 'react';
 import axiosInstance from '../../../../utils/axios';
+import { palette } from '../../../../theme/palette';
 
 const RezDetailModal = ({ open, handleModal, data, isModify }) => {
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -51,7 +52,8 @@ const RezDetailModal = ({ open, handleModal, data, isModify }) => {
     rez_start_time: data && data.rez_start_time,
     rez_end_time: data && data.rez_end_time,
     master: data && data.master,
-    created_at: data && data.created_at
+    created_at: data && data.created_at,
+    pt_list: data && data.mr_pt_list
   };
 
   const handleConfirmBtn = () => {};
@@ -61,7 +63,6 @@ const RezDetailModal = ({ open, handleModal, data, isModify }) => {
       onClose={handleCancelBtn}
       fullWidth={true}
       maxWidth={'md'}
-      // sx={{ height: '850px' }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
@@ -76,7 +77,21 @@ const RezDetailModal = ({ open, handleModal, data, isModify }) => {
         </IconButton>
       </Stack>
 
-      <DialogContent>
+      <DialogContent
+        sx={{
+          overflowY: 'auto',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: palette.grey['500'],
+            borderRadius: '10px'
+          },
+          '&::-webkit-scrollbar': {
+            width: '10px',
+            backgroundColor: '#eee',
+            borderRadius: '10px'
+          }
+        }}
+      >
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <MrInfoSection data={data.mr} />
