@@ -27,17 +27,19 @@ import RezInfo from './section/RezInfo';
 const MrRezConfirmPage = () => {
   const rezData = useSelector(setRezData).payload.mrUser;
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
-  const {
-    m_name,
-    rez_date,
-    rez_end_time,
-    rez_start_time,
-    mr_pt_list,
-    mr_code
-  } = rezData;
   const { list } = mrRecommendData;
-  const mr = list.filter((item) => item.mr_code === mr_code);
-  const { mr_name, location } = mr[0];
+  const mr = list.filter((item) => item.mr_code === rezData.mr_code);
+
+  const info = {
+    m_name: rezData && rezData.m_name,
+    mr_name: mr.length !== 0 && mr[0].mr_name,
+    location: mr.length !== 0 && mr[0].location,
+    rez_date: rezData && rezData.rez_date,
+    rez_start_time: rezData && rezData.rez_start_time,
+    rez_end_time: rezData && rezData.rez_end_time,
+    created_at: mr.length !== 0 && mr[0].created_at,
+    pt_list: rezData && rezData.mr_pt_list
+  };
 
   return (
     <>
@@ -71,14 +73,13 @@ const MrRezConfirmPage = () => {
                 </Box>
               </Grid>
 
-              <Grid item container xs={4}>
-                <RezInfo
-                  mr_name={mr_name}
-                  location={location}
-                  rez_date={rez_date}
-                  rez_start_time={rez_start_time}
-                  rez_end_time={rez_end_time}
-                />
+              <Grid
+                item
+                container
+                xs={4}
+                sx={{ overflowY: 'auto', maxHeight: '600px' }}
+              >
+                <RezInfo data={info} />
               </Grid>
             </Grid>
           </WrapContainer>

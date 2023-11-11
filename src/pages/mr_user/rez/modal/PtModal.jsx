@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   Box,
@@ -22,6 +23,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
+import { setRezData } from '../../../../redux/reducer/mrUserSlice';
 import Toggle from '../../../../components/common/Toggle';
 import axiosInstance from '../../../../utils/axios';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
@@ -516,6 +518,8 @@ const PtModal = ({
   setBmGroupList,
   setIsToggleBmMemList
 }) => {
+  const dispatch = useDispatch();
+  const rezData = useSelector(setRezData).payload.mrUser;
   // 좌측 탭 메뉴 (토글)
   const [selectTab, setSelectTab] = useState('all');
   // 선택된 사용자 임시 리스트 (*적용 대상에 추가되기 전 선택된 사용자들)
@@ -624,6 +628,9 @@ const PtModal = ({
     // 조직도 적용 대상에 데이터가 있는 경우
     if (applyMemberList.length !== 0) {
       setPtList(applyMemberList);
+      dispatch(
+        setRezData({ data: { ...rezData, mr_pt_list: applyMemberList } })
+      );
     }
 
     if (applyBmGroupList.length !== 0) {

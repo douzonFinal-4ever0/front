@@ -28,6 +28,10 @@ const MrRezCalendar = ({ events, data }) => {
     setOpen(!open);
   };
 
+  const handleModifyMode = () => {
+    setIsModify(!isModify);
+  };
+
   const handleEventClick = (e) => {
     const info = e.event._def;
     const { title, publicId } = info; // publicId -> 예약 코드
@@ -73,6 +77,7 @@ const MrRezCalendar = ({ events, data }) => {
         handleModal={handleModal}
         data={rezDetail}
         isModify={isModify}
+        handleModifyMode={handleModifyMode}
       />
     </>
   );

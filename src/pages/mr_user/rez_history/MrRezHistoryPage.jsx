@@ -36,7 +36,7 @@ const MrRezHistoryPage = () => {
 
   useEffect(() => {
     getMrRezApi();
-  }, []);
+  }, [rezList]);
 
   const getMrRezApi = async () => {
     try {
@@ -67,8 +67,6 @@ const MrRezHistoryPage = () => {
       res.data.forEach((rez) => {
         rez.role = '예약자';
       });
-
-      console.log(lestPtList);
 
       // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];

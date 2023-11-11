@@ -56,7 +56,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   // 예약버튼 활성화 여부
   const [isDisabled, setisDisabled] = useState(true);
   // 참석자 리스트
-  const [ptList, setPtList] = useState([]);
+  const [ptList, setPtList] = useState(mr_pt_list);
 
   useEffect(() => {
     if (
