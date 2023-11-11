@@ -150,16 +150,16 @@ const MrRezHistoryPage = () => {
               <WrapContainer bgcolor={'#fff'}>
                 <Grid container sx={{ height: '200px' }}>
                   <Grid item xs={3}>
-                    이번주 회의실 예약 횟수
+                    예약
                   </Grid>
                   <Grid item xs={3}>
-                    평균 회의실 이용 시간
+                    예약
                   </Grid>
                   <Grid item xs={3}>
-                    dasd
+                    예약
                   </Grid>
                   <Grid item xs={3}>
-                    dasd
+                    예약
                   </Grid>
                 </Grid>
               </WrapContainer>
@@ -192,7 +192,7 @@ const MrRezHistoryPage = () => {
                       }
                     }}
                   >
-                    {todayRezList ? (
+                    {todayRezList.length !== 0 ? (
                       todayRezList.map((item, index) => (
                         <TimelineItem key={index}>
                           <TimelineSeparator>

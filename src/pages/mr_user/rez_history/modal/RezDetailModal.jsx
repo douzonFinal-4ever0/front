@@ -249,11 +249,17 @@ const RezDetailModal = ({
             <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
               <RectangleBtn
                 type={'button'}
-                text={data.role === '예약자' ? '삭제' : '확인'}
+                text={
+                  data.role === '예약자' ? (isModify ? '취소' : '삭제') : '확인'
+                }
                 category={'cancel'}
                 sx={{ padding: '10px 8px' }}
                 handlebtn={
-                  data.role === '예약자' ? handleDeletBtn : handleCancelBtn
+                  data.role === '예약자'
+                    ? isModify
+                      ? handleCancelBtn
+                      : handleDeletBtn
+                    : handleCancelBtn
                 }
               />
               {data.role === '예약자' ? (
