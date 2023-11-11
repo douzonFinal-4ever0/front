@@ -36,7 +36,7 @@ const MrRezHistoryPage = () => {
 
   useEffect(() => {
     getMrRezApi();
-  }, [rezList]);
+  }, []);
 
   const getMrRezApi = async () => {
     try {
@@ -171,7 +171,11 @@ const MrRezHistoryPage = () => {
                   <Typography variant="h6" sx={{ marginBottom: '30px' }}>
                     전체 예약 현황
                   </Typography>
-                  <MrRezCalendar events={events} data={rezList} />
+                  <MrRezCalendar
+                    events={events}
+                    data={rezList}
+                    getMrRezApi={getMrRezApi}
+                  />
                 </WrapContainer>
               </Grid>
 

@@ -27,18 +27,20 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
+import DeleteModal from './DeleteModal';
 
 const RezDetailModal = ({
   open,
   handleModal,
   data,
   isModify,
-  handleModifyMode
+  handleModifyMode,
+  getMrRezApi
 }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
-
+  const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const detailInfo = {
     m_name: data && data.m_name,
@@ -52,7 +54,43 @@ const RezDetailModal = ({
     pt_list: data && data.mr_pt_list
   };
 
-  // 취소 버튼 이벤트
+  // 삭제 모달창 취소 이벤트
+  const handleDeleteModalClose = () => {
+    setDeleteModal(false);
+  };
+
+  // 삭세 모달창 삭제 확인 이벤트
+  const handleDeleteConfirm = async () => {
+    try {
+      console.log(data.mr_rez_code);
+      const res = await axiosInstance.axiosInstance.delete(
+        `/mr/rez?mr_rez_code=${data.mr_rez_code}`
+      );
+
+      if (res.status !== 200) return;
+
+      getMrRezApi(); // 페이지 재로드
+
+      // 스낵바
+      handleSetSnackbarContent('예약 삭제 되었습니다. ');
+      handleOpenSnackbar();
+
+      handleModifyMode();
+      handleModal();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
+  // 확인 & 취소 버튼 이벤트
   const handleCancelBtn = () => {
     // 수정모드 시
     if (isModify === true) {
@@ -99,14 +137,6 @@ const RezDetailModal = ({
     handleModifyMode();
   };
 
-  const handleOpenSnackbar = () => {
-    dispatch(openSanckbar());
-  };
-
-  const handleSetSnackbarContent = (content) => {
-    dispatch(setSnackbarContent(content));
-  };
-
   // 수정 완료 버튼 이벤트
   const handleSaveBtn = () => {
     try {
@@ -117,6 +147,7 @@ const RezDetailModal = ({
           mr_rez_code: data.mr_rez_code
         };
 
+        console.log('newData', newData);
         const res = await axiosInstance.axiosInstance.put('/mr/rez', newData);
         if (res.status !== 200) return;
 
@@ -134,6 +165,7 @@ const RezDetailModal = ({
         };
 
         dispatch(setRezData({ data: initialState }));
+        getMrRezApi(); // 페이지 재로드
 
         // 스낵바
         handleSetSnackbarContent('예약 수정 완료되었습니다. ');
@@ -148,86 +180,101 @@ const RezDetailModal = ({
       console.log(err);
     }
   };
+
+  // 삭제 버튼 이벤트
+  const handleDeletBtn = () => {
+    setDeleteModal(true);
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={handleCancelBtn}
-      fullWidth={true}
-      maxWidth={'md'}
-    >
-      <Stack direction={'row'} justifyContent={'space-between'}>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h5">회의실 예약 정보</Typography>
-        </DialogTitle>
-        <IconButton
-          onClick={handleCancelBtn}
-          aria-label="close"
-          sx={{ padding: '24px' }}
-        >
-          <CloseRoundedIcon />
-        </IconButton>
-      </Stack>
-
-      <DialogContent
-        sx={{
-          maxHeight: '561px',
-          overflowY: 'auto',
-          scrollbarWidth: 'none',
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: palette.grey['500'],
-            borderRadius: '10px'
-          },
-          '&::-webkit-scrollbar': {
-            width: '10px',
-            backgroundColor: '#eee',
-            borderRadius: '10px'
-          }
-        }}
+    <>
+      <Dialog
+        open={open}
+        onClose={handleCancelBtn}
+        fullWidth={true}
+        maxWidth={'md'}
       >
-        <Grid container spacing={3}>
-          <Grid item xs={6}>
-            <MrInfoSection data={data.mr} />
-          </Grid>
-          <Grid item xs={6} sx={{ width: '100%' }}>
-            {isModify ? (
-              <RezSection data={data.mr} isReadOnly={isReadOnly} />
-            ) : (
-              <RezInfo data={detailInfo} />
-            )}
-          </Grid>
-        </Grid>
-      </DialogContent>
+        <Stack direction={'row'} justifyContent={'space-between'}>
+          <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="h5">회의실 예약 정보</Typography>
+          </DialogTitle>
+          <IconButton
+            onClick={handleCancelBtn}
+            aria-label="close"
+            sx={{ padding: '24px' }}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
+        </Stack>
 
-      <DialogActions sx={{ paddingBottom: '20px' }}>
-        <Box
+        <DialogContent
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-
-            width: '100%'
+            maxHeight: '561px',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: palette.grey['500'],
+              borderRadius: '10px'
+            },
+            '&::-webkit-scrollbar': {
+              width: '10px',
+              backgroundColor: '#eee',
+              borderRadius: '10px'
+            }
           }}
         >
-          <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
-            <RectangleBtn
-              type={'button'}
-              text={data.role === '예약자' ? '취소' : '확인'}
-              category={'cancel'}
-              sx={{ padding: '10px 8px' }}
-              handlebtn={handleCancelBtn}
-            />
-            {data.role === '예약자' ? (
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <MrInfoSection data={data.mr} />
+            </Grid>
+            <Grid item xs={6} sx={{ width: '100%' }}>
+              {isModify ? (
+                <RezSection data={data.mr} isReadOnly={isReadOnly} />
+              ) : (
+                <RezInfo data={detailInfo} />
+              )}
+            </Grid>
+          </Grid>
+        </DialogContent>
+
+        <DialogActions sx={{ paddingBottom: '20px' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+
+              width: '100%'
+            }}
+          >
+            <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
               <RectangleBtn
                 type={'button'}
-                text={isModify ? '완료' : '수정'}
-                category={'register'}
+                text={data.role === '예약자' ? '삭제' : '확인'}
+                category={'cancel'}
                 sx={{ padding: '10px 8px' }}
-                handlebtn={isModify ? handleSaveBtn : handleModifyBtn}
+                handlebtn={
+                  data.role === '예약자' ? handleDeletBtn : handleCancelBtn
+                }
               />
-            ) : null}
+              {data.role === '예약자' ? (
+                <RectangleBtn
+                  type={'button'}
+                  text={isModify ? '완료' : '수정'}
+                  category={'register'}
+                  sx={{ padding: '10px 8px' }}
+                  handlebtn={isModify ? handleSaveBtn : handleModifyBtn}
+                />
+              ) : null}
+            </Box>
           </Box>
-        </Box>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
+      <DeleteModal
+        open={deleteModal}
+        handleClose={handleDeleteModalClose}
+        handleConfirm={handleDeleteConfirm}
+      />
+    </>
   );
 };
 
