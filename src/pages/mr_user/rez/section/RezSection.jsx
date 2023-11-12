@@ -106,13 +106,29 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
     dispatch(setRezData({ data }));
     try {
       const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
+      console.log('*******상태코드******');
+      console.log(res.status);
+
       if (res.status === 201) {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
         navigation('/mr/rez/confirm');
+        return;
+      } else if (res.status === 400) {
+        // 서버에서 상태 코드 400이면 중복 예약
+        alert('이미 예약된 회의실입니다.');
+        return;
+      } else if (res.status === 405) {
+        // 서버에서 상태 코드 405이면 Method Not Allowed
+        alert('올바르지 않은 요청입니다. 다시 시도해주세요.');
+        return;
+      } else {
+        // 다른 상태 코드에 대한 처리
+        console.log('Unexpected status code:', res.status);
       }
     } catch (err) {
-      console.log(err);
+      alert('이미 예약된 회의실입니다.');
+      console.error(err);
     }
   };
 

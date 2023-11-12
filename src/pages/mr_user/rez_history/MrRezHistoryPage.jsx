@@ -146,7 +146,7 @@ const MrRezHistoryPage = () => {
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <MainContainer>
           <Grid container spacing={2}>
-            <Grid item container xs={12}>
+            {/* <Grid item container xs={12}>
               <WrapContainer bgcolor={'#fff'}>
                 <Grid container sx={{ height: '200px' }}>
                   <Grid item xs={3}>
@@ -163,7 +163,7 @@ const MrRezHistoryPage = () => {
                   </Grid>
                 </Grid>
               </WrapContainer>
-            </Grid>
+            </Grid> */}
 
             <Grid item container spacing={2}>
               <Grid item xs={9}>
