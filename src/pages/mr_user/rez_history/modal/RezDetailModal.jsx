@@ -62,7 +62,6 @@ const RezDetailModal = ({
   // 삭세 모달창 삭제 확인 이벤트
   const handleDeleteConfirm = async () => {
     try {
-      console.log(data.mr_rez_code);
       const res = await axiosInstance.axiosInstance.delete(
         `/mr/rez?mr_rez_code=${data.mr_rez_code}`
       );
@@ -76,6 +75,7 @@ const RezDetailModal = ({
       handleOpenSnackbar();
 
       handleModifyMode();
+      handleDeleteModalClose();
       handleModal();
     } catch (err) {
       console.log(err);
@@ -141,13 +141,15 @@ const RezDetailModal = ({
   const handleSaveBtn = () => {
     try {
       const updateRezApi = async () => {
+        const pts = [...rezData.mr_pt_list, userData];
+
         const newData = {
           ...rezData,
+          mr_pt_list: pts,
           mem_code: userData.mem_code,
           mr_rez_code: data.mr_rez_code
         };
 
-        console.log('newData', newData);
         const res = await axiosInstance.axiosInstance.put('/mr/rez', newData);
         if (res.status !== 200) return;
 

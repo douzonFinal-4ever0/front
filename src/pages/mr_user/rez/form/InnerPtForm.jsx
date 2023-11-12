@@ -100,9 +100,11 @@ const InnerPtForm = ({ ptList, setPtList }) => {
 
   // 참석자 카드 삭제 버튼 이벤트
   const handleCardDeleteBtn = (e) => {
-    const index = e.currentTarget.tabIndex;
-    const copyList = [...ptList];
-    copyList.splice(index, 1);
+    const deleteIndex = e.currentTarget.tabIndex;
+    let copyList = [...ptList];
+    copyList.splice(deleteIndex, 1);
+    const newRez = { ...rezData, mr_pt_list: copyList };
+    dispatch(setRezData({ data: newRez }));
     setPtList(copyList);
     setApplyMemberList(copyList);
   };
