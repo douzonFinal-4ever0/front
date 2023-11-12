@@ -1,11 +1,10 @@
-import * as React from 'react';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { useState, useEffect } from 'react';
-import { palette } from '../../theme/palette';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -29,10 +28,12 @@ const MrTag = ({ onTagSelect, initailTagSelect, selectedRowData }) => {
       onTagSelect(initialKeywords);
     }
   }, [selectedRowData]);
+
   const handleTagSelection = (event, value) => {
     setSelectedTags(value);
     onTagSelect(value);
   };
+
   const isOptionEqualToValue = (option, value) => {
     // 여기에서 옵션과 값의 일치 여부를 정의합니다.
     return option.keyword_name === value.keyword_name;

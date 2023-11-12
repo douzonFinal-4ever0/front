@@ -25,6 +25,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import TimeField from '../../components/common/TimeField';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
   setSnackbarContent
@@ -53,6 +54,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
 
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
+  };
+  const updateBoard = () => {
+    // handleMrListUpdate 함수 디스패치
+    dispatch(handleMrListUpdate());
   };
 
   /*------------------------------------수정시 데이터--------------------------------------------*/
@@ -88,6 +93,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // console.log(initialSelectedTags);
   /** 기존에 가지고 있던 이미지 파일   */
   const initialMr_Img = selectedRowData?.mr_img?.map((urls) => urls.url) || [];
+  console.log('initialMr_Img: ', initialMr_Img);
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
   const [location, setLocation] = useState(initialLocation);
@@ -117,6 +123,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     setSelectedTags(tags);
     setNewSelectedTags(tags);
   };
+  console.log(selectedTags);
   console.log(newselectedTags);
   /*---------------------------------이미지 저장---------------------------------- */
   const [images, setImages] = useState([]); // 이미지 배열
@@ -234,6 +241,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       </Grid>
     );
   };
+  const ModalContentExample = () => {
+    return <SuppliesList />;
+  };
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
@@ -289,6 +299,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -303,6 +314,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -316,6 +328,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -482,14 +495,14 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                   <TimeField
                     withMonth={true}
                     label={'시작 시간'}
-                    timeValue={dayjs().hour(9)}
+                    timeValue={dayjs().hour(9).minute(0)}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TimeField
                     withMonth={true}
                     label={'종료 시간'}
-                    timeValue={dayjs().hour(9)}
+                    timeValue={dayjs().hour(21).minute(0)}
                   />
                 </Grid>
               </Grid>
@@ -590,7 +603,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                       sx={{
                         padding: '14px 12px'
                       }}
-                      handlebtn={() => handleImageDelete(index)}
+                      handlebtn={() => {
+                        handleImageDelete(index);
+                        console.log();
+                      }}
                     />
                   }
                 />
@@ -684,9 +700,6 @@ const VisuallyHiddenInput = styled('input')({
 });
 const daysOfWeek = ['월', '화', '수', '목', '금'];
 
-const ModalContentExample = () => {
-  return <SuppliesList />;
-};
 const StyledLabelGrid = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',

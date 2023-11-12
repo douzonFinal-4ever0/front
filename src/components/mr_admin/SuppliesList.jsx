@@ -3,7 +3,9 @@ import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import { Box, Chip, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import DataGrid from '../../components/common/DataGrid';
+// import DataGrid from '../../components/common/DataGrid';
+import { DataGrid } from '@mui/x-data-grid';
+import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../common/RectangleBtn.jsx';
 
@@ -13,6 +15,22 @@ const SuppliesList = () => {
   const [selectedSpList, setSelectedSpList] = useState([]);
   const [filteredSpList, setFilteredSpList] = useState([]); // 추가: 필터링된 목록 상태
 
+  /*------------------------------선택된 데이터---------------------------------------- */
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    setRowSelectionModel(newRowSelectionModel);
+  };
+  // 선택된 행의 데이터를 가져오는 함수
+  const getSelectedRowsData = () => {
+    const selectedRowsData = rowSelectionModel.map((rowId) => {
+      const row = SpList.find((row) => row.id === rowId);
+      return row;
+    });
+    return selectedRowsData;
+  };
+  const selectedArray = getSelectedRowsData();
+  console.log(selectedArray);
+  /*-------------------------------------------------------------------------------------- */
   useEffect(() => {
     axiosInstance.axiosInstance
       .get('/sp/spList')
@@ -47,8 +65,8 @@ const SuppliesList = () => {
       setSelectedSpList((prevSelected) => [...prevSelected, selectedRowData]);
     }
   };
-  console.log(selectedSpList);
-
+  // console.log(selectedSpList);
+  // onSelectionChange(selectedSpList);
   // console.log(SpList);
   const allList = () => {
     setFilteredSpList(SpList);
@@ -58,7 +76,6 @@ const SuppliesList = () => {
     const filteredList = SpList.filter((item) => item.type === type);
     setFilteredSpList(filteredList);
   };
-
   return (
     <>
       <Grid spacing={1}>
@@ -126,6 +143,30 @@ const SuppliesList = () => {
               }}
             >
               <DataGrid
+                sx={{
+                  border: palette.grey['500'],
+                  borderRadius: '2px',
+                  '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+                    outline: 'none !important'
+                  },
+                  width: 'auto'
+                }}
+                rows={filteredSpList}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[5, 10]}
+                checkboxSelection
+                onRowSelectionModelChange={handleRowSelectionModelChange}
+                rowSelectionModel={rowSelectionModel}
+              />
+
+              {/* <DataGrid
                 columns={columns}
                 rows={filteredSpList}
                 pageSize={10}
@@ -133,7 +174,7 @@ const SuppliesList = () => {
                 clickEvent={handleClick}
                 sx={{ width: 'auto' }}
                 checkbox={true}
-              />
+              /> */}
             </Box>
           </Grid>
         </Grid>

@@ -13,7 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DataGrid from '../../components/common/DataGrid';
 import Drawer from '../../components/common/Drawer';
 import RectangleBtn from '../../components/common/RectangleBtn';
@@ -49,17 +49,29 @@ const MrRegister = () => {
       console.log(filteredMrList);
     };
     return (
-      <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
-        <RectangleBtn
-          category={'register'}
-          text={'회의실 등록'}
-          sx={{
-            padding: '14px 12px',
-            margin: '1px',
-            width: '100%'
-          }}
-          handlebtn={handleMrRegistClick}
-        />
+      <Box
+        sx={{
+          flexGrow: 1,
+          overflow: 'hidden',
+          px: 2,
+          '& .MuiPaper-rounded2': {
+            mt: 1,
+            backgroundColor: '#f5f5f5',
+            height: '64.5vh'
+          }
+        }}
+      >
+        <Grid container sx={{ pt: 3, pl: 1, pr: 1, pb: 3 }}>
+          <RectangleBtn
+            category={'register'}
+            text={'회의실 등록'}
+            sx={{
+              padding: '14px 12px',
+              width: '100%'
+            }}
+            handlebtn={handleMrRegistClick}
+          />
+        </Grid>
         <Divider />
         <Box sx={{ width: '100%' }}>
           <List>
@@ -77,7 +89,6 @@ const MrRegister = () => {
                   sx={{ pl: 4 }}
                   onClick={() => {
                     handleFilterClick('미팅룸');
-                    console.log('미팅룸');
                   }}
                 >
                   <ListItemIcon>
@@ -96,7 +107,6 @@ const MrRegister = () => {
                   sx={{ pl: 4 }}
                   onClick={() => {
                     handleFilterClick('소회의실');
-                    console.log('소회의실');
                   }}
                 >
                   <ListItemIcon>
@@ -115,7 +125,6 @@ const MrRegister = () => {
                   sx={{ pl: 4 }}
                   onClick={() => {
                     handleFilterClick('중회의실');
-                    console.log('중회의실');
                   }}
                 >
                   <ListItemIcon>
@@ -134,7 +143,6 @@ const MrRegister = () => {
                   sx={{ pl: 4 }}
                   onClick={() => {
                     handleFilterClick('대회의실');
-                    console.log('대회의실');
                   }}
                 >
                   <ListItemIcon>
@@ -153,7 +161,7 @@ const MrRegister = () => {
             </Collapse>
           </List>
         </Box>
-      </Grid>
+      </Box>
     );
   };
   const handleMrRegistClick = () => {
@@ -183,10 +191,11 @@ const MrRegister = () => {
       });
   };
 
+  const updatemrList = useSelector((state) => state.mrList);
   // useEffect를 사용하여 초기 데이터 가져오기
   useEffect(() => {
     handleMrListUpdate();
-  }, []);
+  }, [updatemrList]);
 
   /**탭에 들어가는 데이터 */
   const tabData = [

@@ -21,18 +21,32 @@ import MrInfoSection from '../mr_user/rez/section/MrInfoSection';
 const MrStatistics = () => {
   const [modalContent, setModalContent] = useState();
   const [mrResources, setMrResources] = useState({});
+  const [mrRezRank, setMrRezRank] = useState({});
+  // const [mr_code, setMr_code] = useState('');
 
   useEffect(() => {
     axiosInstance.axiosInstance
-      .get(`/mr/R022`)
+      .get(`mr/mrRezRank`)
       .then((res) => {
-        console.log(res.data);
-        setMrResources(res.data);
+        setMrRezRank(res.data);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
       });
   }, []);
+  useEffect(() => {
+    const mr_code = mrRezRank[0]?.mr_code;
+
+    axiosInstance.axiosInstance
+      .get(`mr/${mr_code}`)
+      // .get(`mr/R022`)
+      .then((res) => {
+        setMrResources(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+  }, [mrRezRank]);
 
   const handleClickAvgRezTime = () => {
     setModalContent(<MrRezTimeChart height={'500px'} width={'500px'} />);
@@ -68,7 +82,7 @@ const MrStatistics = () => {
     <CardContent>
       <MrUsageChart height={300} width={'auto'} />
       <Typography gutterBottom variant="h5" component="div">
-        회의실 이용률
+        회의실 사용률
       </Typography>
       <Typography variant="body2" color="text.secondary">
         총 31개의 회의실중 24개 회의실이 운영되었습니다.

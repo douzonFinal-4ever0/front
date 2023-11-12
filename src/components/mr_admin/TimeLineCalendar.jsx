@@ -7,13 +7,13 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection';
+import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection.jsx';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
 import axiosInstance from '../../utils/axios.js';
-import Modal from '../common/Modal';
+import Modal from '../common/Modal.jsx';
 
 const TimeLineCalendar = ({ events, resources }) => {
   const [mrResources, setMrResources] = useState({});
@@ -119,6 +119,12 @@ const TimeLineCalendar = ({ events, resources }) => {
           }
         ]}
         // eventColor="blue"
+      />
+      <Modal
+        open={open}
+        modalTitle={'회의실'}
+        handleModal={handleModal}
+        content={<ModalContentExample />}
       />
     </div>
   );
