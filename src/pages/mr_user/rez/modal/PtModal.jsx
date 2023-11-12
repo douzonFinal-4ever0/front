@@ -23,6 +23,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
+import { setUserData } from '../../../../redux/reducer/userSlice';
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
 import Toggle from '../../../../components/common/Toggle';
 import axiosInstance from '../../../../utils/axios';
@@ -51,6 +52,279 @@ const toggleData = [
     name: '즐겨찾기 멤버'
   }
 ];
+
+const PtModal = ({
+  open,
+  handleModal,
+  userCode,
+  ptList,
+  setPtList,
+  totalMemberList,
+  setTotalMemberList,
+  applyMemberList,
+  setApplyMemberList,
+  isToggleMemList,
+  setIsToggletMemList,
+  isToggleApplyList,
+  setIsToggleApplyList,
+  bmGroupList,
+  setBmGroupList,
+  setIsToggleBmMemList
+}) => {
+  const dispatch = useDispatch();
+  const userData = useSelector(setUserData).payload.user;
+  const master = userData;
+  const rezData = useSelector(setRezData).payload.mrUser;
+  // 좌측 탭 메뉴 (토글)
+  const [selectTab, setSelectTab] = useState('all');
+  // 선택된 사용자 임시 리스트 (*적용 대상에 추가되기 전 선택된 사용자들)
+  const [tempSelectMemList, setTempSelectMemLsit] = useState([]);
+  // 선택된 적용대상 임시 리스트 (*참석자 완료리스트에 추가되기 전 선택된 적용대상들)
+  const [tempApplyMemList, setTempApplyMemList] = useState([]);
+
+  // 즐겨찾기 적용대상 리스트
+  const [applyBmGroupList, setApplyBmGroupList] = useState([]);
+  // 선택된 즐겨찾기 그룹 임시 리스트
+  const [tempGroupList, setTempGroupList] = useState([]);
+  // 선택된 즐겨찾기 멤버 임시 리스트
+  const [tempBmMemList, setTempBmMemList] = useState([]);
+
+  // 좌측 토글 메뉴 클릭 이벤트
+  const handleToggleClick = (e) => {
+    setSelectTab(e.currentTarget.value);
+  };
+
+  // 추가 버튼 클릭 이벤트
+  const handleAddBtn = () => {
+    if (selectTab === 'all') {
+      let list = [];
+      tempSelectMemList &&
+        tempSelectMemList.forEach((mem) => {
+          const res = totalMemberList.filter((i) => i.mem_code === mem);
+          if (res.length !== 0) {
+            list.push(...res);
+          }
+        });
+
+      // 적용 대상 리스트 업데이트
+      setApplyMemberList([...applyMemberList, ...list]);
+      // 적용 대상 리스트 수만큼 토글 리스트 생성
+      setIsToggleApplyList(Array.from({ length: list.length }, () => false));
+      // 토글 리스트 값 생성
+      setIsToggletMemList(
+        Array.from({ length: totalMemberList.length }, () => false)
+      );
+      // 임시 리스트 초기화
+      setTempSelectMemLsit([]);
+
+      return;
+    }
+
+    if (selectTab === 'bmGroup') {
+      let list = [];
+      tempGroupList.forEach((group) => {
+        bmGroupList.forEach((data) => {
+          if (data.bm_group_name === group) {
+            list.push(data);
+          }
+        });
+      });
+
+      setApplyBmGroupList(list); // 데이터 업데이트
+      setTempGroupList([]); //초기화
+
+      return;
+    }
+
+    if (selectTab === 'bmMember') {
+      let list = [];
+      tempBmMemList &&
+        tempBmMemList.forEach((mem) => {
+          const res = totalMemberList.filter((i) => i.mem_code === mem);
+          if (res.length !== 0) {
+            list.push(...res);
+          }
+        });
+
+      // 적용 대상 리스트 업데이트
+      setApplyMemberList(list);
+
+      return;
+    }
+  };
+
+  // 제외 버튼 클릭 이벤트
+  const handleDeleteBtn = () => {
+    // 제외된 후 적용대상에 남아있는 멤버 리스트
+    const res = applyMemberList.filter(
+      (mem) => !tempApplyMemList.includes(mem.mem_code)
+    );
+    setApplyMemberList(res);
+
+    // 적용 대상 리스트 수만큼 토글 리스트 생성
+    setIsToggleApplyList(
+      Array.from({ length: applyMemberList.length }, () => false)
+    );
+  };
+
+  // 취소 버튼 클릭 이벤트
+  const handleCancelBtn = () => {
+    // 적용 대상 리스트 초기화
+    setApplyMemberList(ptList);
+    setApplyBmGroupList([]);
+    setBmGroupList([]);
+
+    // 임시 리스트 초기화
+    setTempSelectMemLsit([]);
+    setTempApplyMemList([]);
+    setTempGroupList([]);
+    setTempBmMemList([]);
+
+    handleModal();
+  };
+
+  // 확인 버튼 클릭 이벤트
+  const handleConfirmBtn = () => {
+    // 조직도 적용 대상에 데이터가 있는 경우
+    if (applyMemberList.length !== 0) {
+      setPtList([...applyMemberList, master]);
+      dispatch(
+        setRezData({ data: { ...rezData, mr_pt_list: applyMemberList } })
+      );
+    }
+
+    if (applyBmGroupList.length !== 0) {
+      setPtList(applyBmGroupList);
+    }
+
+    handleModal();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleCancelBtn}
+      fullWidth={true}
+      maxWidth={'md'}
+    >
+      {/* Modal Header */}
+      <Stack direction={'row'} justifyContent={'space-between'}>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h5">참석자 추가</Typography>
+        </DialogTitle>
+        <IconButton
+          onClick={handleModal}
+          aria-label="close"
+          sx={{ padding: '24px' }}
+        >
+          <CloseRoundedIcon />
+        </IconButton>
+      </Stack>
+
+      {/* Modal Content */}
+      <DialogContent>
+        <Grid container sx={{ display: 'flex', height: '100%' }}>
+          {/* 선택 영역 */}
+          <Grid item xs={5}>
+            <Stack sx={{ rowGap: '20px' }}>
+              <Toggle
+                data={toggleData}
+                sx={{ width: '100%' }}
+                handleToggleBtn={handleToggleClick}
+              />
+              <SelectContainer
+                tab={selectTab}
+                totalMemberList={totalMemberList}
+                tempSelectMemList={tempSelectMemList}
+                setTempSelectMemLsit={setTempSelectMemLsit}
+                isToggleMemList={isToggleMemList}
+                setIsToggletMemList={setIsToggletMemList}
+                applyMemberList={applyMemberList}
+                ptList={ptList}
+                bmGroupList={bmGroupList}
+                tempGroupList={tempGroupList}
+                setTempGroupList={setTempGroupList}
+                setIsToggleBmMemList={setIsToggleBmMemList}
+                tempBmMemList={tempBmMemList}
+                setTempBmMemList={setTempBmMemList}
+              />
+            </Stack>
+          </Grid>
+
+          {/* 버튼 영역 */}
+          <Grid
+            item
+            xs={2}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Stack spacing={1}>
+              <StyledArrowBtn aria-label="add" onClick={handleAddBtn}>
+                추가
+              </StyledArrowBtn>
+              <StyledArrowBtn aria-label="delete" onClick={handleDeleteBtn}>
+                제외
+              </StyledArrowBtn>
+            </Stack>
+          </Grid>
+
+          {/* 적용 영역 */}
+          <Grid item xs={5}>
+            <Stack sx={{ rowGap: '20px' }}>
+              <Typography variant="h6" sx={{ marginTop: '46px' }}>
+                적용 대상
+              </Typography>
+              <ApplyContainer
+                tab={selectTab}
+                applyMemberList={applyMemberList}
+                setApplyMemberList={setApplyMemberList}
+                isToggleApplyList={isToggleApplyList}
+                setIsToggleApplyList={setIsToggleApplyList}
+                tempApplyMemList={tempApplyMemList}
+                setTempApplyMemList={setTempApplyMemList}
+                applyBmGroupList={applyBmGroupList}
+                setApplyBmGroupList={setApplyBmGroupList}
+                ptList={ptList}
+                master={master}
+              />
+            </Stack>
+          </Grid>
+        </Grid>
+      </DialogContent>
+
+      <DialogActions sx={{ paddingBottom: '20px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+
+            width: '100%'
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
+            <RectangleBtn
+              type={'button'}
+              text={'취소'}
+              category={'cancel'}
+              sx={{ padding: '10px 8px' }}
+              handlebtn={handleCancelBtn}
+            />
+            <RectangleBtn
+              type={'button'}
+              text={'확인'}
+              category={'register'}
+              sx={{ padding: '10px 8px' }}
+              handlebtn={handleConfirmBtn}
+            />
+          </Box>
+        </Box>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 // 선택 영역 콘텐츠 컨테이너
 const SelectContainer = ({
@@ -129,8 +403,14 @@ const SelectContainer = ({
 
   // [조직도] 트리 아이템 클릭 이벤트
   const handleTreeItemClick = (e, nodeId) => {
-    // 부서명 클릭 시 오류 처리
+    // 부서명 클릭 시 오류 선택 불가 처리
     if (listByDeptName.includes(nodeId)) return;
+
+    // 이미 적용대상에 등록된 아이템이면 선택 불가 처리
+    const isDuplicate = applyMemberList.filter(
+      (item) => item.mem_code === nodeId
+    );
+    if (isDuplicate.length !== 0) return;
 
     // 토글 상태 변경
     const findIndex = totalMemberList.findIndex(
@@ -173,6 +453,7 @@ const SelectContainer = ({
         const isSelect = isToggleMemList[findIndex];
 
         const res = ptList.filter((mem) => mem.mem_code === userTree.mem_code);
+        // 이미 등록된 여부
         const isConfirm = res.length !== 0 ? true : false;
 
         return (
@@ -180,14 +461,15 @@ const SelectContainer = ({
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              margin: '2px 0'
+              margin: '2px 0',
+              cursor: isConfirm ? 'not-allowed' : 'pointer'
             }}
           >
             <Stack direction={'row'} gap={'4px'}>
-              <StyledUserName isSelect={isSelect}>
+              <StyledUserName isSelect={isSelect} isConfirm={isConfirm}>
                 {userTree.name}
               </StyledUserName>
-              <StyledUserEmail isSelect={isSelect}>
+              <StyledUserEmail isSelect={isSelect} isConfirm={isConfirm}>
                 {userTree.position_name}
               </StyledUserEmail>
             </Stack>
@@ -352,10 +634,13 @@ const ApplyContainer = ({
   applyBmGroupList,
   setApplyBmGroupList,
   ptList,
-  setApplyMemberList
+  setApplyMemberList,
+  master
 }) => {
   useEffect(() => {
-    setApplyMemberList(ptList);
+    // 적용대상에서 본인(예약자)는 제외
+    const res = ptList.filter((mem) => mem.mem_code !== master.mem_code);
+    setApplyMemberList(res);
   }, []);
 
   switch (tab) {
@@ -500,271 +785,6 @@ const ApplyContainer = ({
   }
 };
 
-const PtModal = ({
-  open,
-  handleModal,
-  userCode,
-  ptList,
-  setPtList,
-  totalMemberList,
-  setTotalMemberList,
-  applyMemberList,
-  setApplyMemberList,
-  isToggleMemList,
-  setIsToggletMemList,
-  isToggleApplyList,
-  setIsToggleApplyList,
-  bmGroupList,
-  setBmGroupList,
-  setIsToggleBmMemList
-}) => {
-  const dispatch = useDispatch();
-  const rezData = useSelector(setRezData).payload.mrUser;
-  // 좌측 탭 메뉴 (토글)
-  const [selectTab, setSelectTab] = useState('all');
-  // 선택된 사용자 임시 리스트 (*적용 대상에 추가되기 전 선택된 사용자들)
-  const [tempSelectMemList, setTempSelectMemLsit] = useState([]);
-  // 선택된 적용대상 임시 리스트 (*참석자 완료리스트에 추가되기 전 선택된 적용대상들)
-  const [tempApplyMemList, setTempApplyMemList] = useState([]);
-
-  // 즐겨찾기 적용대상 리스트
-  const [applyBmGroupList, setApplyBmGroupList] = useState([]);
-  // 선택된 즐겨찾기 그룹 임시 리스트
-  const [tempGroupList, setTempGroupList] = useState([]);
-  // 선택된 즐겨찾기 멤버 임시 리스트
-  const [tempBmMemList, setTempBmMemList] = useState([]);
-
-  // 좌측 토글 메뉴 클릭 이벤트
-  const handleToggleClick = (e) => {
-    setSelectTab(e.currentTarget.value);
-  };
-
-  // 추가 버튼 클릭 이벤트
-  const handleAddBtn = () => {
-    if (selectTab === 'all') {
-      let list = [];
-      tempSelectMemList &&
-        tempSelectMemList.forEach((mem) => {
-          const res = totalMemberList.filter((i) => i.mem_code === mem);
-          if (res.length !== 0) {
-            list.push(...res);
-          }
-        });
-
-      // 적용 대상 리스트 업데이트
-      setApplyMemberList([...applyMemberList, ...list]);
-      // 적용 대상 리스트 수만큼 토글 리스트 생성
-      setIsToggleApplyList(Array.from({ length: list.length }, () => false));
-      // 토글 리스트 값 생성
-      setIsToggletMemList(
-        Array.from({ length: totalMemberList.length }, () => false)
-      );
-    }
-
-    if (selectTab === 'bmGroup') {
-      let list = [];
-      tempGroupList.forEach((group) => {
-        bmGroupList.forEach((data) => {
-          if (data.bm_group_name === group) {
-            list.push(data);
-          }
-        });
-      });
-
-      setApplyBmGroupList(list); // 데이터 업데이트
-      setTempGroupList([]); //초기화
-    }
-
-    if (selectTab === 'bmMember') {
-      let list = [];
-      tempBmMemList &&
-        tempBmMemList.forEach((mem) => {
-          const res = totalMemberList.filter((i) => i.mem_code === mem);
-          if (res.length !== 0) {
-            list.push(...res);
-          }
-        });
-
-      // 적용 대상 리스트 업데이트
-      setApplyMemberList(list);
-    }
-  };
-
-  // 제외 버튼 클릭 이벤트
-  const handleDeleteBtn = () => {
-    tempApplyMemList &&
-      tempApplyMemList.forEach((mem) => {
-        const res = applyMemberList.filter((i) => i.mem_code !== mem);
-        if (res.length !== 0) {
-          // 적용 대상 리스트 업데이트
-          setApplyMemberList(res);
-        }
-      });
-
-    // 적용 대상 리스트 수만큼 토글 리스트 생성
-    setIsToggleApplyList(
-      Array.from({ length: applyMemberList.length }, () => false)
-    );
-  };
-
-  // 취소 버튼 클릭 이벤트
-  const handleCancelBtn = () => {
-    // 적용 대상 리스트 초기화
-    setApplyMemberList(ptList);
-    setApplyBmGroupList([]);
-    setBmGroupList([]);
-
-    // 임시 리스트 초기화
-    setTempSelectMemLsit([]);
-    setTempApplyMemList([]);
-    setTempGroupList([]);
-    setTempBmMemList([]);
-
-    handleModal();
-  };
-
-  // 확인 버튼 클릭 이벤트
-  const handleConfirmBtn = () => {
-    // 조직도 적용 대상에 데이터가 있는 경우
-    if (applyMemberList.length !== 0) {
-      setPtList(applyMemberList);
-      dispatch(
-        setRezData({ data: { ...rezData, mr_pt_list: applyMemberList } })
-      );
-    }
-
-    if (applyBmGroupList.length !== 0) {
-      setPtList(applyBmGroupList);
-    }
-
-    handleModal();
-  };
-
-  return (
-    <Dialog
-      open={open}
-      onClose={handleCancelBtn}
-      fullWidth={true}
-      maxWidth={'md'}
-    >
-      {/* Modal Header */}
-      <Stack direction={'row'} justifyContent={'space-between'}>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h5">참석자 추가</Typography>
-        </DialogTitle>
-        <IconButton
-          onClick={handleModal}
-          aria-label="close"
-          sx={{ padding: '24px' }}
-        >
-          <CloseRoundedIcon />
-        </IconButton>
-      </Stack>
-
-      {/* Modal Content */}
-      <DialogContent>
-        <Grid container sx={{ display: 'flex', height: '100%' }}>
-          {/* 선택 영역 */}
-          <Grid item xs={5}>
-            <Stack sx={{ rowGap: '20px' }}>
-              <Toggle
-                data={toggleData}
-                sx={{ width: '100%' }}
-                handleToggleBtn={handleToggleClick}
-              />
-              <SelectContainer
-                tab={selectTab}
-                totalMemberList={totalMemberList}
-                tempSelectMemList={tempSelectMemList}
-                setTempSelectMemLsit={setTempSelectMemLsit}
-                isToggleMemList={isToggleMemList}
-                setIsToggletMemList={setIsToggletMemList}
-                applyMemberList={applyMemberList}
-                ptList={ptList}
-                bmGroupList={bmGroupList}
-                tempGroupList={tempGroupList}
-                setTempGroupList={setTempGroupList}
-                setIsToggleBmMemList={setIsToggleBmMemList}
-                tempBmMemList={tempBmMemList}
-                setTempBmMemList={setTempBmMemList}
-              />
-            </Stack>
-          </Grid>
-
-          {/* 버튼 영역 */}
-          <Grid
-            item
-            xs={2}
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Stack spacing={1}>
-              <StyledArrowBtn aria-label="add" onClick={handleAddBtn}>
-                추가
-              </StyledArrowBtn>
-              <StyledArrowBtn aria-label="delete" onClick={handleDeleteBtn}>
-                제외
-              </StyledArrowBtn>
-            </Stack>
-          </Grid>
-
-          {/* 적용 영역 */}
-          <Grid item xs={5}>
-            <Stack sx={{ rowGap: '20px' }}>
-              <Typography variant="h6" sx={{ marginTop: '46px' }}>
-                적용 대상
-              </Typography>
-              <ApplyContainer
-                tab={selectTab}
-                applyMemberList={applyMemberList}
-                setApplyMemberList={setApplyMemberList}
-                isToggleApplyList={isToggleApplyList}
-                setIsToggleApplyList={setIsToggleApplyList}
-                tempApplyMemList={tempApplyMemList}
-                setTempApplyMemList={setTempApplyMemList}
-                applyBmGroupList={applyBmGroupList}
-                setApplyBmGroupList={setApplyBmGroupList}
-                ptList={ptList}
-              />
-            </Stack>
-          </Grid>
-        </Grid>
-      </DialogContent>
-
-      <DialogActions sx={{ paddingBottom: '20px' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-
-            width: '100%'
-          }}
-        >
-          <Box sx={{ display: 'flex', gap: '10px', width: '300px' }}>
-            <RectangleBtn
-              type={'button'}
-              text={'취소'}
-              category={'cancel'}
-              sx={{ padding: '10px 8px' }}
-              handlebtn={handleCancelBtn}
-            />
-            <RectangleBtn
-              type={'button'}
-              text={'확인'}
-              category={'register'}
-              sx={{ padding: '10px 8px' }}
-              handlebtn={handleConfirmBtn}
-            />
-          </Box>
-        </Box>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
 export default PtModal;
 
 const MinusSquare = (props) => {
@@ -849,15 +869,25 @@ const StyledContainer = styled(Box)(({ theme }) => ({
   overflowY: 'auto'
 }));
 
-const StyledUserName = styled(Typography)(({ theme, isSelect }) => ({
+const StyledUserName = styled(Typography)(({ theme, isSelect, isConfirm }) => ({
   fontSize: '15px',
   fontWeight: 'bold',
-  color: isSelect ? theme.palette.primary.main : theme.palette.grey['900']
+  color: isConfirm
+    ? theme.palette.grey['400']
+    : isSelect
+    ? theme.palette.primary.main
+    : theme.palette.grey['900']
 }));
 
-const StyledUserEmail = styled(Typography)(({ theme, isSelect }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  fontSize: '13px',
-  color: isSelect ? theme.palette.primary.main : theme.palette.grey['900']
-}));
+const StyledUserEmail = styled(Typography)(
+  ({ theme, isSelect, isConfirm }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '13px',
+    color: isConfirm
+      ? theme.palette.grey['400']
+      : isSelect
+      ? theme.palette.primary.main
+      : theme.palette.grey['900']
+  })
+);

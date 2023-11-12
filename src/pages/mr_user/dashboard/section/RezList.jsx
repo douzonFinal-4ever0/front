@@ -21,7 +21,7 @@ const RezList = ({ todayRezList }) => {
     <WrapContainer bgcolor={'#fff'}>
       <Stack
         direction={'row'}
-        sx={{ justifyContent: 'space-between', marginBottom: '20px' }}
+        sx={{ justifyContent: 'space-between', marginBottom: '10px' }}
       >
         <Typography variant="h6">오늘 예약 현황</Typography>
         <StyledLink to={'/mr/rez/history'}>
@@ -32,6 +32,7 @@ const RezList = ({ todayRezList }) => {
       <Timeline
         sx={{
           maxHeight: '500px',
+          minHeight: '300px',
           overflowY: 'auto',
           scrollbarWidth: 'none',
           '&::-webkit-scrollbar-thumb': {
