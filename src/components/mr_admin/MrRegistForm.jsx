@@ -25,6 +25,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import TimeField from '../../components/common/TimeField';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
   setSnackbarContent
@@ -54,6 +55,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
+  const updateBoard = () => {
+    // handleMrListUpdate 함수 디스패치
+    dispatch(handleMrListUpdate());
+  };
 
   /*------------------------------------수정시 데이터--------------------------------------------*/
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
@@ -65,7 +70,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // selectedTags와 같은 구조로 변환
   const initialSelectedTags =
     selectedRowData?.mr_keyword?.map((keywordItem) => ({
-      keyword_name: keywordItem.keyword_name
+      keyword_name: keywordItem.keyword_name,
+      keyword_code: keywordItem.keyword_code
     })) || []; // null 체크 추가
   /**기존에 가지고 있던 요일 데이터     */
   // const initialMr_op_day = selectedRowData?.mr_op_day?.map(
@@ -87,7 +93,12 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // console.log(initialMr_op_day_status);
   // console.log(initialSelectedTags);
   /** 기존에 가지고 있던 이미지 파일   */
-  const initialMr_Img = selectedRowData?.mr_img?.map((urls) => urls.url) || [];
+  const [initialMr_Img, setInitialMr_Img] = useState(
+    selectedRowData?.mr_img?.map((image) => ({
+      url: image.url,
+      img_code: image.img_code
+    })) || []
+  );
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
   const [location, setLocation] = useState(initialLocation);
@@ -117,7 +128,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     setSelectedTags(tags);
     setNewSelectedTags(tags);
   };
-  console.log(newselectedTags);
+  // console.log(selectedTags);
+  // console.log(newselectedTags);
   /*---------------------------------이미지 저장---------------------------------- */
   const [images, setImages] = useState([]); // 이미지 배열
   const [uploadFiles, setUploadFiles] = useState([]); // 파일 업로드용
@@ -170,13 +182,32 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
 
   // console.log(initialMr_Img);
   /**이미지 삭제 */
-  const handleImageDelete = (index) => {
+  const [deletedImgCodes, setDeletedImgCodes] = useState([]);
+  const handleImageDelete = (item, index) => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
+
     const newUploadFiles = [...uploadFiles];
     newUploadFiles.splice(index, 1);
     setUploadFiles(newUploadFiles);
+
+    const newInitialMrImg = [...initialMr_Img];
+    const removedImage = newInitialMrImg.splice(index, 1);
+    setInitialMr_Img(newInitialMrImg);
+
+    const imgCode = item.img_code;
+    setDeletedImgCodes((prevImgCodes) => [...prevImgCodes, imgCode]);
+  };
+  const deleteImage = (imgCode) => {
+    axiosInstance.axiosInstance
+      .delete(`/mr/mrImg/${imgCode}`)
+      .then((res) => {
+        setDeletedImgCodes([]);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
   /*----------------------------모달------------------------------------*/
   // 모달창 열림 여부 값*/
@@ -234,6 +265,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       </Grid>
     );
   };
+  const ModalContentExample = () => {
+    return <SuppliesList />;
+  };
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
   const dayMappings = {
@@ -289,6 +323,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -302,7 +337,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
+        deletedImgCodes.forEach((imgCode) => deleteImage(imgCode));
         handleImgUpload();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -316,6 +353,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
+        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -482,14 +520,14 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                   <TimeField
                     withMonth={true}
                     label={'시작 시간'}
-                    timeValue={dayjs().hour(9)}
+                    timeValue={dayjs().hour(9).minute(0)}
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TimeField
                     withMonth={true}
                     label={'종료 시간'}
-                    timeValue={dayjs().hour(9)}
+                    timeValue={dayjs().hour(21).minute(0)}
                   />
                 </Grid>
               </Grid>
@@ -573,9 +611,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 />
               </ImageListItem>
             ))}
-            {initialMr_Img.map((url, index) => (
+            {initialMr_Img.map((item, index) => (
               <ImageListItem key={index}>
-                <img src={url} alt={`Image ${index}`} loading="lazy" />
+                <img src={item.url} alt={`Image ${index}`} loading="lazy" />
                 <ImageListItemBar
                   sx={{
                     background:
@@ -590,7 +628,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                       sx={{
                         padding: '14px 12px'
                       }}
-                      handlebtn={() => handleImageDelete(index)}
+                      handlebtn={() => {
+                        handleImageDelete(item, index);
+                        // console.log(item.img_code);
+                      }}
                     />
                   }
                 />
@@ -684,9 +725,6 @@ const VisuallyHiddenInput = styled('input')({
 });
 const daysOfWeek = ['월', '화', '수', '목', '금'];
 
-const ModalContentExample = () => {
-  return <SuppliesList />;
-};
 const StyledLabelGrid = styled(Grid)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',

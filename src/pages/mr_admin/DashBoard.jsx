@@ -7,8 +7,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container } from '@mui/material';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import ImageUpload from '../../components/mr_admin/ImageUpload';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
-import ZipFileImport from '../../components/mr_admin/ZipFileImport.jsx';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 
 const DashBoard = () => {
@@ -79,11 +79,10 @@ const DashBoard = () => {
         <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              <ZipFileImport />
+              {/* <ZipFileImport /> */}
               {/* <ExcelImport /> */}
               {/* <SuppliesList /> */}
-
-              {/* <ImageUpload /> */}
+              <ImageUpload />
               {/* <JWTdecode /> */}
               {/* 이미지 리스트 */}
               {/* <img src="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/25942229-e8e1-41ed-9fd1-98168eb36e7e-d1.jpg"></img> */}

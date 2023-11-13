@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 // import DataGrid from '../common/DataGrid';
@@ -10,10 +10,12 @@ import {
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
 import { palette } from '../../theme/palette';
+import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../common/RectangleBtn';
 
 function ExcelImport() {
   const [tableData, setTableData] = useState([]); //엑셀 데이터
+  const [SpList, setSpList] = useState([]);
 
   /*-------------------------------------알림-----------------------------------------------*/
   const dispatch = useDispatch();
@@ -61,10 +63,21 @@ function ExcelImport() {
       };
       reader.readAsArrayBuffer(file);
     }
+    axiosInstance.axiosInstance
+      .get('/sp/spList')
+      .then((res) => {
+        const processedData = res.data.map((item) => ({
+          ...item,
+          id: item.supplies_code
+        }));
+        setSpList(processedData);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
-  /*----------------------------zip파일 업로드---------------------------------------------------*/
   /*----------------------------체크박스 누른 데이터--------------------------------------------*/
-  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
     setRowSelectionModel(newRowSelectionModel);
   };
@@ -103,6 +116,35 @@ function ExcelImport() {
           }))
         : [];
 
+      const excelSupplies = selectedItem?.비품?.split(',');
+      // supplies_code 배열 초기화
+      const suppliesCodeArray = [];
+      // supplies_name 배열을 순회하면서 supplies_code를 찾음
+      excelSupplies?.forEach((name) => {
+        const matchingItem = SpList.find((item) => item.supplies_name === name);
+        if (matchingItem) {
+          suppliesCodeArray.push(matchingItem.supplies_code);
+        }
+      });
+
+      const supplies = suppliesCodeArray
+        ? suppliesCodeArray.map((supply) => ({
+            supplies_code: supply
+          }))
+        : [];
+
+      // const supplies = excelSupplies
+      //   ?.map((name) => {
+      //     const matchingItem = SpList.find(
+      //       (item) => item.supplies_name === name
+      //     );
+      //     return matchingItem
+      //       ? { supplies_code: matchingItem.supplies_code }
+      //       : {};
+      //   })
+      //   .filter((item) => item !== null);
+      console.log(supplies);
+
       /** 등록시 필요한 데이터*/
       const FormToData = {
         mr_name: excelName,
@@ -110,22 +152,25 @@ function ExcelImport() {
         location: excelLocation,
         mr_type: excelType,
         mr_op_day,
-        mr_keyword
+        mr_keyword,
+        mr_supplies: supplies
       };
 
       console.log(FormToData);
 
-      // axiosInstance.axiosInstance
-      //   .post('/mr/mrRegister', FormToData)
-      //   .then((res) => {
-      //     handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
-      //     handleOpenSnackbar();
-      //     handleCloseDrawer();
-      //   })      .catch((error) => {
-      //   console.error('데이터 가져오기 오류:', error);
-      // });;
+      axiosInstance.axiosInstance
+        .post('/mr/mrRegister', FormToData)
+        .then((res) => {
+          handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
+          handleOpenSnackbar();
+          handleCloseDrawer();
+        })
+        .catch((error) => {
+          console.error('데이터 가져오기 오류:', error);
+        });
     });
   };
+  /*-----------------------------------------------------------------------------------*/
 
   return (
     <div>
@@ -178,30 +223,39 @@ function ExcelImport() {
           엑셀 파일 업로드
         </Button>
       </label>
-
-      <DataGrid
+      <Box
         sx={{
-          border: palette.grey['500'],
-          borderRadius: '2px',
-          '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
-            outline: 'none !important'
+          width: '100%',
+          '& .MuiDataGrid-columnHeaders': {
+            backgroundColor: '#f0f0f0'
           },
-          width: 'auto'
+          border: '1px solid'
         }}
-        rows={tableData}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10
+      >
+        <DataGrid
+          sx={{
+            border: palette.grey['500'],
+            borderRadius: '2px',
+            '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+              outline: 'none !important'
+            },
+            width: 'auto'
+          }}
+          rows={tableData}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10
+              }
             }
-          }
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        onRowSelectionModelChange={handleRowSelectionModelChange}
-        rowSelectionModel={rowSelectionModel}
-      />
+          }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          rowSelectionModel={rowSelectionModel}
+        />
+      </Box>
       {/* 등록 버튼 */}
       <RectangleBtn
         category={'register'}
@@ -222,11 +276,60 @@ export default ExcelImport;
 const weekDays = ['월', '화', '수', '목', '금'];
 
 const columns = [
-  { field: '회의실명', headerName: '회의실명', width: 120 },
-  { field: '분류', headerName: '분류', width: 80 },
-  { field: '인원', headerName: '인원', width: 30 },
-  { field: '요일', headerName: '요일', width: 110 },
-  { field: '위치', headerName: '위치', width: 140 },
-  { field: '태그', headerName: '태그', width: 120 },
-  { field: '비품', headerName: '비품', width: 80 }
+  {
+    field: '회의실명',
+    headerName: '회의실명',
+    width: 120,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '분류',
+    headerName: '분류',
+    width: 80,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '인원',
+    headerName: '인원',
+    width: 30,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '요일',
+    headerName: '요일',
+    width: 110,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '위치',
+    headerName: '위치',
+    width: 140,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '태그',
+    headerName: '태그',
+    width: 120,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  },
+  {
+    field: '비품',
+    headerName: '비품',
+    width: 80,
+    headerAlign: 'center',
+    headerClassName: 'super-app-theme--header',
+    align: 'center'
+  }
 ];

@@ -3,32 +3,40 @@ import React from 'react';
 
 const MrFavoriteType = ({ width, height }) => {
   const option = {
+    title: {
+      text: '회의실 유형',
+      left: 'center'
+    },
     tooltip: {
       trigger: 'item'
     },
     legend: {
-      top: 'bottom',
-      left: 'center'
+      top: 'top',
+      left: 'right',
+      orient: 'vertical'
     },
     series: [
       {
         type: 'pie',
         radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
+        // avoidLabelOverlap: false,
         label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: false,
-            fontSize: 40,
-            fontWeight: 'bold'
+          show: true,
+          formatter(param) {
+            // correct the percentage
+            return param.name + ' (' + param.percent.toFixed(1) + '%)';
           }
         },
-        labelLine: {
-          show: false
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
         },
+        // labelLine: {
+        //   show: false
+        // },
         data: [
           { value: 21, name: '소회의실' },
           { value: 3, name: '중회의실' },

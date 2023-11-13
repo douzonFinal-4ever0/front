@@ -13,12 +13,14 @@ import {
 } from '@mui/material';
 // @icons -------------------------------------------
 import {
+  CampaignOutlined,
   ContentPaste,
   DirectionsCarFilledOutlined,
   KeyboardArrowDownOutlined,
   KeyboardArrowUpOutlined,
   MeetingRoomOutlined
 } from '@mui/icons-material';
+// import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import { useLocation } from 'react-router-dom';
 
 const MenuList = (props) => {
@@ -82,7 +84,7 @@ const MenuList = (props) => {
     {
       index: 3,
       title: '공지사항',
-      icon: <StyledRoomIcon isAdminMode={isAdminMode} />,
+      icon: <StyledCampaignOutlinedIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '공지사항 작성', url: '/mr/admin/Notice' },
         { index: 2, title: '공지사항 조회', url: '/mr/admin/NoticeList' },
@@ -202,6 +204,10 @@ const StyledArrowDownIcon = styled(KeyboardArrowDownOutlined)(({ theme }) => ({
 }));
 
 const StyledSubMenuIcon = styled(ContentPaste)(({ theme }) => ({
+  color: theme.palette.mode.light.textMain
+}));
+
+const StyledCampaignOutlinedIcon = styled(CampaignOutlined)(({ theme }) => ({
   color: theme.palette.mode.light.textMain
 }));
 
