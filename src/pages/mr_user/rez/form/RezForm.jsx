@@ -28,8 +28,15 @@ import Selectbox from '../../../../components/common/Selectbox';
 const RezForm = ({ recentMNames, isReadOnly }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
-  const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
-    rezData;
+  const {
+    m_name,
+    m_type,
+    rez_date,
+    rez_start_time,
+    rez_end_time,
+    tot_pt_ctn,
+    mr_pt_list
+  } = rezData;
 
   // 회의명 입력 이벤트
   const handleMName = (e) => {
