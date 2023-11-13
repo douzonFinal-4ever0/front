@@ -51,6 +51,10 @@ import CreateChip from '../../components/car_user/CreateChip';
 import DateSelect from '../../components/car_user/DateSelect';
 import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/car_user/LoadingModal';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +82,16 @@ const Dashboard = () => {
   const currentUser = useSelector((state) => state.user);
   const mem_code = currentUser.mem_code;
   console.log(currentUser);
+
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   const { rezData, error } = useQuery(
     ['rezList', mem_code, range, dateRange, dateFilter],
     () => {
@@ -122,7 +136,10 @@ const Dashboard = () => {
             console.log(data);
           }
           if ((res.data = null)) {
+            //error snackbar
             alert('에러발생');
+            handleOpenSnackbar();
+            handleSetSnackbarContent('에러 발생');
           }
         });
     },
@@ -454,7 +471,8 @@ const Dashboard = () => {
       description: '운행 완료 처리',
       renderCell: (params) => {
         const Data = params.row;
-        const handleClick = () => {
+        const handleClick = (e) => {
+          e.stopPropagation();
           setSelectedRezCode(Data.id);
           console.log(Data.rez_status);
           handleOpen();
@@ -536,7 +554,7 @@ const Dashboard = () => {
     // axiosInstance.axiosInstance.get(`http://localhost:8081/car_rez/rezList/${mem_code}`);
   };
   //오프캔버스 관련
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [selectedRezCode, setSelectedRezCode] = useState(null);
   const [flag, setFlag] = useState(false);
   /**오프캔버스 열기 */

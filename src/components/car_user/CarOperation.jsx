@@ -33,18 +33,34 @@ import styled from '@emotion/styled';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import axiosInstance from '../../utils/axios';
+import { useDispatch } from 'react-redux';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
+import dayjs from 'dayjs';
 
 const CarOperation = ({ rezCode, open, handleClose }) => {
+  function dateFormat(date) {
+    const preDate = new Date(date);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+    return preDate.toLocaleString('ko-KR', options);
+  }
   const [rezData, setRezData] = useState(null);
   const [rezLoc, setRezLoc] = useState(null);
   const [spend, setSpend] = useState(false);
   const [formData, setFormData] = useState(null);
   const [exp, setExp] = useState({
-    exp_at: '',
+    exp_at: null,
     cost: '',
     exp_content: '',
     ac_detail: '',
-    pay_method: ''
+    pay_method: '',
+    imgName: ''
   });
   const [expList, setExpList] = useState([]);
   const style = {
@@ -57,12 +73,24 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     // border: '2px solid #000',
     boxShadow: 24
   };
+  const [opModify, setOpModify] = useState(false);
+  //선택된 exp번호
+  const [selectedExpNum, setSelectedExpNum] = useState(null);
   var expList2 = [];
   const handleCloseEvent = () => {
-    setImages([]);
     handleClose();
   };
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
   useEffect(() => {
+    setSpend(false);
+    setExpList([]);
     if (open) {
       axiosInstance.axiosInstance
         .get(`http://localhost:8081/car_rez/carRezDetail/${rezCode}`)
@@ -86,12 +114,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       setRezLoc(null);
     }
   }, [open]);
-
   //formdata 설정
   const hanldeFormData = (e) => {
     const { name, value } = e.target;
-    console.log(name);
-    console.log(value);
+
     setFormData({
       ...formData,
       [name]: value
@@ -106,10 +132,24 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       [name]: value
     });
   };
+  const imgformData = new FormData();
+  // var selectedFiles;
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  /**이미지가 리스트에 추가가 되는 이벤트 */
+  const handleImageChange = (event) => {
+    console.log(event.target.files[0].name);
+    setSelectedFile(event.target.files[0].name);
+    setExp({
+      ...exp,
+      imgName: event.target.files[0].name
+    });
+    // 파일 데이터 저장
+  };
   //지출 리스트
   const handleExpList = (e) => {
     console.log(exp);
-
+    // setExp({ ...exp, exp_at: dateFormat(exp.exp_at) });
     setExpList([...expList, exp]);
     // expList2 = [...expList2, exp];
     // console.log(expList2);
@@ -120,20 +160,39 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       console.log(newState);
       return newState;
     });
+    setSelectedFiles([...selectedFiles, selectedFile]);
+    console.log(selectedFiles);
+    imgformData.append('img', selectedFiles);
+    // console.log(imgformData);
   };
   const resetExp = () => {
     setExp({
-      exp_at: '',
+      exp_at: null,
       cost: '',
       exp_content: '',
       ac_detail: '',
-      pay_method: ''
+      pay_method: '',
+      imgName: ''
     });
+  };
+  //지출 수정 버튼
+  const handleExpListModify = () => {
+    let modExpList = expList;
+    console.log(modExpList);
+    modExpList[selectedExpNum] = exp;
+    console.log(modExpList);
+    setExpList(modExpList);
+    setFormData((preState) => {
+      const newState = { ...preState };
+      newState.expenditureDTO = [...expList];
+      console.log(newState);
+      return newState;
+    });
+    resetExp();
   };
   //submit 함수
   const hanldSubmit = (e) => {
     e.preventDefault();
-
     if (
       parseFloat(formData.distance) <
       parseFloat(formData.nomal_biz_mileage) +
@@ -141,8 +200,18 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     ) {
       console.log(formData.distance);
       console.log(formData.nomal_biz_mileage + formData.commute_mileage);
+      //error snackbar
       alert('총주행거리가 업무용 거리보다 작습니다.');
+      handleOpenSnackbar();
+      handleSetSnackbarContent('총주행거리가 업무용 거리보다 작습니다.');
     } else {
+      // axiosInstance.Img.post('/mr/mrImg', formData)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //     // handleSetSnackbarContent('이미지가 업로드 완료되었습니다!');
+      //     // handleOpenSnackbar();
+      //   })
+      //   .catch(console.error);
       // console.log(expList2);
       console.log(formData);
       axiosInstance.axiosInstance
@@ -150,6 +219,8 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
         .then((res) => {
           console.log(res.data);
           alert('운행 처리 완료');
+          handleOpenSnackbar();
+          handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
           setExpList([]);
           handleClose();
         });
@@ -161,21 +232,33 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     setSpend(!spend);
   };
   /*---------------------------------이미지 저장---------------------------------- */
-  const [images, setImages] = useState(null); // 이미지 배열
-  /**이미지가 리스트에 추가가 되는 이벤트 */
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const newImage = { src: e.target.result, title: file.name };
-        setImages(newImage);
-        console.log(images);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const [images, setImages] = useState([]); // 이미지 배열
+  // const [uploadFiles, setUploadFiles] = useState([]);
+  // const [duplicateFiles, setDuplicateFiles] = useState([]);
+  // // const [selectedFiles, setSelectedFiles] = useState([]);
 
+  // const handleImgUpload = () => {
+  //   // console.log(selectedFiles);
+  //   console.log(imgformData);
+  // };
+  //지출 선택시
+  const selectOp = (e, index, exp2) => {
+    setOpModify(true);
+    setSelectedExpNum(index);
+    setExp({
+      exp_at: dayjs(exp2.exp_at),
+      cost: exp2.cost,
+      exp_content: exp2.exp_content,
+      ac_detail: exp2.ac_detail,
+      pay_method: exp2.pay_method,
+      imgName: exp2.imgName
+    });
+  };
+  const opModifyCancel = () => {
+    setOpModify(false);
+    setSelectedExpNum(null);
+    resetExp();
+  };
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={{ ...style, width: 750 }}>
@@ -233,7 +316,6 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       variant="outlined"
                       type="text"
                       InputProps={{
-                        inputProps: { min: 0 },
                         endAdornment: (
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
@@ -243,10 +325,6 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                         formData.aft_mileage.toFixed(1)
                       }
                       onChange={hanldeFormData}
-                      // value={
-                      //   formData.distance +
-                      //   rezData.carDetailResponseVO.accum_mileage
-                      // }
                     ></TextField>
                   </Grid>
                 </Grid>
@@ -263,13 +341,14 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       name="nomal_biz_mileage"
                       variant="outlined"
                       type="number"
-                      onChange={hanldeFormData}
+                      onChange={(e) => hanldeFormData(e)}
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
+                      // value={nomal_biz_mileage}
                     ></TextField>
                   </Grid>
                 </Grid>
@@ -283,13 +362,14 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       name="commute_mileage"
                       variant="outlined"
                       type="number"
-                      onChange={hanldeFormData}
+                      onChange={(e) => hanldeFormData(e)}
                       InputProps={{
                         inputProps: { min: 0 },
                         endAdornment: (
                           <InputAdornment position="end">㎞</InputAdornment>
                         )
                       }}
+                      // value={commute_mileage}
                     ></TextField>
                   </Grid>
                 </Grid>
@@ -303,8 +383,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       name="memo"
                       variant="outlined"
                       type="text"
-                      onChange={hanldeFormData}
+                      onChange={(e) => hanldeFormData(e)}
                       multiline
+                      // value={memo}
                     ></TextField>
                   </Grid>
                 </Grid>
@@ -317,7 +398,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       row
                       name="row-radio-buttons-group"
                       value={spend}
-                      onChange={handleSpend}
+                      onChange={(e) => handleSpend(e)}
                     >
                       <FormControlLabel
                         value={false}
@@ -367,7 +448,10 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           <DatePicker
                             name={'exp_at'}
                             onChange={(e) => {
-                              setExp({ ...exp, exp_at: e.$d });
+                              setExp({
+                                ...exp,
+                                exp_at: e.format('YYYY-MM-DD')
+                              });
                             }}
                             value={exp.exp_at}
                           />
@@ -403,7 +487,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                         <TextField
                           id="exp_content"
                           name="exp_content"
-                          onChange={handleExp}
+                          onChange={(e) => handleExp(e)}
                           value={exp.exp_content}
                           variant="outlined"
                           type="text"
@@ -419,7 +503,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           labelId="demo-simple-select-filled-label"
                           id="demo-simple-select-filled"
                           name="ac_detail"
-                          onChange={handleExp}
+                          onChange={(e) => handleExp(e)}
                           value={exp.ac_detail}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
@@ -440,7 +524,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                           labelId="demo-simple-select-filled-label"
                           id="demo-simple-select-filled"
                           name="pay_method"
-                          onChange={handleExp}
+                          onChange={(e) => handleExp(e)}
                           value={exp.pay_method}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
@@ -457,18 +541,40 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                       <StyledLabelGrid item xs={3}>
                         <Label htmlFor={'imgUpload'} text={'영수증'} />
                       </StyledLabelGrid>
-                      <Grid item xs={9}>
-                        <Button component="label" variant="contained">
-                          영수증 사진 업로드
-                          <input
-                            style={{ display: 'none' }}
-                            type="file"
-                            onChange={handleImageChange}
-                          />
-                        </Button>
-                      </Grid>
+                      {exp.imgName !== '' ? (
+                        <>
+                          <Grid item xs={9}>
+                            <Typography variant="body2" fontSize={12}>
+                              {exp.imgName}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={3}></Grid>
+                          <Grid item xs={9}>
+                            <Button component="label" variant="contained">
+                              영수증 사진 업로드
+                              <input
+                                style={{ display: 'none' }}
+                                type="file"
+                                onChange={handleImageChange}
+                              />
+                            </Button>
+                          </Grid>
+                        </>
+                      ) : (
+                        <Grid item xs={9}>
+                          <Button component="label" variant="contained">
+                            영수증 사진 업로드
+                            <input
+                              style={{ display: 'none' }}
+                              type="file"
+                              onChange={handleImageChange}
+                            />
+                          </Button>
+                        </Grid>
+                      )}
                     </Grid>
                   </Grid>
+
                   <Grid container xs={6} sx={{ border: '1px solid #ccc' }}>
                     {/* <ImageList sx={1} cols={1} rowHeight={'auto'}>
                   {images.map((item, index) => (
@@ -479,35 +585,101 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     {/* </ImageListItem> */}
                     {/* ))} */}
                     {/* </ImageList> */}
-                    <List dense component="div" role="list">
-                      {formData.expenditureDTO &&
-                        formData.expenditureDTO.map((exp, index) => {
-                          return (
-                            <ListItem key={index}>
-                              <ListItemButton>
-                                <ListItemAvatar>
-                                  {images && (
-                                    <Avatar
-                                      alt={images.title}
-                                      src={images.src}
-                                    />
-                                  )}
-                                </ListItemAvatar>
-                                <ListItemText
-                                  primary={exp.exp_content}
-                                  secondary={exp.cost + '원'}
-                                />
-                              </ListItemButton>
-                            </ListItem>
-                          );
-                        })}
-                    </List>
+                    <div
+                      style={{
+                        maxHeight: '30vh',
+                        overflowY: 'auto'
+                      }}
+                    >
+                      <List dense component="div" role="list">
+                        {formData.expenditureDTO &&
+                          formData.expenditureDTO.map((exp, index) => {
+                            return (
+                              <ListItem key={index}>
+                                <ListItemButton
+                                  onClick={(e) => selectOp(e, index, exp)}
+                                >
+                                  <ListItemText
+                                    primary={
+                                      index +
+                                      ' 지출 일자:' +
+                                      dateFormat(exp.exp_at) +
+                                      ', 지출 내용:' +
+                                      exp.exp_content
+                                    }
+                                    secondary={
+                                      '결제수단:' +
+                                      exp.pay_method +
+                                      ', 지출 금액:' +
+                                      exp.cost +
+                                      '원'
+                                    }
+                                  />
+                                </ListItemButton>
+                              </ListItem>
+                            );
+                          })}
+                      </List>
+                    </div>
                   </Grid>
                 </Grid>
                 <Grid container xs={12} justifyContent="center">
-                  <Button
+                  {opModify ? (
+                    <div>
+                      <Button
+                        variant="contained"
+                        onClick={(e) => handleExpListModify(e)}
+                        sx={{
+                          borderColor: '#BEBEBE',
+                          ':hover': {
+                            backgroundColor: '#2065D1',
+                            borderColor: '#BEBEBE'
+                          },
+                          margin: '0px 4px'
+                        }}
+                      >
+                        수정
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={(e) => {
+                          opModifyCancel(e);
+                        }}
+                        sx={{
+                          borderColor: '#2065D1',
+                          backgroundColor: '#fff',
+                          color: '#1A6ECE',
+                          ':hover': {
+                            backgroundColor: '#fff',
+                            borderColor: '#2065D1'
+                          },
+                          margin: '0px 4px'
+                        }}
+                      >
+                        취소
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={(e) => {
+                        handleExpList(e);
+                      }}
+                      sx={{
+                        borderColor: '#BEBEBE',
+                        ':hover': {
+                          backgroundColor: '#2065D1',
+                          borderColor: '#BEBEBE'
+                        },
+                        margin: '0px 4px'
+                      }}
+                    >
+                      추가
+                    </Button>
+                  )}
+                  {/* <Button
                     variant="contained"
-                    onClick={handleExpList}
+                    onClick={(e) => handleExpList(e)}
                     sx={{
                       borderColor: '#BEBEBE',
                       ':hover': {
@@ -518,7 +690,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
                     }}
                   >
                     추가
-                  </Button>
+                  </Button> */}
                 </Grid>
               </Collapse>
             </Box>
