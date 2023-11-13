@@ -3,10 +3,10 @@ import React from 'react';
 
 const MrFavoriteType = ({ width, height }) => {
   const option = {
-    title: {
-      text: '회의실 유형',
-      left: 'center'
-    },
+    // title: {
+    //   text: '회의실 유형',
+    //   left: 'center'
+    // },
     tooltip: {
       trigger: 'item'
     },
