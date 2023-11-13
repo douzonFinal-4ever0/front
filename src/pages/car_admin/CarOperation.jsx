@@ -26,7 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import dayjs from 'dayjs';
-import { subDays } from 'date-fns';
+import { subMonths } from 'date-fns';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import MileageLogModal from '../../components/car_admin/operation/MileageLogModal';
 
@@ -78,7 +78,7 @@ const CarOperationPage = () => {
   const dateNow = new Date();
   const today = dateNow.toISOString().slice(0, 10);
 
-  const dateBefore = subDays(new Date(), 7);
+  const dateBefore = subMonths(new Date(), 1);
   const before = dateBefore.toISOString().slice(0, 10); // Day.js 객체로 변경
 
   const [searchFilter, setSearchFilter] = useState({
@@ -92,60 +92,7 @@ const CarOperationPage = () => {
 
   const [operationData, setOperationData] = useState([]);
 
-  useEffect(() => {
-    axiosInstance.axiosInstance
-      .post('/manager/car/operationList', searchFilter)
-      .then((res) => {
-        console.log(res.data);
-        const newData = res.data.map((item, index) => {
-          return {
-            operation_code: item.operation_code,
-            start_at: new Date(item.start_at).toLocaleDateString(),
-            car_info: {
-              car_code: item.car_code,
-              car_name: item.car_name,
-              type: item.type
-            },
-            mem_info: {
-              dept_name: item.dept_name,
-              position_name: item.position_name,
-              name: item.name
-            },
-            purpose: [
-              { reason: '일반업무', distance: item.nomal_biz_mileage },
-              { reason: '출 • 퇴근', distance: item.commute_mileage }
-            ],
-            loc: item.carLocList.map((data) => {
-              return {
-                loc_type: data.loc_type,
-                address: data.address
-              };
-            }),
-            memo: item.memo
-          };
-        });
-        setOperationData(newData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  const [cleared, setCleared] = useState(false);
-
-  useEffect(() => {
-    if (cleared) {
-      const timeout = setTimeout(() => {
-        setCleared(false);
-      }, 1500);
-
-      return () => clearTimeout(timeout);
-    }
-    return () => {};
-  }, [cleared]);
-
-  const handleFilterBtn = () => {
-    console.log(searchFilter);
+  const getAxios = (searchFilter) => {
     axiosInstance.axiosInstance
       .post('/manager/car/operationList', searchFilter)
       .then((res) => {
@@ -184,15 +131,38 @@ const CarOperationPage = () => {
       });
   };
 
+  useEffect(() => {
+    getAxios(searchFilter);
+  }, []);
+
+  const [cleared, setCleared] = useState(false);
+
+  useEffect(() => {
+    if (cleared) {
+      const timeout = setTimeout(() => {
+        setCleared(false);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+    return () => {};
+  }, [cleared]);
+
+  const handleFilterBtn = () => {
+    console.log(searchFilter);
+    getAxios(searchFilter);
+  };
+
   const handleReturnBtn = () => {
-    setSearchFilter({
+    const newSearchFilter = {
       operation_sdate: before,
       operation_edate: today,
       car_type: '전체',
       dept_name: '전체',
       sdistance: 0,
       edistance: 1000
-    });
+    };
+    getAxios(newSearchFilter);
   };
 
   const searchDetailForm = (
@@ -420,7 +390,7 @@ const CarOperationPage = () => {
   };
 
   return (
-    <Box sx={{ height: '85%' }}>
+    <Box sx={{ overflow: 'auto' }}>
       <Modal
         open={modalOpen}
         onClose={handleModalClose}
@@ -429,7 +399,26 @@ const CarOperationPage = () => {
       >
         <MileageLogModal handleModalClose={handleModalClose} style={style} />
       </Modal>
-      <SubHeader title={'운행 내역'} />
+      <SubHeader
+        title={'운행 내역'}
+        children={
+          <Button
+            variant="contained"
+            sx={{
+              color: '#ffffff',
+              backgroundColor: '#3949ab',
+              borderRadius: '6px !important',
+              '&:hover': { backgroundColor: '#283593' },
+              height: '40px',
+              marginRight: '15px'
+            }}
+            endIcon={<FileDownloadIcon />}
+            onClick={handleOperationDownBtn}
+          >
+            운행일지 다운로드
+          </Button>
+        }
+      />
       <Box
         sx={{
           display: 'flex',
@@ -451,25 +440,9 @@ const CarOperationPage = () => {
                 margin: '0px auto',
                 padding: '0px 24px',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'end'
               }}
             >
-              <Box>
-                <Button
-                  sx={{
-                    color: '#ffffff',
-                    backgroundColor: '#114c96',
-                    borderRadius: '4px',
-                    '&:hover': { backgroundColor: '#4873aa' },
-                    height: '35px',
-                    marginRight: '15px'
-                  }}
-                  endIcon={<FileDownloadIcon />}
-                  onClick={handleOperationDownBtn}
-                >
-                  운행일지 다운로드
-                </Button>
-              </Box>
               <Box sx={{ display: 'flex' }}>
                 <Button
                   sx={{

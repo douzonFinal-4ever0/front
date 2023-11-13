@@ -183,13 +183,13 @@ const CarOperationTable = ({
         localeText={{
           noRowsLabel: '등록된 운행 내역이 없습니다.'
         }}
-        pageSizeOptions={[10, 15]}
+        pageSizeOptions={[5, 10, 15]}
         sx={{
           borderRadius: '2px',
+          maxHeight: '580px',
           '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
             outline: 'none !important'
           },
-          overflowX: 'auto',
           '& .MuiDataGrid-row': { cursor: 'pointer' }
         }}
         rowHeight={90}
