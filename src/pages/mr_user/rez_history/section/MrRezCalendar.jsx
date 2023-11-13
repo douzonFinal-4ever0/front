@@ -12,7 +12,7 @@ import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
 import RezDetailModal from '../modal/RezDetailModal';
 
-const MrRezCalendar = ({ events, data }) => {
+const MrRezCalendar = ({ events, data, getMrRezApi }) => {
   const [currentView, setCurrentView] = useState('listWeek');
   const [rezDetail, steRezDetail] = useState([]);
   const [open, setOpen] = useState(false); // 모달창 오픈 여부
@@ -26,6 +26,10 @@ const MrRezCalendar = ({ events, data }) => {
 
   const handleModal = () => {
     setOpen(!open);
+  };
+
+  const handleModifyMode = () => {
+    setIsModify(!isModify);
   };
 
   const handleEventClick = (e) => {
@@ -73,6 +77,8 @@ const MrRezCalendar = ({ events, data }) => {
         handleModal={handleModal}
         data={rezDetail}
         isModify={isModify}
+        handleModifyMode={handleModifyMode}
+        getMrRezApi={getMrRezApi}
       />
     </>
   );

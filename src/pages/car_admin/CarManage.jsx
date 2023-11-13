@@ -1051,6 +1051,9 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
 
 // 실제 등록 페이지
 const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
+  // axios 요청 확인
+  const [isLoading, setIsLoading] = useState(false);
+
   const [carInfo, setCarInfo] = useState([]);
 
   // const [deleteCar, setDeleteCar] = useState([]);
@@ -1135,14 +1138,26 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
   };
 
   const handleReturnBtn = () => {
-    setSearchFilter({
+    const updatedSearchFilter = {
       operation_sdate: null,
       operation_edate: today,
       authority: '전체',
       max_capacity: 0,
       sdistance: 0,
       edistance: 150000
-    });
+    };
+
+    axiosInstance.axiosInstance
+      .post('/manager/car/carList', updatedSearchFilter)
+      .then((res) => {
+        console.log(res.data);
+        setCarInfo(res.data);
+        // 삭제 차량 수 설정
+      })
+      .catch((error) => {
+        // 에러 발생 시 코드 실행
+        console.log(error);
+      });
   };
 
   const searchDetailForm = (
@@ -1367,6 +1382,7 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
         console.log(res.data);
         setCarInfo(res.data);
         // 삭제 차량 수 설정
+        setIsLoading(true);
       })
       .catch((error) => {
         // 에러 발생 시 코드 실행
@@ -1376,9 +1392,6 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
 
   return (
     <>
-      {/* 캘린더 이벤트 전달은 객체 배열을 props로 전달하여 표시
-            
-        */}
       <SubHeader title={'차량'} />
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar
@@ -1442,14 +1455,16 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
                 {searchDetailForm}
               </Collapse>
             </Box>
-            <CarInfo
-              rows={carInfo}
-              setTabData={setTabData}
-              filter={filter}
-              searchValue={searchValue}
-              searchType={searchType}
-              setCarListInfo={setCarInfo}
-            />
+            {isLoading && (
+              <CarInfo
+                rows={carInfo}
+                setTabData={setTabData}
+                filter={filter}
+                searchValue={searchValue}
+                searchType={searchType}
+                setCarListInfo={setCarInfo}
+              />
+            )}
           </StyledContainer>
         </Box>
       </Box>

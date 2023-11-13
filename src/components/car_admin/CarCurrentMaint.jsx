@@ -6,7 +6,7 @@ import LinearProgress, {
 import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
-import { style } from '@mui/system';
+import ErrorIcon from '@mui/icons-material/Error';
 
 const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
   const [currentMaintList, setCurrentMaintList] = useState([]);
@@ -81,6 +81,13 @@ const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
               />
               {item.over >= 0 && (
                 <Box display="flex" justifyContent="end" padding="0px 7px">
+                  <ErrorIcon
+                    sx={{
+                      width: '20px',
+                      color: '#ffa000',
+                      marginRight: '5px'
+                    }}
+                  />
                   <Typography variant="subtitle2" color="#e53935">
                     {item.over}km 초과
                   </Typography>

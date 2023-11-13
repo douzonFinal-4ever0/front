@@ -68,8 +68,6 @@ const MrRezHistoryPage = () => {
         rez.role = '예약자';
       });
 
-      console.log(lestPtList);
-
       // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];
 
@@ -145,6 +143,102 @@ const MrRezHistoryPage = () => {
   return (
     <>
       <SubHeader title="MY 회의실 예약" />
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <MainContainer>
+          <Grid container spacing={2}>
+            {/* <Grid item container xs={12}>
+              <WrapContainer bgcolor={'#fff'}>
+                <Grid container sx={{ height: '200px' }}>
+                  <Grid item xs={3}>
+                    예약
+                  </Grid>
+                  <Grid item xs={3}>
+                    예약
+                  </Grid>
+                  <Grid item xs={3}>
+                    예약
+                  </Grid>
+                  <Grid item xs={3}>
+                    예약
+                  </Grid>
+                </Grid>
+              </WrapContainer>
+            </Grid> */}
+
+            <Grid item container spacing={2}>
+              <Grid item xs={9}>
+                <WrapContainer bgcolor={'#fff'}>
+                  <Typography variant="h6" sx={{ marginBottom: '30px' }}>
+                    전체 예약 현황
+                  </Typography>
+                  <MrRezCalendar
+                    events={events}
+                    data={rezList}
+                    getMrRezApi={getMrRezApi}
+                  />
+                </WrapContainer>
+              </Grid>
+
+              {/* 오늘 회의실 예약 일정 */}
+              <Grid item xs={3} sx={{ minHeight: '564px' }}>
+                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
+                  <Typography variant="h6">오늘 예약 현황</Typography>
+                  <Timeline
+                    sx={{
+                      height: '100%',
+                      [`& .${timelineItemClasses.root}:before`]: {
+                        flex: 0,
+                        padding: 0
+                      }
+                    }}
+                  >
+                    {todayRezList.length !== 0 ? (
+                      todayRezList.map((item, index) => (
+                        <TimelineItem key={index}>
+                          <TimelineSeparator>
+                            <TimelineDot />
+                            <TimelineConnector />
+                          </TimelineSeparator>
+                          <TimelineContent>
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              sx={{ color: palette.primary.main }}
+                            >
+                              {item.newTime}
+                            </Typography>
+                            <Typography variant="subtitle1" component="div">
+                              {item.m_name}
+                            </Typography>
+                            <Typography variant="body2">
+                              {item.mr && item.mr.mr_name}
+                            </Typography>
+                          </TimelineContent>
+                        </TimelineItem>
+                      ))
+                    ) : (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%'
+                        }}
+                      >
+                        <StyledNoCalendarIcon />
+                        <Typography variant="body2" sx={{ color: '#666' }}>
+                          오늘 일정이 없습니다
+                        </Typography>
+                      </Box>
+                    )}
+                  </Timeline>
+                </WrapContainer>
+              </Grid>
+            </Grid>
+          </Grid>
+        </MainContainer>
+      </Box>
     </>
   );
 };

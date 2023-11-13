@@ -3,7 +3,6 @@ import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import format from 'date-fns/format';
 import RectangleIcon from '@mui/icons-material/Rectangle';
-import { useState } from 'react';
 
 const setTitle = (data) => {
   // data 객체의 status 값에 따라 title을 설정

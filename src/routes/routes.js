@@ -97,8 +97,8 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
           element: <CarAdminOperationPage />
         },
         {
-          path: 'example',
-          element: <CarAdminExamplePage />
+          path: 'dashboard',
+          element: <CarAdminDashboardPage />
         }
       ]
     },
@@ -267,8 +267,8 @@ const CarUserRegisterPage = Loadable(
   lazy(() => import('../pages/car_user/Register'))
 );
 
-const CarAdminExamplePage = Loadable(
-  lazy(() => import('../pages/car_admin/Example'))
+const CarAdminDashboardPage = Loadable(
+  lazy(() => import('../pages/car_admin/Dashboard'))
 );
 const CarRezCompletePage = Loadable(
   lazy(() => import('../pages/car_user/CarRezComplete'))

@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
 
 import {
   Grid,
@@ -6,9 +7,11 @@ import {
   ListItemText,
   Stack,
   Typography,
-  Box
+  Box,
+  Avatar
 } from '@mui/material';
 import styled from '@emotion/styled';
+import QRcode from '../../../../components/mr_user/QRcode';
 
 const RezInfo = ({ data }) => {
   const { pathname } = useLocation();
@@ -21,7 +24,8 @@ const RezInfo = ({ data }) => {
     rez_start_time,
     rez_end_time,
     master,
-    created_at
+    created_at,
+    pt_list
   } = data;
 
   return (
@@ -32,13 +36,21 @@ const RezInfo = ({ data }) => {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        borderRadius: '8px',
-        overflow: 'auto'
+        borderRadius: '8px'
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: '10px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        {detailModal ? null : (
+          <StyledStepText>
+            <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+            예약 정보
+          </StyledStepText>
+        )}
+
         <Box sx={{ marginBottom: '20px' }}>
-          <Typography variant="subtitle1">회의 정보</Typography>
+          <Typography variant="subtitle1" sx={{ marginBottom: '8px' }}>
+            회의 정보
+          </Typography>
           <Box>
             {/* 회의명  */}
             <Grid
@@ -71,64 +83,72 @@ const RezInfo = ({ data }) => {
             </Grid>
 
             {/* 예약자  */}
-            <Grid
-              item
-              xs={12}
-              sx={{
-                '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
-                },
-                '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd'
-                }
-              }}
-            >
-              <Stack direction={'row'}>
-                <Grid item xs={5}>
-                  <ListItem className="infoTitle">
-                    <ListItemText primary="예약자" />
-                  </ListItem>
-                </Grid>
-                <Grid item xs={7}>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant="subtitle1">
-                        {master.name} {master.position_name}
-                      </Typography>
-                    </ListItemText>
-                  </ListItem>
-                </Grid>
-              </Stack>
-            </Grid>
+            {detailModal ? (
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  '& .infoTitle': {
+                    backgroundColor: '#eeeeee'
+                  },
+                  '& .MuiListItem-gutters': {
+                    borderBottom: '1px solid #bdbdbd'
+                  }
+                }}
+              >
+                <Stack direction={'row'}>
+                  <Grid item xs={5}>
+                    <ListItem className="infoTitle">
+                      <ListItemText primary="예약자" />
+                    </ListItem>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <ListItem>
+                      <ListItemText>
+                        <Typography variant="subtitle1">
+                          {detailModal && master.name}{' '}
+                          {detailModal && master.position_name} (
+                          {detailModal && master.deptVO.dept_name})
+                        </Typography>
+                      </ListItemText>
+                    </ListItem>
+                  </Grid>
+                </Stack>
+              </Grid>
+            ) : null}
 
             {/* 예약신청일   */}
-            <Grid
-              item
-              xs={12}
-              sx={{
-                '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
-                },
-                '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd'
-                }
-              }}
-            >
-              <Stack direction={'row'}>
-                <Grid item xs={5}>
-                  <ListItem className="infoTitle">
-                    <ListItemText primary="예약신청일" />
-                  </ListItem>
-                </Grid>
-                <Grid item xs={7}>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant="subtitle1">{created_at}</Typography>
-                    </ListItemText>
-                  </ListItem>
-                </Grid>
-              </Stack>
-            </Grid>
+            {detailModal ? (
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  '& .infoTitle': {
+                    backgroundColor: '#eeeeee'
+                  },
+                  '& .MuiListItem-gutters': {
+                    borderBottom: '1px solid #bdbdbd'
+                  }
+                }}
+              >
+                <Stack direction={'row'}>
+                  <Grid item xs={5}>
+                    <ListItem className="infoTitle">
+                      <ListItemText primary="예약신청일" />
+                    </ListItem>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <ListItem>
+                      <ListItemText>
+                        <Typography variant="subtitle1">
+                          {created_at}
+                        </Typography>
+                      </ListItemText>
+                    </ListItem>
+                  </Grid>
+                </Stack>
+              </Grid>
+            ) : null}
           </Box>
         </Box>
 
@@ -286,22 +306,83 @@ const RezInfo = ({ data }) => {
               }}
             >
               <Stack direction={'row'}>
-                <Grid item xs={5}>
+                <Grid item xs={12}>
                   <ListItem className="infoTitle">
-                    <ListItemText primary="예약자" />
+                    <ListItemText primary="참석자" />
                   </ListItem>
-                </Grid>
-                <Grid item xs={7}>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant="subtitle1">{'에스더씨'}</Typography>
-                    </ListItemText>
-                  </ListItem>
+                  <ListItemText sx={{ padding: '10px ' }}>
+                    {pt_list.map((mem, index) => (
+                      <Stack direction={'row'} sx={{ marginBottom: '10px' }}>
+                        <Avatar />
+                        <Typography
+                          key={index}
+                          variant="subtitle1"
+                          sx={{
+                            marginLeft: '10px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {detailModal ? mem.memVO.name : mem.name}{' '}
+                          {detailModal
+                            ? mem.memVO.position_name
+                            : mem.position_name}{' '}
+                          (
+                          {detailModal
+                            ? mem.memVO.deptVO.dept_name
+                            : mem.dept_name}
+                          )
+                        </Typography>
+                      </Stack>
+                    ))}
+                  </ListItemText>
                 </Grid>
               </Stack>
             </Grid>
           </Box>
         </Box>
+
+        {/* QR 코드 */}
+        {detailModal ? (
+          <Box>
+            <Typography variant="subtitle1" sx={{ margin: '16px 0 8px' }}>
+              QR 코드 정보
+            </Typography>
+            <Box>
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  '& .infoTitle': {
+                    backgroundColor: '#eeeeee'
+                  },
+                  '& .MuiListItem-gutters': {
+                    borderBottom: '1px solid #bdbdbd',
+                    borderTop: '1px solid #bdbdbd'
+                  }
+                }}
+              >
+                <Stack direction={'row'}>
+                  <Grid item xs={12}>
+                    <ListItem className="infoTitle">
+                      <ListItemText primary="QR 코드" />
+                    </ListItem>
+                    <ListItemText
+                      sx={{
+                        padding: '10px ',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <QRcode srcValue={'http://www.naver.com'} />
+                    </ListItemText>
+                  </Grid>
+                </Stack>
+              </Grid>
+            </Box>
+          </Box>
+        ) : null}
       </Box>
     </Box>
   );

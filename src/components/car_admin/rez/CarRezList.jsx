@@ -34,12 +34,12 @@ const setColor = (data) => {
   }
 };
 
-const CarRezList = ({ carRezData }) => {
+const CarRezList = ({ carRezData, handleClickRow }) => {
   const columns = [
     {
       field: 'rez_status',
       headerName: '상태',
-      width: 200,
+      width: 160,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -58,7 +58,7 @@ const CarRezList = ({ carRezData }) => {
     {
       field: 'car_name',
       headerName: '차량',
-      width: 200,
+      width: 180,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -89,7 +89,7 @@ const CarRezList = ({ carRezData }) => {
       field: 'name',
       headerName: '예약자',
       type: '',
-      width: 200,
+      width: 160,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -113,7 +113,7 @@ const CarRezList = ({ carRezData }) => {
       field: 'start_at',
       headerName: '예약 일시',
       type: 'number',
-      width: 200,
+      width: 220,
       align: 'center',
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
@@ -131,7 +131,7 @@ const CarRezList = ({ carRezData }) => {
     {
       field: 'detail',
       headerName: '목적',
-      width: 200,
+      width: 160,
       align: 'center',
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header'
@@ -162,7 +162,7 @@ const CarRezList = ({ carRezData }) => {
           }}
           pageSizeOptions={[5, 10, 15]}
           sx={{
-            maxHeight: '600px',
+            maxHeight: '590px',
             borderRadius: '2px',
             '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
               outline: 'none !important'
@@ -170,6 +170,9 @@ const CarRezList = ({ carRezData }) => {
             '& .MuiDataGrid-row': { cursor: 'pointer' }
           }}
           rowHeight={70}
+          onRowClick={(row) => {
+            handleClickRow(row.row.car_rez_code);
+          }}
         />
       </Box>
     </StyledContainer>

@@ -77,7 +77,8 @@ const MenuList = (props) => {
       categories: [
         { index: 3, title: '차량 관리', url: '/car/admin/carManage' },
         { index: 4, title: '예약 관리', url: '/car/admin/rez' },
-        { index: 5, title: '운행 내역', url: '/car/admin/operation' }
+        { index: 5, title: '운행 내역', url: '/car/admin/operation' },
+        { index: 6, title: '주간 리포트', url: '/car/admin/dashboard' }
       ]
     },
     {
