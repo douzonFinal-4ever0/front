@@ -27,6 +27,7 @@ const MrStatistics = () => {
   const [modalTitle, setModalTitle] = useState('');
   const [mrRezRow, setMrRezRow] = useState({});
   const [mrRezTime, setMrRezTime] = useState({});
+  const [mrRezType, setMrRezType] = useState([]);
   // const [mr_code, setMr_code] = useState('');
   console.log();
   useEffect(() => {
@@ -58,6 +59,14 @@ const MrStatistics = () => {
       .get('mr/mrRezRow')
       .then((res) => {
         setMrRezRow(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+    axiosInstance.axiosInstance
+      .get('mr/mrTypeRow')
+      .then((res) => {
+        setMrRezType(res.data);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -147,14 +156,26 @@ const MrStatistics = () => {
       </Typography>
     </CardContent>
   );
+  console.log(mrRezType);
+  // 변환할 데이터 구조
+  // const data = mrRezType.map((item) => ({
+  //   value: item.rez_cnt,
+  //   name: item.mr_type
+  // }));
+  const mrType =
+    mrRezType &&
+    mrRezType.map((item) => ({
+      value: item.rez_cnt,
+      name: item.mr_type
+    }));
   const cardContent4 = (
     <CardContent>
       <Typography gutterBottom variant="h4" component="div">
         ⭐인기 있는 회의실 유형
       </Typography>
-      <MrFavoriteType width={'auto'} height={300} />
+      <MrFavoriteType width={'auto'} height={300} data={mrType} />
       <Typography variant="body1">
-        💡소회의실이 가장 인기가 많습니다.
+        💡{mrRezType[0]?.mr_type}이 가장 인기가 많습니다.
       </Typography>
     </CardContent>
   );
@@ -204,7 +225,7 @@ const MrStatistics = () => {
       </Typography>
       <MrContrastChart width={'auto'} height={300} />
       <Typography variant="body1">
-        💡지난주에 비해 n건의 회의실 예약이 (증가/감소) 되었습니다.
+        💡지난주에 비해 n건의 회의실 예약이 증가되었습니다.
       </Typography>
     </CardContent>
   );
@@ -228,16 +249,16 @@ const MrStatistics = () => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item container xs={6}>
+            <Grid item container xs={4}>
               <WrapContainer bgcolor={'#fff'}>{cardContent1}</WrapContainer>
             </Grid>
-            <Grid item container xs={6}>
+            <Grid item container xs={8}>
               <WrapContainer bgcolor={'#fff'}>{cardContent2}</WrapContainer>
             </Grid>
-            <Grid item container xs={6}>
+            <Grid item container xs={5}>
               <WrapContainer bgcolor={'#fff'}>{cardContent3}</WrapContainer>
             </Grid>
-            <Grid item container xs={6}>
+            <Grid item container xs={7}>
               <WrapContainer bgcolor={'#fff'}>{cardContent6}</WrapContainer>
             </Grid>
             <Grid item container xs={6}>
