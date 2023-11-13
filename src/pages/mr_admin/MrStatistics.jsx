@@ -22,13 +22,23 @@ const MrStatistics = () => {
   const [modalContent, setModalContent] = useState();
   const [mrResources, setMrResources] = useState({});
   const [mrRezRank, setMrRezRank] = useState({});
+  const [mrRez, setMrRez] = useState();
   // const [mr_code, setMr_code] = useState('');
-
+  console.log(mrResources);
+  console.log();
   useEffect(() => {
     axiosInstance.axiosInstance
       .get(`mr/mrRezRank`)
       .then((res) => {
         setMrRezRank(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+    axiosInstance.axiosInstance
+      .get('mr/mrRez')
+      .then((res) => {
+        setMrRez(res.data);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -47,7 +57,7 @@ const MrStatistics = () => {
         console.error('데이터 가져오기 오류:', error);
       });
   }, [mrRezRank]);
-
+  console.log(mrRez);
   const handleClickAvgRezTime = () => {
     setModalContent(<MrRezTimeChart height={'500px'} width={'500px'} />);
     handleModal();

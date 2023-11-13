@@ -70,7 +70,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // selectedTags와 같은 구조로 변환
   const initialSelectedTags =
     selectedRowData?.mr_keyword?.map((keywordItem) => ({
-      keyword_name: keywordItem.keyword_name
+      keyword_name: keywordItem.keyword_name,
+      keyword_code: keywordItem.keyword_code
     })) || []; // null 체크 추가
   /**기존에 가지고 있던 요일 데이터     */
   // const initialMr_op_day = selectedRowData?.mr_op_day?.map(
@@ -92,8 +93,12 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // console.log(initialMr_op_day_status);
   // console.log(initialSelectedTags);
   /** 기존에 가지고 있던 이미지 파일   */
-  const initialMr_Img = selectedRowData?.mr_img?.map((urls) => urls.url) || [];
-  console.log('initialMr_Img: ', initialMr_Img);
+  const [initialMr_Img, setInitialMr_Img] = useState(
+    selectedRowData?.mr_img?.map((image) => ({
+      url: image.url,
+      img_code: image.img_code
+    })) || []
+  );
   /*-------------------------------입력폼 제어--------------------------------------------*/
   const [mr_name, setMr_name] = useState(initialMrName);
   const [location, setLocation] = useState(initialLocation);
@@ -123,8 +128,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     setSelectedTags(tags);
     setNewSelectedTags(tags);
   };
-  console.log(selectedTags);
-  console.log(newselectedTags);
+  // console.log(selectedTags);
+  // console.log(newselectedTags);
   /*---------------------------------이미지 저장---------------------------------- */
   const [images, setImages] = useState([]); // 이미지 배열
   const [uploadFiles, setUploadFiles] = useState([]); // 파일 업로드용
@@ -177,13 +182,32 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
 
   // console.log(initialMr_Img);
   /**이미지 삭제 */
-  const handleImageDelete = (index) => {
+  const [deletedImgCodes, setDeletedImgCodes] = useState([]);
+  const handleImageDelete = (item, index) => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
+
     const newUploadFiles = [...uploadFiles];
     newUploadFiles.splice(index, 1);
     setUploadFiles(newUploadFiles);
+
+    const newInitialMrImg = [...initialMr_Img];
+    const removedImage = newInitialMrImg.splice(index, 1);
+    setInitialMr_Img(newInitialMrImg);
+
+    const imgCode = item.img_code;
+    setDeletedImgCodes((prevImgCodes) => [...prevImgCodes, imgCode]);
+  };
+  const deleteImage = (imgCode) => {
+    axiosInstance.axiosInstance
+      .delete(`/mr/mrImg/${imgCode}`)
+      .then((res) => {
+        setDeletedImgCodes([]);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
   };
   /*----------------------------모달------------------------------------*/
   // 모달창 열림 여부 값*/
@@ -313,6 +337,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
+        deletedImgCodes.forEach((imgCode) => deleteImage(imgCode));
         handleImgUpload();
         updateBoard();
       })
@@ -586,9 +611,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 />
               </ImageListItem>
             ))}
-            {initialMr_Img.map((url, index) => (
+            {initialMr_Img.map((item, index) => (
               <ImageListItem key={index}>
-                <img src={url} alt={`Image ${index}`} loading="lazy" />
+                <img src={item.url} alt={`Image ${index}`} loading="lazy" />
                 <ImageListItemBar
                   sx={{
                     background:
@@ -604,8 +629,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                         padding: '14px 12px'
                       }}
                       handlebtn={() => {
-                        handleImageDelete(index);
-                        console.log();
+                        handleImageDelete(item, index);
+                        // console.log(item.img_code);
                       }}
                     />
                   }
