@@ -1,10 +1,79 @@
-import { Tooltip, Typography, makeStyles } from '@mui/material';
+import {
+  AppBar,
+  Backdrop,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CloseIcon from '@mui/icons-material/Close';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
+  const [openImg, setOpenImg] = useState(false);
+  const handleClose = () => {
+    setOpenImg(false);
+  };
+  const handleOpen = () => {
+    setOpenImg(true);
+  };
+
+  const [images, setImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    // 이미지가 끝에 도달하면 첫 번째 이미지로 이동
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    // 이미지가 처음에 도달하면 마지막 이미지로 이동
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+  };
+
+  const handleMaintImg = (e, url) => {
+    e.stopPropagation();
+    // 사진 보여주기
+    setImages(url);
+    handleOpen();
+  };
+
+  const handleImageDownload = (e) => {
+    e.stopPropagation();
+    console.log(images[currentImageIndex]);
+    const url = `http://localhost:8081/manager/download?originalFileName=${images[currentImageIndex]}`;
+    axiosInstance.axiosInstance
+      .get(url, { responseType: 'blob' })
+      .then((response) => {
+        const name = response.data.type;
+        const blob = new Blob([response.data], {
+          type: response.headers['content-type']
+        });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', name);
+        link.style.cssText = 'display:none';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch((error) => {
+        console.log('이미지 다운로드 에러 발생!!!');
+      });
+  };
   const columns = [
     {
       field: 'maint_name',
@@ -35,7 +104,7 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
       field: 'maint_cost',
       headerName: '금액',
       type: 'number',
-      width: 128,
+      width: 100,
       align: 'center',
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header'
@@ -43,7 +112,7 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
     {
       field: 'pay_method',
       headerName: '지불 방법',
-      width: 128,
+      width: 100,
       align: 'center',
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header'
@@ -60,7 +129,7 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
       field: 'mem_info', // 추후 수정 필요
       headerName: '등록 사원',
       sortable: false,
-      width: 128,
+      width: 100,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -76,7 +145,43 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'super-app-theme--header',
-      width: 128
+      width: 100,
+      renderCell: (params) => (
+        <Tooltip title={params.row.memo} placement="bottom-start">
+          <Typography
+            variant="caption"
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {params.row.memo}
+          </Typography>
+        </Tooltip>
+      )
+    },
+    {
+      field: 'url',
+      headerName: '사진',
+      headerAlign: 'center',
+      align: 'center',
+      headerClassName: 'super-app-theme--header',
+      width: 128,
+      renderCell: (params) =>
+        params.row.url.length > 0 ? (
+          <IconButton
+            aria-label="delete"
+            size="large"
+            onClick={(e) => {
+              handleMaintImg(e, params.row.url);
+            }}
+          >
+            <InsertPhotoIcon />
+          </IconButton>
+        ) : (
+          '-'
+        )
     }
   ];
 
@@ -110,7 +215,8 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
                 item.memResponseVO.position_name
             ],
             memo: item.memo,
-            maint_code: item.maint_code
+            maint_code: item.maint_code,
+            url: item.url
           };
         });
         setMaintData(newData);
@@ -169,6 +275,102 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
           setCheckedRow(selectedRowsData);
         }}
       />
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          position: 'fixed',
+          top: 0
+        }}
+        open={openImg}
+        onClick={handleClose}
+      >
+        <Box sx={{ flexGrow: 1, '& .MuiPaper-root': { border: 'none' } }}>
+          <AppBar
+            position="fixed"
+            sx={{
+              top: 0,
+              backgroundColor: 'rgba(0,0,0,0)',
+              boxShadow: 'none'
+            }}
+          >
+            <Toolbar
+              sx={{
+                backgroundColor: 'rgba(0,0,0,.5)',
+                display: 'flex',
+                justifyContent: 'end'
+              }}
+            >
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                sx={{ mr: 2 }}
+                onClick={handleImageDownload}
+              >
+                <FileDownloadIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                sx={{ mr: 2 }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <IconButton
+            sx={{
+              background: 'rgba(0,0,0,.2)',
+              position: 'absolute',
+              left: 0,
+              padding: '40px 30px',
+              margin: 'auto',
+              color: 'white'
+            }}
+            onClick={handlePrevImage}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
+          <IconButton
+            sx={{
+              background: 'rgba(0,0,0,.2)',
+              position: 'absolute',
+              right: 0,
+              padding: '40px 30px',
+              margin: 'auto',
+              color: 'white'
+            }}
+            onClick={handleNextImage}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+          <Box
+            sx={{
+              transition: 'opacity 300ms ease 0s',
+              animationDuration: '300ms',
+              animationDirection: 'reverse',
+              width: 'auto',
+              height: 'auto',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+          >
+            <img
+              src={images[currentImageIndex]}
+              alt={`Image ${currentImageIndex + 1}`}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+          </Box>
+        </Box>
+      </Backdrop>
     </Box>
   );
 };

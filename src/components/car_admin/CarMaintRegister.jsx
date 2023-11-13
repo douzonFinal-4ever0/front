@@ -1,8 +1,11 @@
 import {
+  Button,
   Chip,
   FormControl,
   FormControlLabel,
   Grid,
+  IconButton,
+  ImageListItemBar,
   InputAdornment,
   InputLabel,
   Radio,
@@ -27,6 +30,10 @@ import {
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
 import axiosInstance from '../../utils/axios';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import CloseIcon from '@mui/icons-material/Close';
 
 const CarMaintRegister = ({
   carCode,
@@ -102,10 +109,25 @@ const CarMaintRegister = ({
     mileage: mileage === null ? 0 : mileage
   });
 
-  useEffect(() => {
-    console.log(maintRegisterData);
-    console.log(typeof maintRegisterData.maint_start_at);
-  }, [maintRegisterData]);
+  const [files, setFiles] = useState([]);
+
+  // 이미지
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    const newFiles = selectedFiles.filter(
+      (file) => !files.some((existingFile) => existingFile.name === file.name)
+    );
+    setFiles([...files, ...newFiles]);
+  };
+  const handleRemoveImage = (index) => {
+    const newFiles = [...files];
+    newFiles.splice(index, 1);
+    setFiles(newFiles);
+  };
+  // useEffect(() => {
+  //   console.log(maintRegisterData);
+  //   console.log(typeof maintRegisterData.maint_start_at);
+  // }, [maintRegisterData]);
 
   const handleMaintRegisterBtn = () => {
     if (
@@ -126,9 +148,21 @@ const CarMaintRegister = ({
       });
     }
 
-    console.log(maintRegisterData);
-    axiosInstance.axiosInstance
-      .post('/manager/car/maintRecordRegister', maintRegisterData)
+    const formData = new FormData();
+
+    files.forEach((fileItem) => {
+      console.log(fileItem);
+      formData.append('file', fileItem);
+    });
+    formData.append('maintRegisterData', JSON.stringify(maintRegisterData));
+
+    // FormData의 내용 확인
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
+    // console.log(maintRegisterData);
+    axiosInstance.Img.post('/manager/car/maintRecordRegister', formData)
       .then((res) => {
         console.log(res.data);
         // res.data -> maint 객체 하나
@@ -395,6 +429,71 @@ const CarMaintRegister = ({
                 <Grid xs={4.5}></Grid>
               </Grid>
             </Grid>
+            <Grid item container xs={12} spacing={3}>
+              <StyledLabelGrid item xs={1.5}>
+                <Label htmlFor={'carMaint'} text={'이미지 등록'} />
+              </StyledLabelGrid>
+              <Grid item xs={4.5}>
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  이미지 업로드
+                  <VisuallyHiddenInput
+                    type="file"
+                    multiple
+                    onChange={handleImageChange}
+                  />
+                </Button>
+                {files.length > 0 && (
+                  <ImageList
+                    sx={{ width: 500, height: 'auto', margin: '15px 0px' }}
+                    cols={3}
+                    rowHeight={164}
+                  >
+                    {files.map((file, index) => (
+                      <ImageListItem key={index}>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Preview ${index}`}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '6px'
+                          }}
+                        />
+                        <ImageListItemBar
+                          sx={{
+                            background:
+                              'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, ' +
+                              'rgba(0,0,0,0.2) 70%, rgba(0,0,0,0) 100%)'
+                          }}
+                          position="top"
+                          title={
+                            <Typography variant="subtitle2">
+                              {file.name}
+                            </Typography>
+                          }
+                          actionIcon={
+                            <IconButton
+                              sx={{ color: 'white' }}
+                              onClick={() => handleRemoveImage(index)}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          }
+                          actionPosition="right"
+                        />
+                      </ImageListItem>
+                    ))}
+                  </ImageList>
+                )}
+                <Grid xs={1.5}></Grid>
+                <Grid xs={4.5}></Grid>
+              </Grid>
+            </Grid>
             <Grid item container xs={12} spacing={3.5}>
               <StyledLabelGrid item xs={1.5}>
                 <Label htmlFor={'carMaint'} text={'메모'} />
@@ -461,3 +560,15 @@ const StyledLabelGrid = styled(Grid)(({ theme }) => ({
 CarMaintRegister.defaultProps = {
   maint_code: ''
 };
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1
+});
