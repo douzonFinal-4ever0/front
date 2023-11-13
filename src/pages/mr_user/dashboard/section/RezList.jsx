@@ -16,7 +16,6 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
 const RezList = ({ todayRezList }) => {
-  console.log(todayRezList);
   return (
     <WrapContainer bgcolor={'#fff'}>
       <Stack
@@ -25,7 +24,9 @@ const RezList = ({ todayRezList }) => {
       >
         <Typography variant="h6">오늘 예약 현황</Typography>
         <StyledLink to={'/mr/rez/history'}>
-          <Typography sx={{ fontWeight: 'bold' }}>전체보기</Typography>
+          <Typography sx={{ fontWeight: 'bold', fontSize: '15px' }}>
+            전체보기
+          </Typography>
           <KeyboardArrowRightRoundedIcon />
         </StyledLink>
       </Stack>
