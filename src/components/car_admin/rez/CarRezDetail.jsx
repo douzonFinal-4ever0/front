@@ -136,7 +136,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
                 예약 정보
               </Typography>
             </Box>
-            {carRezData.carRezResponseVO.rez_status === '2' ? (
+            {carRezData.carRezResponseVO.rez_status === '3' ? (
               <Box width="15%">
                 <Box>
                   <RectangleBtn
