@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import axiosInstance from '../../utils/axios';
+import RectangleBtn from '../common/RectangleBtn';
 
 const CarRezDetail = ({ rezCode }) => {
   const navigate = useNavigate();
@@ -225,21 +226,30 @@ const CarRezDetail = ({ rezCode }) => {
                   spacing={2}
                 >
                   {rezData.rez_status !== '1' && rezData.rez_status !== '4' ? (
-                    <Button
-                      sx={{
-                        backgroundColor: '#607d8b',
-                        ':hover': { backgroundColor: '#455a64' },
-                        margin: '0px 4px'
-                      }}
-                      variant="contained"
-                      onClick={updateRez2}
-                    >
-                      예약 수정
-                    </Button>
+                    // <Button
+                    //   sx={{
+                    //     backgroundColor: '#607d8b',
+                    //     ':hover': { backgroundColor: '#455a64' },
+                    //     margin: '0px 4px'
+                    //   }}
+                    //   variant="contained"
+                    //   onClick={updateRez2}
+                    // >
+                    //   예약 수정
+                    // </Button>
+                    <Grid container xs={2} sx={{ mr: 1 }}>
+                      <RectangleBtn
+                        // type={'submit'}
+                        text={'예약 수정'}
+                        category={'modify'}
+                        sx={{ padding: '14px 12px', minWidth: '100px' }}
+                        handlebtn={updateRez2}
+                      />
+                    </Grid>
                   ) : (
                     ''
                   )}
-                  <Button
+                  {/* <Button
                     sx={{
                       backgroundColor: '#607d8b',
                       ':hover': { backgroundColor: '#455a64' },
@@ -249,7 +259,16 @@ const CarRezDetail = ({ rezCode }) => {
                     onClick={cancelRez}
                   >
                     예약 취소
-                  </Button>
+                  </Button> */}
+                  <Grid container xs={2}>
+                    <RectangleBtn
+                      // type={'submit'}
+                      text={'예약 취소'}
+                      category={'delete'}
+                      sx={{ padding: '14px 12px', minWidth: '100px' }}
+                      handlebtn={cancelRez}
+                    />
+                  </Grid>
                 </Grid>
               ) : (
                 ''

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { setRezData } from '../../../../redux/reducer/mrUserSlice';
 import { setUserData } from '../../../../redux/reducer/userSlice';
 import axiosInstance from '../../../../utils/axios';
@@ -23,11 +24,12 @@ import ImageIcon from '@mui/icons-material/Image';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 const InnerPtForm = ({ ptList, setPtList }) => {
+  const { pathname } = useLocation();
+  const isDetailModal = pathname === '/mr/rez/history' ? true : false;
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;
-
   // 모달창 오픈
   const [openModal, setOpenModal] = useState(false);
   // ------------------------------------------------------------
@@ -98,9 +100,11 @@ const InnerPtForm = ({ ptList, setPtList }) => {
 
   // 참석자 카드 삭제 버튼 이벤트
   const handleCardDeleteBtn = (e) => {
-    const index = e.currentTarget.tabIndex;
-    const copyList = [...ptList];
-    copyList.splice(index, 1);
+    const deleteIndex = e.currentTarget.tabIndex;
+    let copyList = [...ptList];
+    copyList.splice(deleteIndex, 1);
+    const newRez = { ...rezData, mr_pt_list: copyList };
+    dispatch(setRezData({ data: newRez }));
     setPtList(copyList);
     setApplyMemberList(copyList);
   };
@@ -165,10 +169,7 @@ const InnerPtForm = ({ ptList, setPtList }) => {
                       fontSize: '14px'
                     }}
                   >
-                    |
-                    {mem.deptVO === undefined
-                      ? mem.dept_name
-                      : mem.deptVO.dept_name}
+                    | {mem.deptVO ? mem.deptVO.dept_name : mem.dept_name}
                   </Typography>
                 </Stack>
               }

@@ -27,21 +27,64 @@ import RezInfo from './section/RezInfo';
 const MrRezConfirmPage = () => {
   const rezData = useSelector(setRezData).payload.mrUser;
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
-  const {
-    m_name,
-    rez_date,
-    rez_end_time,
-    rez_start_time,
-    mr_pt_list,
-    mr_code
-  } = rezData;
   const { list } = mrRecommendData;
-  const mr = list.filter((item) => item.mr_code === mr_code);
-  const { mr_name, location } = mr[0];
+  const mr = list.filter((item) => item.mr_code === rezData.mr_code);
+
+  const info = {
+    m_name: rezData && rezData.m_name,
+    mr_name: mr.length !== 0 && mr[0].mr_name,
+    location: mr.length !== 0 && mr[0].location,
+    rez_date: rezData && rezData.rez_date,
+    rez_start_time: rezData && rezData.rez_start_time,
+    rez_end_time: rezData && rezData.rez_end_time,
+    created_at: mr.length !== 0 && mr[0].created_at,
+    pt_list: rezData && rezData.mr_pt_list
+  };
 
   return (
     <>
       <SubHeader title="회의실 예약" />
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <MainContainer>
+          <WrapContainer bgcolor={'#fff'}>
+            <Grid container direction={'row'} spacing={3}>
+              <Grid item xs={8}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: `calc(100vh - 260px)`
+                  }}
+                >
+                  <StyledDoneIcon />
+                  <StyledDoneTitle>회의실 예약 완료</StyledDoneTitle>
+                  <StyledDoneText>
+                    예약이 완료되었습니다. <br />
+                    자세한 사항은 예약 내역 페이지에서 확인할 수 있습니다.
+                  </StyledDoneText>
+                  <Stack direction={'row'} gap={1} sx={{ marginTop: '40px' }}>
+                    <StyledLinkOutline to={'/mr/dashboard'}>
+                      대시보드
+                    </StyledLinkOutline>
+                    <StyledLink to={'/mr/rez/history'}>예약 내역</StyledLink>
+                  </Stack>
+                </Box>
+              </Grid>
+
+              <Grid
+                item
+                container
+                xs={4}
+                sx={{ overflowY: 'auto', maxHeight: '600px' }}
+              >
+                <RezInfo data={info} />
+              </Grid>
+            </Grid>
+          </WrapContainer>
+        </MainContainer>
+      </Box>
     </>
   );
 };
