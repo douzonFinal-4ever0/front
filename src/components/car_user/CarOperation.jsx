@@ -222,11 +222,6 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
           selectedFiles2.forEach((file) => {
             imgformData.append('images', file);
           });
-
-          // for (var pair of imgformData.entries()) {
-          //   console.log(pair[0]);
-          //   console.log(pair[1]);
-          // }
           axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
             (res) => {
               console.log(res.data);
