@@ -14,6 +14,10 @@ import JWTdecode from '../../components/common/JWTdecode';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
 import axiosInstance from '../../utils/axios';
+import socketIOClient from 'socket.io-client';
+import { useContext } from 'react';
+import { SocketContext } from '../../utils/SocketProvider';
+// import SocketContext from '../../utils/SocketContext';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,6 +30,8 @@ const Login = () => {
     email,
     password
   };
+  const socket = useContext(SocketContext);
+
   /**로그인 할때 쓰는 핸들러 */
   const handleLogin = () => {
     axiosInstance.axiosInstance
@@ -45,6 +51,8 @@ const Login = () => {
   localStorage.setItem('jwtToken', jwt);
   if (jwt != '') {
     if (jwt != 'Bearer undefined') {
+      console.log(socket);
+      socket.emit('login');
       navigate('/mr/dashboard');
     }
   }

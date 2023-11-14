@@ -67,6 +67,7 @@ const SubSideContents = ({
     // console.log(rezStart_at + '');
     // console.log(typeof rezStart_at);
     // console.log(Token);
+    console.log(socket);
     socket.emit('user', currentName);
     socket.on('users', (currentUsers) => {
       // console.log(currentUsers);

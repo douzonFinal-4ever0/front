@@ -484,7 +484,6 @@ const Register = () => {
         dest_loc: dest_loc
       };
     } else {
-      console.log('ads');
       setFormData({
         memDTO: {
           mem_code: mem_code

@@ -20,6 +20,9 @@ import Statistics from './section/Statistics';
 import calcRezRate from '../../../utils/calcRezRate';
 import Notice from './section/Notice';
 import Notices from './section/Notices';
+import { useLocation } from 'react-router-dom';
+import { SocketContext } from '../../../utils/SocketProvider';
+import { useContext } from 'react';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -28,6 +31,11 @@ const DashboardPage = () => {
   const bmData = useSelector(setBmData).payload.bm;
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
   const [notice, setNotice] = useState([]); // 공지사항 리스트
+  //알람 관련
+
+  const socket = useContext(SocketContext);
+  // const currentUser = useSelector((state) => state.user);
+  // const mem_code = currentUser.mem_code;
 
   // 리덕스 데이터
   const { name, position_name, mem_code, dept_name } = userData;
@@ -37,6 +45,7 @@ const DashboardPage = () => {
     getMrRezApi();
     getMrUsageApi();
     getNotice();
+    socket.emit('loginSuccess', mem_code);
   }, []);
 
   // 전체 회의실 사용률 조회

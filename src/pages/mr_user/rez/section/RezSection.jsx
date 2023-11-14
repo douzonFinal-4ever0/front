@@ -30,6 +30,8 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
+import { useContext } from 'react';
+import { SocketContext } from '../../../../utils/SocketProvider';
 
 const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const location = useLocation();
@@ -59,7 +61,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const [ptList, setPtList] = useState(mr_pt_list);
   // 회의명 태그 클릭한 데이터
   const [clickTagData, setClickTagData] = useState([]);
-
+  const socket = useContext(SocketContext);
   useEffect(() => {
     if (
       m_name !== '' &&
@@ -113,6 +115,8 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
         navigation('/mr/rez/confirm');
+        //예약 완료하면 참석자들에게 알림
+        socket.emit('allParticipant', ptList);
         return;
       } else if (res.status === 400) {
         // 서버에서 상태 코드 400이면 중복 예약
