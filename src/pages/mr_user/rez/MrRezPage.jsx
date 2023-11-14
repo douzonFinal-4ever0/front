@@ -39,12 +39,17 @@ const MrRezPage = () => {
       if (res.status !== 200) return;
       const { data } = res;
 
-      let arr = new Set();
-      data.forEach((item) => {
-        arr.add(item.m_name);
+      // 다시 최신순 정렬
+      data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      // 최신 5개 중 중복 제거를 위해 Set 사용
+      let uniqueArray = Array.from(
+        new Set(data.map((item) => item.m_name))
+      ).map((m_name) => {
+        return data.find((item) => item.m_name === m_name);
       });
 
-      setRecentMNames(Array.from(arr));
+      setRecentMNames(uniqueArray);
     } catch (err) {
       console.log(err);
     }

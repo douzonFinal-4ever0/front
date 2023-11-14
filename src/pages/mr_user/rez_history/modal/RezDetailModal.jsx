@@ -74,7 +74,6 @@ const RezDetailModal = ({
       handleSetSnackbarContent('예약 삭제 되었습니다. ');
       handleOpenSnackbar();
 
-      handleModifyMode();
       handleDeleteModalClose();
       handleModal();
     } catch (err) {
