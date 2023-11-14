@@ -36,12 +36,16 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import { palette } from '../../theme/palette';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import axiosInstance from '../../utils/axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../components/common/Spinner';
 import LoadingModal from '../../components/car_user/LoadingModal';
 import socketIOClient from 'socket.io-client';
 import MultiTimePicker from '../../components/common/MultiTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../redux/reducer/SnackbarSlice';
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -109,94 +113,14 @@ const Register = () => {
   const [rezStart_at, setRezStart_at] = useState(null);
   const [rezReturn_at, setRezReturn_at] = useState(null);
 
-  //입력시 변환
-  const handleCarCode = (e) => {
-    if (carRez) {
-      setCar_code(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
   };
-  const handleDetail = (e) => {
-    if (carRez) {
-      setDetail(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleEstMileage = (e) => {
-    if (carRez) {
-      setEst_mileage(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleStartAt = (e) => {
-    if (carRez) {
-      setStart_at(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleReturnAt = (e) => {
-    if (carRez) {
-      setReturn_at(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleReceiptLoc = (e) => {
-    if (carRez) {
-      setReceipt_loc(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleReturnLoc = (e) => {
-    if (carRez) {
-      setReturn_loc(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
-  };
-  const handleDestLoc = (e) => {
-    if (carRez) {
-      setDest_loc(e.target.value);
-    } else {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
   };
 
   let updateData = {};
@@ -309,15 +233,24 @@ const Register = () => {
     console.log(formData);
     var flag = 0;
     if (formData.carDTO.car_code === '') {
+      //error snackbar
       alert('차량을 선택하세요');
+      handleOpenSnackbar();
+      handleSetSnackbarContent('차량을 선택하세요.');
       flag++;
     }
     if (formData.start_at === '' || formData.return_at === '') {
+      //error snackbar
       alert('날짜를 선택하세요');
+      handleOpenSnackbar();
+      handleSetSnackbarContent('날짜를 선택하세요.');
       flag++;
     }
     if (formData.return_loc === '' || formData.dest_loc === '') {
+      //error snackbar
       alert('장소를 선택하세요');
+      handleOpenSnackbar();
+      handleSetSnackbarContent('장소를 선택하세요.');
       flag++;
     }
     if (flag === 0) {
@@ -327,6 +260,8 @@ const Register = () => {
           let data = res.data;
           data.start_at = dateFormat(res.data.start_at);
           data.return_at = dateFormat(res.data.return_at);
+          handleOpenSnackbar();
+          handleSetSnackbarContent('예약이 완료되었습니다.');
           console.log('예약 완료 : ' + dateFormat(res.data.start_at));
           socket.emit('disconnect_with_info', currentName);
           navigate('../carRezComplete', { state: data });
