@@ -477,7 +477,11 @@ const Dashboard = () => {
           console.log(Data.rez_status);
           handleOpen();
         };
-        if (Data.rez_status === '4' || Data.rez_status === '1') {
+        if (
+          Data.rez_status === '4' ||
+          Data.rez_status === '1' ||
+          Data.rez_status === '3'
+        ) {
           return (
             <Button
               onClick={(e) => {

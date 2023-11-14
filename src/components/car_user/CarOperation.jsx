@@ -132,14 +132,16 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       [name]: value
     });
   };
-  const imgformData = new FormData();
-  // var selectedFiles;
+
+  // var selectedFile;
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  // var selectedFiles = [];
   /**이미지가 리스트에 추가가 되는 이벤트 */
   const handleImageChange = (event) => {
-    console.log(event.target.files[0].name);
-    setSelectedFile(event.target.files[0].name);
+    console.log(event.target.files[0]);
+    setSelectedFile(event.target.files[0]);
+    // selectedFile = event.target.files[0];
     setExp({
       ...exp,
       imgName: event.target.files[0].name
@@ -157,13 +159,13 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     setFormData((preState) => {
       const newState = { ...preState };
       newState.expenditureDTO = [...expList, exp];
-      console.log(newState);
+      // console.log(newState);
       return newState;
     });
+
+    console.log(selectedFile);
     setSelectedFiles([...selectedFiles, selectedFile]);
-    console.log(selectedFiles);
-    imgformData.append('img', selectedFiles);
-    // console.log(imgformData);
+    // selectedFiles = [...selectedFiles, selectedFile];
   };
   const resetExp = () => {
     setExp({
@@ -185,7 +187,7 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
     setFormData((preState) => {
       const newState = { ...preState };
       newState.expenditureDTO = [...expList];
-      console.log(newState);
+      // console.log(newState);
       return newState;
     });
     resetExp();
@@ -198,31 +200,45 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       parseFloat(formData.nomal_biz_mileage) +
         parseFloat(formData.commute_mileage)
     ) {
-      console.log(formData.distance);
-      console.log(formData.nomal_biz_mileage + formData.commute_mileage);
+      // console.log(formData.distance);
+      // console.log(formData.nomal_biz_mileage + formData.commute_mileage);
       //error snackbar
       alert('총주행거리가 업무용 거리보다 작습니다.');
       handleOpenSnackbar();
       handleSetSnackbarContent('총주행거리가 업무용 거리보다 작습니다.');
     } else {
-      // axiosInstance.Img.post('/mr/mrImg', formData)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //     // handleSetSnackbarContent('이미지가 업로드 완료되었습니다!');
-      //     // handleOpenSnackbar();
-      //   })
-      //   .catch(console.error);
+      // console.log('asdasdasd');
       // console.log(expList2);
       console.log(formData);
       axiosInstance.axiosInstance
         .post(`http://localhost:8081/car_rez/operation`, formData)
         .then((res) => {
           console.log(res.data);
-          alert('운행 처리 완료');
-          handleOpenSnackbar();
-          handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
-          setExpList([]);
-          handleClose();
+          // 콘솔에 FormData 내용 출력
+          console.log(selectedFiles);
+          const selectedFiles2 = Array.from(selectedFiles);
+          console.log(selectedFiles2);
+          var imgformData = new FormData();
+          selectedFiles2.forEach((file) => {
+            imgformData.append('images', file);
+          });
+
+          // for (var pair of imgformData.entries()) {
+          //   console.log(pair[0]);
+          //   console.log(pair[1]);
+          // }
+          axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
+            (res) => {
+              console.log(res.data);
+              setSelectedFile(null);
+              setSelectedFiles([]);
+              setExpList([]);
+              handleClose();
+              alert('운행 처리 완료');
+              handleOpenSnackbar();
+              handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
+            }
+          );
         });
     }
   };
