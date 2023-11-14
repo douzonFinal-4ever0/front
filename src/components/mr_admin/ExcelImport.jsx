@@ -39,6 +39,16 @@ function ExcelImport() {
     const file = event.target.files[0];
 
     if (file) {
+      const validExtensions = ['.xlsx', '.xls'];
+      const fileExtension = file.name.slice(
+        ((file.name.lastIndexOf('.') - 1) >>> 0) + 2
+      );
+
+      if (!validExtensions.includes(`.${fileExtension}`)) {
+        handleSetSnackbarContent('엑셀 파일만 업로드 가능합니다.');
+        handleOpenSnackbar();
+        return;
+      }
       const reader = new FileReader();
 
       reader.onload = (e) => {
