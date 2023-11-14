@@ -17,6 +17,9 @@ import WrapContainer from '../../../components/mr_user/WrapContainer';
 import MiniRezForm from './section/MiniRezForm';
 import RezList from './section/RezList';
 import Statistics from './section/Statistics';
+import calcRezRate from '../../../utils/calcRezRate';
+import Notice from './section/Notice';
+import Notices from './section/Notices';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -24,7 +27,7 @@ const DashboardPage = () => {
   const userData = useSelector(setUserData).payload.user;
   const bmData = useSelector(setBmData).payload.bm;
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
-  const [rezList, setRezList] = useState([]); // 전체 예약 리스트
+  const [notice, setNotice] = useState([]); // 공지사항 리스트
 
   // 리덕스 데이터
   const { name, position_name, mem_code, dept_name } = userData;
@@ -32,8 +35,23 @@ const DashboardPage = () => {
 
   useEffect(() => {
     getMrRezApi();
+    getMrUsageApi();
+    getNotice();
   }, []);
 
+  // 전체 회의실 사용률 조회
+  const getMrUsageApi = async () => {
+    const date = getToday(); //년월일
+    const time = '16:00';
+
+    const res = await axiosInstance.axiosInstance(
+      `/mr/statistics?date=${date}&time=${time}`
+    );
+    if (res.status !== 200) return;
+    calcRezRate(res.data);
+  };
+
+  // 사용자 회의실 예약 조회
   const getMrRezApi = async () => {
     try {
       // 참석자로 지정된 회의 예약 조회
@@ -90,6 +108,19 @@ const DashboardPage = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // 공지사항 조회
+  const getNotice = async () => {
+    const res = await axiosInstance.axiosInstance.get('/mr/notice');
+    if (res.status !== 200) return;
+
+    const processedData = res.data.map((item) => ({
+      ...item,
+      id: item.notice_code
+    }));
+
+    setNotice(processedData);
   };
 
   // 현재 날짜 구하기
@@ -173,16 +204,29 @@ const DashboardPage = () => {
         </Box>
         <MainContainer>
           <Stack spacing={3}>
-            {/* 예약 폼 */}
+            {/* 1단락 */}
             <MiniRezForm />
 
+            {/* 2단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={5.5}>
+                <Grid item xs={6}>
                   <RezList todayRezList={todayRezList} />
                 </Grid>
-                <Grid item xs={6.5}>
+                <Grid item xs={6}>
                   <Statistics />
+                </Grid>
+              </Grid>
+            </Box>
+
+            {/* 3단락 */}
+            <Box>
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <Notice data={notice} />
+                </Grid>
+                <Grid item xs={6}>
+                  asd
                 </Grid>
               </Grid>
             </Box>

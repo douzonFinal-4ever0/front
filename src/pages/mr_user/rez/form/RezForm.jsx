@@ -25,7 +25,7 @@ import { palette } from '../../../../theme/palette';
 import { times, meetingTypes } from '../../../../config';
 import Selectbox from '../../../../components/common/Selectbox';
 
-const RezForm = ({ recentMNames, isReadOnly }) => {
+const RezForm = ({ recentMNames, setClickTagData }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const {
@@ -47,6 +47,8 @@ const RezForm = ({ recentMNames, isReadOnly }) => {
   // 회의명 태그 클릭 이벤트
   const handleMNameChip = (e) => {
     const value = e.target.textContent;
+    const findData = recentMNames.filter((item) => item.m_name === value);
+    setClickTagData([...findData]);
     const newRezData = { ...rezData, m_name: value };
     dispatch(setRezData({ data: newRezData }));
   };
@@ -120,7 +122,7 @@ const RezForm = ({ recentMNames, isReadOnly }) => {
             {recentMNames &&
               recentMNames.map((item) => (
                 <StyledChip
-                  label={item}
+                  label={item.m_name}
                   size="small"
                   onClick={handleMNameChip}
                 />

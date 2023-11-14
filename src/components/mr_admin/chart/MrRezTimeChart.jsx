@@ -1,7 +1,7 @@
 import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 
-const MrRezTimeChart = ({ height, width }) => {
+const MrRezTimeChart = ({ height, width, data }) => {
   // 그래프 데이터 설정
   const option = {
     tooltip: {
@@ -30,10 +30,20 @@ const MrRezTimeChart = ({ height, width }) => {
         '4시간 30분',
         '5시간',
         '5시간 30분',
-        '6시간'
+        '6시간',
+        '6시간 30분',
+        '7시간',
+        '7시간 30분',
+        '8시간',
+        '8시간 30분',
+        '9시간'
       ],
       axisTick: {
         alignWithLabel: true
+      },
+      axisLabel: {
+        interval: 0, // 모든 레이블을 표시하도록 설정
+        rotate: 45 // 레이블을 45도로 회전
       }
     },
     yAxis: {
@@ -41,9 +51,9 @@ const MrRezTimeChart = ({ height, width }) => {
     },
     series: [
       {
-        data: [8, 4, 2, 14, 0, 2, 0, 0, 0, 1, 0, 0],
+        data: data,
         type: 'bar',
-        barWidth: '50%',
+        barWidth: '60%',
         name: '건 수'
       }
     ]

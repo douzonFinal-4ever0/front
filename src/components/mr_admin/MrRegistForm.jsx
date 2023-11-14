@@ -44,6 +44,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
+    dispatch(handleMrListUpdate());
   };
   /*-------------------------------------알림-----------------------------------------------*/
   const dispatch = useDispatch();
@@ -55,10 +56,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
-  const updateBoard = () => {
-    // handleMrListUpdate 함수 디스패치
-    dispatch(handleMrListUpdate());
-  };
+  // const updateBoard = () => {
+  //   // handleMrListUpdate 함수 디스패치
+  //   dispatch(handleMrListUpdate());
+  // };
 
   /*------------------------------------수정시 데이터--------------------------------------------*/
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
@@ -323,7 +324,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
-        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -339,7 +339,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleCloseDrawer();
         deletedImgCodes.forEach((imgCode) => deleteImage(imgCode));
         handleImgUpload();
-        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -353,7 +352,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
-        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);

@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
   setSnackbarContent
@@ -30,6 +31,7 @@ function ExcelImport() {
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
+    dispatch(handleMrListUpdate());
   };
   /*----------------------------------------------------------------------------------------*/
   /**엑셀 파일 업로드 */

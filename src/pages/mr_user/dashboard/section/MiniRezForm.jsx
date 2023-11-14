@@ -113,7 +113,8 @@ const MiniRezForm = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          rowGap: '20px'
+          rowGap: '30px',
+          padding: '10px 0'
         }}
         onSubmit={handleRezBtnSubmit}
       >

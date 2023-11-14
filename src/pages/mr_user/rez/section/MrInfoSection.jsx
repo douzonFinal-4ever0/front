@@ -1,4 +1,5 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { Chip } from '@mui/material';
 import styled from '@emotion/styled';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -8,11 +9,15 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 
 import { setMrRecommendData } from '../../../../redux/reducer/MrRecommendSlice';
+import RoomPreferencesRoundedIcon from '@mui/icons-material/RoomPreferencesRounded';
+import TagRoundedIcon from '@mui/icons-material/TagRounded';
+import TurnedInNotRoundedIcon from '@mui/icons-material/TurnedInNotRounded';
 import Carousel from '../../../../components/mr_user/Carousel';
 import { useState } from 'react';
 import { PAGE_INNER_PADDING } from '../../../../config';
 import Tag from '../../../../components/mr_user/Tag';
 import { convertDayToText } from '../../../../utils/convertDayToText';
+import { palette } from '../../../../theme/palette';
 
 const MrInfoSection = ({ data }) => {
   const {
@@ -23,8 +28,11 @@ const MrInfoSection = ({ data }) => {
     avl_end_time,
     mr_keyword,
     mr_img,
-    mr_op_day
+    mr_op_day,
+    mr_supplies
   } = data;
+
+  console.log(mr_supplies);
 
   // 요일 number -> string으로 변경
   let newDays = [];
@@ -42,6 +50,7 @@ const MrInfoSection = ({ data }) => {
     setBookmark(!bookmark);
   };
 
+  console.log(mr_supplies);
   return (
     <Box
       component={'section'}
@@ -61,17 +70,20 @@ const MrInfoSection = ({ data }) => {
               )}
             </IconButton>
           </StyledRoomTitleInfoWrap>
+
           <Stack sx={{ rowGap: '6px' }}>
             {/* 위치 영역 */}
             <StyledRoomInfoWrap>
               <FmdGoodOutlinedIcon fontSize="small" />
               <StyledInfoText>{location}</StyledInfoText>
             </StyledRoomInfoWrap>
+
             {/* 최대 인원수 영역 */}
             <StyledRoomInfoWrap>
               <PermIdentityOutlinedIcon fontSize="small" />
               <StyledInfoText>최대 {maximum_capacity} 명</StyledInfoText>
             </StyledRoomInfoWrap>
+
             {/* 이용시간 영역 */}
             <StyledRoomInfoWrap>
               <AccessTimeRoundedIcon fontSize="small" />
@@ -93,6 +105,7 @@ const MrInfoSection = ({ data }) => {
                   .replace(/:\d+\s/, ' ')}
               </StyledInfoText>
             </StyledRoomInfoWrap>
+
             {/* 요일 영역 */}
             <StyledRoomInfoWrap>
               <DateRangeRoundedIcon fontSize="small" />
@@ -101,15 +114,48 @@ const MrInfoSection = ({ data }) => {
                   <StyledInfoText key={index}>{day}</StyledInfoText>
                 ))}
             </StyledRoomInfoWrap>
-          </Stack>
-          {/* 태그 영역 */}
-          <Stack sx={{ marginTop: `${PAGE_INNER_PADDING}px` }}>
-            <StyledRoomTagsWrap>
-              {mr_keyword &&
-                mr_keyword.map((tag, index) => (
-                  <Tag key={index} text={tag.keyword_name} isHashTag={true} />
-                ))}
-            </StyledRoomTagsWrap>
+
+            {/* 장비 영역 */}
+            <Stack sx={{ marginTop: '10px', rowGap: '6px' }}>
+              <Stack direction={'row'} sx={{ alignItems: 'center' }}>
+                <RoomPreferencesRoundedIcon
+                  fontSize="small"
+                  sx={{ marginRight: '4px' }}
+                />
+                <StyledInfoTilte>기본 장비</StyledInfoTilte>
+              </Stack>
+
+              <StyledRoomTagsWrap>
+                {mr_supplies &&
+                  mr_supplies.map((item, index) => (
+                    <>
+                      {item.supplies.supplies_name === null ? null : (
+                        <Chip
+                          label={item.supplies.supplies_name}
+                          sx={{ backgroundColor: palette.grey['300'] }}
+                        />
+                      )}
+                    </>
+                  ))}
+              </StyledRoomTagsWrap>
+            </Stack>
+
+            {/* 태그 영역 */}
+            <Stack sx={{ marginTop: '10px', rowGap: '6px' }}>
+              <Stack direction={'row'} sx={{ alignItems: 'center' }}>
+                <TagRoundedIcon fontSize="small" sx={{ marginRight: '4px' }} />
+                <StyledInfoTilte>회의실 태그</StyledInfoTilte>
+              </Stack>
+              <StyledRoomTagsWrap>
+                {mr_keyword &&
+                  mr_keyword.map((tag, index) => (
+                    <Chip
+                      label={tag.keyword_name}
+                      sx={{ backgroundColor: palette.grey['300'] }}
+                    />
+                  ))}
+              </StyledRoomTagsWrap>
+            </Stack>
           </Stack>
         </Stack>
       </Box>
@@ -139,6 +185,10 @@ const StyledRoomName = styled('h3')(({ theme }) => ({
 
 const StyledInfoText = styled(Typography)(({ theme }) => ({
   fontSize: '16px'
+}));
+
+const StyledInfoTilte = styled(Typography)(({ theme }) => ({
+  fontSize: '16x'
 }));
 
 const StyledRoomTagsWrap = styled(StyledRoomInfoWrap)(({ theme }) => ({

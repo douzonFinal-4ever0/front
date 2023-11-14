@@ -57,6 +57,8 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const [isDisabled, setisDisabled] = useState(true);
   // 참석자 리스트
   const [ptList, setPtList] = useState(mr_pt_list);
+  // 회의명 태그 클릭한 데이터
+  const [clickTagData, setClickTagData] = useState([]);
 
   useEffect(() => {
     if (
@@ -106,8 +108,6 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
     dispatch(setRezData({ data }));
     try {
       const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
-      console.log('*******상태코드******');
-      console.log(res.status);
 
       if (res.status === 201) {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
@@ -159,7 +159,11 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <RezForm recentMNames={recentMNames} isReadOnly={isReadOnly} />
+                <RezForm
+                  recentMNames={recentMNames}
+                  isReadOnly={isReadOnly}
+                  setClickTagData={setClickTagData}
+                />
               </AccordionDetails>
             </Accordion>
 
@@ -185,7 +189,12 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
-                <InnerPtForm ptList={ptList} setPtList={setPtList} />
+                <InnerPtForm
+                  ptList={ptList}
+                  setPtList={setPtList}
+                  clickTagData={clickTagData}
+                  setClickTagData={setClickTagData}
+                />
               </AccordionDetails>
             </Accordion>
 
