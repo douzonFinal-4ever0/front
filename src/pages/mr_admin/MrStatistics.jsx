@@ -23,7 +23,7 @@ const MrStatistics = () => {
   const [modalContent, setModalContent] = useState();
   const [mrResources, setMrResources] = useState({});
   const [mrRez, setMrRez] = useState();
-  const [mrRezRank, setMrRezRank] = useState({});
+  const [mrRezRank, setMrRezRank] = useState([]);
   const [modalTitle, setModalTitle] = useState('');
   const [mrRezRow, setMrRezRow] = useState({});
   const [mrRezTime, setMrRezTime] = useState({});
@@ -90,27 +90,122 @@ const MrStatistics = () => {
         console.error('데이터 가져오기 오류:', error);
       });
   }, []);
-  console.log(mrRezDate);
-  console.log(mrRezFavTime);
+
+  // Ensure that mrRezRank is an array
+
+  // Group data by mr_code
+  const groupedData = mrRezRank.reduce((acc, item) => {
+    const { mr_code, img_url, mr_name, rez_cnt } = item;
+    acc[mr_code] = acc[mr_code] || { mr_code, mr_name, rez_cnt, img_url: [] };
+    acc[mr_code].img_url.push(img_url);
+    return acc;
+  }, {});
+
+  // Convert the grouped data into an array
+  const result = Object.values(groupedData);
+  console.log(result);
+
+  // 현재 날짜를 얻기 위해 새로운 Date 객체를 생성
+  const currentDate = new Date();
+
+  // 현재 주의 월요일 날짜를 계산
+  const currentMonday = new Date(currentDate);
+  currentMonday.setDate(
+    currentDate.getDate() -
+      currentDate.getDay() +
+      (currentDate.getDay() === 0 ? -6 : 1)
+  );
+
+  // 저번주 월요일을 계산
+  const lastMonday = new Date(currentMonday);
+  lastMonday.setDate(currentMonday.getDate() - 7);
+
+  // 함수를 통해 필요한 날짜 배열을 추출
+  const getWeekDates = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const weekDates = [];
+
+    while (startDate <= endDate) {
+      weekDates.push(startDate.toISOString().split('T')[0]);
+      startDate.setDate(startDate.getDate() + 1);
+    }
+
+    return weekDates;
+  };
+  console.log(mrRezRank);
+
+  // 저번주 월요일부터 금요일까지의 날짜 배열
+  const lastWeekDates = getWeekDates(
+    lastMonday,
+    new Date(lastMonday.getTime() + 4 * 24 * 60 * 60 * 1000)
+  );
+
+  // 이번주 월요일부터 금요일까지의 날짜 배열
+  const currentWeekDates = getWeekDates(
+    currentMonday,
+    new Date(currentMonday.getTime() + 4 * 24 * 60 * 60 * 1000)
+  );
+
+  const lastWeekCntData = lastWeekDates.map((date) => {
+    if (Array.isArray(mrRezDate)) {
+      // currentWeekDates 배열의 날짜와 일치하는 mrRezData의 데이터를 찾음
+      const matchingData = mrRezDate.find((data) =>
+        data.rez_date.includes(date)
+      );
+
+      // 일치하는 데이터가 있으면 해당 데이터의 cnt 값을 반환, 없으면 0을 반환
+      return matchingData ? matchingData.cnt : 0;
+    } else {
+      // data가 배열이 아닌 경우에 대한 처리 (예: 기본값 설정 또는 오류 처리)
+      return 0; // 또는 다른 적절한 값을 반환
+    }
+  });
+  const currentWeekCntData = currentWeekDates.map((date) => {
+    if (Array.isArray(mrRezDate)) {
+      // currentWeekDates 배열의 날짜와 일치하는 mrRezData의 데이터를 찾음
+      const matchingData = mrRezDate.find((data) =>
+        data.rez_date.includes(date)
+      );
+
+      // 일치하는 데이터가 있으면 해당 데이터의 cnt 값을 반환, 없으면 0을 반환
+      return matchingData ? matchingData.cnt : 0;
+    } else {
+      // data가 배열이 아닌 경우에 대한 처리 (예: 기본값 설정 또는 오류 처리)
+      return 0; // 또는 다른 적절한 값을 반환
+    }
+  });
+
+  const lastWeekSum = lastWeekCntData.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+
+  // reduce 메서드를 사용하여 배열의 합을 계산
+  const currentWeekSum = currentWeekCntData.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+
   // 모든 시간대를 포함한 배열 생성
   const allTimeSlots = [
-    '09:00:00',
-    '09:30:00',
-    '10:00:00',
-    '10:30:00',
-    '11:00:00',
-    '12:00:00',
-    '12:30:00',
-    '13:00:00',
-    '14:00:00',
-    '14:30:00',
-    '15:00:00',
-    '15:30:00',
-    '16:00:00',
-    '16:30:00',
-    '17:00:00',
-    '17:30:00',
-    '18:00:00'
+    '09:00',
+    '09:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '12:00',
+    '12:30',
+    '13:00',
+    '14:00',
+    '14:30',
+    '15:00',
+    '15:30',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
+    '18:00'
   ];
 
   // mrRezFavTime의 시간대를 기준으로 데이터 매핑
@@ -123,8 +218,13 @@ const MrStatistics = () => {
       })
     : [];
 
-  // 결과로 나온 resultArray에는 모든 시간대에 대한 rez_cnt 값이 들어 있습니다.
-  console.log(FavTime);
+  const mrRezFavTimeArray = Object.values(mrRezFavTime);
+  const maxRezCntItem = mrRezFavTimeArray.reduce(
+    (maxItem, currentItem) => {
+      return currentItem.rez_cnt > maxItem.rez_cnt ? currentItem : maxItem;
+    },
+    { rez_cnt: -1 }
+  );
 
   const handleMrInfo = (mr_code) => {
     axiosInstance.axiosInstance
@@ -222,8 +322,8 @@ const MrStatistics = () => {
         ]}
       />
       <Typography variant="body1">
-        💡총 {mrRezRow.total}개의 회의실중 {mrRezRow.rez_row_count}개 회의실이
-        운영되었습니다.
+        💡총 {mrRezRow.total}개의 회의실중{' '}
+        {mrRezRow.total - mrRezRow.rez_row_count}개 회의실이 운영되었습니다.
       </Typography>
     </CardContent>
   );
@@ -236,7 +336,7 @@ const MrStatistics = () => {
         <MrMostTimeChart width={'auto'} height={300} data={FavTime} />
       </CardActionArea>
       <Typography variant="body1">
-        💡가장 붐비는 시간대는 09:00 입니다.
+        💡가장 붐비는 시간대는 {maxRezCntItem.rez_time} 입니다.
       </Typography>
     </CardContent>
   );
@@ -267,17 +367,17 @@ const MrStatistics = () => {
       <Typography gutterBottom variant="h4" component="div">
         ⭐인기 있는 회의실
       </Typography>
-      <Grid container spacing={3} mb={3} mt={3}>
+      <Grid container spacing={3} mb={1} mt={1}>
         {[0, 1, 2].map((index) => (
           <Grid item xs={4} key={index}>
             <CardActionArea
               onClick={() => {
-                handleMrInfo(mrRezRank[index]?.mr_code);
+                handleMrInfo(result[index]?.mr_code);
               }}
             >
               <CardMedia
                 component="img"
-                image="https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/b5b95fa1-9e4d-4860-b160-200d136e722d-mr-room7.png"
+                image={result[index]?.img_url[0]}
                 style={{ borderRadius: '15px' }}
               />
             </CardActionArea>
@@ -288,16 +388,16 @@ const MrStatistics = () => {
               component="div"
               sx={{ textAlign: 'center' }}
             >
-              {mrRezRank[index]?.mr_name}
+              {result[index]?.mr_name}
             </Typography>
             <Typography variant="body2" sx={{ textAlign: 'center' }}>
-              {mrRezRank[index]?.rez_cnt}회
+              {result[index]?.rez_cnt}회
             </Typography>
           </Grid>
         ))}
       </Grid>
       <Typography variant="body1">
-        💡{mrRezRank[0]?.mr_name}호가 가장 인기가 많습니다.
+        💡{result[0]?.mr_name}호가 가장 인기가 많습니다.
       </Typography>
     </CardContent>
   );
@@ -306,9 +406,17 @@ const MrStatistics = () => {
       <Typography gutterBottom variant="h4" component="div">
         📈총 예약 건수
       </Typography>
-      <MrContrastChart width={'auto'} height={300} />
+      <MrContrastChart
+        width={'auto'}
+        height={300}
+        currentWeekDates={currentWeekDates}
+        lastWeekDates={lastWeekDates}
+        lastWeekCntData={lastWeekCntData}
+        currentWeekCntData={currentWeekCntData}
+      />
       <Typography variant="body1">
-        💡지난주에 비해 n건의 회의실 예약이 증가되었습니다.
+        💡지난주에 비해 {Math.abs(currentWeekSum - lastWeekSum)}건의 회의실
+        예약이 {currentWeekSum - lastWeekSum >= 0 ? '증가' : '감소'}되었습니다.
       </Typography>
     </CardContent>
   );

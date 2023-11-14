@@ -1,7 +1,14 @@
 import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 
-const MrContrastChart = ({ width, height }) => {
+const MrContrastChart = ({
+  width,
+  height,
+  currentWeekDates,
+  lastWeekDates,
+  lastWeekCntData,
+  currentWeekCntData
+}) => {
   const colors = ['#7cb342', '#2196f3'];
   const option = {
     color: colors,
@@ -41,7 +48,7 @@ const MrContrastChart = ({ width, height }) => {
           }
         },
         // prettier-ignore
-        data: ['2023-10-30', '2023-10-31', '2023-11-01', '2023-11-02', '2023-11-03']
+        data: currentWeekDates
       },
       {
         type: 'category',
@@ -67,7 +74,7 @@ const MrContrastChart = ({ width, height }) => {
           }
         },
         // prettier-ignore
-        data: ['2023-11-06', '2023-11-07', '2023-11-08', '2023-11-09', '2023-11-10']
+        data: lastWeekDates
       }
     ],
     yAxis: [
@@ -84,7 +91,7 @@ const MrContrastChart = ({ width, height }) => {
         emphasis: {
           focus: 'series'
         },
-        data: [2, 7, 5, 9, 7]
+        data: lastWeekCntData
       },
       {
         name: '이번 주',
@@ -93,7 +100,7 @@ const MrContrastChart = ({ width, height }) => {
         emphasis: {
           focus: 'series'
         },
-        data: [11, 15, 17, 52, 25]
+        data: currentWeekCntData
       }
     ]
   };
