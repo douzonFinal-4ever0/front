@@ -107,7 +107,6 @@ const MrStatistics = () => {
 
   // Convert the grouped data into an array
   const result = Object.values(groupedData);
-  console.log(result);
 
   // 현재 날짜를 얻기 위해 새로운 Date 객체를 생성
   const currentDate = new Date();
@@ -137,7 +136,6 @@ const MrStatistics = () => {
 
     return weekDates;
   };
-  console.log(mrRezRank);
 
   // 저번주 월요일부터 금요일까지의 날짜 배열
   const lastWeekDates = getWeekDates(
@@ -430,7 +428,7 @@ const MrStatistics = () => {
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <MainContainer>
           <Grid container spacing={3}>
-            <Grid xs={12}>
+            {/* <Grid xs={12}>
               <Box
                 marginTop="30px"
                 width="100px"
@@ -443,7 +441,7 @@ const MrStatistics = () => {
                   회의실 통계
                 </Typography>
               </Box>
-            </Grid>
+            </Grid> */}
             <Grid item container xs={5}>
               <WrapContainer bgcolor={'#fff'}>{cardContent2}</WrapContainer>
             </Grid>
