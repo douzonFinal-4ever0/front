@@ -78,9 +78,10 @@ const DashboardPage = () => {
       lestPtList.forEach((rez) => {
         rez.role = '참석자';
       });
-      res.data.forEach((rez) => {
-        rez.role = '예약자';
-      });
+      res.data &&
+        res.data.forEach((rez) => {
+          rez.role = '예약자';
+        });
 
       // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];
@@ -88,15 +89,16 @@ const DashboardPage = () => {
       let list = [];
       // 오늘 예약 현황 추출
       const today = getToday();
-      data.forEach((rez) => {
-        if (rez.rez_start_time.includes(today)) {
-          const startTime = getTime(rez.rez_start_time);
-          const endTime = getTime(rez.rez_end_time);
-          const time = `${startTime} - ${endTime}`;
-          const newRez = [{ ...rez, newTime: time }];
-          list.push(...newRez);
-        }
-      });
+      data &&
+        data.forEach((rez) => {
+          if (rez.rez_start_time.includes(today)) {
+            const startTime = getTime(rez.rez_start_time);
+            const endTime = getTime(rez.rez_end_time);
+            const time = `${startTime} - ${endTime}`;
+            const newRez = [{ ...rez, newTime: time }];
+            list.push(...newRez);
+          }
+        });
 
       // 이름 시간 순으로 정렬
       list.sort(

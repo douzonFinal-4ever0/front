@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 // -------------------------------------------------------------
 import styled from '@emotion/styled';
 import {
+  Avatar,
+  AvatarGroup,
   Box,
   Grid,
   IconButton,
@@ -17,6 +19,11 @@ import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 // -------------------------------------------------------------
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../../redux/reducer/SnackbarSlice';
+import axiosInstance from '../../../utils/axios';
 import { setRezData } from '../../../redux/reducer/mrUserSlice';
 import { setMrRecommendData } from '../../../redux/reducer/MrRecommendSlice';
 import MainContainer from '../../../components/mr_user/MainContainer';
@@ -28,6 +35,7 @@ import { palette } from '../../../theme/palette';
 import RezInfo from './section/RezInfo';
 
 const MrRezConfirmPage = () => {
+  const dispatch = useDispatch();
   const [isBookmark, setIsBookMark] = useState(false);
 
   const rezData = useSelector(setRezData).payload.mrUser;
@@ -46,8 +54,40 @@ const MrRezConfirmPage = () => {
     pt_list: rezData && rezData.mr_pt_list
   };
 
-  const handleStarBtnClick = () => {
-    setIsBookMark(!isBookmark);
+  // 자신을 제외한 참석자 리스트
+  const ptMems = rezData.mr_pt_list.filter(
+    (mem) => mem.mem_code !== rezData.mem_code
+  );
+
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
+  const handleStarBtnClick = async () => {
+    const members = ptMems.map((mem) => mem.mem_code);
+
+    // 즐겨찾기 추가 시
+    if (!isBookmark) {
+      const data = {
+        groupName: rezData.m_name,
+        master: rezData.mem_code,
+        members
+      };
+
+      try {
+        const res = await axiosInstance.axiosInstance.post('/mr/mem/bm', data);
+        if (res.status !== 201) return;
+        handleSetSnackbarContent('즐겨찾기 등록되었습니다. ');
+        handleOpenSnackbar();
+        setIsBookMark(true);
+      } catch (err) {
+        console.log('API 요청 오류 발생');
+      }
+    }
   };
 
   return (
@@ -121,27 +161,44 @@ const MrRezConfirmPage = () => {
                         borderRadius: '2px'
                       }}
                     >
-                      <Box sx={{ flexGrow: 1, display: 'flex', gap: '10px' }}>
+                      <Box sx={{ flexGrow: 1, display: 'flex', gap: '20px' }}>
                         <Typography
                           variant="subtitle1"
                           sx={{ display: 'flex', alignItems: 'center' }}
                         >
-                          회의명
+                          {rezData.m_name}
                         </Typography>
                         <Typography
                           variant="body2"
                           sx={{ display: 'flex', alignItems: 'center' }}
                         >
-                          4명
+                          {`${ptMems.length}명`}
                         </Typography>
+                        <AvatarGroup
+                          renderSurplus={(surplus) => (
+                            <span>+{surplus.toString()[0]}k</span>
+                          )}
+                          total={ptMems.length}
+                          sx={{
+                            '& .MuiAvatar-root': {
+                              width: 30,
+                              height: 30,
+                              fontSize: 15
+                            }
+                          }}
+                        >
+                          {ptMems.map((mem, index) => (
+                            <Avatar key={index} />
+                          ))}
+                        </AvatarGroup>
                       </Box>
                       <StyledStarBtn onClick={handleStarBtnClick}>
                         {isBookmark ? (
-                          <StarRoundedIcon fontSize="large" color="warning" />
+                          <StarRoundedIcon fontSize="large" color="primary" />
                         ) : (
                           <StarBorderRoundedIcon
                             fontSize="large"
-                            color="warning"
+                            color="primary"
                           />
                         )}
                       </StyledStarBtn>
@@ -150,14 +207,14 @@ const MrRezConfirmPage = () => {
                 </Box>
               </Grid>
 
-              <Grid
+              {/* <Grid
                 item
                 container
                 xs={4}
-                sx={{ overflowY: 'auto', maxHeight: '600px' }}
+                sx={{ overflowY: 'auto', height: '100%' }}
               >
                 <RezInfo data={info} />
-              </Grid>
+              </Grid> */}
             </Grid>
           </WrapContainer>
         </MainContainer>
@@ -180,6 +237,7 @@ const StyledStarBtn = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledBmSection = styled(Box)(({ theme }) => ({
+  marginTop: '50px',
   padding: '20px',
   width: '70%',
   display: 'flex',
