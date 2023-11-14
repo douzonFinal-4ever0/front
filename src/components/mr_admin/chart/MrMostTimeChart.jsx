@@ -37,16 +37,14 @@ const MrMostTimeChart = ({ width, height }) => {
         '16시 30분',
         '17시',
         '17시 30분',
-        '18시',
-        '18시 30분',
-        '19시',
-        '19시 30분',
-        '20시',
-        '20시 30분',
-        '21시'
+        '18시'
       ],
       axisTick: {
         alignWithLabel: true
+      },
+      axisLabel: {
+        interval: 0, // 모든 레이블을 표시하도록 설정
+        rotate: 45 // 레이블을 45도로 회전
       }
     },
     yAxis: {
