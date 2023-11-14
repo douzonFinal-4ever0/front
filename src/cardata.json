@@ -1,0 +1,4370 @@
+[
+  {
+    "model": "Peugeot 2008 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "17.1",
+    "CO2": 109,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토요타 Camry Hybrid",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "17.1",
+    "CO2": 91,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "XM3 하이브리드 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "17.0",
+    "CO2": 93,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "XM3 하이브리드 17인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "17.4",
+    "CO2": 91,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉6 기본형 RWD 18인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "6.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉6 항속형 RWD 18인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "6.0",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉서스 ES300h",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "16.8",
+    "CO2": 94,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 5008 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "16.1",
+    "CO2": 116,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "DS4 Crossback 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "16.5",
+    "CO2": 113,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "T-Roc",
+    "fuel_type": "경유",
+    "fuel_effciency": "16.4",
+    "CO2": 114,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS4 Crossback 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "16.2",
+    "CO2": 115,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q2 35 TDI",
+    "fuel_type": "경유",
+    "fuel_effciency": "16.7",
+    "CO2": 111,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6GDI 하이브리드 (16“타이어)(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "21.1",
+    "CO2": 74,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6GDI 하이브리드 (17“타이어)(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "19.5",
+    "CO2": 81,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 2008 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "17.1",
+    "CO2": 109,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot New 308 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "17.2",
+    "CO2": 108,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로(SG2) 1.6GDI 하이브리드 16인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "20.8",
+    "CO2": 75,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로(SG2) 1.6GDI 하이브리드 16인치 빌트인캠",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "20.5",
+    "CO2": 76,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로(SG2) 1.6GDI 하이브리드 18인치 빌트인캠",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "18.8",
+    "CO2": 84,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로(SG2) 1.6GDI 하이브리드 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "19.1",
+    "CO2": 82,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉6 항속형 RWD 20인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉6 항속형 AWD 18인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Jetta",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.1",
+    "CO2": 119,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320d",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.5",
+    "CO2": 131,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 5008 2.0 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.3",
+    "CO2": 133,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "투싼 1.6T-GDI HEV 6AT 4WD 19인치 빌트인캠",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.7",
+    "CO2": 110,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 1.6T-GDI HEV 6AT 4WD 17/18인치 빌트인캠",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.9",
+    "CO2": 108,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 1.6T-GDI HEV 6AT 4WD 17/18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.3",
+    "CO2": 105,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 1.6T-GDI HEV 6AT 4WD 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.1",
+    "CO2": 107,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320d",
+    "fuel_type": "경유",
+    "fuel_effciency": "15.0",
+    "CO2": 125,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320d Touring",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.2",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Tiguan Allspace 2.0 TDI",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.6",
+    "CO2": 129,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Peugeot 3008 1.5 BlueHDi",
+    "fuel_type": "경유",
+    "fuel_effciency": "15.8",
+    "CO2": 119,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉서스 NX350h",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.0",
+    "CO2": 114,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로 플러스 EV 항속형 2WD 17인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 218d Active Tourer",
+    "fuel_type": "경유",
+    "fuel_effciency": "15.8",
+    "CO2": 119,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "니로 EV 17인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토요타 RAV4 Hybrid AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.2",
+    "CO2": 104,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토요타 RAV4 Hybrid 2WD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.5",
+    "CO2": 102,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6 가솔린 16인치 타이어(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.9",
+    "CO2": 110,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉5 항속형 RWD 19인치 (77.4kWh)",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉5 항속형 RWD 19인치 빌트인캠 (77.4kWh)",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model 3 RWD",
+    "fuel_type": "전기",
+    "fuel_effciency": "5.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6 가솔린 15인치 타이어(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.4",
+    "CO2": 106,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Jetta",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.1",
+    "CO2": 119,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Arteon 2.0TDI 4Motion",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.8",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q3 35 TDI",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.8",
+    "CO2": 128,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q3 Sportback 35 TDI",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.8",
+    "CO2": 128,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 5인 18인치 타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 5인 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 136,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 5인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.3",
+    "CO2": 114,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 7인 18인치 타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 7인 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 136,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 6인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 5인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 6인 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 136,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "스포티지 2.0디젤 2WD 8AT 17인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.5",
+    "CO2": 131,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 2WD 8AT 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 2WD 8AT 18인치 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.8",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 2WD 8AT 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 136,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 2WD 8AT 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.8",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 7인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.0",
+    "CO2": 108,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 7인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 6인 18인치타이어 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 6인 18인치 타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.1",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "투싼 2.0디젤 2WD 8AT 19인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.8",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 2WD 8AT 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.9",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 6인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.3",
+    "CO2": 114,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 7인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.3",
+    "CO2": 114,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 5인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.3",
+    "CO2": 106,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 5인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.0",
+    "CO2": 108,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GD HEV 2WD 6인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.0",
+    "CO2": 108,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 6인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.3",
+    "CO2": 106,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 5인 18인치타이어 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 2WD 8AT 17인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.5",
+    "CO2": 131,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 2WD 8AT 19인치 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.8",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 2WD 8AT 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.2",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 7인 18인치타이어 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV 2WD 7인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "15.3",
+    "CO2": 106,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "BMW 740d xDrive",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.5",
+    "CO2": 153,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS7 1.2 PureTech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.0",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 2.5 GDI 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.7",
+    "CO2": 143,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 408 1.2 PureTech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.9",
+    "CO2": 129,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz C200",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.7",
+    "CO2": 145,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQE300",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉6 항속형 AWD 20인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.8",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A5 Sportback 40 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.1",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A4 40 TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.0",
+    "CO2": 128,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320d xDrive",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.3",
+    "CO2": 143,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model X AWD",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Model S AWD",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model X AWD",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model S Plaid",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model X AWD",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "셀토스(PE) 1.6T-GDI 2WD 16인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.8",
+    "CO2": 130,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 2.0 가솔린 4WD 16 인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.2",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 2.0 가솔린 4WD 16 인치 (빌트인캠)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.1",
+    "CO2": 138,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 1.6T-GDI 2WD 16인치 (빌트인캠)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.5",
+    "CO2": 133,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQE350 +",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 2.0 가솔린 2WD 18 인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.3",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 1.6T-GDI 2WD 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.8",
+    "CO2": 142,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 2.0 가솔린 2WD 16 인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.9",
+    "CO2": 128,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 1.6T-GDI 4WD 16인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.8",
+    "CO2": 142,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320d xDrive",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.5",
+    "CO2": 142,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz E300 d 4MATIC Coupe",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.5",
+    "CO2": 141,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "쏘나타(DN8) 1.6 T-GDI 19인치 23MY",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.4",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘나타(DN8) 2.0CVVL_19인치타이어_23MY",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.7",
+    "CO2": 143,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot e-2008 SUV",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot e-208",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.4",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS3 CROSSBACK E-TENSE",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "ID.4 Pro",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS7 CROSSBACK 1.2 PureTech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.8",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 AWD 8인 18인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.7",
+    "CO2": 165,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 7인 18인치(빌트인캠)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.2",
+    "CO2": 157,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 7인 18인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 8인 18인치(빌트인캠)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.2",
+    "CO2": 157,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 AWD 7인 18인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.7",
+    "CO2": 165,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 8인 20인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.0",
+    "CO2": 159,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 8인 18인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 2WD 7인 20인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.0",
+    "CO2": 159,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "이티밴",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.4",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "GV70 Electrified 무선충전",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉서스 UX300e",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "트레일블레이저 1.35 TURBO AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.6",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q4 e-tron 40",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz E220 d 4MATIC",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.7",
+    "CO2": 139,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "티볼리 가솔린 1.6 AT 2WD 기준4 16인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.6",
+    "CO2": 143,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉5 항속형 4WD 19인치 (77.4kWh)",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉5 항속형 4WD 20인치 (77.4kWh)",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.4",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아이오닉5 항속형 RWD 20인치 (77.4kWh)",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.8",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 2WD 6MT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.6",
+    "CO2": 167,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6 T-GDI 7DCT 18인치 타이어(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.8",
+    "CO2": 130,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "비바",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "아반떼 1.6 T-GDI 6MT 18인치 타이어(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.3",
+    "CO2": 136,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 3008 1.2 Puretech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.2",
+    "CO2": 134,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS7 CROSSBACK 1.2 PureTech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.8",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Peugeot 5008 1.2 Puretech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.1",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "코란도 e-motion 2WD Non Heat Pump",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.9",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 Electrified 19인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.6",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 Electrified 20인치",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A3 40 TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.0",
+    "CO2": 131,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "DS7 CROSSBACK 1.2 PureTech",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.8",
+    "CO2": 137,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카니발 2.2디젤 11인 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.3",
+    "CO2": 157,
+    "type": "승합차",
+    "max_capacity": 11
+  },
+  {
+    "model": "투싼 2.0디젤 AWD 8AT 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 6인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.4",
+    "CO2": 122,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 5인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.4",
+    "CO2": 122,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 7인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.1",
+    "CO2": 125,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "스포티지 2.0디젤 4WD 8AT 18인치 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 7인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.7",
+    "CO2": 139,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 5인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.1",
+    "CO2": 125,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 6인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.7",
+    "CO2": 139,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 2.2디젤 2WD 5인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.7",
+    "CO2": 139,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 6인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 5인 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 6인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 5인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 4WD 8AT 19인치 (빌트인캠)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 19인치 (스포츠패키지)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.2",
+    "CO2": 144,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 21인치 (스포츠패키지)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.6",
+    "CO2": 151,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.9",
+    "CO2": 148,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 18인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 19인치 (스포츠패키지)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.2",
+    "CO2": 157,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 21인치 (스포츠패키지)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.0",
+    "CO2": 160,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 21인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.0",
+    "CO2": 160,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 5인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.6",
+    "CO2": 140,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 7인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 2.2디젤 AWD 7인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "GV70 2.2디젤 AWD 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.2",
+    "CO2": 157,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.2",
+    "CO2": 144,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 21인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.6",
+    "CO2": 151,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카니발 2.2디젤 9인 18인치/19인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.9",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 9
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 18인치 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.5",
+    "CO2": 141,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 AWD 8AT 19인치 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 5인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 6인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "스포티지 2.0디젤 4WD 8AT 17인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.9",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 AWD 8AT 17/18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.9",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카니발 2.2디젤 하이리무진 9인(18인치/19인치)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.0",
+    "CO2": 160,
+    "type": "승용차",
+    "max_capacity": 9
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 5인 18인치타이어 (빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 145,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 5인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 6인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "카니발 2.2디젤 11인 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 155,
+    "type": "승합차",
+    "max_capacity": 11
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 5인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.6",
+    "CO2": 140,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 7인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "쏘렌토 2.2디젤 2WD 7인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "14.0",
+    "CO2": 135,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 7인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 145,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "쏘렌토 2.2디젤 4WD 6인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.1",
+    "CO2": 145,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "카니발 2.2디젤 7인 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.5",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "스포티지 2.0디젤 4WD 8AT 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.5",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV70 2.2디젤 2WD 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.6",
+    "CO2": 140,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "투싼 2.0디젤 AWD 8AT 18인치 (빌트인캠) (22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.8",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카니발 2.2디젤 7인 19인치(빌트인캠)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.4",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "카니발 2.2디젤 9인 18인치/19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "13.0",
+    "CO2": 147,
+    "type": "승용차",
+    "max_capacity": 9
+  },
+  {
+    "model": "GV80 3.0디젤 2WD 5인 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.7",
+    "CO2": 165,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0디젤 4WD 8AT 18인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "12.9",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 7인 17",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.4",
+    "CO2": 122,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "싼타페 1.6T-GDI HEV AWD 6인 19",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.1",
+    "CO2": 125,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "Polestar 2 Long Range Single Motor",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.8",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW i4 eDrive40",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.6",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MINI Cooper SE",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "BMW iX xDrive50",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI 2WD 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.1",
+    "CO2": 168,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI AWD 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.5",
+    "CO2": 179,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 2.5 GDI 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.4",
+    "CO2": 148,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI 2WD 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI 2WD 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 163,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 2.5 GDI 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "CHEVROLET EQUINOX AWD (MY23)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.0",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "CHEVROLET EQUINOX FWD (MY23)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.4",
+    "CO2": 147,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "디펜더 130 D300",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.9",
+    "CO2": 197,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "Mercedes-Benz EQS450 +",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQS580 4MATIC SUV(5seats)",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQS450 4MATIC SUV",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.6",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-Benz EQS450 4MATIC SUV(5seats)",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.6",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQS580 4MATIC SUV",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "마세라티 그레칼레 모데나",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.8",
+    "CO2": 178,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "마세라티 그레칼레 GT",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz C300 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 151,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQE350 4MATIC",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.0",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q5 Sportback 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.2",
+    "CO2": 164,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q5 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.5",
+    "CO2": 161,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "S4 TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.6",
+    "CO2": 178,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz S450 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.6",
+    "CO2": 179,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A5 Coupe 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.9",
+    "CO2": 156,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "A5 Cabriolet 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.7",
+    "CO2": 157,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "MASADA 3세대 4밴",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 4
+  },
+  {
+    "model": "A4 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.6",
+    "CO2": 158,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MASADA 3세대 2밴",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "A5 Sportback 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 152,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "S5 Coupe TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 171,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "A6 45 TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.0",
+    "CO2": 154,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A6 45 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.7",
+    "CO2": 156,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q7 45 TDI quattro",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 183,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Q7 45 TDI quattro",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 183,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q7 50 TDI quattro",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.0",
+    "CO2": 177,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "BMW 320i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model X Plaid",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Model X Plaid",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "토레스 가솔린 1.5 AT 2WD 저공해3종 18인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.1",
+    "CO2": 150,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토레스 가솔린 1.5 AT 4WD 저공해3종 18인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.2",
+    "CO2": 164,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토레스 가솔린 1.5 AT 2WD 저공해3종 17인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW X7 xDrive40d",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.0",
+    "CO2": 194,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "BMW X7 xDrive40d",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.0",
+    "CO2": 194,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "Mercedes-Benz E450 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz E450 4MATIC Cabriolet",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-Benz CLS450 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 172,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz E450 4MATIC Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "BMW M340i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 162,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320i Touring",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.8",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW M340i xDrive Touring",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.6",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.2",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 1.6T-GDI 4WD 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.8",
+    "CO2": 156,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "셀토스(PE) 2.0 가솔린 4WD 18 인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.3",
+    "CO2": 148,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 스포츠 D300",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.4",
+    "CO2": 187,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 S90B6 AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 176,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 S90B5",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.1",
+    "CO2": 155,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW i7 xDrive60",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 740i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.7",
+    "CO2": 156,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 XC60B5 AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 175,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 19인치(올시즌)_SP",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.4",
+    "CO2": 181,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI 2WD 18인치타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 162,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI 2WD 19인치(썸머)_SP",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 171,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 18인치(빌트인캠)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.6",
+    "CO2": 177,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 18인치타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 174,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI 2WD 19인치(썸머)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 171,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz S400 d 4MATIC",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.4",
+    "CO2": 170,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI 2WD 19인치(올시즌)_SP",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.2",
+    "CO2": 166,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 19인치(올시즌)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.4",
+    "CO2": 181,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI 2WD 19인치(올시즌)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.2",
+    "CO2": 166,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크2.0T-GDI 2WD 18인치(빌트인캠)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.2",
+    "CO2": 166,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 AWD 7인 20인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.4",
+    "CO2": 170,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 2.2 디젤 AWD 8인 20인치",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.4",
+    "CO2": 170,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "Q8 50 TDI quattro",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.1",
+    "CO2": 193,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MASADA 픽업",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.5",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "Mercedes-Benz EQS450 4MATIC",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.5",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q4 Sportback e-tron 40",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 C40 Recharge Twin",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "토요타 GR86",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.5",
+    "CO2": 174,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Explorer 3.3 FHEV",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 160,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-Benz EQB300 4MATIC",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-Benz EQB300 4MATIC (5 Seater)",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Master VAN Ph2 L2H2",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 183,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "Tiguan Allspace",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.1",
+    "CO2": 167,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Master VAN Ph2 L1H1",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.0",
+    "CO2": 175,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "티볼리 가솔린 1.6 AT 2WD 기준4 18인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.4",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 XC40 Recharge Twin",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.9",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW iX M60",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.4",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQS350",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.0",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 레니게이드 1.3 FWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 160,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 2WD 6AT SCR Step2(20인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.4",
+    "CO2": 188,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 2WD 6AT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 184,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 4WD 6MT SCR Step2(20인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.9",
+    "CO2": 178,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 4WD 6AT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 184,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2 디젤 4WD 6MT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.1",
+    "CO2": 175,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2디젤 4WD 6AT SCR Step2(17인치XL)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.2",
+    "CO2": 191,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 2WD 6MT SCR Step2(20인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.3",
+    "CO2": 171,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2 디젤 2WD 6AT SCR Step2(20인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.3",
+    "CO2": 190,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2디젤 4WD 6MT SCR Step2(17인치XL)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.8",
+    "CO2": 180,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2 디젤 4WD 6AT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 185,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "아반떼 1.6 LPI 15인치 타이어(22MY)",
+    "fuel_type": "LPG",
+    "fuel_effciency": "10.6",
+    "CO2": 122,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "브라보",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.1",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 4WD 6MT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.1",
+    "CO2": 175,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠칸 2.2 디젤 2WD 6AT SCR Step2(17인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 186,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴스포츠 2.2 디젤 4WD 6AT SCR Step2(20인치)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.4",
+    "CO2": 187,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MINI John Cooper Works Clubman ALL4(MY23~)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.7",
+    "CO2": 175,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz EQA250",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.0",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 D350 LWB (7인승)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.1",
+    "CO2": 193,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "더 뉴 레인지로버 D350 LWB (5인승)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.1",
+    "CO2": 193,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MASADA 2밴",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "더 뉴 레인지로버 D350 SWB (5인승)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.1",
+    "CO2": 193,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "MASADA 4밴",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 4
+  },
+  {
+    "model": "S3 TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 163,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴 2.2 8AT 4WD SCR Step2 7인승",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 184,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "렉스턴 2.2 8AT 2WD SCR Step2 7인승",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.9",
+    "CO2": 179,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "렉스턴 2.2 8AT 4WD SCR Step2 5인승",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.6",
+    "CO2": 184,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉스턴 2.2 8AT 2WD SCR Step2 5인승",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.9",
+    "CO2": 179,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "싼타페(개조) 2.5T-GDI AWD 6인 20인치(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.5",
+    "CO2": 178,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페(개조) 2.5T-GDI AWD 6인 18인치(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.9",
+    "CO2": 172,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페(개조) 2.5T-GDI 2WD 6인 20인치(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.1",
+    "CO2": 167,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페(개조)2.5T-GDI 2WD 6인 18인치(빌트인캠)_22MY",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.4",
+    "CO2": 162,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 7인 22인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.3",
+    "CO2": 189,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 5인 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.8",
+    "CO2": 180,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 1톤 초장축 표준캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.5",
+    "CO2": 204,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "짚 컴패스 2.4 AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.6",
+    "CO2": 173,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV80 3.0디젤 2WD 5인 (20인치/22인치)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.5",
+    "CO2": 169,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 6인 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.8",
+    "CO2": 180,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 7인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 186,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 6인 22인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.3",
+    "CO2": 189,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 6인 20인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 186,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "GV80 3.0디젤 2WD 6인(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.1",
+    "CO2": 175,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "싼타페(개조) 2.5T-GDI 2WD 6인 18인치(22MY)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "10.5",
+    "CO2": 161,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "봉고 1톤 초장축 슈퍼캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.5",
+    "CO2": 204,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 7인 19인치(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.8",
+    "CO2": 180,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "포터 2.5디젤 초장축 표준캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.5",
+    "CO2": 204,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "카니발 2.2디젤 하이리무진 7인(19인치)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.5",
+    "CO2": 168,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "더 뉴 레인지로버 D350 LWB (7인승)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.1",
+    "CO2": 193,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "포터 2.5디젤 초장축 슈퍼캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.5",
+    "CO2": 204,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "GV80 3.0디젤 AWD 5인 (20인치/22인치)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "10.5",
+    "CO2": 186,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "GV80 3.0디젤 2WD 7인(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "11.1",
+    "CO2": 175,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Polestar 2 Long Range Dual Motor",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.8",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Golf GTI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "11.5",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz GLS580 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.6",
+    "CO2": 262,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-Benz GLS580 4MATIC(6 Seater)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.6",
+    "CO2": 262,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "Mercedes-Maybach GLS600 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.1",
+    "CO2": 290,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-Maybach GLS600 4MATIC(5 Seater)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.1",
+    "CO2": 290,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GLE63 S 4MATIC + Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 255,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI AWD 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.2",
+    "CO2": 186,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 GDI AWD 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.0",
+    "CO2": 190,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Q7 55 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 211,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Q8 55 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.2",
+    "CO2": 209,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 LPI 18인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "7.8",
+    "CO2": 170,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 LPI 20인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "7.3",
+    "CO2": 183,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "그랜저(GN7) 3.5 LPI 19인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "7.4",
+    "CO2": 180,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Huracan Tecnica",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.2",
+    "CO2": 286,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "Mercedes-Maybach S680 4MATIC(5 Seats)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 306,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Maybach S680 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 306,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "짚 그랜드 체로키",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 228,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 그랜드 체로키",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 228,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GLE53 4MATIC + Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 212,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GLE53 4MATIC +(5seats)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 218,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz GLE450 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.6",
+    "CO2": 200,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-Benz GLE450 4MATIC(5Seats)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.6",
+    "CO2": 200,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GLE53 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 218,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "T4K",
+    "fuel_type": "전기",
+    "fuel_effciency": "2.6",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "마세라티 MC20 Cielo",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.1",
+    "CO2": 253,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "GMC Sierra",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.9",
+    "CO2": 254,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "URUS S",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.4",
+    "CO2": 273,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "URUS Performante",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 272,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "URUS S",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.4",
+    "CO2": 273,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "URUS Performante",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 272,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG A45 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.8",
+    "CO2": 195,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG EQS53 4MATIC +",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.1",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG EQE53 4MATIC +",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.3",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG EQS53 4MATIC +",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG E53 4MATIC + Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.2",
+    "CO2": 186,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-AMG E53 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 187,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GT43 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.2",
+    "CO2": 211,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG CLS53 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 189,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG GT63 S 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.7",
+    "CO2": 260,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 스포츠 P360",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.0",
+    "CO2": 217,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "911 터보 S 카브리올레",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.7",
+    "CO2": 264,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 타르가 4 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.7",
+    "CO2": 229,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-AMG CLA45 S 4MATIC +",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 188,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "RS Q8",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.6",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "페라리 푸로산게",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.1",
+    "CO2": 354,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "마세라티 그레칼레 트로페오",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.0",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz S580 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.8",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Maybach S580 4MATIC(5Seats)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 213,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Maybach S580 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 213,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-AMG GLC63 S 4MATIC + Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.9",
+    "CO2": 253,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz S500 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 189,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "RS 5 Sportback",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.3",
+    "CO2": 205,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 랭글러 루비콘",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 230,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 글래디에이터",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.2",
+    "CO2": 277,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 글래디에이터",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.2",
+    "CO2": 277,
+    "type": "화물차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A8 L 60 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 234,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "A8 L 60 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 234,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "S8 L TFSI",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.6",
+    "CO2": 226,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW X7 M60i xDrive",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.9",
+    "CO2": 250,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "BMW X7 M60i xDrive",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.9",
+    "CO2": 250,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "BMW X7 xDrive40i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.8",
+    "CO2": 218,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "Rolls Royce Phantom",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 310,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Rolls Royce Phantom EWB",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 310,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Rolls Royce Phantom EWB",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 310,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW X7 xDrive40i",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.8",
+    "CO2": 218,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Rolls Royce Phantom",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 310,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "페라리 812 Competizione A",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.7",
+    "CO2": 318,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "스포티지 2.0 LPI 18인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "9.1",
+    "CO2": 144,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0 LPI 19인치(빌트인캠)",
+    "fuel_type": "LPG",
+    "fuel_effciency": "8.8",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0 LPI 18인치(빌트인캠)",
+    "fuel_type": "LPG",
+    "fuel_effciency": "8.9",
+    "CO2": 147,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0 LPI 17인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "9.2",
+    "CO2": 143,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "스포티지 2.0 LPI 19인치",
+    "fuel_type": "LPG",
+    "fuel_effciency": "9.0",
+    "CO2": 146,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-AMG G63",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.8",
+    "CO2": 301,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 19인치(썸머)_SP",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 185,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Maybach GLS600 4MATIC (5 seater)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.2",
+    "CO2": 283,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "G70 슈팅브레이크 2.0T-GDI AWD 19인치(썸머)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.1",
+    "CO2": 185,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Maybach GLS600 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.2",
+    "CO2": 283,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-Benz GLS580 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.0",
+    "CO2": 289,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Mercedes-AMG GLE63 S 4MATIC+ Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 270,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI AWD 8인 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.7",
+    "CO2": 196,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI AWD 7인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.5",
+    "CO2": 200,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI AWD 7인 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.7",
+    "CO2": 196,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI 2WD 7인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.0",
+    "CO2": 188,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI AWD 8인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.5",
+    "CO2": 200,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI 2WD 8인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.0",
+    "CO2": 188,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI 2WD 8인 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.3",
+    "CO2": 183,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "팰리세이드(PE) 3.8GDI 2WD 7인 18인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.3",
+    "CO2": 183,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "더 뉴 레인지로버 P530 LWB (4인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "QM6 2.0 LPLi SULEV30 (19",
+    "fuel_type": "LPG",
+    "fuel_effciency": "8.6",
+    "CO2": 153,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "QM6 2.0 LPLi SULEV30 (18",
+    "fuel_type": "LPG",
+    "fuel_effciency": "8.9",
+    "CO2": 147,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Expedition 3.5L (8인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 237,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "Lincoln Navigator 3.5L",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 238,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "Lincoln Navigator 3.5L (8인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 238,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "Expedition 3.5L",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 237,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "다니고C",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.1",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "CHEVROLET TRAVERSE AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.3",
+    "CO2": 211,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "타이칸 GTS (5인승)",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "타이칸 GTS",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.2",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "718 카이맨 GT4",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.6",
+    "CO2": 231,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "BMW M850i xDrive Gran Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.7",
+    "CO2": 224,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW M850i xDrive Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.6",
+    "CO2": 226,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mustang GT 5.0 Convertible",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.5",
+    "CO2": 227,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "짚 레니게이드 1.3 AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.3",
+    "CO2": 179,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mustang GT 5.0 Coupe",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.5",
+    "CO2": 227,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mustang GT 5.0 Convertible",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.5",
+    "CO2": 227,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "짚 그랜드 체로키",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 228,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "이엔플러스EV1톤롱바디트럭",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.0",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "이엔1톤롱바디카고",
+    "fuel_type": "전기",
+    "fuel_effciency": "2.8",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "Explorer 2.3L",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.9",
+    "CO2": 189,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "G90 e-S/C 3.5T-GDI(LONG WHEEL BASE) AWD 4인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.2",
+    "CO2": 209,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "G90 e-S/C 3.5T-GDI(LONG WHEEL BASE) AWD 5인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.2",
+    "CO2": 209,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 P530 SWB (5인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 P530 LWB (5인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 P530 LWB (7인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "봉고 1톤 일반덤프 4X4장축 킹캡(MT)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.7",
+    "CO2": 225,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "마칸",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.4",
+    "CO2": 208,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "마칸 S",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.8",
+    "CO2": 224,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "마칸 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.6",
+    "CO2": 228,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "포터2.5디젤 덤프4X4장축 슈퍼캡(MT)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.8",
+    "CO2": 222,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "Mercedes-Maybach S680 4MATIC (4 Seater)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.9",
+    "CO2": 297,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "Mercedes-Maybach S680 4MATIC",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "5.9",
+    "CO2": 297,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 1톤 3방덤프 4X4장축 킹캡(MT)(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.7",
+    "CO2": 225,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "젤라",
+    "fuel_type": "전기",
+    "fuel_effciency": "2.6",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 2
+  },
+  {
+    "model": "Bronco 2.7",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.2",
+    "CO2": 205,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "더 뉴 레인지로버 P530 LWB (7인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.8",
+    "CO2": 261,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "A8 L 55 TFSI quattro",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.3",
+    "CO2": 209,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 전기차 (22)",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.1",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "캐딜락 Escalade ESV(8인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 269,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "911 타르가 4 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 GTS (2인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "911 카레라 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 GTS (2인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "911 카레라 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 4 GTS 카브리올레",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 GTS 카브리올레",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 GTS 카브리올레",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.1",
+    "CO2": 216,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "캐딜락 Escalade ESV(7인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 269,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "캐딜락 Escalade(7인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.0",
+    "CO2": 250,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "캐딜락 Escalade(8인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.0",
+    "CO2": 250,
+    "type": "승용차",
+    "max_capacity": 8
+  },
+  {
+    "model": "911 카레라 4 GTS",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "911 카레라 4 GTS (2인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.9",
+    "CO2": 222,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "CHEVROLET TAHOE AWD",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.4",
+    "CO2": 274,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "G90 3.5T-GDI AWD 5인 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.5",
+    "CO2": 202,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "포터 2.5디젤 4X4장축 슈퍼캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.0",
+    "CO2": 217,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "포터 2.5디젤 4X4장축 더블캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.6",
+    "CO2": 227,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "G90 3.5T-GDI 2WD 4인 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.0",
+    "CO2": 190,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "봉고 1톤 4X4장축 표준캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.0",
+    "CO2": 218,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "포터 2.5디젤 초장축 더블캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.7",
+    "CO2": 224,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 6인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.2",
+    "CO2": 214,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 6인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.3",
+    "CO2": 211,
+    "type": "승용차",
+    "max_capacity": 6
+  },
+  {
+    "model": "봉고 1톤 4X4장축 더블캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.6",
+    "CO2": 227,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 7인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.2",
+    "CO2": 214,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "포터 2.5디젤 초장축 표준캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.8",
+    "CO2": 221,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "봉고 1톤 초장축 더블캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.3",
+    "CO2": 209,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "포터 2.5디젤 초장축 슈퍼캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.8",
+    "CO2": 221,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "포터 2.5디젤 4X4장축 표준캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.0",
+    "CO2": 217,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 7인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.1",
+    "CO2": 215,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "G90 3.5T-GDI AWD 4인 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.5",
+    "CO2": 202,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 5인 18인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.3",
+    "CO2": 211,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 1톤 4X4장축 슈퍼캡(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.0",
+    "CO2": 218,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "봉고 1톤 초장축 표준캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.8",
+    "CO2": 221,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "G90 3.5T-GDI AWD 4인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.3",
+    "CO2": 207,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "G90 3.5T-GDI 2WD 5인 19인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.3",
+    "CO2": 184,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 1톤 초장축 슈퍼캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.8",
+    "CO2": 221,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "G90 3.5T-GDI 2WD 5인 19인치(빌트인캠)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "9.3",
+    "CO2": 184,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "모하비 3.0 디젤 4WD 5인 20인치타이어(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.3",
+    "CO2": 212,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "포터 2.5디젤 초장축 더블캡 MT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "9.3",
+    "CO2": 209,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "G90 3.5T-GDI 2WD 4인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.9",
+    "CO2": 192,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "G90 3.5T-GDI AWD 5인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.3",
+    "CO2": 207,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "봉고 1톤 초장축 더블캡 AT(22)",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.7",
+    "CO2": 224,
+    "type": "화물차",
+    "max_capacity": 6
+  },
+  {
+    "model": "G90 3.5T-GDI 2WD 5인 20인치",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "8.9",
+    "CO2": 192,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "포터 일렉트릭 22MY",
+    "fuel_type": "전기",
+    "fuel_effciency": "3.1",
+    "CO2": null,
+    "type": "화물차",
+    "max_capacity": 3
+  },
+  {
+    "model": "e-tron S",
+    "fuel_type": "전기",
+    "fuel_effciency": "2.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "e-tron S Sportback",
+    "fuel_type": "전기",
+    "fuel_effciency": "2.7",
+    "CO2": null,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW X6 M50i (2022)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.4",
+    "CO2": 234,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW X5 M50i (2022)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.3",
+    "CO2": 237,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz G400 d",
+    "fuel_type": "경유",
+    "fuel_effciency": "8.2",
+    "CO2": 241,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카이엔 터보 COUPE (5인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 270,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카이엔 COUPE",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 242,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "카이엔 터보 COUPE",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 270,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "카이엔 터보",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 270,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카이엔 터보 GT",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.5",
+    "CO2": 270,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "카이엔",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 242,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "카이엔 COUPE (5인승)",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "7.2",
+    "CO2": 242,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "캐딜락 CT5-V Blackwing",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "6.1",
+    "CO2": 281,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "Mercedes-Benz S580 e 4MATIC",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "9.8",
+    "CO2": 31,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "A7 55 TFSI e quattro",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.3",
+    "CO2": 45.639,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "페라리 296 GTS",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "7.7",
+    "CO2": 149,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "짚 그랜드 체로키 4xe",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "8.8",
+    "CO2": 48,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "짚 그랜드 체로키 4xe",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "8.8",
+    "CO2": 48,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 320e",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.0",
+    "CO2": 35,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "BMW 330e",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.0",
+    "CO2": 35,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "렉서스 NX450h+",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "14.4",
+    "CO2": 26,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "K5(JF) 2.0GDI 플러그인하이브리드 개조차",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "17.0",
+    "CO2": 26,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 S90T8 AWD",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.9",
+    "CO2": 42,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "파나메라 터보 S E-하이브리드",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "7.5",
+    "CO2": 61,
+    "type": "승용차",
+    "max_capacity": 4
+  },
+  {
+    "model": "파나메라 터보 S E-하이브리드 (5인승)",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "7.5",
+    "CO2": 61,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "볼보 XC90T8 AWD",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.0",
+    "CO2": 42,
+    "type": "승용차",
+    "max_capacity": 7
+  },
+  {
+    "model": "볼보 XC60T8 AWD",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "11.4",
+    "CO2": 33,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "페라리 296 GTB",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "7.8",
+    "CO2": 131,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "Mercedes-Benz GLC300 e 4MATIC Coupe",
+    "fuel_type": "하이브리드",
+    "fuel_effciency": "9.4",
+    "CO2": 55,
+    "type": "승용차",
+    "max_capacity": 5
+  },
+  {
+    "model": "레이 1.0 가솔린 1인승 밴형 14인치 타이어",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "13.0",
+    "CO2": 127,
+    "type": "승용차",
+    "max_capacity": 1
+  },
+  {
+    "model": "캐스퍼 1.0 가솔린 15인치타이어_밴형",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "14.3",
+    "CO2": 115,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "캐스퍼 1.0T-GDI 4AT 15인치_밴형",
+    "fuel_type": "휘발유",
+    "fuel_effciency": "12.8",
+    "CO2": 130,
+    "type": "승용차",
+    "max_capacity": 2
+  },
+  {
+    "model": "CEVO-C SE 1인승 밴형",
+    "fuel_type": "전기",
+    "fuel_effciency": "6.3",
+    "CO2": 69,
+    "type": "승용차",
+    "max_capacity": 1
+  },
+  {
+    "model": "포텐스",
+    "fuel_type": "전기",
+    "fuel_effciency": "4.5",
+    "CO2": 57,
+    "type": "화물차",
+    "max_capacity": 2
+  }
+]
