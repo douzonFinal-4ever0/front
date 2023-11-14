@@ -29,6 +29,7 @@ import { useQuery } from 'react-query';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import LoadingModal from './LoadingModal';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 //통신
@@ -59,6 +60,7 @@ const SubSideContents = ({
   const getJwtToken = () => {
     return localStorage.getItem('jwtToken');
   };
+
   useEffect(() => {
     //통신 연결
     const Token = getJwtToken();
@@ -179,6 +181,17 @@ const SubSideContents = ({
     //다른 차량 선택시 선택됨 해제 필요
   };
 
+  // const groupSelect = () => {
+  //   // openGroup 상태가 변경될 때 실행되는 효과
+  //   // 다른 그룹은 모두 닫히도록 상태를 업데이트
+  //   const newOpenGroup = groupedCarData.find(
+  //     (group) => group.groupName === openGroup
+  //   );
+  //   if (!newOpenGroup) {
+  //     // openGroup이 유효하지 않은 경우, 모든 그룹을 닫습니다.
+  //     setOpenGroup('');
+  //   }
+  // };
   useEffect(() => {
     // openGroup 상태가 변경될 때 실행되는 효과
     // 다른 그룹은 모두 닫히도록 상태를 업데이트
@@ -203,13 +216,21 @@ const SubSideContents = ({
     } else {
       return (
         <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
-          {/* <List dense component="div" role="list">
+          <List dense component="div" role="list">
             {groupedCarData.map((group, index) => {
               const isGroupOpen = openGroup === group.groupName;
               return (
                 <div key={index}>
                   <div onClick={() => toggleGroup(group.groupName)}>
-                    <ListSubheader>{group.groupName}</ListSubheader>
+                    <ListSubheader>
+                      {group.groupName}
+
+                      {openGroup !== group.groupName ? (
+                        <ExpandMoreIcon />
+                      ) : (
+                        <ExpandLessIcon />
+                      )}
+                    </ListSubheader>
                   </div>
                   <Collapse in={isGroupOpen}>
                     {group.items.map((car, index) => (
@@ -240,8 +261,8 @@ const SubSideContents = ({
                 </div>
               );
             })}
-          </List> */}
-          {groupedCarData.map((group, index) => {
+          </List>
+          {/* {groupedCarData.map((group, index) => {
             console.log(group.groupName);
             return (
               <Accordion>
@@ -257,14 +278,14 @@ const SubSideContents = ({
                     {group.items.map((car, index) => (
                       <ListItem
                         key={index}
-                        onClick={(e) =>
+                        onClick={(e) => {
                           handleItem(
                             e,
                             car.car_code,
                             car.car_address,
                             car.car_name
-                          )
-                        }
+                          );
+                        }}
                       >
                         <ListItemButton disabled={car.car_status === '선택됨'}>
                           <ListItemText
@@ -282,7 +303,7 @@ const SubSideContents = ({
                 </AccordionDetails>
               </Accordion>
             );
-          })}
+          })} */}
         </div>
       );
     }

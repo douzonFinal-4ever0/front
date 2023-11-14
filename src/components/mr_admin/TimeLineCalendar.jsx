@@ -56,7 +56,7 @@ const TimeLineCalendar = ({ events, resources }) => {
     daysOfWeek: [1, 2, 3, 4, 5, 6], // 월~토
 
     startTime: '9:00', // 시작 시간
-    endTime: '22:00' // 종료 시간
+    endTime: '19:00' // 종료 시간
   };
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/

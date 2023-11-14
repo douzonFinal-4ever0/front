@@ -1,7 +1,7 @@
 import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 
-const MrMostTimeChart = ({ width, height }) => {
+const MrMostTimeChart = ({ width, height, data }) => {
   // 그래프 데이터 설정
   const option = {
     tooltip: {
@@ -37,16 +37,14 @@ const MrMostTimeChart = ({ width, height }) => {
         '16시 30분',
         '17시',
         '17시 30분',
-        '18시',
-        '18시 30분',
-        '19시',
-        '19시 30분',
-        '20시',
-        '20시 30분',
-        '21시'
+        '18시'
       ],
       axisTick: {
         alignWithLabel: true
+      },
+      axisLabel: {
+        interval: 0, // 모든 레이블을 표시하도록 설정
+        rotate: 45 // 레이블을 45도로 회전
       }
     },
     yAxis: {
@@ -54,10 +52,7 @@ const MrMostTimeChart = ({ width, height }) => {
     },
     series: [
       {
-        data: [
-          16, 0, 2, 0, 3, 0, 0, 1, 3, 0, 2, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-          0, 0
-        ],
+        data: data,
         type: 'bar',
         barWidth: '60%',
         name: '건 수'
