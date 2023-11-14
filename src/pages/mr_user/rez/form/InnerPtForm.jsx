@@ -22,8 +22,9 @@ import {
 } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 
-const InnerPtForm = ({ ptList, setPtList }) => {
+const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const { pathname } = useLocation();
   const isDetailModal = pathname === '/mr/rez/history' ? true : false;
   const dispatch = useDispatch();
@@ -110,11 +111,110 @@ const InnerPtForm = ({ ptList, setPtList }) => {
   };
 
   // 참석자 카드 리스트 컴포넌트
-  const PtCardList = ({ data }) => {
+  const PtCardList = ({ data, setPtList, tagData, setClickTagData }) => {
     const masterCode = mem_code;
+    // const [recoms, setRecoms] = useState(tagData);
+
+    // useEffect(() => {
+    //   // 예약자 제외 필터링
+    //   setRecoms(tagData && [...tagData]);
+
+    //   if (recoms) {
+    //     const res =
+    //       recoms && recoms.filter((item) => item.mem_code !== masterCode);
+    //     setRecoms(res);
+    //   }
+    // }, []);
+
+    const handleRecomIcon = (e) => {
+      // recomList 에서 제거
+      if (tagData) {
+        const copy = [...tagData];
+        const a =
+          copy && copy.filter((item) => item.mem_code !== e.currentTarget.name);
+
+        setClickTagData([...a]);
+        //setClickTagData(a);
+
+        const mem =
+          tagData &&
+          tagData.filter((item) => item.mem_code === e.currentTarget.name);
+
+        const memInfo = {
+          dept_name: mem[0].memVO.deptVO.dept_name,
+          mem_code: mem[0].memVO.mem_code,
+          name: mem[0].memVO.name,
+          position: mem[0].memVO.position_name
+        };
+
+        // setPtList([...data, memInfo]);
+      }
+      // data 에 추가
+    };
 
     return (
       <List sx={{ width: '100%' }}>
+        {/* 참석자 추천 리스트  */}
+        {/* {tagData &&
+          tagData.map((mem, index) => (
+            <ListItem
+              key={index}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  name={mem.mem_code}
+                  tabIndex={index}
+                  onClick={handleRecomIcon}
+                  sx={{ paddingRight: '25px' }}
+                >
+                  <PersonAddRoundedIcon />
+                </IconButton>
+              }
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Stack direction={'row'} gap={1}>
+                    <Typography
+                      sx={{
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        color: palette.grey['500']
+                      }}
+                    >
+                      {mem.memVO.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '14px',
+                        color: palette.grey['500']
+                      }}
+                    >
+                      {mem.memVO.position_name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: '14px',
+                        color: palette.grey['500']
+                      }}
+                    >
+                      | {mem.memVO.deptVO.dept_name}
+                    </Typography>
+                  </Stack>
+                }
+              />
+            </ListItem>
+          ))} */}
+
+        {/* 추가된 참석자 리스트  */}
         {data.map((mem, index) => (
           <ListItem
             key={index}
@@ -182,7 +282,15 @@ const InnerPtForm = ({ ptList, setPtList }) => {
 
   return (
     <>
-      {ptList && <PtCardList data={ptList} />}
+      {ptList && (
+        <PtCardList
+          data={ptList}
+          setPtList={setPtList}
+          tagData={clickTagData.length !== 0 && clickTagData[0].mr_pt_list}
+          clickTagData={clickTagData}
+          setClickTagData={setClickTagData}
+        />
+      )}
       <RectangleBtn
         type={'button'}
         text={'참석자 추가'}

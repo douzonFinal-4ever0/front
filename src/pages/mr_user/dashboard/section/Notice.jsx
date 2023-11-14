@@ -15,7 +15,6 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
 const Notice = ({ data }) => {
-  console.log(data);
   return (
     <>
       <WrapContainer bgcolor={'#fff'}>

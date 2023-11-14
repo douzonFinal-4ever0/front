@@ -33,8 +33,6 @@ const calcRezRate = (data) => {
   });
 
   const result = Array.from(groupData.values());
-
-  console.log(mrTypes);
 };
 
 export default calcRezRate;

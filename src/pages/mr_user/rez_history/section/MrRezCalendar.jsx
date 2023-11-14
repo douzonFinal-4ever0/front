@@ -18,6 +18,9 @@ const MrRezCalendar = ({ events, data, getMrRezApi }) => {
   const [open, setOpen] = useState(false); // 모달창 오픈 여부
   const [isModify, setIsModify] = useState(false); // 수정모드 여부
 
+  console.log('찐');
+  console.log(data);
+
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5, 6],
     startTime: '9:00',
