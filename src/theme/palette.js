@@ -113,6 +113,7 @@ export const palette = {
       textSub: '#435770'
     },
     dark: {
+      light: '#777777',
       bgMain: '#2c2c33',
       bgSub: '#424249',
       textMain: '#fff',
