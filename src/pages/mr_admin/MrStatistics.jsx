@@ -91,15 +91,19 @@ const MrStatistics = () => {
       });
   }, []);
 
-  // Ensure that mrRezRank is an array
-
-  // Group data by mr_code
-  const groupedData = mrRezRank.reduce((acc, item) => {
-    const { mr_code, img_url, mr_name, rez_cnt } = item;
-    acc[mr_code] = acc[mr_code] || { mr_code, mr_name, rez_cnt, img_url: [] };
-    acc[mr_code].img_url.push(img_url);
-    return acc;
-  }, {});
+  const groupedData = Array.isArray(mrRezRank)
+    ? mrRezRank.reduce((acc, item) => {
+        const { mr_code, img_url, mr_name, rez_cnt } = item;
+        acc[mr_code] = acc[mr_code] || {
+          mr_code,
+          mr_name,
+          rez_cnt,
+          img_url: []
+        };
+        acc[mr_code].img_url.push(img_url);
+        return acc;
+      }, {})
+    : {};
 
   // Convert the grouped data into an array
   const result = Object.values(groupedData);
@@ -346,7 +350,7 @@ const MrStatistics = () => {
   //   name: item.mr_type
   // }));
   const mrType =
-    mrRezType &&
+    Array.isArray(mrRezType) &&
     mrRezType.map((item) => ({
       value: item.rez_cnt,
       name: item.mr_type
