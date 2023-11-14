@@ -1,7 +1,7 @@
 import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 
-const MrMostTimeChart = ({ width, height }) => {
+const MrMostTimeChart = ({ width, height, data }) => {
   // 그래프 데이터 설정
   const option = {
     tooltip: {
@@ -52,10 +52,7 @@ const MrMostTimeChart = ({ width, height }) => {
     },
     series: [
       {
-        data: [
-          16, 0, 2, 0, 3, 0, 0, 1, 3, 0, 2, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-          0, 0
-        ],
+        data: data,
         type: 'bar',
         barWidth: '60%',
         name: '건 수'

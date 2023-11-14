@@ -92,6 +92,40 @@ const MrStatistics = () => {
   }, []);
   console.log(mrRezDate);
   console.log(mrRezFavTime);
+  // 모든 시간대를 포함한 배열 생성
+  const allTimeSlots = [
+    '09:00:00',
+    '09:30:00',
+    '10:00:00',
+    '10:30:00',
+    '11:00:00',
+    '12:00:00',
+    '12:30:00',
+    '13:00:00',
+    '14:00:00',
+    '14:30:00',
+    '15:00:00',
+    '15:30:00',
+    '16:00:00',
+    '16:30:00',
+    '17:00:00',
+    '17:30:00',
+    '18:00:00'
+  ];
+
+  // mrRezFavTime의 시간대를 기준으로 데이터 매핑
+  const FavTime = Array.isArray(mrRezFavTime)
+    ? allTimeSlots.map((time) => {
+        const correspondingObject = mrRezFavTime.find(
+          (obj) => obj.rez_time === time
+        );
+        return correspondingObject ? correspondingObject.rez_cnt : 0;
+      })
+    : [];
+
+  // 결과로 나온 resultArray에는 모든 시간대에 대한 rez_cnt 값이 들어 있습니다.
+  console.log(FavTime);
+
   const handleMrInfo = (mr_code) => {
     axiosInstance.axiosInstance
       .get(`mr/${mr_code}`)
@@ -144,7 +178,9 @@ const MrStatistics = () => {
   };
 
   const handleClickMostTime = () => {
-    setModalContent(<MrMostTimeChart height={'500px'} width={'500px'} />);
+    setModalContent(
+      <MrMostTimeChart height={'500px'} width={'500px'} data={FavTime} />
+    );
     setModalTitle('가장 많이 사용하는 시간 통계');
     handleModal();
   };
@@ -197,7 +233,7 @@ const MrStatistics = () => {
         🕘예약 시간대
       </Typography>
       <CardActionArea onClick={handleClickMostTime}>
-        <MrMostTimeChart width={'auto'} height={300} />
+        <MrMostTimeChart width={'auto'} height={300} data={FavTime} />
       </CardActionArea>
       <Typography variant="body1">
         💡가장 붐비는 시간대는 09:00 입니다.
