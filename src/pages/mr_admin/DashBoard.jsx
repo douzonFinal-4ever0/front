@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ExcelDownloadButton from '../../components/mr_admin/ExcelDownloadButton';
 import ImageUpload from '../../components/mr_admin/ImageUpload';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import ZipFileImport from '../../components/mr_admin/ZipFileImport';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 
 const DashBoard = () => {
@@ -80,7 +81,7 @@ const DashBoard = () => {
         <MainContainer2>
           <WrapContainer bgcolor={'#fff'}>
             <Container sx={{ width: 'auto' }}>
-              {/* <ZipFileImport /> */}
+              <ZipFileImport />
               {/* <ExcelImport /> */}
               {/* <SuppliesList /> */}
               <ExcelDownloadButton />

@@ -109,10 +109,23 @@ const MrNoticeDetails = () => {
                       <MoreVertIcon />
                     </IconButton>
                   </Grid>
+                  <Grid item xs={1}>
+                    <RectangleBtn
+                      category={'register'}
+                      text={'목록'}
+                      sx={{
+                        padding: '14px 12px'
+                      }}
+                      handlebtn={handleMrList}
+                    />
+                  </Grid>
 
+                  <Grid item xs>
+                    {/* <Button onClick={handleTest}>test</Button> */}
+                  </Grid>
                   <Grid item xs={2}>
                     <Fade in={checked}>
-                      <Grid container spacing={2}>
+                      <Grid container spacing={1}>
                         <Grid item xs={6}>
                           <RectangleBtn
                             category={'modify'}
@@ -135,19 +148,6 @@ const MrNoticeDetails = () => {
                         </Grid>
                       </Grid>
                     </Fade>
-                  </Grid>
-                  <Grid item xs>
-                    {/* <Button onClick={handleTest}>test</Button> */}
-                  </Grid>
-                  <Grid item xs={1}>
-                    <RectangleBtn
-                      category={'register'}
-                      text={'목록'}
-                      sx={{
-                        padding: '14px 12px'
-                      }}
-                      handlebtn={handleMrList}
-                    />
                   </Grid>
                 </Grid>
               </Grid>
