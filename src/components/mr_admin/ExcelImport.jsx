@@ -34,6 +34,18 @@ function ExcelImport() {
     dispatch(handleMrListUpdate());
   };
   /*----------------------------------------------------------------------------------------*/
+  const validateExcelData = (rowData) => {
+    const requiredFields = ['분류', '위치', '인원', '요일'];
+    const missingFields = [];
+
+    requiredFields.forEach((field) => {
+      if (!rowData[field]) {
+        missingFields.push(field);
+      }
+    });
+
+    return missingFields;
+  };
   /**엑셀 파일 업로드 */
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -61,11 +73,31 @@ function ExcelImport() {
         /**시트 데이터를 배열로 변환 */
         const excelData = XLSX.utils.sheet_to_json(sheet);
 
+        // // ID를 추가하고 tableData에 할당
+        // const dataWithIds = excelData.map((row, index) => ({
+        //   id: index, // ID를 각 행의 인덱스로 생성
+        //   ...row // 기존 열 데이터 유지
+        // }));
+
         // ID를 추가하고 tableData에 할당
-        const dataWithIds = excelData.map((row, index) => ({
-          id: index, // ID를 각 행의 인덱스로 생성
-          ...row // 기존 열 데이터 유지
-        }));
+        const dataWithIds = excelData
+          .map((row, index) => {
+            const missingFields = validateExcelData(row);
+            if (missingFields.length > 0) {
+              handleSetSnackbarContent(
+                `행 ${
+                  index + 1
+                }에 필수 필드가 누락되었습니다: ${missingFields.join(', ')}`
+              );
+              handleOpenSnackbar();
+              return null; // 유효하지 않은 데이터는 무시
+            }
+            return {
+              id: index, // ID를 각 행의 인덱스로 생성
+              ...row // 기존 열 데이터 유지
+            };
+          })
+          .filter(Boolean);
 
         // 테이블 데이터 설정
         setTableData(dataWithIds);

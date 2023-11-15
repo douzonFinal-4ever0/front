@@ -1,6 +1,7 @@
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -72,23 +73,28 @@ const TimeLineCalendar = ({ events, resources }) => {
 
   return (
     <div>
+      {/* <TimeField
+        withMonth={true}
+        label={'시작 시간'}
+        timeValue={dayjs().hour(9).minute(0)}
+      /> */}
       <FullCalendar
         plugins={[
           dayGridPlugin,
           resourceTimelinePlugin,
           resourceTimeGridPlugin,
-          listPlugin
+          listPlugin,
+          multiMonthPlugin
         ]}
         locale={koLocale} // 한국어 설정
         initialView={currentView}
         nowIndicator={true}
         businessHours={businessHours}
         events={events}
-        dayMaxEvents={true}
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next today,resourceTimelineMonth',
+          left: 'prev,next today,resourceTimelineMonth,multiMonthYear',
           // resourceTimeGridDay,',
           center: 'title',
           right: 'resourceTimelineDay,listWeek'
@@ -101,9 +107,10 @@ const TimeLineCalendar = ({ events, resources }) => {
             buttonText: '시간대'
           },
           resourceTimelineMonth: {
+            eventMaxStack: 0,
             buttonText: '월',
-            timeGrid: {
-              dayMaxEventRows: 2 // adjust to 6 only for timeGridWeek/timeGridDay
+            views: {
+              eventMaxStack: 10
             }
           },
           listWeek: {
@@ -111,6 +118,21 @@ const TimeLineCalendar = ({ events, resources }) => {
             title: events.description,
             eventContent: function (arg) {
               return arg.event.extendedProps.description;
+            }
+          },
+          multiMonthYear: {
+            eventMaxStack: 0,
+            buttonText: '년도',
+            title: events.description,
+            multiMonthMaxColumns: 6,
+            dayMaxEventRows: 3,
+            // eventContent: function (arg) {
+            //   return arg.event.extendedProps.description;
+            // },
+            // duration: { months: 6 },
+            views: {
+              eventMaxStack: 5,
+              dayMaxEventRows: 3
             }
           }
         }}
