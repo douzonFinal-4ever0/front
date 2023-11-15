@@ -84,13 +84,14 @@ const TimeLineCalendar = ({ events, resources }) => {
         nowIndicator={true}
         businessHours={businessHours}
         events={events}
+        dayMaxEvents={true}
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next,today',
+          left: 'prev,next today,resourceTimelineMonth',
+          // resourceTimeGridDay,',
           center: 'title',
           right: 'resourceTimelineDay,listWeek'
-          // resourceTimeGridDay,resourceTimelineMonth
         }}
         views={{
           resourceTimeGridDay: {
@@ -100,10 +101,17 @@ const TimeLineCalendar = ({ events, resources }) => {
             buttonText: '시간대'
           },
           resourceTimelineMonth: {
-            buttonText: '월'
+            buttonText: '월',
+            timeGrid: {
+              dayMaxEventRows: 2 // adjust to 6 only for timeGridWeek/timeGridDay
+            }
           },
           listWeek: {
-            buttonText: '리스트'
+            buttonText: '리스트',
+            title: events.description,
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            }
           }
         }}
         resources={resources}

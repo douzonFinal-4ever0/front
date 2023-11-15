@@ -58,9 +58,6 @@ function ExcelImport() {
         const sheetName = workbook.SheetNames[0]; // 첫 번째 시트를 선택
         const sheet = workbook.Sheets[sheetName];
 
-        // const sheetName2 = workbook.SheetNames[1]; // 이미지 시트를 선택
-        // const imgSheet = workbook.Sheets[sheetName2];
-
         /**시트 데이터를 배열로 변환 */
         const excelData = XLSX.utils.sheet_to_json(sheet);
 

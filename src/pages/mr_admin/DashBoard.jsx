@@ -7,6 +7,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container } from '@mui/material';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import ExcelDownloadButton from '../../components/mr_admin/ExcelDownloadButton';
 import ImageUpload from '../../components/mr_admin/ImageUpload';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import WrapContainer from '../../components/mr_user/WrapContainer';
@@ -82,6 +83,7 @@ const DashBoard = () => {
               {/* <ZipFileImport /> */}
               {/* <ExcelImport /> */}
               {/* <SuppliesList /> */}
+              <ExcelDownloadButton />
               <ImageUpload />
               {/* <JWTdecode /> */}
               {/* 이미지 리스트 */}

@@ -4,11 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataGrid from '../../components/common/DataGrid';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import Spinner from '../../components/common/Spinner.jsx';
 import SubHeader from '../../components/common/SubHeader';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import axiosInstance from '../../utils/axios.js';
 const MrNoticeList = () => {
+  const [isLoading, setIsLoading] = useState(true);
   /*-------------------------------------url 이동---------------------------------------------------*/
   const navigate = useNavigate();
   const handleWriteNotice = () => {
@@ -26,6 +28,7 @@ const MrNoticeList = () => {
         }));
         setNoticeList(processedData);
         // console.log(res.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -46,6 +49,7 @@ const MrNoticeList = () => {
 
   return (
     <>
+      <Spinner isLoading={isLoading} />
       <SubHeader title={'공지사항 조회'} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer2>
