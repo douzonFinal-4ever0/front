@@ -332,7 +332,7 @@ const MrStatistics = () => {
   const cardContent3 = (
     <CardContent>
       <Typography gutterBottom variant="h4" component="div">
-        🕘예약 시간대
+        🕘사용 시간대
       </Typography>
       <CardActionArea onClick={handleClickMostTime}>
         <MrMostTimeChart width={'auto'} height={300} data={FavTime} />
