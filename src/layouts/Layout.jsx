@@ -14,7 +14,6 @@ import {
 import { Alert, Collapse, Snackbar } from '@mui/material';
 import JWTdecode from '../components/common/JWTdecode';
 import { useContext } from 'react';
-import { SocketContext } from '../utils/SocketProvider';
 
 const Layout = ({ isAdminMode, setIsAdminMode }) => {
   // 사이드바 오픈 여부 (boolean)
@@ -32,13 +31,6 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
   const handleCloseSnackbar = () => {
     dispatch(closeSanckbar());
   };
-  const socket = useContext(SocketContext);
-  useEffect(() => {
-    console.log('qweqwe');
-    socket.on('mrRezParticipant', (data) => {
-      console.log(data);
-    });
-  }, []);
 
   return (
     <>

@@ -19,8 +19,8 @@ const App = () => {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <JWTdecode />
         <BrowserRouter>
+          <JWTdecode />
           <SocketProvider>
             <ThemeProvider>
               <Router

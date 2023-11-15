@@ -9,27 +9,37 @@ const io = require('socket.io')(server, {
   }
 });
 // const axios = require('axios');
-const users = new Set();
+const users = new Map();
 io.on('connection', (socket) => {
-  console.log('연결 성공');
+  const memInfo = socket.handshake.query;
+  console.log(memInfo.mem_code);
+  users.set(memInfo.mem_code, socket.id);
+  console.log('연결 성공... ');
+  // console.log('소켓 ID : +' + socket.id + '사용자 ID : ' + currentUserCode);
+  console.log(users);
   //   io.emit('connect', true);
-  socket.on('loginSuccess', (currentUserCode) => {
-    users.add(currentUserCode);
-    socket.userId = currentUserCode;
-    console.log(users);
-  });
+  // socket.on('loginSuccess', (currentUserCode) => {
+  //   // users.add(currentUserCode);
+  //   users.set(currentUserCode, socket.id);
+  //   // socket.id = currentUserCode;
+  //   console.log(users);
+  // });
   socket.on('allParticipant', (data) => {
     for (let mem of data) {
-      for (let memCode of users) {
+      for (let memCode of Array.from(users.keys())) {
         if (mem.mem_code === memCode) {
-          console.log('참석자 입니다');
-          io.to(memCode).emit(
+          console.log(memCode + ' 참석자 입니다. 소켓 : ' + users.get(memCode));
+          io.to(users.get(memCode)).emit(
             'mrRezParticipant',
             '회의실 예약 참석자로 지정되었습니다.'
           );
         }
       }
     }
+  });
+  socket.on('disconnect', (mem_code) => {
+    users.delete(mem_code);
+    socket.disconnect();
   });
 });
 // server.emit('message', '연결 성공');

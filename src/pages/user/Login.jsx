@@ -52,7 +52,8 @@ const Login = () => {
   if (jwt != '') {
     if (jwt != 'Bearer undefined') {
       console.log(socket);
-      socket.emit('login');
+      // socket.emit('login');
+      // socket.emit('loginSuccess', mem_code);
       navigate('/mr/dashboard');
     }
   }
