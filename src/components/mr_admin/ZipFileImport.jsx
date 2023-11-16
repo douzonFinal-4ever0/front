@@ -4,36 +4,55 @@ import JSZip from 'jszip';
 import React, { useState } from 'react';
 
 const ZipFileImport = () => {
-  const [zipFiles, setZipFiles] = useState([]); //zip 파일 데이터
+  const [zipFiles, setZipFiles] = useState([]);
 
-  const handleZipFileUpload = (event) => {
+  const handleZipFileUpload = async (event) => {
     const file = event.target.files[0];
 
     if (file) {
       const zip = new JSZip();
 
-      zip
-        .loadAsync(file, {
+      try {
+        const zipInstance = await zip.loadAsync(file, {
           decodeFileName: function (bytes) {
             return iconv.decode(bytes, 'euc-kr');
           }
-        })
-        .then((zipFiles) => {
-          const filePromises = [];
-
-          zipFiles.forEach((relativePath, zipObject) => {
-            filePromises.push(
-              zipObject.async('blob').then((content) => ({
-                name: decodeURIComponent(relativePath),
-                content: content
-              }))
-            );
-          });
-
-          Promise.all(filePromises).then((result) => {
-            setZipFiles(result);
-          });
         });
+
+        const filePromises = [];
+
+        zipInstance.forEach((relativePath, zipObject) => {
+          filePromises.push(
+            zipObject.async('blob').then((content) => ({
+              name: decodeURIComponent(relativePath),
+              content: content
+            }))
+          );
+        });
+
+        const result = await Promise.all(filePromises);
+        setZipFiles(result);
+
+        // 업로드를 서버로 전송
+        const formData = new FormData();
+        result.forEach((file) => {
+          const convertedFile = new File([file.content], file.name, {
+            type: file.content.type
+          });
+          formData.append('images', convertedFile);
+        });
+        console.log(formData);
+        // // 아래의 URL은 서버의 업로드 엔드포인트로 수정해야 합니다.
+        // fetch('YOUR_SERVER_UPLOAD_ENDPOINT', {
+        //   method: 'POST',
+        //   body: formData
+        // })
+        //   .then((response) => response.json())
+        //   .then((data) => console.log(data))
+        //   .catch((error) => console.error('Error:', error));
+      } catch (error) {
+        console.error('Error loading zip file:', error);
+      }
     }
   };
   console.log(zipFiles);

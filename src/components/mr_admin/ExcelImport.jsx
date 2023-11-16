@@ -35,7 +35,7 @@ function ExcelImport() {
   };
   /*----------------------------------------------------------------------------------------*/
   const validateExcelData = (rowData) => {
-    const requiredFields = ['분류', '위치', '인원', '요일'];
+    const requiredFields = ['회의실명', '분류', '위치', '인원', '요일'];
     const missingFields = [];
 
     requiredFields.forEach((field) => {
@@ -85,9 +85,7 @@ function ExcelImport() {
             const missingFields = validateExcelData(row);
             if (missingFields.length > 0) {
               handleSetSnackbarContent(
-                `행 ${
-                  index + 1
-                }에 필수 필드가 누락되었습니다: ${missingFields.join(', ')}`
+                `행에 필수 필드가 누락되었습니다: ${missingFields.join(', ')}`
               );
               handleOpenSnackbar();
               return null; // 유효하지 않은 데이터는 무시

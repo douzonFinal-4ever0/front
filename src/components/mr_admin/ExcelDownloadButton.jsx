@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 const ExcelDownloadButton = () => {
   const handleDownload = () => {
     // 데이터를 포함한 원하는 형태로 엑셀 파일을 생성
-    const data = [['분류', '위치', '인원', '요일', '태그', '비품']];
+    const data = [['회의실명', '분류', '위치', '인원', '요일', '태그', '비품']];
 
     const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new();

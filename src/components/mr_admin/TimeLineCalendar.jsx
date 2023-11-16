@@ -94,7 +94,8 @@ const TimeLineCalendar = ({ events, resources }) => {
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next today,resourceTimelineMonth,multiMonthYear',
+          left: 'prevYear,prev,next,nextYear today,resourceTimelineMonth,dayGridMonth',
+          // ,multiMonthYear',
           // resourceTimeGridDay,',
           center: 'title',
           right: 'resourceTimelineDay,listWeek'
@@ -108,14 +109,24 @@ const TimeLineCalendar = ({ events, resources }) => {
           },
           resourceTimelineMonth: {
             eventMaxStack: 0,
-            buttonText: '월',
+            buttonText: '월1',
+            // eventContent: function (arg) {
+            //   return arg.event.extendedProps.description;
+            // },
             views: {
               eventMaxStack: 10
             }
           },
           listWeek: {
             buttonText: '리스트',
-            title: events.description,
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            }
+          },
+          dayGridMonth: {
+            // eventMaxStack: 0,
+            dayMaxEventRows: 0,
+            buttonText: '월2',
             eventContent: function (arg) {
               return arg.event.extendedProps.description;
             }
@@ -126,9 +137,9 @@ const TimeLineCalendar = ({ events, resources }) => {
             title: events.description,
             multiMonthMaxColumns: 6,
             dayMaxEventRows: 3,
-            // eventContent: function (arg) {
-            //   return arg.event.extendedProps.description;
-            // },
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            },
             // duration: { months: 6 },
             views: {
               eventMaxStack: 5,
