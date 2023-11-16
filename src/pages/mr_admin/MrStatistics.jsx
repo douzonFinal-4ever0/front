@@ -317,6 +317,7 @@ const MrStatistics = () => {
       </Typography>
       <MrUsageChart
         height={300}
+        // width={'auto'}
         width={'auto'}
         data={[
           { value: mrRezRow.total - mrRezRow.rez_row_count, name: '사용 ' },
