@@ -22,7 +22,8 @@ const MrRezPage = () => {
   const mrRecommendData = useSelector(setMrRecommendData).payload.mrRecommend;
   const userData = useSelector(setUserData).payload.user;
   const { list } = mrRecommendData;
-  const [recentMNames, setRecentMNames] = useState([]);
+  // 최신 예약 내역의 탑 5 리스트 (중복 제거된)
+  const [recentRez, setRecentRez] = useState([]);
 
   // 선택한 회의실 카드 정보
   const [selectMrCard, setSelectMrCard] = useState({});
@@ -31,6 +32,7 @@ const MrRezPage = () => {
     getRecentMrRezApi();
   }, []);
 
+  // 최근 예약 내역 불러오기
   const getRecentMrRezApi = async () => {
     try {
       const res = await axiosInstance.axiosInstance.get(
@@ -49,7 +51,7 @@ const MrRezPage = () => {
         return data.find((item) => item.m_name === m_name);
       });
 
-      setRecentMNames(uniqueArray);
+      setRecentRez(uniqueArray);
     } catch (err) {
       console.log(err);
     }
@@ -125,7 +127,7 @@ const MrRezPage = () => {
                     {list.length !== 0 ? (
                       <RezSection
                         selectMrCard={selectMrCard}
-                        recentMNames={recentMNames}
+                        recentRez={recentRez}
                       />
                     ) : (
                       '데이터 없음'

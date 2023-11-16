@@ -50,7 +50,6 @@ const MrInfoSection = ({ data }) => {
     setBookmark(!bookmark);
   };
 
-  console.log(mr_supplies);
   return (
     <Box
       component={'section'}
@@ -132,7 +131,10 @@ const MrInfoSection = ({ data }) => {
                       {item.supplies.supplies_name === null ? null : (
                         <Chip
                           label={item.supplies.supplies_name}
-                          sx={{ backgroundColor: palette.grey['300'] }}
+                          sx={{
+                            backgroundColor: palette.grey['300'],
+                            fontSize: '14px'
+                          }}
                         />
                       )}
                     </>
