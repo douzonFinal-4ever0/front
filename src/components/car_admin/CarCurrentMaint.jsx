@@ -7,6 +7,7 @@ import { Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
 import ErrorIcon from '@mui/icons-material/Error';
+import { formatNumber } from '../../utils/formatNumber';
 
 const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
   const [currentMaintList, setCurrentMaintList] = useState([]);
@@ -71,7 +72,7 @@ const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
                   {item.title}
                 </Typography>
                 <Typography variant="body2" width="50%">
-                  {`${item.cycle}km 마다 교체`}
+                  {`${formatNumber(item.cycle)}km 마다 교체`}
                 </Typography>
               </Box>
               <BorderLinearProgress
@@ -89,7 +90,7 @@ const CarCurrentMaint = ({ carCode, handleMaintClick }) => {
                     }}
                   />
                   <Typography variant="subtitle2" color="#e53935">
-                    {item.over}km 초과
+                    {formatNumber(item.over)}km 초과
                   </Typography>
                 </Box>
               )}

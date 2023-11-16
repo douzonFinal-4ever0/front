@@ -162,6 +162,7 @@ const CarOperationPage = () => {
       sdistance: 0,
       edistance: 1000
     };
+    setSearchFilter(newSearchFilter);
     getAxios(newSearchFilter);
   };
 

@@ -34,7 +34,9 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
+import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { useDispatch } from 'react-redux';
+import { formatNumber } from '../../utils/formatNumber';
 
 const style = {
   position: 'absolute',
@@ -57,6 +59,10 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
 
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
+  };
+
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
   };
 
   // 수정 모달 관련 변수 및 함수
@@ -83,8 +89,16 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
       .put('/manager/car/carDelete', carCode)
       .then((res) => {
         console.log(res.data);
+        const updatedCarListInfo = carListInfo.map((item) =>
+          item.car_code === carCode ? { ...item, car_status: '삭제됨' } : item
+        );
+
+        // 변경된 배열을 적용
+        setCarListInfo(updatedCarListInfo);
         handleSetSnackbarContent('삭제가 완료되었습니다.');
         handleOpenSnackbar();
+        handleDeleteModalClose();
+        handleCloseDrawer();
       });
   };
 
@@ -653,25 +667,27 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
         }}
       >
         <Typography variant="h6">기본 정보</Typography>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          width="140px"
-          height="36px"
-        >
-          <RectangleBtn
-            text={'수정'}
-            category={'modify'}
-            sx={{ width: '64px' }}
-            handlebtn={handleModifyBtn}
-          />
-          <RectangleBtn
-            text={'삭제'}
-            category={'delete'}
-            sx={{ width: '64px' }}
-            handlebtn={handleDeleteModalOpen}
-          />
-        </Box>
+        {carInfo.car_status !== '삭제됨' && (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            width="140px"
+            height="36px"
+          >
+            <RectangleBtn
+              text={'수정'}
+              category={'modify'}
+              sx={{ width: '64px' }}
+              handlebtn={handleModifyBtn}
+            />
+            <RectangleBtn
+              text={'삭제'}
+              category={'delete'}
+              sx={{ width: '64px' }}
+              handlebtn={handleDeleteModalOpen}
+            />
+          </Box>
+        )}
       </Box>
       <Grid
         container
@@ -735,7 +751,9 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
             <ListItemText primary="누적 주행거리" />
           </ListItem>
           <ListItem>
-            <ListItemText primary={carInfo.accum_mileage + ' km'} />
+            <ListItemText
+              primary={formatNumber(carInfo.accum_mileage) + ' km'}
+            />
           </ListItem>
         </Grid>
         <Grid item sx={{ display: 'flex' }} xs={6}>
