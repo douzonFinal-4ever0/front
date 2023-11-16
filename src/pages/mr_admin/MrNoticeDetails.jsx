@@ -1,21 +1,21 @@
-import React from 'react';
-import SubHeader from '../../components/common/SubHeader';
-import { Box, Fade, Grid, IconButton } from '@mui/material';
-import WrapContainer from '../../components/mr_user/WrapContainer';
-import RectangleBtn from '../../components/common/RectangleBtn';
-import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../utils/axios';
-import { useState } from 'react';
-import { useEffect } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Box, Fade, Grid, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import Spinner from '../../components/common/Spinner';
+import SubHeader from '../../components/common/SubHeader';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
+import WrapContainer from '../../components/mr_user/WrapContainer';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
-import { useDispatch } from 'react-redux';
+import axiosInstance from '../../utils/axios';
 
 const MrNoticeDetails = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
@@ -36,6 +36,7 @@ const MrNoticeDetails = () => {
       .get(`/mr/notice/${notice_code}`)
       .then((res) => {
         setSelectedNotice(res.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -69,6 +70,7 @@ const MrNoticeDetails = () => {
       .then((res) => {
         handleOpenSnackbar();
         handleSetSnackbarContent('삭제가 완료되었습니다.');
+        setIsLoading(false);
         navigate('../NoticeList');
       })
       .catch((error) => {
@@ -78,6 +80,7 @@ const MrNoticeDetails = () => {
 
   return (
     <>
+      <Spinner isLoading={isLoading} />
       <SubHeader title={title} />
       <Box sx={{ display: 'flex' }}>
         <MainContainer2>
@@ -106,10 +109,23 @@ const MrNoticeDetails = () => {
                       <MoreVertIcon />
                     </IconButton>
                   </Grid>
+                  <Grid item xs={1}>
+                    <RectangleBtn
+                      category={'register'}
+                      text={'목록'}
+                      sx={{
+                        padding: '14px 12px'
+                      }}
+                      handlebtn={handleMrList}
+                    />
+                  </Grid>
 
+                  <Grid item xs>
+                    {/* <Button onClick={handleTest}>test</Button> */}
+                  </Grid>
                   <Grid item xs={2}>
                     <Fade in={checked}>
-                      <Grid container spacing={2}>
+                      <Grid container spacing={1}>
                         <Grid item xs={6}>
                           <RectangleBtn
                             category={'modify'}
@@ -132,19 +148,6 @@ const MrNoticeDetails = () => {
                         </Grid>
                       </Grid>
                     </Fade>
-                  </Grid>
-                  <Grid item xs>
-                    {/* <Button onClick={handleTest}>test</Button> */}
-                  </Grid>
-                  <Grid item xs={1}>
-                    <RectangleBtn
-                      category={'register'}
-                      text={'목록'}
-                      sx={{
-                        padding: '14px 12px'
-                      }}
-                      handlebtn={handleMrList}
-                    />
                   </Grid>
                 </Grid>
               </Grid>

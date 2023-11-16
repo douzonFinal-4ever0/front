@@ -1,17 +1,16 @@
-import { useLocation } from 'react-router-dom';
 import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
-import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
+import { useLocation } from 'react-router-dom';
 
+import styled from '@emotion/styled';
 import {
+  Avatar,
+  Box,
   Grid,
   ListItem,
   ListItemText,
   Stack,
-  Typography,
-  Box,
-  Avatar
+  Typography
 } from '@mui/material';
-import styled from '@emotion/styled';
 import QRcode from '../../../../components/mr_user/QRcode';
 import { palette } from '../../../../theme/palette';
 
@@ -27,9 +26,10 @@ const RezInfo = ({ data }) => {
     rez_end_time,
     master,
     created_at,
-    pt_list
+    pt_list,
+    mr_rez_code //예약 코드
   } = data;
-
+  console.log(mr_rez_code); // 예약코드가 undefined가 나옴
   return (
     <Box
       component={'section'}
@@ -397,7 +397,11 @@ const RezInfo = ({ data }) => {
                         alignItems: 'center'
                       }}
                     >
-                      <QRcode srcValue={'http://www.naver.com'} />
+                      {/* <QRcode srcValue={'http://www.naver.com'} /> */}
+                      <QRcode
+                        // QR코드 생성 및 주소
+                        srcValue={`http://192.168.0.177:3000/mr/rez/${mr_rez_code}`}
+                      />
                     </ListItemText>
                   </Grid>
                 </Stack>
