@@ -34,7 +34,7 @@ const DefaultBarChart = () => (
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Skeleton variant="rectangular" height={530} />
+          <Skeleton variant="rectangular" height={200} />
         </Grid>
       </Grid>
     </CardContent>
