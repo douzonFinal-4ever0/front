@@ -289,7 +289,7 @@ const BmMemModal = ({
       if (res.status === 201) {
         alert('즐겨찾기 등록 성공하였습니다.');
         bmGroupMemApi(); // 즐겨찾기 리스트 조회
-        setSelectMems([]); // 적용 대상 리스트 초기화
+        setApplyList([]); // 적용 대상 리스트 초기화
         setGroupName(''); // 그룹명 초기화
         handleModal(); // 모달창 닫기
       } else {
