@@ -7,6 +7,7 @@ import CarMaint from './CarMaint';
 import { Box } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import { Circle } from '@mui/icons-material';
+import { formatNumber } from '../../utils/formatNumber';
 
 const CarInfo = ({
   rows,
@@ -18,7 +19,7 @@ const CarInfo = ({
 }) => {
   const dispatch = useDispatch();
 
-  const handleClickRow = (value, mileage) => {
+  const handleClickRow = (value, mileage, status) => {
     console.log('value : ' + value + 'mileage : ' + mileage);
 
     setTabData([
@@ -34,7 +35,9 @@ const CarInfo = ({
       },
       {
         title: '정비 및 지출',
-        content: <CarMaint carCode={value} accum_mileage={mileage} />
+        content: (
+          <CarMaint carCode={value} accum_mileage={mileage} status={status} />
+        )
       }
     ]);
     dispatch(openDrawer());
@@ -133,7 +136,7 @@ const CarInfo = ({
       renderCell: (params) => (
         <Box display="flex">
           <Typography variant="button" marginRight="5px">
-            {params.value}
+            {formatNumber(params.value)}
           </Typography>
           <Typography>km</Typography>
         </Box>
@@ -255,7 +258,11 @@ const CarInfo = ({
           '& .MuiDataGrid-row': { cursor: 'pointer' }
         }}
         onRowClick={(row) => {
-          handleClickRow(row.row.car_code, row.row.accum_mileage);
+          handleClickRow(
+            row.row.car_code,
+            row.row.accum_mileage,
+            row.row.car_status
+          );
         }}
       />
     </Box>

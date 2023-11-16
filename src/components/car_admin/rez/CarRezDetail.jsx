@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import RectangleBtn from '../../common/RectangleBtn';
 import { palette } from '../../../theme/palette';
 import CarDeleteModal from '../CarDeleteModal';
+import { formatNumber } from '../../../utils/formatNumber';
 
 const setTitle = (data) => {
   // data 객체의 status 값에 따라 title을 설정
@@ -27,21 +28,6 @@ const setTitle = (data) => {
     return '운행중';
   } else {
     return '운행 완료';
-  }
-};
-
-const setColor = (data) => {
-  // data 객체의 status 값에 따라 color를 설정
-  if (data === '1') {
-    return '#9e9e9e';
-  } else if (data === '2') {
-    return '#d32f2f';
-  } else if (data === '3') {
-    return '#ffc107';
-  } else if (data === '4') {
-    return '#1769aa';
-  } else {
-    return '#2e7d32';
   }
 };
 
@@ -89,11 +75,11 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
       .then((res) => {
         setCarRezData({
           ...carRezData,
-          carRezResponseVO: { ...carRezData.carRezResponseVO, rez_status: '4' }
+          carRezResponseVO: { ...carRezData.carRezResponseVO, rez_status: '2' }
         });
         const updatedRezData = rezData.map((data) => {
           if (data.car_rez_code === car_rez_code) {
-            return { ...data, rez_status: '4' };
+            return { ...data, rez_status: '2' };
           }
           return data;
         });
@@ -241,7 +227,9 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={`${carRezData.carRezResponseVO.est_mileage}km`}
+                  primary={`${formatNumber(
+                    carRezData.carRezResponseVO.est_mileage
+                  )}km`}
                 />
               </ListItem>
             </Grid>

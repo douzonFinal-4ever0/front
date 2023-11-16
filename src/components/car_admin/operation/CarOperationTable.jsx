@@ -27,11 +27,20 @@ const CarOperationTable = ({
       align: 'center',
       renderCell: (params) => (
         <Box display="flex" width="100%" alignItems="center">
-          <Chip
-            label={params.value.type}
-            size="small"
-            sx={{ backgroundColor: '#90caf9', marginRight: '20px' }}
-          />
+          {params.value.type === '승용차' ? (
+            <Chip
+              label={params.value.type}
+              size="small"
+              sx={{ backgroundColor: '#90caf9', marginRight: '20px' }}
+            />
+          ) : (
+            <Chip
+              label={params.value.type}
+              size="small"
+              sx={{ backgroundColor: '#a5d6a7', marginRight: '20px' }}
+            />
+          )}
+
           <Box>
             <Typography variant="subtitle1">{params.value.car_code}</Typography>
             <Typography
@@ -178,6 +187,9 @@ const CarOperationTable = ({
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 10 }
+          },
+          sorting: {
+            sortModel: [{ field: 'start_at', sort: 'desc' }]
           }
         }}
         localeText={{
