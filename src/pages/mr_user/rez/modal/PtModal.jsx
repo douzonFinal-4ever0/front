@@ -231,6 +231,7 @@ const PtModal = ({
                 data={toggleData}
                 sx={{ width: '100%' }}
                 handleToggleBtn={handleToggleClick}
+                selectBtn={selectTab}
               />
               <SelectContainer
                 tab={selectTab}

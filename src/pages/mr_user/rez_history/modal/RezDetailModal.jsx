@@ -46,6 +46,9 @@ const RezDetailModal = ({
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
 
+  console.log('여기');
+  console.log(data);
+
   const detailInfo = {
     m_name: data && data.m_name,
     mr_name: data.mr && data.mr.mr_name,

@@ -5,14 +5,20 @@ import { palette } from '../../theme/palette';
 
 const Toggle = (props) => {
   const { data, handleToggleBtn, selectBtn, sx } = props;
-
   return (
     <ToggleButtonGroup value={selectBtn} exclusive onChange={handleToggleBtn}>
       {data.map((item, index) => (
         <ToggleButton
           key={index}
           value={item.value}
-          sx={{ border: `1px solid ${palette.grey['500']}`, ...sx }}
+          sx={{
+            '&$checked': {
+              backgroundColor: 'your_custom_checked_color' // 토글이 활성화된 경우 배경색
+            },
+
+            border: `1px solid ${palette.grey['500']}`,
+            ...sx
+          }}
         >
           {item.name}
         </ToggleButton>

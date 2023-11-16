@@ -126,9 +126,9 @@ const BmPage = () => {
   const registerName = (selectTab) => {
     switch (selectTab) {
       case 0:
-        return '멤버 등록';
-      case 1:
         return '그룹 등록';
+      case 1:
+        return '멤버 등록';
       case 2:
         return '회의실 등록';
       default:
