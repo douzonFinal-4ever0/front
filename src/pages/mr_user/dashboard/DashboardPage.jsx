@@ -20,6 +20,9 @@ import Statistics from './section/Statistics';
 import calcRezRate from '../../../utils/calcRezRate';
 import Notice from './section/Notice';
 import Notices from './section/Notices';
+import { setRezData } from '../../../redux/reducer/mrUserSlice';
+import { getFormattedDate } from '../../../utils/formatDate';
+import Progress from '../../../components/mr_user/Progress';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -28,27 +31,40 @@ const DashboardPage = () => {
   const bmData = useSelector(setBmData).payload.bm;
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
   const [notice, setNotice] = useState([]); // 공지사항 리스트
+  const [isLoading, setIsLoading] = useState(false);
 
   // 리덕스 데이터
   const { name, position_name, mem_code, dept_name } = userData;
   const { mr_list } = bmData;
 
   useEffect(() => {
+    setIsLoading(true);
     getMrRezApi();
     getMrUsageApi();
     getNotice();
+    setIsLoading(false);
   }, []);
 
   // 전체 회의실 사용률 조회
   const getMrUsageApi = async () => {
-    const date = getToday(); //년월일
+    const date = getToday(); // 년월일
     const time = '16:00';
 
-    const res = await axiosInstance.axiosInstance(
+    const res = await axiosInstance.axiosInstance.get(
       `/mr/statistics?date=${date}&time=${time}`
     );
+
     if (res.status !== 200) return;
-    calcRezRate(res.data);
+
+    const data = res.data;
+
+    if (Array.isArray(data)) {
+      // Handle the case when data is an array
+      calcRezRate(data.length !== 0 ? data : []);
+    } else {
+      // Handle the case when data is not an array
+      console.error('Data is not an array:', data);
+    }
   };
 
   // 사용자 회의실 예약 조회
@@ -78,9 +94,10 @@ const DashboardPage = () => {
       lestPtList.forEach((rez) => {
         rez.role = '참석자';
       });
-      res.data.forEach((rez) => {
-        rez.role = '예약자';
-      });
+      res.data &&
+        res.data.forEach((rez) => {
+          rez.role = '예약자';
+        });
 
       // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];
@@ -88,15 +105,16 @@ const DashboardPage = () => {
       let list = [];
       // 오늘 예약 현황 추출
       const today = getToday();
-      data.forEach((rez) => {
-        if (rez.rez_start_time.includes(today)) {
-          const startTime = getTime(rez.rez_start_time);
-          const endTime = getTime(rez.rez_end_time);
-          const time = `${startTime} - ${endTime}`;
-          const newRez = [{ ...rez, newTime: time }];
-          list.push(...newRez);
-        }
-      });
+      data &&
+        data.forEach((rez) => {
+          if (rez.rez_start_time.includes(today)) {
+            const startTime = getTime(rez.rez_start_time);
+            const endTime = getTime(rez.rez_end_time);
+            const time = `${startTime} - ${endTime}`;
+            const newRez = [{ ...rez, newTime: time }];
+            list.push(...newRez);
+          }
+        });
 
       // 이름 시간 순으로 정렬
       list.sort(
@@ -115,10 +133,17 @@ const DashboardPage = () => {
     const res = await axiosInstance.axiosInstance.get('/mr/notice');
     if (res.status !== 200) return;
 
-    const processedData = res.data.map((item) => ({
-      ...item,
-      id: item.notice_code
-    }));
+    let processedData = [];
+
+    if (Array.isArray(res.data)) {
+      processedData = res.data.map((item) => ({
+        ...item,
+        id: item.notice_code
+      }));
+    } else {
+      // 데이터가 배열이 아닌 경우에 대한 처리
+      console.error('Data is not an array:', res.data);
+    }
 
     setNotice(processedData);
   };
@@ -233,6 +258,7 @@ const DashboardPage = () => {
           </Stack>
         </MainContainer>
       </Box>
+      <Progress open={isLoading} />
     </>
   );
 };

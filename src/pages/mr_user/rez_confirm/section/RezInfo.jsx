@@ -1,17 +1,18 @@
-import { useLocation } from 'react-router-dom';
 import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
+import { useLocation } from 'react-router-dom';
 
+import styled from '@emotion/styled';
 import {
+  Avatar,
+  Box,
   Grid,
   ListItem,
   ListItemText,
   Stack,
-  Typography,
-  Box,
-  Avatar
+  Typography
 } from '@mui/material';
-import styled from '@emotion/styled';
 import QRcode from '../../../../components/mr_user/QRcode';
+import { palette } from '../../../../theme/palette';
 
 const RezInfo = ({ data }) => {
   const { pathname } = useLocation();
@@ -25,9 +26,10 @@ const RezInfo = ({ data }) => {
     rez_end_time,
     master,
     created_at,
-    pt_list
+    pt_list,
+    mr_rez_code //예약 코드
   } = data;
-
+  console.log(mr_rez_code); // 예약코드가 undefined가 나옴
   return (
     <Box
       component={'section'}
@@ -36,10 +38,28 @@ const RezInfo = ({ data }) => {
         flexDirection: 'column',
         width: '100%',
         height: '100%',
-        borderRadius: '8px'
+        borderRadius: '8px',
+        overflow: 'auto',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: palette.grey['500'],
+          borderRadius: '10px'
+        },
+        '&::-webkit-scrollbar': {
+          width: '10px',
+          backgroundColor: '#eee',
+          borderRadius: '10px'
+        }
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          maxHeight: '650px'
+        }}
+      >
         {detailModal ? null : (
           <StyledStepText>
             <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
@@ -58,11 +78,11 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd',
-                  borderTop: '1px solid #bdbdbd'
+                  borderBottom: `1px solid ${palette.grey['400']}`,
+                  borderTop: `1px solid ${palette.grey['400']}`
                 }
               }}
             >
@@ -89,10 +109,10 @@ const RezInfo = ({ data }) => {
                 xs={12}
                 sx={{
                   '& .infoTitle': {
-                    backgroundColor: '#eeeeee'
+                    backgroundColor: palette.grey['100']
                   },
                   '& .MuiListItem-gutters': {
-                    borderBottom: '1px solid #bdbdbd'
+                    borderBottom: `1px solid ${palette.grey['400']}`
                   }
                 }}
               >
@@ -124,10 +144,10 @@ const RezInfo = ({ data }) => {
                 xs={12}
                 sx={{
                   '& .infoTitle': {
-                    backgroundColor: '#eeeeee'
+                    backgroundColor: palette.grey['100']
                   },
                   '& .MuiListItem-gutters': {
-                    borderBottom: '1px solid #bdbdbd'
+                    borderBottom: `1px solid ${palette.grey['400']}`
                   }
                 }}
               >
@@ -163,11 +183,11 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd',
-                  borderTop: '1px solid #bdbdbd'
+                  borderBottom: `1px solid ${palette.grey['400']}`,
+                  borderTop: `1px solid ${palette.grey['400']}`
                 }
               }}
             >
@@ -193,10 +213,10 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd'
+                  borderBottom: `1px solid ${palette.grey['400']}`
                 }
               }}
             >
@@ -222,7 +242,7 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
                   borderBottom: '1px solid #bdbdbd'
@@ -253,10 +273,10 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd'
+                  borderBottom: `1px solid ${palette.grey['400']}`
                 }
               }}
             >
@@ -297,11 +317,11 @@ const RezInfo = ({ data }) => {
               xs={12}
               sx={{
                 '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
+                  backgroundColor: palette.grey['100']
                 },
                 '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd',
-                  borderTop: '1px solid #bdbdbd'
+                  borderBottom: `1px solid ${palette.grey['400']}`,
+                  borderTop: `1px solid ${palette.grey['400']}`
                 }
               }}
             >
@@ -330,7 +350,9 @@ const RezInfo = ({ data }) => {
                           (
                           {detailModal
                             ? mem.memVO.deptVO.dept_name
-                            : mem.dept_name}
+                            : mem.deptVO === undefined
+                            ? mem.dept_name
+                            : mem.deptVO.dept_name}
                           )
                         </Typography>
                       </Stack>
@@ -354,11 +376,11 @@ const RezInfo = ({ data }) => {
                 xs={12}
                 sx={{
                   '& .infoTitle': {
-                    backgroundColor: '#eeeeee'
+                    backgroundColor: palette.grey['100']
                   },
                   '& .MuiListItem-gutters': {
-                    borderBottom: '1px solid #bdbdbd',
-                    borderTop: '1px solid #bdbdbd'
+                    borderBottom: `1px solid ${palette.grey['400']}`,
+                    borderTop: `1px solid ${palette.grey['400']}`
                   }
                 }}
               >
@@ -375,7 +397,11 @@ const RezInfo = ({ data }) => {
                         alignItems: 'center'
                       }}
                     >
-                      <QRcode srcValue={'http://www.naver.com'} />
+                      {/* <QRcode srcValue={'http://www.naver.com'} /> */}
+                      <QRcode
+                        // QR코드 생성 및 주소
+                        srcValue={`http://192.168.0.177:3000/mr/rez/${mr_rez_code}`}
+                      />
                     </ListItemText>
                   </Grid>
                 </Stack>
@@ -392,6 +418,7 @@ export default RezInfo;
 
 const StyledStepText = styled(Typography)(({ theme }) => ({
   paddingBottom: '6px',
+  marginBottom: '16px',
   display: 'flex',
   alignItems: 'center',
   fontSize: '18px',

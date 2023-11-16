@@ -1,11 +1,4 @@
-import {
-  Checkbox,
-  Container,
-  Grid,
-  Paper,
-  TextField,
-  styled
-} from '@mui/material';
+import { Container, Grid, Paper, TextField, styled } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -100,8 +93,8 @@ const Login = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Checkbox />
-              <span>로그인 기억하기</span>
+              {/* <Checkbox />
+              <span>로그인 기억하기</span> */}
             </Grid>
             <Grid item xs={12}>
               <RectangleBtn

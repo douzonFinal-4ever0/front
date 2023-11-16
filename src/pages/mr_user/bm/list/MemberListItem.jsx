@@ -83,15 +83,17 @@ const MemberListItem = ({
 export default MemberListItem;
 
 const StyledMemItem = styled(ListItem)(({ theme }) => ({
+  marginBottom: '6px',
   borderRadius: '2px',
   border: `1px solid ${theme.palette.grey['300']}`,
   '&:hover': {
-    backgroundColor: theme.palette.grey['100']
+    backgroundColor: theme.palette.grey['300']
   }
 }));
 
 const StyledStarBtn = styled(IconButton)(({ theme }) => ({
   padding: 0,
+
   display: 'flex',
   flexGrow: 1,
   justifyContent: 'flex-end',

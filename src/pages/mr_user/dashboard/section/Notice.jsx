@@ -40,7 +40,8 @@ const Notice = ({ data }) => {
                 sx={{
                   padding: '10px 8px',
                   display: 'flex',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
+                  border: `1px solid ${palette.grey['300']}`
                 }}
               >
                 <Box sx={{ display: 'flex', gap: '8px' }}>
@@ -50,7 +51,6 @@ const Notice = ({ data }) => {
                   </Typography>
                 </Box>
                 <Typography sx={{ color: '#aaa', fontSize: '14px' }}>
-                  {' '}
                   {item.updated_at.substring(0, 10)}
                 </Typography>
               </ListItemButton>

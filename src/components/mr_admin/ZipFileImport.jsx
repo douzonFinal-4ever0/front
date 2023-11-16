@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
-import React from 'react';
-import { useState } from 'react';
+import iconv from 'iconv-lite';
 import JSZip from 'jszip';
+import React, { useState } from 'react';
 
 const ZipFileImport = () => {
   const [zipFiles, setZipFiles] = useState([]); //zip 파일 데이터
@@ -12,22 +12,28 @@ const ZipFileImport = () => {
     if (file) {
       const zip = new JSZip();
 
-      zip.loadAsync(file).then((zipFiles) => {
-        const filePromises = [];
+      zip
+        .loadAsync(file, {
+          decodeFileName: function (bytes) {
+            return iconv.decode(bytes, 'euc-kr');
+          }
+        })
+        .then((zipFiles) => {
+          const filePromises = [];
 
-        zipFiles.forEach((relativePath, zipObject) => {
-          filePromises.push(
-            zipObject.async('blob').then((content) => ({
-              name: decodeURIComponent(relativePath),
-              content: content
-            }))
-          );
-        });
+          zipFiles.forEach((relativePath, zipObject) => {
+            filePromises.push(
+              zipObject.async('blob').then((content) => ({
+                name: decodeURIComponent(relativePath),
+                content: content
+              }))
+            );
+          });
 
-        Promise.all(filePromises).then((result) => {
-          setZipFiles(result);
+          Promise.all(filePromises).then((result) => {
+            setZipFiles(result);
+          });
         });
-      });
     }
   };
   console.log(zipFiles);

@@ -1,6 +1,5 @@
-import { QRCodeCanvas } from 'qrcode.react';
 import { Box } from '@mui/material';
-import LogoImage from '../../assets/images/logo/logo.png';
+import { QRCodeCanvas } from 'qrcode.react';
 import DouzoneLogo from '../../assets/images/logo/douzone_logo.png';
 
 const QRcode = ({ srcValue }) => {

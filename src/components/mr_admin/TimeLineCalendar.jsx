@@ -1,6 +1,7 @@
 import koLocale from '@fullcalendar/core/locales/ko';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
@@ -72,12 +73,18 @@ const TimeLineCalendar = ({ events, resources }) => {
 
   return (
     <div>
+      {/* <TimeField
+        withMonth={true}
+        label={'시작 시간'}
+        timeValue={dayjs().hour(9).minute(0)}
+      /> */}
       <FullCalendar
         plugins={[
           dayGridPlugin,
           resourceTimelinePlugin,
           resourceTimeGridPlugin,
-          listPlugin
+          listPlugin,
+          multiMonthPlugin
         ]}
         locale={koLocale} // 한국어 설정
         initialView={currentView}
@@ -87,10 +94,11 @@ const TimeLineCalendar = ({ events, resources }) => {
         eventClick={handleEventClick}
         resourceAreaHeaderContent={'회의실'}
         headerToolbar={{
-          left: 'prev,next,today',
+          left: 'prevYear,prev,next,nextYear today,resourceTimelineMonth,dayGridMonth',
+          // ,multiMonthYear',
+          // resourceTimeGridDay,',
           center: 'title',
           right: 'resourceTimelineDay,listWeek'
-          // resourceTimeGridDay,resourceTimelineMonth
         }}
         views={{
           resourceTimeGridDay: {
@@ -100,10 +108,43 @@ const TimeLineCalendar = ({ events, resources }) => {
             buttonText: '시간대'
           },
           resourceTimelineMonth: {
-            buttonText: '월'
+            eventMaxStack: 0,
+            buttonText: '월1',
+            // eventContent: function (arg) {
+            //   return arg.event.extendedProps.description;
+            // },
+            views: {
+              eventMaxStack: 10
+            }
           },
           listWeek: {
-            buttonText: '리스트'
+            buttonText: '리스트',
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            }
+          },
+          dayGridMonth: {
+            // eventMaxStack: 0,
+            dayMaxEventRows: 0,
+            buttonText: '월2',
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            }
+          },
+          multiMonthYear: {
+            eventMaxStack: 0,
+            buttonText: '년도',
+            title: events.description,
+            multiMonthMaxColumns: 6,
+            dayMaxEventRows: 3,
+            eventContent: function (arg) {
+              return arg.event.extendedProps.description;
+            },
+            // duration: { months: 6 },
+            views: {
+              eventMaxStack: 5,
+              dayMaxEventRows: 3
+            }
           }
         }}
         resources={resources}
