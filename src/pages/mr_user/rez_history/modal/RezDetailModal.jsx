@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
   Box,
   Dialog,
@@ -12,21 +13,20 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
-import { getFormattedDate } from '../../../../utils/formatDate';
-import { setRezData } from '../../../../redux/reducer/mrUserSlice';
-import { setUserData } from '../../../../redux/reducer/userSlice';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
-import MrInfoSection from '../../rez/section/MrInfoSection';
-import RezSection from '../../rez/section/RezSection';
-import RezInfo from '../../rez_confirm/section/RezInfo';
-import axiosInstance from '../../../../utils/axios';
-import { palette } from '../../../../theme/palette';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
+import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { setUserData } from '../../../../redux/reducer/userSlice';
+import { palette } from '../../../../theme/palette';
+import axiosInstance from '../../../../utils/axios';
+import { getFormattedDate } from '../../../../utils/formatDate';
+import MrInfoSection from '../../rez/section/MrInfoSection';
+import RezSection from '../../rez/section/RezSection';
+import RezInfo from '../../rez_confirm/section/RezInfo';
 import DeleteModal from './DeleteModal';
 
 const RezDetailModal = ({
@@ -51,7 +51,8 @@ const RezDetailModal = ({
     rez_end_time: data && data.rez_end_time,
     master: data && data.master,
     created_at: data && data.created_at,
-    pt_list: data && data.mr_pt_list
+    pt_list: data && data.mr_pt_list,
+    mr_rez_code: data && data.mr_rez_code
   };
 
   // 삭제 모달창 취소 이벤트
