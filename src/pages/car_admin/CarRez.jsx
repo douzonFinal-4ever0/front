@@ -12,14 +12,12 @@ import {
   Divider,
   FormControl,
   Grid,
-  InputAdornment,
   ListItem,
   ListItemIcon,
   MenuItem,
   Modal,
   Paper,
   Select,
-  TextField,
   Typography
 } from '@mui/material';
 import format from 'date-fns/format';
@@ -32,17 +30,17 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 import EventIcon from '@mui/icons-material/Event';
 import CarRezList from '../../components/car_admin/rez/CarRezList';
 import Searchbar from '../../components/common/Searchbar';
-import { subMonths } from 'date-fns';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import RectangleBtn from '../../components/common/RectangleBtn';
-import RezStatusChart from '../../components/car_admin/chart/RezStatusChart';
 import CommonTitle from '../../components/car_admin/CommonTitle';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import { Circle } from '@mui/icons-material';
+import RezPageStatusChart from '../../components/car_admin/chart/RezPageStatusChart';
 
 const setTitle = (data) => {
   // data 객체의 status 값에 따라 title을 설정
@@ -62,15 +60,15 @@ const setTitle = (data) => {
 const setColor = (data) => {
   // data 객체의 status 값에 따라 color를 설정
   if (data === '1') {
-    return '#9e9e9e';
+    return '#B5C7E3';
   } else if (data === '2') {
-    return '#d32f2f';
+    return '#e87676';
   } else if (data === '3') {
     return '#ffc107';
   } else if (data === '4') {
-    return '#1769aa';
+    return '#4695db';
   } else {
-    return '#2e7d32';
+    return '#9cb287';
   }
 };
 
@@ -87,7 +85,7 @@ const style = {
 };
 
 // 사이드바 컴포넌트
-const SubSidebarContent = ({ rezData }) => {
+const SubSidebarContent = ({ rezData, isList, listData }) => {
   // rezData에서 필요한 값을 추출하여 계산
   const calculateSeries = (data) => {
     const counts = {
@@ -115,8 +113,10 @@ const SubSidebarContent = ({ rezData }) => {
   const labels = ['미처리', '취소', '운행 대기', '운행 중', '운행 완료'];
   const [series, setSeries] = useState([]);
   useEffect(() => {
-    setSeries(calculateSeries(rezData));
-  }, [rezData]);
+    isList
+      ? setSeries(calculateSeries(listData))
+      : setSeries(calculateSeries(rezData));
+  }, [rezData, listData]);
 
   return (
     <Box sx={{ width: '100%', height: '100%', backgroundColor: '#ffffff' }}>
@@ -124,7 +124,7 @@ const SubSidebarContent = ({ rezData }) => {
         <CommonTitle title={'예약 현황'} />
       </Box>
       <Box marginTop="10px">
-        <RezStatusChart series={series} labels={labels} />
+        <RezPageStatusChart series={series} labels={labels} />
         <List sx={{ width: '50%', margin: 'auto', padding: '0px' }}>
           {labels.map((item, index) => (
             <ListItem
@@ -180,10 +180,9 @@ const CarRezPage = () => {
   //리스트 or 캘린더
   const [isList, setIsList] = useState(false);
 
-  const handleListBtn = () => {
-    setIsList((prev) => !prev);
+  const listAxios = (inputSearchFilter) => {
     axiosInstance.axiosInstance
-      .get('/manager/car/rezListGetAll')
+      .post('/manager/car/rezListGetAll', inputSearchFilter)
       .then((res) => {
         console.log(res.data);
         // const newRezData = res.data.map((data) => {
@@ -192,11 +191,16 @@ const CarRezPage = () => {
         //     start_at: format(new Date(data.start_at), 'yyyy-MM-dd HH:mm:ss')
         //   };
         // });
-        setRezData(res.data);
+        setListData(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleListBtn = () => {
+    setIsList((prev) => !prev);
+    listAxios(searchFilter);
   };
 
   // 검색
@@ -224,18 +228,18 @@ const CarRezPage = () => {
   };
 
   const dateNow = new Date();
-  const today = dateNow.toISOString().slice(0, 10);
+  const today = endOfMonth(dateNow).toISOString().slice(0, 10);
 
-  const dateBefore = subMonths(new Date(), 1);
-  const before = dateBefore.toISOString().slice(0, 10); // Day.js 객체로 변경
+  const dateBefore = startOfMonth(dateNow, 1);
+  const before = dateBefore.toISOString().slice(0, 10);
 
   const [searchFilter, setSearchFilter] = useState({
-    operation_sdate: before,
-    operation_edate: today,
-    car_type: '전체',
-    dept_name: '전체',
-    sdistance: 0,
-    edistance: 1000
+    rez_status: 0,
+    rez_start_at: null,
+    rez_end_at: null,
+    oper_start_at: before,
+    oper_end_at: today,
+    dept_name: '전체'
   });
   const [openSearchDetail, setOpenSearchDetail] = useState(false);
 
@@ -243,23 +247,25 @@ const CarRezPage = () => {
     setOpenSearchDetail((prev) => !prev);
   };
 
-  const handleOperationDownBtn = () => {
-    handleModalOpen();
-  };
-
   const handleFilterBtn = () => {
     console.log(searchFilter);
+    listAxios(searchFilter);
   };
 
   const handleReturnBtn = () => {
     const newSearchFilter = {
-      operation_sdate: before,
-      operation_edate: today,
-      car_type: '전체',
-      dept_name: '전체',
-      sdistance: 0,
-      edistance: 1000
+      rez_status: 0,
+      rez_start_at: null,
+      rez_end_at: null,
+      oper_start_at: before,
+      oper_end_at: today,
+      dept_name: '전체'
     };
+    setSearchValue('');
+
+    setSearchFilter(newSearchFilter);
+
+    listAxios(newSearchFilter);
   };
 
   // 검색창 내용
@@ -267,7 +273,7 @@ const CarRezPage = () => {
     <Paper sx={{ width: '100%', padding: '10px 25px', overflow: 'hidden' }}>
       <Grid container marginBottom="25px">
         <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="subtitle2">운행 목록 기간</Typography>
+          <Typography variant="subtitle2">예약 기간</Typography>
         </Grid>
         <Grid item xs={4.5} sx={{ overflow: 'hidden' }}>
           <Box display="flex">
@@ -283,12 +289,12 @@ const CarRezPage = () => {
                       '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
                     }}
                     format="YYYY-MM-DD"
-                    value={dayjs(searchFilter.operation_sdate)}
+                    value={dayjs(searchFilter.oper_start_at)}
                     onChange={(newValue) => {
-                      console.log(searchFilter.operation_sdate);
+                      console.log(searchFilter.oper_start_at);
                       setSearchFilter({
                         ...searchFilter,
-                        operation_sdate: newValue.format('YYYY-MM-DD')
+                        oper_start_at: newValue.format('YYYY-MM-DD')
                       });
                     }}
                   />
@@ -317,12 +323,12 @@ const CarRezPage = () => {
                     }}
                     format="YYYY-MM-DD"
                     size="small"
-                    value={dayjs(searchFilter.operation_edate)}
+                    value={dayjs(searchFilter.oper_end_at)}
                     onChange={(newValue) => {
-                      console.log(searchFilter.operation_edate);
+                      console.log(searchFilter.oper_end_at);
                       setSearchFilter({
                         ...searchFilter,
-                        operation_edate: newValue.format('YYYY-MM-DD')
+                        oper_end_at: newValue.format('YYYY-MM-DD')
                       });
                     }}
                   />
@@ -331,14 +337,85 @@ const CarRezPage = () => {
             </LocalizationProvider>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={1.5}
-          sx={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
-        >
-          <Typography variant="subtitle2">차량 종류</Typography>
+        <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="subtitle2">등록 일자</Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4.5} sx={{ overflow: 'hidden' }}>
+          <Box display="flex">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box>
+                <DemoItem>
+                  <DatePicker
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        height: '40px',
+                        width: '150px'
+                      },
+                      '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
+                    }}
+                    format="YYYY-MM-DD"
+                    value={
+                      searchFilter.rez_start_at
+                        ? dayjs(searchFilter.rez_start_at)
+                        : null
+                    }
+                    onChange={(newValue) => {
+                      console.log(searchFilter.rez_start_at);
+                      setSearchFilter({
+                        ...searchFilter,
+                        rez_start_at: newValue.format('YYYY-MM-DD')
+                      });
+                    }}
+                  />
+                </DemoItem>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  margin: '0px 10px'
+                }}
+              >
+                <Typography variant="h6">-</Typography>
+              </Box>
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box>
+                <DemoItem>
+                  <DatePicker
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        height: '40px',
+                        width: '150px'
+                      },
+                      '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
+                    }}
+                    format="YYYY-MM-DD"
+                    size="small"
+                    value={
+                      searchFilter.rez_end_at
+                        ? dayjs(searchFilter.rez_end_at)
+                        : null
+                    }
+                    onChange={(newValue) => {
+                      console.log(searchFilter.rez_end_at);
+                      setSearchFilter({
+                        ...searchFilter,
+                        rez_end_at: newValue.format('YYYY-MM-DD')
+                      });
+                    }}
+                  />
+                </DemoItem>
+              </Box>
+            </LocalizationProvider>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="subtitle2">상태</Typography>
+        </Grid>
+        <Grid item xs={4.5}>
           <Box sx={{ minWidth: 120, width: '270px' }}>
             <FormControl
               sx={{
@@ -347,24 +424,25 @@ const CarRezPage = () => {
             >
               <Select
                 id="demo-simple-select"
-                value={searchFilter.car_type}
+                value={searchFilter.rez_status}
                 displayEmpty
                 onChange={(e) => {
                   setSearchFilter({
                     ...searchFilter,
-                    car_type: e.target.value
+                    rez_status: e.target.value
                   });
                 }}
               >
-                <MenuItem value="전체">전체</MenuItem>
-                <MenuItem value="승용차">승용차</MenuItem>
-                <MenuItem value="화물차">화물차</MenuItem>
+                <MenuItem value={0}>전체</MenuItem>
+                <MenuItem value={3}>운행대기</MenuItem>
+                <MenuItem value={4}>운행중</MenuItem>
+                <MenuItem value={1}>미처리</MenuItem>
+                <MenuItem value={5}>운행완료</MenuItem>
+                <MenuItem value={2}>취소</MenuItem>
               </Select>
             </FormControl>
           </Box>
         </Grid>
-      </Grid>
-      <Grid container>
         <Grid item xs={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="subtitle2">부서</Typography>
         </Grid>
@@ -396,56 +474,6 @@ const CarRezPage = () => {
                 <MenuItem value={'기획1팀'}>기획1팀</MenuItem>
               </Select>
             </FormControl>
-          </Box>
-        </Grid>
-        <Grid
-          item
-          xs={1.5}
-          sx={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
-        >
-          <Typography sx={{ whiteSpace: 'pre-line' }} variant="subtitle2">
-            {'업무용 운행 거리'}
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Box
-            sx={{
-              minWidth: 120,
-              display: 'flex',
-              '& .MuiFormControl-root': { width: '120px', height: '40px' }
-            }}
-          >
-            <TextField
-              type="number"
-              InputProps={{
-                inputProps: { min: 0 },
-                endAdornment: <InputAdornment position="end">㎞</InputAdornment>
-              }}
-              sx={{
-                '& .MuiInputBase-root': { width: '120px', height: '40px' }
-              }}
-              value={searchFilter.sdistance}
-              onChange={(e) => {
-                setSearchFilter({ ...searchFilter, sdistance: e.target.value });
-              }}
-            ></TextField>
-            <Typography variant="h6" margin="0px 10px">
-              -
-            </Typography>
-            <TextField
-              type="number"
-              InputProps={{
-                inputProps: { min: 0 },
-                endAdornment: <InputAdornment position="end">㎞</InputAdornment>
-              }}
-              sx={{
-                '& .MuiInputBase-root': { width: '120px', height: '40px' }
-              }}
-              value={searchFilter.edistance}
-              onChange={(e) => {
-                setSearchFilter({ ...searchFilter, edistance: e.target.value });
-              }}
-            ></TextField>
           </Box>
         </Grid>
         <Grid item flexGrow={1} display="flex" justifyContent="end"></Grid>
@@ -497,6 +525,7 @@ const CarRezPage = () => {
 
   useEffect(() => {
     // start_at과 count를 키로 가지는 객체를 저장할 배열 초기화
+
     const startAtCounts = [];
 
     // rezData 배열을 순회
@@ -545,9 +574,15 @@ const CarRezPage = () => {
   };
 
   const handleDateSet = (arg) => {
+    console.log(arg);
     axiosInstance.axiosInstance
-      .get('/manager/car/rezListGetAll', {
-        params: { sdate: arg.start, edate: arg.end }
+      .post('/manager/car/rezListGetAll', {
+        rez_status: 0,
+        dept_name: '전체',
+        rez_start_at: null,
+        rez_end_at: null,
+        oper_start_at: arg.start,
+        oper_end_at: arg.end
       })
       .then((res) => {
         console.log(res.data);
@@ -585,14 +620,13 @@ const CarRezPage = () => {
   };
 
   return (
-    <>
+    <Box sx={{ overflow: 'auto' }}>
       <SubHeader title={'차량 예약 조회'} />
       <Grid
         container
         sx={{
           display: 'flex',
-          justifyContent: 'center',
-          height: '770px'
+          justifyContent: 'center'
         }}
       >
         <Modal open={modalOpen} onClose={handleModalClose}>
@@ -660,8 +694,10 @@ const CarRezPage = () => {
                 <Divider />
                 {isList ? (
                   <CarRezList
-                    carRezData={rezData}
+                    carRezData={listData}
                     handleClickRow={handleClickRow}
+                    searchType={searchType}
+                    searchValue={searchValue}
                   />
                 ) : (
                   <Calendar
@@ -678,12 +714,16 @@ const CarRezPage = () => {
         </Grid>
         <Grid xs={2.5}>
           <StyledSidebar>
-            <SubSidebarContent rezData={rezData} />
+            <SubSidebarContent
+              rezData={rezData}
+              isList={isList}
+              listData={listData}
+            />
           </StyledSidebar>
         </Grid>
         {/* <SubSidebar content={<SubSidebarContent />} widthP={15} /> */}
       </Grid>
-    </>
+    </Box>
   );
 };
 
