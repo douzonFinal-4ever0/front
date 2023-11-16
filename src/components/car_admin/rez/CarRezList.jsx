@@ -3,6 +3,7 @@ import { Chip, Tooltip, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { DataGrid } from '@mui/x-data-grid';
 import format from 'date-fns/format';
+import { formatNumber } from '../../../utils/formatNumber';
 
 const setTitle = (data) => {
   // data 객체의 status 값에 따라 title을 설정
@@ -22,26 +23,30 @@ const setTitle = (data) => {
 const setColor = (data) => {
   // data 객체의 status 값에 따라 color를 설정
   if (data === '1') {
-    return '#9e9e9e';
+    return '#a7b6ce';
   } else if (data === '2') {
     return '#d32f2f';
   } else if (data === '3') {
     return '#ffc107';
   } else if (data === '4') {
-    return '#1769aa';
+    return '#3884C7';
   } else {
-    return '#2e7d32';
+    return '#9cb287';
   }
 };
 
-const CarRezList = ({ carRezData, handleClickRow }) => {
+const CarRezList = ({
+  carRezData,
+  handleClickRow,
+  searchValue,
+  searchType
+}) => {
   const columns = [
     {
       field: 'rez_status',
       headerName: '상태',
-      width: 160,
+      width: 100,
       headerAlign: 'center',
-      headerClassName: 'super-app-theme--header',
       align: 'center',
       renderCell: (params) => (
         <Chip
@@ -58,7 +63,7 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
     {
       field: 'car_name',
       headerName: '차량',
-      width: 180,
+      width: 160,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -89,7 +94,7 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
       field: 'name',
       headerName: '예약자',
       type: '',
-      width: 160,
+      width: 110,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -110,8 +115,21 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
       )
     },
     {
+      field: 'rez_at',
+      headerName: '등록일자',
+      width: 120,
+      align: 'center',
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => (
+        <Typography textAlign="center" variant="button" display="block">
+          {format(new Date(params.value), 'yyyy-MM-dd')}
+        </Typography>
+      )
+    },
+    {
       field: 'start_at',
-      headerName: '예약 일시',
+      headerName: '예약 기간',
       type: 'number',
       width: 220,
       align: 'center',
@@ -120,7 +138,7 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
       renderCell: (params) => (
         <Box width="100%">
           <Typography textAlign="center" variant="button" display="block">
-            {params.row.start_at}
+            {format(new Date(params.row.start_at), 'yyyy-MM-dd HH:mm:ss')}
           </Typography>
           <Typography textAlign="center" variant="button" display="block">
             {format(new Date(params.row.return_at), 'yyyy-MM-dd HH:mm:ss')}
@@ -129,14 +147,42 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
       )
     },
     {
+      field: 'est_mileage',
+      headerName: '예상 주행 거리',
+      width: 100,
+      align: 'center',
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => (
+        <Typography textAlign="center" variant="subtitle2" display="block">
+          {`${formatNumber(params.value)}km`}
+        </Typography>
+      )
+    },
+    {
       field: 'detail',
       headerName: '목적',
-      width: 160,
+      width: 80,
       align: 'center',
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header'
     }
   ];
+
+  const filteredRows = carRezData.filter((item) => {
+    const lowerSearchValue = searchValue.toLowerCase();
+    if (searchType === 0) {
+      // 차량 코드로 검색
+      return item.car_code.includes(searchValue);
+    } else {
+      // 다른 경우 (차량명 또는 사용자 이름으로 검색)
+      console.log(item);
+      return (
+        item.car_name.toLowerCase().includes(lowerSearchValue) ||
+        item.name.includes(searchValue)
+      );
+    }
+  });
 
   return (
     <StyledContainer>
@@ -149,12 +195,19 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
         }}
       >
         <DataGrid
-          rows={carRezData}
+          rows={filteredRows}
           columns={columns}
           getRowId={(row) => row.car_rez_code}
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 10 }
+            },
+            sorting: {
+              sortModel: [
+                { field: 'rez_status', sort: 'asc' },
+                { field: 'rez_at', sort: 'desc' },
+                { field: 'start_at', sort: 'desc' }
+              ]
             }
           }}
           localeText={{
@@ -162,7 +215,8 @@ const CarRezList = ({ carRezData, handleClickRow }) => {
           }}
           pageSizeOptions={[5, 10, 15]}
           sx={{
-            maxHeight: '590px',
+            minHeight: '300px',
+            maxHeight: '580px',
             borderRadius: '2px',
             '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
               outline: 'none !important'

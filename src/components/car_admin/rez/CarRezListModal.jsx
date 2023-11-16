@@ -22,15 +22,15 @@ const setTitle = (data) => {
 const setColor = (data) => {
   // data 객체의 status 값에 따라 color를 설정
   if (data === '1') {
-    return '#9e9e9e';
+    return '#a7b6ce';
   } else if (data === '2') {
     return '#d32f2f';
   } else if (data === '3') {
     return '#ffc107';
   } else if (data === '4') {
-    return '#1769aa';
+    return '#3884C7';
   } else {
-    return '#2e7d32';
+    return '#9cb287';
   }
 };
 
