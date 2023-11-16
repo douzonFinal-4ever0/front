@@ -39,7 +39,7 @@ const Router = ({ isAdminMode, setIsAdminMode }) => {
         { path: 'login', element: <LoginPage /> },
         { path: '*', element: <Page404 /> },
         {
-          path: '/mr/rez/:mr_code',
+          path: '/mr/rez/:mr_rez_code',
           element: <MrQRPage />
         }
       ]
