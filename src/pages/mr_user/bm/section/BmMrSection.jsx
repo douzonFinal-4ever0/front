@@ -1,46 +1,38 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, List, Stack, Typography } from '@mui/material';
 import WrapContainer from '../../../../components/mr_user/WrapContainer';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import styled from '@emotion/styled';
+import { palette } from '../../../../theme/palette';
 
 const BmMrSection = () => {
-  const handleModifyBtn = () => {
-    console.log('수정');
-  };
-
-  const handleAddBtn = () => {
-    console.log('추가');
-  };
   return (
-    <WrapContainer bgcolor={'#fff'}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
-            <StyledSectionText>즐겨찾기 회의실</StyledSectionText>
-            <Stack direction={'row'} sx={{ gap: '8px' }}>
-              <Box>
-                <RectangleBtn
-                  text={'수정'}
-                  type={'button'}
-                  category={'cancel'}
-                  sx={{ padding: '10px 8px' }}
-                  handlebtn={handleModifyBtn}
-                />
-              </Box>
-              <Box>
-                <RectangleBtn
-                  text={'추가'}
-                  type={'button'}
-                  category={'modify'}
-                  sx={{ padding: '10px 8px' }}
-                  handlebtn={handleAddBtn}
-                />
-              </Box>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
-    </WrapContainer>
+    <Grid
+      container
+      sx={{
+        width: '100%',
+        overflowY: 'auto',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: palette.grey['500'],
+          borderRadius: '10px'
+        },
+        '&::-webkit-scrollbar': {
+          width: '10px',
+          backgroundColor: '#eee',
+          borderRadius: '10px'
+        }
+      }}
+    >
+      <List
+        sx={{
+          width: '100%',
+          height: '600px',
+          display: 'flex',
+          flexDirection: 'column',
+          rowGap: '6px'
+        }}
+      ></List>
+    </Grid>
   );
 };
 

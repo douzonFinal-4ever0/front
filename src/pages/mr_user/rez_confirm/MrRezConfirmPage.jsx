@@ -33,6 +33,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 import { palette } from '../../../theme/palette';
 import RezInfo from './section/RezInfo';
+import { getFormattedDate } from '../../../utils/formatDate';
 
 const MrRezConfirmPage = () => {
   const dispatch = useDispatch();
@@ -128,93 +129,98 @@ const MrRezConfirmPage = () => {
                       <StyledLink to={'/mr/rez/history'}>예약 내역</StyledLink>
                     </Stack>
                   </Box>
-                  <StyledBmSection>
-                    <Box>
-                      <Stack
-                        direction={'row'}
-                        sx={{ alignItems: 'center', gap: '4px' }}
-                      >
-                        <StyledIcon />
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ color: palette.grey['700'], fontSize: '15px' }}
+                  {ptMems && ptMems.length !== 0 ? (
+                    <StyledBmSection>
+                      <Box>
+                        <Stack
+                          direction={'row'}
+                          sx={{ alignItems: 'center', gap: '4px' }}
                         >
-                          멤버 그룹 즐겨찾기에 등록 해보세요!
-                        </Typography>
-                      </Stack>
-                      <Typography
-                        sx={{
-                          fontSize: '14px',
-                          color: '#555',
-                          marginTop: '4px'
-                        }}
-                      >
-                        다음에 동일한 회의 예약 시 자동으로 참석자 그룹이
-                        지정됩니다.
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        padding: '10px 12px',
-                        display: 'flex',
-                        backgroundColor: '#fff',
-                        borderRadius: '2px'
-                      }}
-                    >
-                      <Box sx={{ flexGrow: 1, display: 'flex', gap: '20px' }}>
+                          <StyledIcon />
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              color: palette.grey['700'],
+                              fontSize: '15px'
+                            }}
+                          >
+                            멤버 그룹 즐겨찾기에 등록 해보세요!
+                          </Typography>
+                        </Stack>
                         <Typography
-                          variant="subtitle1"
-                          sx={{ display: 'flex', alignItems: 'center' }}
-                        >
-                          {rezData.m_name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ display: 'flex', alignItems: 'center' }}
-                        >
-                          {`${ptMems.length}명`}
-                        </Typography>
-                        <AvatarGroup
-                          renderSurplus={(surplus) => (
-                            <span>+{surplus.toString()[0]}k</span>
-                          )}
-                          total={ptMems.length}
                           sx={{
-                            '& .MuiAvatar-root': {
-                              width: 30,
-                              height: 30,
-                              fontSize: 15
-                            }
+                            fontSize: '14px',
+                            color: '#555',
+                            marginTop: '4px'
                           }}
                         >
-                          {ptMems.map((mem, index) => (
-                            <Avatar key={index} />
-                          ))}
-                        </AvatarGroup>
+                          다음에 동일한 회의 예약 시 자동으로 참석자 그룹이
+                          지정됩니다.
+                        </Typography>
                       </Box>
-                      <StyledStarBtn onClick={handleStarBtnClick}>
-                        {isBookmark ? (
-                          <StarRoundedIcon fontSize="large" color="primary" />
-                        ) : (
-                          <StarBorderRoundedIcon
-                            fontSize="large"
-                            color="primary"
-                          />
-                        )}
-                      </StyledStarBtn>
-                    </Box>
-                  </StyledBmSection>
+                      <Box
+                        sx={{
+                          padding: '10px 12px',
+                          display: 'flex',
+                          backgroundColor: '#fff',
+                          borderRadius: '2px'
+                        }}
+                      >
+                        <Box sx={{ flexGrow: 1, display: 'flex', gap: '20px' }}>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            {rezData.m_name}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            {`${ptMems.length}명`}
+                          </Typography>
+                          <AvatarGroup
+                            renderSurplus={(surplus) => (
+                              <span>+{surplus.toString()[0]}k</span>
+                            )}
+                            total={ptMems.length}
+                            sx={{
+                              '& .MuiAvatar-root': {
+                                width: 30,
+                                height: 30,
+                                fontSize: 15
+                              }
+                            }}
+                          >
+                            {ptMems.map((mem, index) => (
+                              <Avatar key={index} />
+                            ))}
+                          </AvatarGroup>
+                        </Box>
+                        <StyledStarBtn onClick={handleStarBtnClick}>
+                          {isBookmark ? (
+                            <StarRoundedIcon fontSize="large" color="primary" />
+                          ) : (
+                            <StarBorderRoundedIcon
+                              fontSize="large"
+                              color="primary"
+                            />
+                          )}
+                        </StyledStarBtn>
+                      </Box>
+                    </StyledBmSection>
+                  ) : null}
                 </Box>
               </Grid>
 
-              {/* <Grid
+              <Grid
                 item
                 container
                 xs={4}
                 sx={{ overflowY: 'auto', height: '100%' }}
               >
                 <RezInfo data={info} />
-              </Grid> */}
+              </Grid>
             </Grid>
           </WrapContainer>
         </MainContainer>
@@ -239,7 +245,7 @@ const StyledStarBtn = styled(IconButton)(({ theme }) => ({
 const StyledBmSection = styled(Box)(({ theme }) => ({
   marginTop: '50px',
   padding: '20px',
-  width: '70%',
+  width: '80%',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.grey['100'],

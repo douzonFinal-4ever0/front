@@ -28,6 +28,7 @@ import {
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
 import DeleteModal from './DeleteModal';
+import Progress from '../../../../components/mr_user/Progress';
 
 const RezDetailModal = ({
   open,
@@ -37,11 +38,14 @@ const RezDetailModal = ({
   handleModifyMode,
   getMrRezApi
 }) => {
+  console.log(data);
+
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
+
   const detailInfo = {
     m_name: data && data.m_name,
     mr_name: data.mr && data.mr.mr_name,
@@ -113,7 +117,8 @@ const RezDetailModal = ({
 
   // 수정 버튼 이벤트
   const handleModifyBtn = () => {
-    const list = { ...data };
+    const ptList = [...data.mr_pt_list];
+    const list = { ...data, mr_pt_list: ptList };
     if (list.length !== 0) {
       list.mr_pt_list.forEach((item) => {
         item.memVO.mem_code = item.mem_code;
@@ -171,7 +176,6 @@ const RezDetailModal = ({
         // 스낵바
         handleSetSnackbarContent('예약 수정 완료되었습니다. ');
         handleOpenSnackbar();
-
         handleModifyMode();
         handleModal();
       };
@@ -210,7 +214,7 @@ const RezDetailModal = ({
 
         <DialogContent
           sx={{
-            maxHeight: '561px',
+            maxHeight: '690px',
             overflowY: 'auto',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar-thumb': {
@@ -251,22 +255,26 @@ const RezDetailModal = ({
               <RectangleBtn
                 type={'button'}
                 text={
-                  data.role === '예약자' ? (isModify ? '취소' : '삭제') : '확인'
+                  data && data.role === '예약자'
+                    ? isModify
+                      ? '취소'
+                      : '예약 취소'
+                    : '확인'
                 }
                 category={'cancel'}
                 sx={{ padding: '10px 8px' }}
                 handlebtn={
-                  data.role === '예약자'
+                  data && data.role === '예약자'
                     ? isModify
                       ? handleCancelBtn
                       : handleDeletBtn
                     : handleCancelBtn
                 }
               />
-              {data.role === '예약자' ? (
+              {data && data.role === '예약자' ? (
                 <RectangleBtn
                   type={'button'}
-                  text={isModify ? '완료' : '수정'}
+                  text={isModify ? '완료' : '예약 수정'}
                   category={'register'}
                   sx={{ padding: '10px 8px' }}
                   handlebtn={isModify ? handleSaveBtn : handleModifyBtn}

@@ -25,7 +25,7 @@ import { palette } from '../../../../theme/palette';
 import { times, meetingTypes } from '../../../../config';
 import Selectbox from '../../../../components/common/Selectbox';
 
-const RezForm = ({ recentMNames, setClickTagData }) => {
+const RezForm = ({ recentRez, setClickTagData, setExpanded }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const {
@@ -47,10 +47,11 @@ const RezForm = ({ recentMNames, setClickTagData }) => {
   // 회의명 태그 클릭 이벤트
   const handleMNameChip = (e) => {
     const value = e.target.textContent;
-    const findData = recentMNames.filter((item) => item.m_name === value);
+    const findData = recentRez.filter((item) => item.m_name === value);
     setClickTagData([...findData]);
     const newRezData = { ...rezData, m_name: value };
     dispatch(setRezData({ data: newRezData }));
+    setExpanded(true ? 'interPt' : false);
   };
 
   // 회의 종류 셀렉트박스 이벤트
@@ -119,8 +120,8 @@ const RezForm = ({ recentMNames, setClickTagData }) => {
               gap: '4px'
             }}
           >
-            {recentMNames &&
-              recentMNames.map((item) => (
+            {recentRez &&
+              recentRez.map((item) => (
                 <StyledChip
                   label={item.m_name}
                   size="small"
@@ -240,9 +241,10 @@ const StyledSelect = styled(Select)(({ theme }) => ({
 const StyledChip = styled(Chip)(({ theme }) => ({
   marginBottom: '6px',
   '&.MuiChip-root': {
+    padding: '4px',
     borderRadius: '20px',
-    fontSize: '12px',
+    fontSize: '14px',
     color: '#000',
-    backgroundColor: '#eee'
+    backgroundColor: theme.palette.grey['300']
   }
 }));
