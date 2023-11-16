@@ -27,8 +27,7 @@ import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const { pathname } = useLocation();
   const isDetailModal = pathname === '/mr/rez/history' ? true : false;
-  const dispatch = useDispatch();
-  const rezData = useSelector(setRezData).payload.mrUser;
+
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;
   // 모달창 오픈
@@ -48,6 +47,7 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const [bmGroupList, setBmGroupList] = useState([]);
   // 즐겨찾기 멤버 토글 데이터
   const [isToggleBmMemList, setIsToggleBmMemList] = useState([]);
+  console.log(ptList);
 
   useEffect(() => {
     getMembersApi(); // 전체 사용자 리스트 조회
@@ -99,197 +99,18 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
     handleModalOpen();
   };
 
-  // 참석자 카드 삭제 버튼 이벤트
-  const handleCardDeleteBtn = (e) => {
-    const deleteIndex = e.currentTarget.tabIndex;
-    let copyList = [...ptList];
-    copyList.splice(deleteIndex, 1);
-    const newRez = { ...rezData, mr_pt_list: copyList };
-    dispatch(setRezData({ data: newRez }));
-    setPtList(copyList);
-    setApplyMemberList(copyList);
-  };
-
-  // 참석자 카드 리스트 컴포넌트
-  const PtCardList = ({ data, setPtList, tagData, setClickTagData }) => {
-    const masterCode = mem_code;
-    // const [recoms, setRecoms] = useState(tagData);
-
-    // useEffect(() => {
-    //   // 예약자 제외 필터링
-    //   setRecoms(tagData && [...tagData]);
-
-    //   if (recoms) {
-    //     const res =
-    //       recoms && recoms.filter((item) => item.mem_code !== masterCode);
-    //     setRecoms(res);
-    //   }
-    // }, []);
-
-    const handleRecomIcon = (e) => {
-      // recomList 에서 제거
-      if (tagData) {
-        const copy = [...tagData];
-        const a =
-          copy && copy.filter((item) => item.mem_code !== e.currentTarget.name);
-
-        setClickTagData([...a]);
-        //setClickTagData(a);
-
-        const mem =
-          tagData &&
-          tagData.filter((item) => item.mem_code === e.currentTarget.name);
-
-        const memInfo = {
-          dept_name: mem[0].memVO.deptVO.dept_name,
-          mem_code: mem[0].memVO.mem_code,
-          name: mem[0].memVO.name,
-          position: mem[0].memVO.position_name
-        };
-
-        // setPtList([...data, memInfo]);
-      }
-      // data 에 추가
-    };
-
-    return (
-      <List sx={{ width: '100%' }}>
-        {/* 참석자 추천 리스트  */}
-        {/* {tagData &&
-          tagData.map((mem, index) => (
-            <ListItem
-              key={index}
-              secondaryAction={
-                <IconButton
-                  edge="end"
-                  name={mem.mem_code}
-                  tabIndex={index}
-                  onClick={handleRecomIcon}
-                  sx={{ paddingRight: '25px' }}
-                >
-                  <PersonAddRoundedIcon />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  <ImageIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Stack direction={'row'} gap={1}>
-                    <Typography
-                      sx={{
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        color: palette.grey['500']
-                      }}
-                    >
-                      {mem.memVO.name}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        fontSize: '14px',
-                        color: palette.grey['500']
-                      }}
-                    >
-                      {mem.memVO.position_name}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        fontSize: '14px',
-                        color: palette.grey['500']
-                      }}
-                    >
-                      | {mem.memVO.deptVO.dept_name}
-                    </Typography>
-                  </Stack>
-                }
-              />
-            </ListItem>
-          ))} */}
-
-        {/* 추가된 참석자 리스트  */}
-        {data.map((mem, index) => (
-          <ListItem
-            key={index}
-            secondaryAction={
-              mem.mem_code === masterCode ? (
-                <Box
-                  sx={{
-                    padding: '4px',
-                    fontSize: '12px',
-                    backgroundColor: palette.grey['300'],
-                    borderRadius: '2px'
-                  }}
-                >
-                  예약자
-                </Box>
-              ) : (
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  tabIndex={index}
-                  onClick={handleCardDeleteBtn}
-                >
-                  <DeleteForeverRoundedIcon />
-                </IconButton>
-              )
-            }
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <ImageIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Stack direction={'row'} gap={1}>
-                  <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>
-                    {mem.name}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      fontSize: '14px'
-                    }}
-                  >
-                    {mem.position_name}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      fontSize: '14px'
-                    }}
-                  >
-                    | {mem.deptVO ? mem.deptVO.dept_name : mem.dept_name}
-                  </Typography>
-                </Stack>
-              }
-            />
-          </ListItem>
-        ))}
-      </List>
-    );
-  };
-
   return (
     <>
       {ptList && (
-        <PtCardList
-          data={ptList}
-          setPtList={setPtList}
-          tagData={clickTagData.length !== 0 && clickTagData[0].mr_pt_list}
-          clickTagData={clickTagData}
-          setClickTagData={setClickTagData}
-        />
+        <List sx={{ width: '100%' }}>
+          <PtCardList
+            mem_code={mem_code}
+            data={ptList}
+            setPtList={setPtList}
+            clickTagData={clickTagData}
+            setClickTagData={setClickTagData}
+          />
+        </List>
       )}
       <RectangleBtn
         type={'button'}
@@ -320,6 +141,141 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
 };
 
 export default InnerPtForm;
+
+// 참석자 카드 리스트 컴포넌트
+const PtCardList = ({
+  mem_code,
+  data,
+  setPtList,
+  tagData,
+  clickTagData,
+  setClickTagData,
+  ptList,
+  setApplyMemberList
+}) => {
+  const dispatch = useDispatch();
+  const rezData = useSelector(setRezData).payload.mrUser;
+  const masterCode = mem_code;
+
+  // 참석자 카드 삭제 버튼 이벤트
+  const handleCardDeleteBtn = (e) => {
+    const deleteIndex = e.currentTarget.tabIndex;
+    console.log(ptList);
+    let copyList = [...data];
+    copyList.splice(deleteIndex, 1);
+    const newRez = { ...rezData, mr_pt_list: copyList };
+    dispatch(setRezData({ data: newRez }));
+    setPtList(copyList);
+    // setApplyMemberList(copyList);
+  };
+  // const [recoms, setRecoms] = useState(tagData);
+
+  // useEffect(() => {
+  //   // 예약자 제외 필터링
+  //   setRecoms(tagData && [...tagData]);
+
+  //   if (recoms) {
+  //     const res =
+  //       recoms && recoms.filter((item) => item.mem_code !== masterCode);
+  //     setRecoms(res);
+  //   }
+  // }, []);
+
+  console.log(tagData);
+
+  const handleRecomIcon = (e) => {
+    // recomList 에서 제거
+    if (tagData) {
+      const copy = [...tagData];
+      const a =
+        copy && copy.filter((item) => item.mem_code !== e.currentTarget.name);
+
+      setClickTagData([...a]);
+      //setClickTagData(a);
+
+      // const mem =
+      //   tagData.length &&
+      //   tagData.filter((item) => item.mem_code === e.currentTarget.name);
+
+      // const memInfo = {
+      //   dept_name: mem[0].memVO.deptVO.dept_name,
+      //   mem_code: mem[0].memVO.mem_code,
+      //   name: mem[0].memVO.name,
+      //   position: mem[0].memVO.position_name
+      // };
+
+      // setPtList([...data, memInfo]);
+    }
+    // data 에 추가
+  };
+
+  return (
+    <>
+      {/* 추가된 참석자 리스트  */}
+      {data.map((mem, index) => (
+        <ListItem
+          key={index}
+          secondaryAction={
+            mem.mem_code === masterCode ? (
+              <Box
+                sx={{
+                  padding: '4px',
+                  fontSize: '12px',
+                  backgroundColor: palette.grey['300'],
+                  borderRadius: '2px'
+                }}
+              >
+                예약자
+              </Box>
+            ) : (
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                tabIndex={index}
+                onClick={handleCardDeleteBtn}
+              >
+                <DeleteForeverRoundedIcon />
+              </IconButton>
+            )
+          }
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <ImageIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <Stack direction={'row'} gap={1}>
+                <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>
+                  {mem.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontSize: '14px'
+                  }}
+                >
+                  {mem.position_name}
+                </Typography>
+                <Typography
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontSize: '14px'
+                  }}
+                >
+                  | {mem.deptVO ? mem.deptVO.dept_name : mem.dept_name}
+                </Typography>
+              </Stack>
+            }
+          />
+        </ListItem>
+      ))}
+    </>
+  );
+};
 
 // // 전체 멤버 조회
 // const res = await axiosInstance.axiosInstance.get('/mr/mem');

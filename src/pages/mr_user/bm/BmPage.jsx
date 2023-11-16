@@ -12,6 +12,7 @@ import BmMemberSection from './section/BmMemberSection';
 import WrapContainer from '../../../components/mr_user/WrapContainer';
 import RectangleBtn from '../../../components/common/RectangleBtn';
 import BmMemModal from './modal/BmMemModal';
+import BmMrSection from './section/BmMrSection';
 
 const BmPage = () => {
   // 사용자 정보
@@ -49,32 +50,37 @@ const BmPage = () => {
     const { data } = res;
 
     // 개별 멤버
-    const memResult = data.filter((item) => item.bm_group_name === null);
+    const memResult =
+      data.length !== 0 && data.filter((item) => item.bm_group_name === null);
     // 그룹 & 그룹 멤버
-    const groupResult = data.filter((item) => item.bm_group_name !== null);
+    const groupResult =
+      data.length !== 0 && data.filter((item) => item.bm_group_name !== null);
 
     // 그룹핑
     const groupedData = [];
-    groupResult.forEach((item) => {
-      const { bm_group_name, ...rest } = item;
+    groupResult &&
+      groupResult.forEach((item) => {
+        const { bm_group_name, ...rest } = item;
 
-      // 해당 bm_group_code가 이미 존재하는지 확인
-      const existingGroup = groupedData.find(
-        (group) => group.bm_group_name === bm_group_name
-      );
+        // 해당 bm_group_code가 이미 존재하는지 확인
+        const existingGroup = groupedData.find(
+          (group) => group.bm_group_name === bm_group_name
+        );
 
-      if (existingGroup) {
-        // 이미 존재하는 경우 mem_list 배열에 추가
-        existingGroup.mem_list.push(rest);
-      } else {
-        // 새로운 그룹 생성
-        const newGroup = { bm_group_name, mem_list: [rest] };
-        groupedData.push(newGroup);
-      }
-    });
+        if (existingGroup) {
+          // 이미 존재하는 경우 mem_list 배열에 추가
+          existingGroup.mem_list.push(rest);
+        } else {
+          // 새로운 그룹 생성
+          const newGroup = { bm_group_name, mem_list: [rest] };
+          groupedData.push(newGroup);
+        }
+      });
 
-    setMemList([...memResult]);
-    setGroupList([...groupedData]);
+    if (data.length !== 0) {
+      setMemList([...memResult]);
+      setGroupList([...groupedData]);
+    }
   };
 
   // 첫 로드 시 서버로부터 즐겨찾기 데이터 가져오기
@@ -120,9 +126,9 @@ const BmPage = () => {
   const registerName = (selectTab) => {
     switch (selectTab) {
       case 0:
-        return '멤버 등록';
-      case 1:
         return '그룹 등록';
+      case 1:
+        return '멤버 등록';
       case 2:
         return '회의실 등록';
       default:
@@ -141,8 +147,8 @@ const BmPage = () => {
               onChange={handleTabClick}
               sx={{ borderBottom: '1px solid #e8e8e8' }}
             >
-              <Tab label="멤버" {...a11yProps(0)} sx={{ fontSize: '16px' }} />
-              <Tab label="그룹" {...a11yProps(1)} sx={{ fontSize: '16px' }} />
+              <Tab label="그룹" {...a11yProps(0)} sx={{ fontSize: '16px' }} />
+              <Tab label="멤버" {...a11yProps(1)} sx={{ fontSize: '16px' }} />
               <Tab label="회의실" {...a11yProps(2)} sx={{ fontSize: '16px' }} />
               <Stack
                 sx={{
@@ -174,17 +180,17 @@ const BmPage = () => {
               </Stack>
             </Tabs>
             <CustomTabPanel value={selectTab} index={0}>
+              <BmGroupSection data={groupList} />
+            </CustomTabPanel>
+            <CustomTabPanel value={selectTab} index={1}>
               <BmMemberSection
                 data={memList}
                 deleteMemCodeList={deleteMemCodeList}
                 setDeleteMemCodeList={setDeleteMemCodeList}
               />
             </CustomTabPanel>
-            <CustomTabPanel value={selectTab} index={1}>
-              <BmGroupSection data={groupList} />
-            </CustomTabPanel>
             <CustomTabPanel value={selectTab} index={2}>
-              adasdsa
+              <BmMrSection />
             </CustomTabPanel>
           </WrapContainer>
         </MainContainer>

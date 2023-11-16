@@ -9,28 +9,29 @@ const calcRezRate = (data) => {
   // 회의실별로 예약건 그룹화
   const groupData = new Map();
 
-  data.forEach((item) => {
-    switch (item.mr.mr_type) {
-      case '소회의실':
-        mrTypes['sm'] = mrTypes.sm + 1;
-        break;
-      case '중회의실':
-        mrTypes['md'] = mrTypes.md + 1;
-        break;
-      case '대회의실':
-        mrTypes['lg'] = mrTypes.lg + 1;
-        break;
-      case '미팅룸':
-        mrTypes['mt'] = mrTypes.mt + 1;
-    }
+  data.length !== 0 &&
+    data.forEach((item) => {
+      switch (item.mr.mr_type) {
+        case '소회의실':
+          mrTypes['sm'] = mrTypes.sm + 1;
+          break;
+        case '중회의실':
+          mrTypes['md'] = mrTypes.md + 1;
+          break;
+        case '대회의실':
+          mrTypes['lg'] = mrTypes.lg + 1;
+          break;
+        case '미팅룸':
+          mrTypes['mt'] = mrTypes.mt + 1;
+      }
 
-    const mrCode = item.mr.mr_code;
-    if (!groupData.has(mrCode)) {
-      groupData.set(mrCode, [item]);
-    } else {
-      groupData.get(mrCode).push(item);
-    }
-  });
+      const mrCode = item.mr.mr_code;
+      if (!groupData.has(mrCode)) {
+        groupData.set(mrCode, [item]);
+      } else {
+        groupData.get(mrCode).push(item);
+      }
+    });
 
   const result = Array.from(groupData.values());
 };
