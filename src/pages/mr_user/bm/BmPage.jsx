@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material';
 
+import { setBmData } from '../../../redux/reducer/BmSlice';
 import { setUserData } from '../../../redux/reducer/userSlice';
 import axiosInstance from '../../../utils/axios';
 import SubHeader from '../../../components/common/SubHeader';
@@ -15,6 +15,9 @@ import BmMemModal from './modal/BmMemModal';
 import BmMrSection from './section/BmMrSection';
 
 const BmPage = () => {
+  const dispatch = useDispatch();
+  const bmData = useSelector(setBmData).payload.bm;
+  console.log(bmData);
   // 사용자 정보
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;
@@ -27,6 +30,8 @@ const BmPage = () => {
   const [memList, setMemList] = useState([]);
   // 즐겨찾기 그룹
   const [groupList, setGroupList] = useState([]);
+  // 즐겨찾기 회의실
+  const [mrList, setMrList] = useState([]);
 
   //=====================================================
 
@@ -40,6 +45,24 @@ const BmPage = () => {
   // 모달창 오픈 이벤트
   const handleModal = () => {
     setOpenModal(!openModal);
+  };
+
+  // 첫 로드 시 서버로부터 즐겨찾기 데이터 가져오기
+  useEffect(() => {
+    bmMRApi();
+    bmGroupMemApi();
+  }, []);
+
+  // 즐겨찾기 회의실 API
+  const bmMRApi = async () => {
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/bm?mem_code=${mem_code}`
+    );
+    if (res.status !== 200) return;
+    const { data } = res;
+    // 즐겨찾기 회의실 리덕스 저장
+    dispatch(setBmData({ data }));
+    setMrList(data);
   };
 
   // 즐겨찾기 조회 API
@@ -82,11 +105,6 @@ const BmPage = () => {
       setGroupList([...groupedData]);
     }
   };
-
-  // 첫 로드 시 서버로부터 즐겨찾기 데이터 가져오기
-  useEffect(() => {
-    bmGroupMemApi();
-  }, []);
 
   // 페이지 탭 버튼 이벤트
   const handleTabClick = (event, newValue) => {
@@ -190,7 +208,7 @@ const BmPage = () => {
               />
             </CustomTabPanel>
             <CustomTabPanel value={selectTab} index={2}>
-              <BmMrSection />
+              <BmMrSection data={mrList} />
             </CustomTabPanel>
           </WrapContainer>
         </MainContainer>

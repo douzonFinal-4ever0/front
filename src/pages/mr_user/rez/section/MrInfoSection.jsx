@@ -31,9 +31,6 @@ const MrInfoSection = ({ data }) => {
     mr_op_day,
     mr_supplies
   } = data;
-
-  console.log(mr_supplies);
-
   // 요일 number -> string으로 변경
   let newDays = [];
 

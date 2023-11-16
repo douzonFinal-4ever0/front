@@ -3,8 +3,11 @@ import WrapContainer from '../../../../components/mr_user/WrapContainer';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import styled from '@emotion/styled';
 import { palette } from '../../../../theme/palette';
+import MrListItem from '../list/MrListItem';
+import MrInfoSection from '../../rez/section/MrInfoSection';
 
-const BmMrSection = () => {
+const BmMrSection = ({ data }) => {
+  console.log(data);
   return (
     <Grid
       container
@@ -28,10 +31,26 @@ const BmMrSection = () => {
           width: '100%',
           height: '600px',
           display: 'flex',
-          flexDirection: 'column',
-          rowGap: '6px'
+          rowGap: '6px',
+          flexWrap: 'wrap',
+          gap: '10px',
+          justifyContent: 'space-between'
         }}
-      ></List>
+      >
+        {data &&
+          data.map((mr, index) => (
+            <Grid
+              item
+              xs={3.9}
+              sx={{
+                padding: '20px',
+                border: `1px solid ${palette.grey['400']}`
+              }}
+            >
+              <MrInfoSection data={mr.mr} key={index} />
+            </Grid>
+          ))}
+      </List>
     </Grid>
   );
 };
