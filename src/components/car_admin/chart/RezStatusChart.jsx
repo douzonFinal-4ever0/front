@@ -106,7 +106,9 @@ const RezStatusChart = () => {
             >
               <CalculateIcon fontSize="large" />
             </Typography>
-            <Typography variant="h6">총 운행 횟수</Typography>
+            <Typography variant="h6" sx={{ whiteSpace: 'nowrap' }}>
+              이번주 예약 현황
+            </Typography>
           </StyledBox>
           <StyledBox>
             <Typography variant="h3" color="#333333" margin="0px 10px">
