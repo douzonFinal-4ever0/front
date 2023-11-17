@@ -1,4 +1,11 @@
-import { Container, Grid, Paper, TextField, styled } from '@mui/material';
+import {
+  Checkbox,
+  Container,
+  Grid,
+  Paper,
+  TextField,
+  styled
+} from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +14,12 @@ import JWTdecode from '../../components/common/JWTdecode';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
 import axiosInstance from '../../utils/axios';
+import socketIOClient, { io } from 'socket.io-client';
+import { useContext } from 'react';
+import { SocketContext, useSocket } from '../../utils/SocketProvider';
+import { useEffect } from 'react';
+
+// import SocketContext from '../../utils/SocketContext';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -19,6 +32,14 @@ const Login = () => {
     email,
     password
   };
+  // const socket = useContext(SocketContext);
+  const socket = useSocket();
+  // const socket = useSelector(setSocket).payload.socket;
+  const user = useSelector(setUserData).payload.user;
+  const { name, position_name, mem_code, dept_name } = user;
+  // useEffect(() => {
+
+  // }, [dispatch]);
   /**로그인 할때 쓰는 핸들러 */
   const handleLogin = () => {
     axiosInstance.axiosInstance
@@ -27,6 +48,10 @@ const Login = () => {
         setJwt('Bearer ' + res.data.token);
       });
     <JWTdecode />;
+    // console.log(socket);
+    // socket.on('connect', () => {
+    //   socket.emit('loadRez', jwt);
+    // });
   };
   // 엔터 키가 눌렸을 때 실행되는 함수
   const handleKeyPress = (event) => {
@@ -34,14 +59,35 @@ const Login = () => {
       handleLogin();
     }
   };
+
   // JWT 토큰을 localStorage에 저장
   localStorage.setItem('jwtToken', jwt);
   if (jwt != '') {
     if (jwt != 'Bearer undefined') {
+      // console.log(socket);
+      // socket.emit('login');
+      // socket.emit('loginSuccess', mem_code);
+      // console.log(socket);
+      console.log(user.mem_code);
+
       navigate('/mr/dashboard');
     }
   }
+  // useEffect(() => {
+  //   console.log(user);
+  //   if (user.mem_code !== '') {
+  //     console.log(user);
+  //     const memInfo = {
+  //       mem_code: mem_code,
+  //       name: name
+  //     };
 
+  //     const newSocket = io('http://localhost:4001', { query: memInfo });
+  //     dispatch(setSocket(newSocket));
+  //     console.log(socket);
+  //     // socket.emit('loadRez', jwt);
+  //   }
+  // }, [user]);
   return (
     <Container
       sx={{
@@ -93,8 +139,8 @@ const Login = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              {/* <Checkbox />
-              <span>로그인 기억하기</span> */}
+              <Checkbox />
+              <span>로그인 기억하기</span>
             </Grid>
             <Grid item xs={12}>
               <RectangleBtn

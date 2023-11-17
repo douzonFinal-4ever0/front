@@ -84,7 +84,7 @@ const BajajAreaChartCard = () => {
             />
           </svg>
         </Typography>
-        <Typography variant="h6">운행 패턴</Typography>
+        <Typography variant="h6">정비 패턴</Typography>
       </Box>
       <ReactApexChart
         options={mileageCharData.options}

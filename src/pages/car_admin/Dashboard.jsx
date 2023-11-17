@@ -15,6 +15,8 @@ import MileageChart from '../../components/car_admin/chart/MileageChart';
 import BajajAreaChartCard from '../../components/car_admin/chart/MileagePatternChart';
 import OperationCarChart from '../../components/car_admin/chart/OperationCarChart';
 import MaintUrgentChart from '../../components/car_admin/chart/MaintUrgentChart';
+import LocationChart from '../../components/car_admin/chart/LocationChart';
+import OperTimeChart from '../../components/car_admin/chart/OperTimeChart';
 
 const CarDashboard = () => {
   return (
@@ -22,24 +24,18 @@ const CarDashboard = () => {
       <StyledAppBar position="static">
         <Toolbar
           sx={{
-            padding: '30px 40px !important',
-            width: '100%',
-            display: 'block'
+            padding: '20px 30px !important',
+            display: 'flex'
           }}
         >
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, color: '#000' }}
+            sx={{ color: '#000', marginRight: '20px' }}
           >
             한 주간의 리포트
           </Typography>
-          <Box
-            width="100%"
-            display="flex"
-            alignItems="center"
-            sx={{ flexGrow: 1, marginTop: '10px' }}
-          >
+          <Box display="flex" alignItems="center">
             <Typography color="#111111" variant="subtitle2" marginRight="20px">
               기간
             </Typography>
@@ -63,7 +59,7 @@ const CarDashboard = () => {
         sx={{
           flexGrow: 1,
           margin: '20px 0px',
-          '& .MuiPaper-root': { borderRadius: '6px' }
+          '& .MuiPaper-root': { borderRadius: '2px' }
         }}
         container
         spacing={2}
@@ -100,7 +96,7 @@ const CarDashboard = () => {
                   height: 350
                 }}
               >
-                <BajajAreaChartCard />
+                <LocationChart />
               </StyledPaper>
             </Grid>
           </Grid>
@@ -121,7 +117,9 @@ const CarDashboard = () => {
                 sx={{
                   height: 400
                 }}
-              />
+              >
+                <OperTimeChart />
+              </StyledPaper>
             </Grid>
           </Grid>
         </Grid>
@@ -156,51 +154,13 @@ const CarDashboard = () => {
                   height: 350
                 }}
               >
-                <Grid container>
-                  <Grid
-                    item
-                    xs={4}
-                    sx={{ display: 'flex', flexDirection: 'column' }}
-                  >
-                    <StyledBox>
-                      <Typography
-                        height="48px"
-                        display="flex"
-                        color="#4ecb71"
-                        marginRight="6px"
-                        alignItems="center"
-                      >
-                        🛠️
-                      </Typography>
-                      <Typography variant="h6">정비 비용</Typography>
-                      {/* 초과 비용이 의심되는 정비 내역 보여주기 */}
-                    </StyledBox>
-                    <StyledBox>
-                      <Typography
-                        variant="h3"
-                        color="#333333"
-                        margin="0px 10px"
-                      >
-                        26건
-                      </Typography>
-                    </StyledBox>
-                    <StyledSubBox>
-                      <Typography variant="h4">💡</Typography>
-                      <Typography variant="subtitle2">
-                        총 ㅁㅁ대의 차량 중 11대를 운행했습니다.
-                      </Typography>
-                    </StyledSubBox>
-                  </Grid>
-                  <Grid item xs={8} paddingTop="25px">
-                    {/* <MileageChart /> */}
-                  </Grid>
-                </Grid>
+                <BajajAreaChartCard />
               </StyledPaper>
             </Grid>
           </Grid>
         </Grid>
         {/* 지출 통계 */}
-        <Grid xs={11}>
+        {/* <Grid xs={11}>
           <Box
             marginTop="50px"
             width="90px"
@@ -247,7 +207,7 @@ const CarDashboard = () => {
               ></Paper>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );
