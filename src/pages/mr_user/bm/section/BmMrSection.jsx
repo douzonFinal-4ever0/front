@@ -34,7 +34,7 @@ const BmMrSection = ({ data }) => {
           rowGap: '6px',
           flexWrap: 'wrap',
           gap: '10px',
-          justifyContent: 'space-between'
+          justifyContent: 'flex-start'
         }}
       >
         {data &&
