@@ -15,17 +15,20 @@ const SocketProvider = ({ children }) => {
   const newSocket = useRef(null);
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false);
-  var memInfo = {
-    mem_code: '',
-    name: ''
-  };
+  // var memInfo = {
+  //   mem_code: '',
+  //   name: ''
+  // };
+  var memCode = '';
   // var newSocket;
   if (userData) {
     console.log(mem_code);
-    memInfo = {
-      mem_code: mem_code,
-      name: name
-    };
+    // memInfo = {
+    //   mem_code: mem_code,
+    //   name: name
+    // };
+    // };
+    memCode = mem_code;
   }
   //   if (memInfo.mem_code !== '')
   //     newSocket.current = io('http://localhost:4001', { query: memInfo }); // 서버 주소에 맞게 변경
@@ -80,16 +83,23 @@ const SocketProvider = ({ children }) => {
     //   }
     // };
   }, []); // 빈 배열을 넣어 한 번만 실행되도록 설정
+
   useEffect(() => {
     console.log('loginSuccess');
-    if (newSocket.current && memInfo.mem_code !== '') {
+
+    // if (newSocket.current && memInfo.mem_code !== '') {
+    if (newSocket.current && memCode !== '') {
+      const getJwtToken = () => {
+        return localStorage.getItem('jwtToken');
+      };
+      const jwt = getJwtToken();
       // 예시: 로그인 성공 이벤트를 가정하고 'loginSuccess' 이벤트를 사용
-      newSocket.current.emit('loginSuccess', memInfo.mem_code);
+      newSocket.current.emit('loginSuccess', { memCode, jwt });
 
       // 추가적인 로그인 후 소켓 연결 로직
       // ...
     }
-  }, [newSocket.current, memInfo.mem_code]);
+  }, [newSocket.current, memCode]);
   //   return (
   // if (!isConnected) {
   //   return <LoadingModal open={!isConnected}></LoadingModal>;
