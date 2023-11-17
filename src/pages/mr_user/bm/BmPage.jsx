@@ -17,7 +17,6 @@ import BmMrSection from './section/BmMrSection';
 const BmPage = () => {
   const dispatch = useDispatch();
   const bmData = useSelector(setBmData).payload.bm;
-  console.log(bmData);
   // 사용자 정보
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;

@@ -42,8 +42,19 @@ const DashboardPage = () => {
     getMrRezApi();
     getMrUsageApi();
     getNotice();
+    bmMrApi();
     setIsLoading(false);
   }, []);
+
+  // 즐겨찾기 회의실 API
+  const bmMrApi = async () => {
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/bm?mem_code=${mem_code}`
+    );
+    if (res.status !== 200) return;
+    // 즐겨찾기 회의실 리덕스 저장
+    dispatch(setBmData({ data: res && res.data }));
+  };
 
   // 전체 회의실 사용률 조회
   const getMrUsageApi = async () => {

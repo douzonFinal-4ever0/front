@@ -8,6 +8,8 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import DateRangeRoundedIcon from '@mui/icons-material/DateRangeRounded';
 
+import { setUserData } from '../../../../redux/reducer/userSlice';
+import { setBmData } from '../../../../redux/reducer/BmSlice';
 import { setMrRecommendData } from '../../../../redux/reducer/MrRecommendSlice';
 import RoomPreferencesRoundedIcon from '@mui/icons-material/RoomPreferencesRounded';
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
@@ -18,9 +20,17 @@ import { PAGE_INNER_PADDING } from '../../../../config';
 import Tag from '../../../../components/mr_user/Tag';
 import { convertDayToText } from '../../../../utils/convertDayToText';
 import { palette } from '../../../../theme/palette';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import axiosInstance from '../../../../utils/axios';
+import {
+  openSanckbar,
+  setSnackbarContent
+} from '../../../../redux/reducer/SnackbarSlice';
 
 const MrInfoSection = ({ data }) => {
   const {
+    mr_code,
     mr_name,
     location,
     maximum_capacity,
@@ -31,6 +41,18 @@ const MrInfoSection = ({ data }) => {
     mr_op_day,
     mr_supplies
   } = data;
+
+  const dispatch = useDispatch();
+  // 즐겨찾기 별 버튼
+  const [isBm, setIsBm] = useState(false);
+
+  const userData = useSelector(setUserData).payload.user;
+  const bmData = useSelector(setBmData).payload.bm;
+  // 즐겨찾기 회의실 리덕스 데이터
+  const { mr_list } = bmData;
+
+  // 즐겨찾기에 저장된 회의실일 경우 배열안에 객체가 담김. 없으면 빈배열
+  const bmMrInfo = mr_list.filter((mr) => mr.mr.mr_code === mr_code);
   // 요일 number -> string으로 변경
   let newDays = [];
 
@@ -40,10 +62,42 @@ const MrInfoSection = ({ data }) => {
     arr.forEach((item) => newDays.push(convertDayToText(item.day)));
   }
 
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
+
   // 즐겨찾기 유무
   const [bookmark, setBookmark] = useState(false);
 
-  const handleBookmark = () => {
+  useEffect(() => {
+    setBookmark(bmMrInfo.length !== 0 ? true : false);
+  }, [data]);
+
+  const handleBookmark = async () => {
+    //이미 북마크 표시된건 리턴 처리
+    if (bookmark) return;
+
+    const data = {
+      mem_code: userData.mem_code,
+      mr_code: mr_code
+    };
+
+    try {
+      // 즐겨찾기 추가 API 요청
+      const res = await axiosInstance.axiosInstance.post('/mr/bm', data);
+      if (res.status !== 201) return;
+
+      handleSetSnackbarContent('즐겨찾기 등록되었습니다.');
+      handleOpenSnackbar();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+
     setBookmark(!bookmark);
   };
 
@@ -58,11 +112,11 @@ const MrInfoSection = ({ data }) => {
           <StyledRoomTitleInfoWrap>
             {/* 회의실명 영역 */}
             <StyledRoomName>{mr_name}</StyledRoomName>
-            <IconButton onClick={handleBookmark}>
+            <IconButton onClick={handleBookmark} disabled={bookmark}>
               {bookmark ? (
-                <StarRoundedIcon fontSize="large" />
+                <StarRoundedIcon fontSize="large" color="primary" />
               ) : (
-                <StarBorderRoundedIcon fontSize="large" />
+                <StarBorderRoundedIcon fontSize="large" color="primary" />
               )}
             </IconButton>
           </StyledRoomTitleInfoWrap>

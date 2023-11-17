@@ -47,7 +47,6 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const [bmGroupList, setBmGroupList] = useState([]);
   // 즐겨찾기 멤버 토글 데이터
   const [isToggleBmMemList, setIsToggleBmMemList] = useState([]);
-  console.log(ptList);
 
   useEffect(() => {
     getMembersApi(); // 전체 사용자 리스트 조회
