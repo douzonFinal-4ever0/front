@@ -31,7 +31,7 @@ import {
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
 import { useContext } from 'react';
-import { SocketContext } from '../../../../utils/SocketProvider';
+import { SocketContext, useSocket } from '../../../../utils/SocketProvider';
 
 const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const location = useLocation();
@@ -61,7 +61,9 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const [ptList, setPtList] = useState(mr_pt_list);
   // 회의명 태그 클릭한 데이터
   const [clickTagData, setClickTagData] = useState([]);
-  const socket = useContext(SocketContext);
+  // const socket = useContext(SocketContext);
+  const socket = useSocket();
+  console.log(socket);
   useEffect(() => {
     if (
       m_name !== '' &&
@@ -91,7 +93,9 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
@@ -116,7 +120,10 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
         handleOpenSnackbar();
         navigation('/mr/rez/confirm');
         //예약 완료하면 참석자들에게 알림
-        socket.emit('allParticipant', ptList);
+        const mr_rez_code = res.data;
+        console.log(mr_rez_code);
+        const jwt = getJwtToken();
+        socket.emit('allParticipant', { ptList, mr_rez_code, jwt });
         return;
       } else if (res.status === 400) {
         // 서버에서 상태 코드 400이면 중복 예약

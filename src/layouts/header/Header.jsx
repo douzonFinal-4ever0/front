@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
@@ -29,7 +29,7 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import UserProfile from '../../assets/images/user/user-round.svg';
 import { HEADER_HIEGHT } from '../../config';
 import { palette } from '../../theme/palette';
-import { SocketContext } from '../../utils/SocketProvider';
+import { SocketContext, useSocket } from '../../utils/SocketProvider';
 import { useEffect } from 'react';
 
 const Header = (props) => {
@@ -46,7 +46,7 @@ const Header = (props) => {
   const [open2, setOpen2] = useState(false);
   // 읽지 않은 알림이 있다고 알려주는 알림
   const [open3, setOpen3] = useState(false);
-
+  const dispatch = useDispatch();
   const { name, position_name, mem_code, dept_name } = user;
   // const handleClick = (newPlacement) => (event) => {
   //   setAnchorEl(event.currentTarget);
@@ -54,9 +54,24 @@ const Header = (props) => {
   //   setPlacement(newPlacement);
   // };
   const navigate = useNavigate();
+  const socket = useSocket();
+  // const socket = useContext(SocketContext);
   const handleLogOut = () => {
     localStorage.removeItem('jwtToken');
-    socket.emit('disconnect', mem_code);
+    dispatch(
+      setUserData({
+        data: {
+          mem_code: '', // 사번
+          name: '', // 성명
+          position_name: '', // 직급명
+          dept_name: '', // 부서명
+          role: '', // 역할
+          email: ''
+        }
+      })
+    );
+    socket.emit('disconnect_mem', mem_code);
+    socket.disconnect();
     navigate('/login');
   };
 
@@ -72,22 +87,28 @@ const Header = (props) => {
     setOpen2(false);
     setAlarmData(null);
   };
-  const socket = useContext(SocketContext);
+
   useEffect(() => {
     console.log('qweqwe');
     console.log(isAlarm);
-    socket.on('mrRezParticipant', (data) => {
-      console.log('123124');
-      setIsAlarm(true);
-      setOpen3(true);
-      console.log(data);
-      setAlarmData({ ...alarmData, mrRezParticipant: data });
-    });
+    // if (socket !== null) {
+    //   socket.on('mrRezParticipant', (data) => {
+    //     console.log('123124');
+    //     setIsAlarm(true);
+    //     setOpen3(true);
+    //     console.log(data);
+    //     setAlarmData({ ...alarmData, mrRezParticipant: data });
+    //   });
+    // }
+
     // 컴포넌트 언마운트 시 이벤트 리스너 해제
     return () => {
       // socket.off('serverEvent');
     };
-  }, [socket, isAlarm]);
+  }, [
+    // socket,
+    isAlarm
+  ]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar isAdminMode={isAdminMode}>

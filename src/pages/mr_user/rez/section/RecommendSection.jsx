@@ -118,18 +118,20 @@ const MrCard = ({ data, selectMrCard, handleCardClick }) => {
 };
 
 const MrCardList = ({ data, selectMrCard, handleCardClick }) => {
+  console.log(data);
   return (
     <ContainerWithScroll>
       <StyledList sx={{ width: '100%' }}>
-        {data.map((item) => (
-          <StyledListItem key={item.mr_code}>
-            <MrCard
-              data={item}
-              selectMrCard={selectMrCard}
-              handleCardClick={handleCardClick}
-            />
-          </StyledListItem>
-        ))}
+        {data &&
+          data.map((item) => (
+            <StyledListItem key={item.mr_code}>
+              <MrCard
+                data={item}
+                selectMrCard={selectMrCard}
+                handleCardClick={handleCardClick}
+              />
+            </StyledListItem>
+          ))}
       </StyledList>
     </ContainerWithScroll>
   );
