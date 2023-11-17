@@ -1,6 +1,7 @@
 const app = require('express')();
 const server = require('http').createServer(app);
 const cors = require('cors');
+const { forEach } = require('jszip');
 const io = require('socket.io')(server, {
   cors: {
     origin: '*',
@@ -8,98 +9,163 @@ const io = require('socket.io')(server, {
   }
 });
 const axios = require('axios');
+// const oracledb = require('oracledb');
+// oracledb.initOracleClient({
+//   libDir: 'C:/final_work/front/servers/instantclient_21_12'
+// });
+// // Oracle 데이터베이스 연결 정보
+// const dbConfig = {
+//   user: 'admin',
+//   password: 'ResQ123456789',
+//   connectString:
+//     '146.56.121.170:1522?TNS_ADMIN=C:/final_work/back/src/main/resources/OracleCloud/Wallet_ResQ'
+// };
 
-const users = new Set();
-const selectedUser = new Map();
-var cars = [];
-function mapToJSON(map) {
-  const jsonObj = {};
-  for (const [key, value] of map) {
-    jsonObj[key] = value;
-  }
-  return jsonObj;
-}
+// async function connectToDatabase() {
+//   try {
+//     console.log('adasdasdasdasdasda');
+//     // Oracle 데이터베이스에 연결
+//     const connection = await oracledb.getConnection(dbConfig);
+
+//     // 연결 성공시 수행할 작업 추가
+//     console.log('Connected to Oracle Database');
+
+//     // 여기에서 추가적인 작업 수행 가능
+
+//     // 연결 종료
+//     await connection.close();
+//   } catch (err) {
+//     console.error('Error connecting to Oracle Database:', err);
+//   }
+// }
+const users = new Map();
+var mrRezDatas;
+// let currentSocket = null;
 io.on('connection', (socket) => {
-  socket.on('user', (currentName) => {
-    users.add(currentName);
-    io.emit('users', users);
-    io.emit('currentCnt', users.size);
+  console.log('연결 성공... ');
+
+  socket.on('loginSuccess', ({ memCode, jwt }) => {
+    console.log('login');
+    console.log(memCode);
+    users.set(memCode, socket.id);
+    console.log(users);
+    axios
+      .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
+        headers: {
+          Authorization: jwt
+        }
+      })
+      .then((res) => {
+        console.log('alarmInfo');
+        console.log(res.data);
+        io.to(users.get(memCode)).emit('loadAlarm', res.data);
+        // mrRezDatas = res.data;
+      });
   });
-  socket.on('disconnect_with_info', (disConnectUser) => {
-    users.delete(disConnectUser);
-    selectedUser.delete(disConnectUser);
-    io.emit('users', users);
-    console.log(users.size);
-    io.emit('currentCnt', users.size);
+  socket.on('clickAlarm', ({ alert_code, jwt, mem_code }) => {
+    console.log(alert_code);
+    console.log(jwt);
+    // axios
+    //   .patch(`http://localhost:8081/car_rez/clickAlarm/${alert_code}`, {
+    //     headers: {
+    //       Authorization: jwt
+    //     }
+    //   })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       console.log('읽음처리 완');
+    //       //   axios
+    //       //     .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
+    //       //       headers: {
+    //       //         Authorization: jwt
+    //       //       }
+    //       //     })
+    //       //     .then((res) => {
+    //       //       console.log('alarmInfo');
+    //       //       console.log(res.data);
+    //       //       io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
+    //       //     });
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
+    axios
+      .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
+        headers: {
+          Authorization: jwt
+        }
+      })
+      .then((res) => {
+        console.log('alarmInfo');
+        console.log(res.data);
+        io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
+      });
   });
 
-  socket.on(
-    'init',
-    ({ rows, mem_code, rezStart_at, rezReturn_at, Token, setRows }) => {
-      console.log(mem_code);
-      // GET 요청 보내기
+  // socket.on('loadRez', (Token) => {
+  //   console.log('asd');
+  //   axios
+  //     .get(`http://localhost:8081/mr/participantPerRez`, {
+  //       headers: {
+  //         Authorization: Token
+  //       }
+  //     })
+  //     .then((res) => {
+  //       // console.log(res.data);
+  //       // mrRezDatas = res.data;
+  //     });
+  // });
+
+  socket.on('allParticipant', ({ ptList, mr_rez_code, jwt }) => {
+    for (let mem of ptList) {
+      console.log('asdasd');
+      alertDTO = {
+        mem_code: mem.mem_code,
+        contents: '회의실 예약 참석자로 지정되었습니다.'
+      };
       axios
-        .get(
-          `http://localhost:8081/car_rez/availableCars/${mem_code}/${rezStart_at}/${rezReturn_at}`,
-          {
-            headers: {
-              Authorization: Token
-            }
+        .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO, {
+          headers: {
+            Authorization: jwt
           }
-        )
-        .then((res) => {
-          // 성공적인 응답 처리
-          // console.log('응답 데이터:', res.data);
-          // cars = res.data.map((car) => {
-          //   car.car_status = '선택가능';
-          // });
-          console.log(res.data);
-          cars = res.data;
-          cars.map((car) => (car.car_status = '사용가능'));
-          console.log(cars);
-          io.emit('cars', cars);
         })
-        .catch((error) => {
-          // 오류 처리
-          console.error('오류 발생:', error);
+        .then((res) => {
+          // console.log(res.data);
+          // mrRezDatas = res.data;
         });
-      // console.log(rows);
-    }
-  );
-  socket.on('selected', ({ car_code, currentName }) => {
-    console.log('selected');
-    if (selectedUser.get(currentName)) {
-      //선택한게 있을때
-      //전에 선택한 차량
-      console.log(selectedUser.get(currentName));
-      cars.map((car) => {
-        if (car.car_code === selectedUser.get(currentName)) {
-          car.car_status = '선택가능';
-          // console.log(car);
+      for (let memCode of Array.from(users.keys())) {
+        if (mem.mem_code === memCode) {
+          console.log(memCode + ' 참석자 입니다. 소켓 : ' + users.get(memCode));
+          axios
+            .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
+              headers: {
+                Authorization: jwt
+              }
+            })
+            .then((res) => {
+              console.log('alarmInfo');
+              console.log(res.data);
+              io.to(users.get(memCode)).emit('loadAlarm', res.data);
+              // mrRezDatas = res.data;
+            });
+          // io.to(users.get(memCode)).emit(
+          //   'mrRezParticipant',
+          //   '회의실 예약 참석자로 지정되었습니다.'
+          // );
         }
-      });
-      // console.log(cars);
-      selectedUser.delete(currentName);
-      selectedUser.set(currentName, car_code);
-    } else {
-      selectedUser.set(currentName, car_code);
-    }
-    console.log(selectedUser);
-    console.log(car_code);
-    cars.map((car) => {
-      // console.log(car);
-      if (car_code === car.car_code) {
-        car.car_status = '선택됨';
-        console.log(car);
       }
-    });
-    const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
-    // console.log(cars);
-    io.emit('selected', jsonObject);
-    io.emit('Upcars', cars);
+    }
+  });
+  socket.on('disconnect_mem', (mem_code) => {
+    console.log('delete');
+    console.log(mem_code);
+    users.delete(mem_code);
+    console.log(users);
+    // socket.off();
   });
 });
-
-server.listen(4000, function () {
-  console.log('listening on port 4000');
+// server.emit('message', '연결 성공');
+server.listen(4001, function () {
+  console.log('listening on port 4001');
 });

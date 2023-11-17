@@ -27,10 +27,17 @@ io.on('connection', (socket) => {
   });
   socket.on('disconnect_with_info', (disConnectUser) => {
     users.delete(disConnectUser);
+    selectedUser.get(disConnectUser);
+    cars.map((car) => {
+      if (car.car_code === selectedUser.get(disConnectUser)) {
+        car.car_status = '선택가능';
+      }
+    });
     selectedUser.delete(disConnectUser);
     io.emit('users', users);
     console.log(users.size);
     io.emit('currentCnt', users.size);
+    io.emit('cars', cars);
   });
 
   socket.on(
