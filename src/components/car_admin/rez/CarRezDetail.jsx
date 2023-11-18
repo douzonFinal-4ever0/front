@@ -67,12 +67,27 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
   const handleDeleteModalClose = () => {
     setDeleteModalOpen(false);
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
   const handleRezCancelBtn = () => {
     // 해당 예약을 취소시킴. 예약 상태를 취소로 업데이트
     axiosInstance.axiosInstance
       .put(`/manager/car/rezCancel/${car_rez_code}`)
       .then((res) => {
+        const alertDTO = {
+          mem_code: carRezData.carRezResponseVO.carRezResponseVO.mem_code,
+          contents: `차량 예약 번호 : ${carRezData.carRezResponseVO.car_rez_code}\n차량 예약이 취소되었습니다.`
+        };
+        const memList = [alertDTO.mem_code];
+        axiosInstance.axiosInstance
+          .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
+          .then((res2) => {
+            if (res2.status === 200) {
+              socket.emit('changeDB', { memList, jwt });
+            }
+          });
         setCarRezData({
           ...carRezData,
           carRezResponseVO: { ...carRezData.carRezResponseVO, rez_status: '2' }

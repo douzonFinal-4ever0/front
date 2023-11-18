@@ -9,120 +9,82 @@ const io = require('socket.io')(server, {
   }
 });
 const axios = require('axios');
-// const oracledb = require('oracledb');
-// oracledb.initOracleClient({
-//   libDir: 'C:/final_work/front/servers/instantclient_21_12'
-// });
-// // Oracle 데이터베이스 연결 정보
-// const dbConfig = {
-//   user: 'admin',
-//   password: 'ResQ123456789',
-//   connectString:
-//     '146.56.121.170:1522?TNS_ADMIN=C:/final_work/back/src/main/resources/OracleCloud/Wallet_ResQ'
-// };
 
-// async function connectToDatabase() {
-//   try {
-//     console.log('adasdasdasdasdasda');
-//     // Oracle 데이터베이스에 연결
-//     const connection = await oracledb.getConnection(dbConfig);
-
-//     // 연결 성공시 수행할 작업 추가
-//     console.log('Connected to Oracle Database');
-
-//     // 여기에서 추가적인 작업 수행 가능
-
-//     // 연결 종료
-//     await connection.close();
-//   } catch (err) {
-//     console.error('Error connecting to Oracle Database:', err);
-//   }
-// }
 const users = new Map();
-var mrRezDatas;
-// let currentSocket = null;
+var jwtT;
 io.on('connection', (socket) => {
   console.log('연결 성공... ');
 
+  // //db값이 바뀌면 알림 전송 고민
+  // setInterval(() => {
+  //   if (jwtT) {
+  //     const memList = Array.from(users.keys());
+  //     axios
+  //       .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+  //         headers: {
+  //           Authorization: jwtT
+  //         }
+  //       })
+  //       .then((res) => {
+  //         console.log(res.data);
+  //         for (let memCode of Array.from(users.keys())) {
+  //           var filterData = res.data.filter((item) => {
+  //             return !item['mem_code'] || item['mem_code'].includes(memCode);
+  //           });
+  //           io.to(users.get(memCode)).emit('loadAlarm', filterData);
+  //         }
+  //         // io.emit('loadAnnouncement', res.data);
+  //       });
+  //   }
+  // }, 10000);
   socket.on('loginSuccess', ({ memCode, jwt }) => {
     console.log('login');
     console.log(memCode);
     users.set(memCode, socket.id);
     console.log(users);
+    const memCodes = [memCode];
+    jwtT = jwt;
+    //로그인시 alarm정보 가져오기
     axios
-      .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
+      .get(`http://localhost:8081/car_rez/loadAlarm/${memCodes}`, {
         headers: {
           Authorization: jwt
         }
       })
       .then((res) => {
-        console.log('alarmInfo');
+        // console.log('alarmInfo');
         console.log(res.data);
-        io.to(users.get(memCode)).emit('loadAlarm', res.data);
-        // mrRezDatas = res.data;
-      });
-  });
-  socket.on('clickAlarm', ({ alert_code, jwt, mem_code }) => {
-    console.log(alert_code);
-    console.log(jwt);
-    // axios
-    //   .patch(`http://localhost:8081/car_rez/clickAlarm/${alert_code}`, {
-    //     headers: {
-    //       Authorization: jwt
-    //     }
-    //   })
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       console.log('읽음처리 완');
-    //       //   axios
-    //       //     .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
-    //       //       headers: {
-    //       //         Authorization: jwt
-    //       //       }
-    //       //     })
-    //       //     .then((res) => {
-    //       //       console.log('alarmInfo');
-    //       //       console.log(res.data);
-    //       //       io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
-    //       //     });
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
-    axios
-      .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
-        headers: {
-          Authorization: jwt
-        }
-      })
-      .then((res) => {
-        console.log('alarmInfo');
-        console.log(res.data);
-        io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
+        var filterData = res.data.filter((item) => {
+          return (
+            // item['contents'].includes('전체') ||
+            !item['mem_code'] || item['mem_code'].includes(memCode)
+          );
+        });
+        io.to(users.get(memCode)).emit('loadAlarm', filterData);
       });
   });
 
-  // socket.on('loadRez', (Token) => {
-  //   console.log('asd');
+  // socket.on('clickAlarm', ({ alert_code, jwt, mem_code }) => {
+  //   console.log(alert_code);
+  //   console.log(jwt);
   //   axios
-  //     .get(`http://localhost:8081/mr/participantPerRez`, {
+  //     .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
   //       headers: {
-  //         Authorization: Token
+  //         Authorization: jwt
   //       }
   //     })
   //     .then((res) => {
-  //       // console.log(res.data);
-  //       // mrRezDatas = res.data;
+  //       console.log('alarmInfo');
+  //       console.log(res.data);
+  //       io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
   //     });
   // });
 
   socket.on('allParticipant', ({ ptList, mr_rez_code, jwt }) => {
     for (let mem of ptList) {
-      console.log('asdasd');
       alertDTO = {
         mem_code: mem.mem_code,
-        contents: '회의실 예약 참석자로 지정되었습니다.'
+        contents: `예약 번호 : ${mr_rez_code}\n회의실 예약 참석자로 지정되었습니다.`
       };
       axios
         .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO, {
@@ -134,35 +96,82 @@ io.on('connection', (socket) => {
           // console.log(res.data);
           // mrRezDatas = res.data;
         });
-      for (let memCode of Array.from(users.keys())) {
-        if (mem.mem_code === memCode) {
-          console.log(memCode + ' 참석자 입니다. 소켓 : ' + users.get(memCode));
-          axios
-            .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
-              headers: {
-                Authorization: jwt
-              }
-            })
-            .then((res) => {
-              console.log('alarmInfo');
-              console.log(res.data);
-              io.to(users.get(memCode)).emit('loadAlarm', res.data);
-              // mrRezDatas = res.data;
-            });
-          // io.to(users.get(memCode)).emit(
-          //   'mrRezParticipant',
-          //   '회의실 예약 참석자로 지정되었습니다.'
-          // );
-        }
-      }
+      // for (let memCode of Array.from(users.keys())) {
+      //   if (mem.mem_code === memCode) {
+      //     console.log(memCode + ' 참석자 입니다. 소켓 : ' + users.get(memCode));
+      //     axios
+      //       .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
+      //         headers: {
+      //           Authorization: jwt
+      //         }
+      //       })
+      //       .then((res) => {
+      //         console.log('alarmInfo');
+      //         console.log(res.data);
+      //         io.to(users.get(memCode)).emit('loadAlarm', res.data);
+      //         // mrRezDatas = res.data;
+      //       });
+      //     // io.to(users.get(memCode)).emit(
+      //     //   'mrRezParticipant',
+      //     //   '회의실 예약 참석자로 지정되었습니다.'
+      //     // );
+      //   }
+      // }
     }
   });
+
   socket.on('disconnect_mem', (mem_code) => {
     console.log('delete');
     console.log(mem_code);
     users.delete(mem_code);
     console.log(users);
     // socket.off();
+  });
+
+  //DB값 변경 시 값 불러오기
+  socket.on('changeDB', ({ memList, jwt }) => {
+    console.log(memList);
+
+    //변화된 사람 알람만 가져오기
+    axios
+      .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+        headers: {
+          Authorization: jwt
+        }
+      })
+      .then((res) => {
+        //변화된 클라이언트들에게만 알람보내기
+        // console.log(res.data);
+        for (let mem of memList) {
+          for (let memCode of Array.from(users.keys())) {
+            if (mem === memCode) {
+              var filterData = res.data.filter((item) => {
+                return !item['mem_code'] || item['mem_code'].includes(memCode);
+              });
+              io.to(users.get(memCode)).emit('loadAlarm', filterData);
+            }
+          }
+        }
+      });
+  });
+
+  socket.on('allUsers', (jwt) => {
+    const memList = Array.from(users.keys());
+    axios
+      .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+        headers: {
+          Authorization: jwt
+        }
+      })
+      .then((res) => {
+        for (let memCode of Array.from(users.keys())) {
+          var filterData = res.data.filter((item) => {
+            return !item['mem_code'] || item['mem_code'].includes(memCode);
+          });
+          io.to(users.get(memCode)).emit('loadAlarm', filterData);
+        }
+        // io.emit('loadAnnouncement', res.data);
+      });
   });
 });
 // server.emit('message', '연결 성공');
