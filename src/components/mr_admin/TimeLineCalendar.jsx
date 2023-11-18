@@ -8,6 +8,7 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import {
   Divider,
@@ -31,6 +32,7 @@ import Modal from '../common/Modal.jsx';
 const TimeLineCalendar = ({ events, resources }) => {
   const [mrResources, setMrResources] = useState({});
   const [rezData, setRezData] = useState();
+  const [rezPt, setRezPt] = useState();
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
@@ -71,10 +73,15 @@ const TimeLineCalendar = ({ events, resources }) => {
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
       });
+    axiosInstance.axiosInstance
+      .get(`/mr/mrRezPt/${mr_rez_code}`)
+      .then((res) => {
+        console.log(res.data);
+        setRezPt(res.data);
+      });
     info.view.calendar.gotoDate(eventDate);
     handleModal();
   };
-
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5, 6], // 월~토
 
@@ -84,7 +91,8 @@ const TimeLineCalendar = ({ events, resources }) => {
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
-
+  const filteredRezPt = rezPt && rezPt.filter((pt) => pt.name !== rezData.name);
+  console.log(filteredRezPt);
   const ModalContentExample = () => {
     return (
       <Grid container spacing={2}>
@@ -139,6 +147,34 @@ const TimeLineCalendar = ({ events, resources }) => {
               />
             </ListItem>
             <Divider />
+          </List>
+          <Typography sx={{ mt: 1, mb: 2 }} variant="h4" component="div">
+            참석자 정보
+          </Typography>
+          <Divider />
+          <List>
+            {filteredRezPt &&
+              filteredRezPt.map((participant, index) => (
+                <React.Fragment key={index}>
+                  <ListItem>
+                    <ListItemIcon sx={{ color: '#000000' }}>
+                      <PersonOutlineOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        participant &&
+                        participant.name +
+                          ' ' +
+                          participant.position_name +
+                          ' (' +
+                          participant.dept_name +
+                          ')'
+                      }
+                    />
+                  </ListItem>
+                  {index !== filteredRezPt.length - 1 && <Divider />}
+                </React.Fragment>
+              ))}
           </List>
         </Grid>
       </Grid>
