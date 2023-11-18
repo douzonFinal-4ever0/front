@@ -64,7 +64,9 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // };
 
   /*------------------------------------수정시 데이터--------------------------------------------*/
-  const initialMrSupplies = selectedRowData ? selectedRowData.mr_supplies : '';
+  const initialMrSupplies = selectedRowData
+    ? selectedRowData.mr_supplies
+    : null;
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
   const initialLocation = selectedRowData ? selectedRowData.location : '';
   const initialMaximumCapacity = selectedRowData
@@ -213,22 +215,36 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         console.error('데이터 가져오기 오류:', error);
       });
   };
-  /*----------------------------모달------------------------------------*/
+  /*----------------------------장비------------------------------------*/
+  let all_mr_supplies = '';
+  const [mr_supplies, setMr_supplies] = useState([]);
   // 모달창 열림 여부 값*/
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
-
+  const handleSelectedArray = (selectedArray) => {
+    all_mr_supplies = selectedArray;
+    console.log(all_mr_supplies);
+  };
   const ModalActionBtns = () => {
     const handleSaveBtn = () => {
+      setMr_supplies(
+        all_mr_supplies
+          ? all_mr_supplies.map((supply) => ({
+              supplies_code: supply.supplies_code,
+              supplies_name: supply.supplies_name
+            }))
+          : []
+      );
       handleModal();
       console.log('save 누름');
     };
+
     const handleCancelBtn = () => {
       handleModal();
       console.log('cancel 누름');
     };
-
+    console.log(mr_supplies);
     return (
       <Grid
         container
@@ -270,7 +286,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     );
   };
   const ModalContentExample = () => {
-    return <SuppliesList />;
+    return <SuppliesList onGetSelectedRowsData={handleSelectedArray} />;
   };
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
@@ -380,6 +396,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     mr_name,
     maximum_capacity,
     location,
+    mr_supplies,
     mr_type: mrType,
     mr_keyword: selectedTags,
     mr_op_day: selectedDays // 변환된 요일 배열 사용
@@ -597,6 +614,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             {initialMrSupplies &&
               initialMrSupplies.map((supplies, index) => (
                 <Chip label={supplies.supplies.supplies_name} />
+              ))}
+            {mr_supplies &&
+              mr_supplies.map((supplies) => (
+                <Chip label={supplies.supplies_name} />
               ))}
           </Box>
           <Modal
