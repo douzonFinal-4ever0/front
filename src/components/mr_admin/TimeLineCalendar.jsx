@@ -83,7 +83,7 @@ const TimeLineCalendar = ({ events, resources }) => {
     handleModal();
   };
   const businessHours = {
-    daysOfWeek: [1, 2, 3, 4, 5, 6], // 월~토
+    daysOfWeek: [1, 2, 3, 4, 5], // 월~토
 
     startTime: '9:00', // 시작 시간
     endTime: '19:00' // 종료 시간
@@ -95,7 +95,7 @@ const TimeLineCalendar = ({ events, resources }) => {
   console.log(filteredRezPt);
   const ModalContentExample = () => {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={6}>
           <MrInfoSection data={mrResources} />
         </Grid>
@@ -148,7 +148,7 @@ const TimeLineCalendar = ({ events, resources }) => {
             </ListItem>
             <Divider />
           </List>
-          <Typography sx={{ mt: 1, mb: 2 }} variant="h4" component="div">
+          <Typography sx={{ mt: 3, mb: 2 }} variant="h4" component="div">
             참석자 정보
           </Typography>
           <Divider />
@@ -172,7 +172,8 @@ const TimeLineCalendar = ({ events, resources }) => {
                       }
                     />
                   </ListItem>
-                  {index !== filteredRezPt.length - 1 && <Divider />}
+                  {/* {index !== filteredRezPt.length - 1 && <Divider />} */}
+                  <Divider />
                 </React.Fragment>
               ))}
           </List>
@@ -274,7 +275,7 @@ const TimeLineCalendar = ({ events, resources }) => {
       />
       <Modal
         open={open}
-        modalTitle={'회의실'}
+        modalTitle={'회의실 예약 정보'}
         handleModal={handleModal}
         content={<ModalContentExample />}
       />
