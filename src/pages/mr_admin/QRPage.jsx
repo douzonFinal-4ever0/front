@@ -79,10 +79,10 @@ const QRPage = () => {
         alignContent: 'center',
         alignItems: 'center',
         justifyItems: 'center',
-        margin: 'auto+'
+        margin: 'auto'
       }}
     >
-      <Box sx={{ width: 400 }}>
+      <Box sx={{ width: 'auto' }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             {mr && <MrInfoSection data={mr} />}

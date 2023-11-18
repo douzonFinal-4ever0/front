@@ -6,14 +6,14 @@ const getJwtToken = () => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8081', // API의 기본 URL
-  // baseURL: 'http://192.168.0.177:8081', // API의 기본 URL 시연할 경우에 쓸 url
+  // baseURL: 'http://localhost:8081', // API의 기본 URL
+  baseURL: 'http://192.168.219.107:8081', // API의 기본 URL 시연할 경우에 쓸 url
   headers: {
     Authorization: getJwtToken()
   }
 });
 const axiosQR = axios.create({
-  baseURL: 'http://192.168.0.177:8081', // API의 기본 URL 시연할 경우에 쓸 url
+  baseURL: 'http://192.168.219.107:8081', // API의 기본 URL 시연할 경우에 쓸 url
   headers: {
     Authorization: getJwtToken()
   }

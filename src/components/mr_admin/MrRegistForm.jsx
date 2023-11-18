@@ -246,7 +246,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           }}
           onClick={handleSaveBtn}
         >
-          수정
+          확인
         </Button>
         <Button
           variant="outlined"

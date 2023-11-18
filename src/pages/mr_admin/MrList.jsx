@@ -17,13 +17,13 @@ const MrList = () => {
       .get('/mr/mrRez')
       .then((res) => {
         setRezList(res.data);
-        console.log(res.data);
         const newEvents = res.data.map((rez) => ({
           title: rez.m_name,
           start: rez.rez_start_time,
           end: rez.rez_end_time,
           resourceId: rez.mr[0].mr_code,
-          description: rez.m_name + '     [' + rez.mr[0].mr_name + ']'
+          description: rez.m_name + '     [' + rez.mr[0].mr_name + ']',
+          mr_rez_code: rez.mr_rez_code
         }));
         setEvents(newEvents);
       })
@@ -52,7 +52,8 @@ const MrList = () => {
       start: '',
       end: '',
       resourceId: '',
-      description: ''
+      description: '',
+      mr_rez_code: ''
     }
   ]);
   const [mrList, setMrList] = useState([

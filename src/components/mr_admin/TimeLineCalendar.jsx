@@ -5,7 +5,19 @@ import multiMonthPlugin from '@fullcalendar/multimonth';
 import FullCalendar from '@fullcalendar/react';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import { Box } from '@mui/material';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import DnsOutlinedIcon from '@mui/icons-material/DnsOutlined';
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography
+} from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection.jsx';
@@ -18,6 +30,7 @@ import Modal from '../common/Modal.jsx';
 
 const TimeLineCalendar = ({ events, resources }) => {
   const [mrResources, setMrResources] = useState({});
+  const [rezData, setRezData] = useState();
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
@@ -39,12 +52,21 @@ const TimeLineCalendar = ({ events, resources }) => {
     /**클릭한 이벤트의 시작 날짜를 가져옴 */
     const eventDate = info.event.start;
     const mr_code = info.event._def.resourceIds[0];
-    // console.log(info.event._def.resourceIds[0]);
+    const mr_rez_code = info.event._def.extendedProps.mr_rez_code;
     axiosInstance.axiosInstance
       .get(`/mr/${mr_code}`)
       .then((res) => {
         // console.log(res.data);
         setMrResources(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+    axiosInstance.axiosInstance
+      .get(`/mr/mrRez/${mr_rez_code}`)
+      .then((res) => {
+        console.log(res.data);
+        setRezData(res.data);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -65,9 +87,61 @@ const TimeLineCalendar = ({ events, resources }) => {
 
   const ModalContentExample = () => {
     return (
-      <Box sx={{ width: '500px' }}>
-        <MrInfoSection data={mrResources} />
-      </Box>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <MrInfoSection data={mrResources} />
+        </Grid>
+        <Grid item xs={6}>
+          <Typography sx={{ mt: 1, mb: 2 }} variant="h4" component="div">
+            예약 정보
+          </Typography>
+          <Divider />
+          <List>
+            <ListItem>
+              <ListItemIcon sx={{ color: '#000000' }}>
+                <DnsOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={rezData && rezData.m_name} />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemIcon>
+                <PersonAddAltOutlinedIcon sx={{ color: '#000000' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  rezData &&
+                  rezData.name +
+                    ' ' +
+                    rezData.position_name +
+                    ' (' +
+                    rezData.dept_name +
+                    ')'
+                }
+              />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemIcon>
+                <CalendarMonthOutlinedIcon sx={{ color: '#000000' }} />
+              </ListItemIcon>
+              <ListItemText primary={rezData && rezData.rez_date} />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemIcon>
+                <ScheduleOutlinedIcon sx={{ color: '#000000' }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  rezData && rezData.start_time + ' ~ ' + rezData.end_time
+                }
+              />
+            </ListItem>
+            <Divider />
+          </List>
+        </Grid>
+      </Grid>
     );
   };
 
