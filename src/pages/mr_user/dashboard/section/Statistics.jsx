@@ -96,12 +96,11 @@ const Statistics = ({ data }) => {
     }
   });
 
-  const mdCnt = smResult
+  const mdCnt = mdResult
     .map((i) => i.rez_cnt)
     .reduce((acc, cur) => acc + cur, 0);
   const mdtot = mr[1].cnt * ((18 - 9) * 2);
   const mdRate = (mdCnt / mdtot) * 100;
-  console.log(`소회의실 예약률: ${mdRate.toFixed(2)}%`);
 
   // 대회의실 데이터 가공 ************************************************
   lg &&
@@ -130,12 +129,11 @@ const Statistics = ({ data }) => {
     }
   });
 
-  const lgCnt = smResult
+  const lgCnt = lgResult
     .map((i) => i.rez_cnt)
     .reduce((acc, cur) => acc + cur, 0);
   const lgtot = mr[2].cnt * ((18 - 9) * 2);
   const lgRate = (lgCnt / lgtot) * 100;
-  console.log(`소회의실 예약률: ${lgRate.toFixed(2)}%`);
 
   // 미팅룸 데이터 가공 ************************************************
   mt &&
@@ -164,7 +162,7 @@ const Statistics = ({ data }) => {
     }
   });
 
-  const mtCnt = smResult
+  const mtCnt = mtResult
     .map((i) => i.rez_cnt)
     .reduce((acc, cur) => acc + cur, 0);
   const mttot = mr[3].cnt * ((18 - 9) * 2);
