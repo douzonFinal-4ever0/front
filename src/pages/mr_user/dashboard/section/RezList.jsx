@@ -41,7 +41,7 @@ const RezList = ({ todayRezList }) => {
 
   return (
     <>
-      <WrapContainer bgcolor={'#fff'}>
+      <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
         <Stack
           direction={'row'}
           sx={{ justifyContent: 'space-between', marginBottom: '10px' }}
@@ -56,8 +56,7 @@ const RezList = ({ todayRezList }) => {
         </Stack>
         <Timeline
           sx={{
-            maxHeight: '330px',
-            minHeight: '300px',
+            // maxHeight: '330px',
             overflowY: 'auto',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar-thumb': {
@@ -129,7 +128,7 @@ const RezList = ({ todayRezList }) => {
                             fontWeight: 'bold'
                           }}
                         >
-                          예약자
+                          MY 예약
                         </Typography>
                       ) : null}
                     </Stack>

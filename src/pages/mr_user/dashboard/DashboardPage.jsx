@@ -237,7 +237,7 @@ const DashboardPage = () => {
             {/* 2단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={4}>
+                <Grid item xs={4} sx={{ height: '600px' }}>
                   <RezList todayRezList={todayRezList} />
                 </Grid>
                 <Grid item xs={8}>
