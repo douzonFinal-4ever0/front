@@ -1,28 +1,51 @@
-import React, { useEffect } from 'react';
-import Editor from '../../components/mr_admin/Editor';
+import { Grid, MenuItem, Select, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import RectangleBtn from '../../components/common/RectangleBtn';
+import Spinner from '../../components/common/Spinner.jsx';
 import SubHeader from '../../components/common/SubHeader';
-import { TextField, Select, MenuItem, Grid } from '@mui/material';
-import { useState } from 'react';
+import Editor from '../../components/mr_admin/Editor';
+import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import OnOffSwitch from '../../components/mr_admin/OnOffSwitch';
 import WrapContainer from '../../components/mr_user/WrapContainer';
-import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axios.js';
-import RectangleBtn from '../../components/common/RectangleBtn';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
+import axiosInstance from '../../utils/axios.js';
 const MrNotice = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const notice_code = new URLSearchParams(location.search).get('notice_code');
   const [editorData, setEditorData] = useState('<p>테스트</p>');
   const [isPublic, setIsPublic] = useState(true); // OnOff 스위치의 상태를 관리
   const [notice_title, setNotice_title] = useState('');
   const [template, setTemplate] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const mem_code = useSelector((state) => state.user.mem_code);
+  const isEditMode = Boolean(notice_code);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (notice_code) {
+      setIsLoading(true);
+      axiosInstance.axiosInstance
+        .get(`/mr/notice/${notice_code}`)
+        .then((res) => {
+          const existData = res.data.contents;
+          console.log(existData);
+          setEditorData(existData);
+          setIsPublic(res.data.is_opened === 0);
+          setNotice_title(res.data.notice_title);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching notice data:', error);
+        });
+    }
+  }, [notice_code]);
 
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
@@ -38,16 +61,24 @@ const MrNotice = () => {
     setIsPublic(event.target.checked);
   };
   /**공지사항에 들어가야하는 데이터 */
-  const FormtoData = {
+  const FormToData = {
     contents: editorData,
     is_opened: isPublic ? 0 : 1,
     notice_title,
     mem_code
   };
-  /**공지사랑 등록 버튼 이벤트 */
-  const handleClick = () => {
+  /**공지사항 수정에 들어가야하는 데이터 */
+  const FormToData2 = {
+    contents: editorData,
+    is_opened: isPublic ? 0 : 1,
+    notice_code,
+    notice_title,
+    mem_code
+  };
+
+  const handleCreate = () => {
     axiosInstance.axiosInstance
-      .post('/mr/notice', FormtoData)
+      .post('/mr/notice', FormToData)
       .then(() => {
         handleOpenSnackbar();
         handleSetSnackbarContent('공지사항이 등록되었습니다.');
@@ -58,6 +89,29 @@ const MrNotice = () => {
       });
     // console.log('텍스트:' + editorData);
     // console.log('공개 여부: ' + isPublic); // OnOff 스위치 상태 출력
+  };
+
+  const handleUpdate = () => {
+    axiosInstance.axiosInstance
+      .patch('/mr/notice/update', FormToData2)
+      .then(() => {
+        handleOpenSnackbar();
+        handleSetSnackbarContent('공지사항이 수정되었습니다.');
+        console.log(FormToData2);
+        navigate('../NoticeList');
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+  };
+
+  /**공지사항 이벤트 */
+  const handleClick = () => {
+    if (isEditMode) {
+      handleUpdate();
+    } else {
+      handleCreate();
+    }
   };
 
   /**템플릿을 선택할때의 이벤트 */
@@ -89,7 +143,8 @@ const MrNotice = () => {
 
   return (
     <>
-      <SubHeader title={'공지사항 작성'} />
+      <Spinner isLoading={isLoading} />
+      <SubHeader title={isEditMode ? '공지사항 수정' : '공지사항 작성'} />
       <MainContainer2>
         <WrapContainer bgcolor={'#fff'}>
           <Grid container spacing={1} sx={{ display: 'flex' }}>
@@ -103,6 +158,7 @@ const MrNotice = () => {
                   label="제목"
                   variant="outlined"
                   sx={{ width: '100%', backgroundColor: '#f5f5f5' }}
+                  value={notice_title}
                   placeholder="제목을 입력하세요"
                   onChange={(e) => {
                     setNotice_title(e.target.value);
@@ -118,18 +174,19 @@ const MrNotice = () => {
                   <MenuItem defaultValue="" disabled>
                     탬플릿 선택
                   </MenuItem>
-                  {template.map((item) => (
-                    <MenuItem key={item.template_code} value={item.type}>
-                      {item.type}
-                    </MenuItem>
-                  ))}
+                  {template &&
+                    template.map((item) => (
+                      <MenuItem key={item.template_code} value={item.type}>
+                        {item.type}
+                      </MenuItem>
+                    ))}
                 </StyledSelect>
               </Grid>
               <Grid item xs={2}>
                 <RectangleBtn
                   category={'register'}
                   type={'submit'}
-                  text={'작성 완료'}
+                  text={isEditMode ? '수정 완료' : '작성 완료'}
                   sx={{
                     width: '100%'
                   }}

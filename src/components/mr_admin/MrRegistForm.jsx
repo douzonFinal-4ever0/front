@@ -612,13 +612,19 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             </IconButton>
 
             {initialMrSupplies &&
-              initialMrSupplies.map((supplies, index) => (
-                <Chip label={supplies.supplies.supplies_name} />
-              ))}
+              initialMrSupplies.map(
+                (supplies, index) =>
+                  supplies.supplies.supplies_name !== null && (
+                    <Chip key={index} label={supplies.supplies.supplies_name} />
+                  )
+              )}
             {mr_supplies &&
-              mr_supplies.map((supplies) => (
-                <Chip label={supplies.supplies_name} />
-              ))}
+              mr_supplies.map(
+                (supplies, index) =>
+                  supplies.supplies_name !== null && (
+                    <Chip key={index} label={supplies.supplies_name} />
+                  )
+              )}
           </Box>
           <Modal
             open={open}
