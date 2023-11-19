@@ -209,7 +209,7 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
             </Accordion>
 
             {/* 외부 참석자 */}
-            <Accordion
+            {/* <Accordion
               expanded={expanded === 'outerPt'}
               onChange={handleChange('outerPt')}
               sx={{
@@ -232,7 +232,7 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
               <AccordionDetails>
                 <OutterPtForm />
               </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
           </Box>
           {currentURL === '/mr/rez/history' ? null : (
             <RectangleBtn
