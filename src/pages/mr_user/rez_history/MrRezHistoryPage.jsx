@@ -178,7 +178,9 @@ const MrRezHistoryPage = () => {
                   <MrRezCalendar
                     events={events}
                     data={rezList}
+                    setRezList={setRezList}
                     getMrRezApi={getMrRezApi}
+                    setEvents={setEvents}
                   />
                 </WrapContainer>
               </Grid>

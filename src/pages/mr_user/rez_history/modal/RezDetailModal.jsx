@@ -36,18 +36,17 @@ const RezDetailModal = ({
   data,
   isModify,
   handleModifyMode,
-  getMrRezApi
+  getMrRezApi,
+  list,
+  setRezList,
+  events,
+  setEvents
 }) => {
-  console.log(data);
-
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
-
-  console.log('여기');
-  console.log(data);
 
   const detailInfo = {
     m_name: data && data.m_name,
@@ -75,8 +74,13 @@ const RezDetailModal = ({
       );
 
       if (res.status !== 200) return;
+      const reData = list.filter(
+        (item) => item.mr_rez_code !== data.mr_rez_code
+      );
+      setRezList(reData);
 
-      getMrRezApi(); // 페이지 재로드
+      const reEvent = events.filter((e) => e.id !== data.mr_rez_code);
+      setEvents(reEvent);
 
       // 스낵바
       handleSetSnackbarContent('예약 삭제 되었습니다. ');
