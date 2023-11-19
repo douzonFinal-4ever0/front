@@ -181,7 +181,7 @@ const Statistics = ({ data }) => {
         }}
       >
         <Typography variant="h6">실시간 회의실 예약 현황</Typography>
-        <Typography sx={{ fontSize: '14px', color: '#999' }}>
+        <Typography sx={{ fontSize: '15px', color: '#555' }}>
           {`${today} ${time} 기준`}
         </Typography>
       </Stack>
@@ -189,7 +189,7 @@ const Statistics = ({ data }) => {
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <StyledCard category={0}>
-              <Typography variant="subtitle2" sx={{ color: '#666' }}>
+              <Typography variant="subtitle1" sx={{ color: '#3357FF' }}>
                 소회의실
               </Typography>
               <StyledRate>{`${smRate.toFixed(1)}%`}</StyledRate>
@@ -197,7 +197,7 @@ const Statistics = ({ data }) => {
           </Grid>
           <Grid item xs={3}>
             <StyledCard category={1}>
-              <Typography variant="subtitle2" sx={{ color: '#666' }}>
+              <Typography variant="subtitle1" sx={{ color: '#00bfa5' }}>
                 중회의실
               </Typography>
               <StyledRate>{`${mdRate.toFixed(1)}%`}</StyledRate>
@@ -205,7 +205,7 @@ const Statistics = ({ data }) => {
           </Grid>
           <Grid item xs={3}>
             <StyledCard category={2}>
-              <Typography variant="subtitle2" sx={{ color: '#666' }}>
+              <Typography variant="subtitle1" sx={{ color: '#f9a825' }}>
                 대회의실
               </Typography>
               <StyledRate>{`${lgRate.toFixed(1)}%`}</StyledRate>
@@ -214,7 +214,7 @@ const Statistics = ({ data }) => {
 
           <Grid item xs={3}>
             <StyledCard category={3}>
-              <Typography variant="subtitle2" sx={{ color: '#666' }}>
+              <Typography variant="subtitle1" sx={{ color: '#f44336' }}>
                 미팅룸
               </Typography>
               <StyledRate>{`${mtRate.toFixed(1)}%`}</StyledRate>

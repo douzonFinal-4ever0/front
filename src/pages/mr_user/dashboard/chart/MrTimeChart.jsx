@@ -51,7 +51,7 @@ const MrTimeChart = ({ smResult, mdResult, lgResult, mtResult }) => {
         vertical: 5 // 레전드 간 수직 간격 조절
       },
       markers: {
-        colors: ['#FF5733', '#FFC300', '#33FF57', '#3357FF'] // 각 레전드 항목의 마커 색상 변경
+        colors: ['#FF5733', '#FFC300', '#00796b', '#3357FF'] // 각 레전드 항목의 마커 색상 변경
       }
     },
     xaxis: {
