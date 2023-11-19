@@ -189,7 +189,9 @@ const PtModal = ({
     if (applyMemberList.length !== 0) {
       setPtList([...applyMemberList, master]);
       dispatch(
-        setRezData({ data: { ...rezData, mr_pt_list: applyMemberList } })
+        setRezData({
+          data: { ...rezData, mr_pt_list: [...applyMemberList, master] }
+        })
       );
     }
 

@@ -152,7 +152,7 @@ const MrRezHistoryPage = () => {
           <Grid container spacing={2}>
             {/* <Grid item container xs={12}>
               <WrapContainer bgcolor={'#fff'}>
-                <Grid container sx={{ height: '200px' }}>
+                <Grid container sx={{ height: '140px' }}>
                   <Grid item xs={3}>
                     예약
                   </Grid>
