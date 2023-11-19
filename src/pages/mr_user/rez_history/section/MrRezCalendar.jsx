@@ -7,6 +7,7 @@ import TimeLineCalendar from '../../../../components/mr_admin/TimeLineCalendar';
 import axiosInstance from '../../../../utils/axios.js';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -14,7 +15,7 @@ import RezDetailModal from '../modal/RezDetailModal';
 
 const MrRezCalendar = ({
   events,
-  data,
+  data, // 전체 예약 리스트
   setRezList,
   getMrRezApi,
   setEvents
@@ -23,8 +24,6 @@ const MrRezCalendar = ({
   const [rezDetail, steRezDetail] = useState([]);
   const [open, setOpen] = useState(false); // 모달창 오픈 여부
   const [isModify, setIsModify] = useState(false); // 수정모드 여부
-
-  console.log(events);
 
   const businessHours = {
     daysOfWeek: [1, 2, 3, 4, 5, 6],
@@ -51,7 +50,7 @@ const MrRezCalendar = ({
   return (
     <>
       <FullCalendar
-        plugins={[listPlugin, dayGridPlugin]}
+        plugins={[listPlugin, dayGridPlugin, multiMonthPlugin]}
         initialView={currentView}
         nowIndicator={true}
         events={events}
@@ -71,7 +70,7 @@ const MrRezCalendar = ({
         }}
         res
         headerToolbar={{
-          left: 'prev,next,today',
+          left: 'prevYear,prev,next,nextYear,today',
           center: 'title',
           right: 'listWeek,dayGridMonth'
         }}
@@ -84,6 +83,7 @@ const MrRezCalendar = ({
         open={open}
         handleModal={handleModal}
         data={rezDetail}
+        steRezDetail={steRezDetail}
         list={data}
         setRezList={setRezList}
         isModify={isModify}
