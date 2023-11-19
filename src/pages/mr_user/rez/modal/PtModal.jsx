@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
+  Autocomplete,
   Box,
   Button,
   Chip,
@@ -13,6 +14,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
   Typography
 } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -36,11 +38,11 @@ const toggleData = [
     value: 'all',
     name: '조직도'
   },
-  {
-    index: 1,
-    value: 'search',
-    name: '검색'
-  },
+  // {
+  //   index: 1,
+  //   value: 'search',
+  //   name: '검색'
+  // },
   {
     index: 2,
     value: 'bmGroup',
@@ -493,42 +495,53 @@ const SelectContainer = ({
       };
 
       return (
-        <StyledContainer>
-          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
-            <TreeView
-              aria-label="customized"
-              defaultExpanded={['1']}
-              defaultCollapseIcon={<MinusSquare />}
-              defaultExpandIcon={<PlusSquare />}
-              defaultEndIcon={<CircleIcon />}
-              onNodeSelect={handleTreeItemClick}
-              sx={{ overflowX: 'hidden' }}
-            >
-              {treeData &&
-                treeData.map((deptTree, index) => (
-                  <StyledTreeItem
-                    nodeId={deptTree.dept}
-                    label={deptTree.dept}
-                    key={index}
-                  >
-                    {deptTree.members.map((userTree, index) => (
-                      <StyledTreeItem
-                        nodeId={userTree.mem_code}
-                        label={<TreeLabel userTree={userTree} />}
-                        key={index}
-                      />
-                    ))}
-                  </StyledTreeItem>
-                ))}
-            </TreeView>
-          </Box>
-        </StyledContainer>
+        <>
+          <StyledContainer>
+            <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+              <TreeView
+                aria-label="customized"
+                defaultExpanded={['1']}
+                defaultCollapseIcon={<MinusSquare />}
+                defaultExpandIcon={<PlusSquare />}
+                defaultEndIcon={<CircleIcon />}
+                onNodeSelect={handleTreeItemClick}
+                sx={{ overflowX: 'hidden' }}
+              >
+                {treeData &&
+                  treeData.map((deptTree, index) => (
+                    <StyledTreeItem
+                      nodeId={deptTree.dept}
+                      label={deptTree.dept}
+                      key={index}
+                    >
+                      {deptTree.members.map((userTree, index) => (
+                        <StyledTreeItem
+                          nodeId={userTree.mem_code}
+                          label={<TreeLabel userTree={userTree} />}
+                          key={index}
+                        />
+                      ))}
+                    </StyledTreeItem>
+                  ))}
+              </TreeView>
+            </Box>
+          </StyledContainer>
+        </>
       );
     case 'search':
+      let newTotList = [];
+      totalMemberList.forEach((mem) => {
+        newTotList.push({
+          label: `${mem.name} (${mem.position_name} | ${mem.deptVO.dept_name})`
+        });
+      });
       return (
-        <StyledContainer>
-          <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}> 검색</Box>
-        </StyledContainer>
+        <Autocomplete
+          disablePortal
+          options={newTotList}
+          sx={{ width: '100%' }}
+          renderInput={(params) => <TextField {...params} />}
+        />
       );
     case 'bmGroup':
       const BmGroupMemLabel = ({ memTree }) => {
@@ -649,6 +662,7 @@ const ApplyContainer = ({
   switch (tab) {
     case 'all':
     case 'bmMember':
+    case 'search':
       const handleApplyTreeItem = (e, nodeId) => {
         // 토글 상태 변경
         const findIndex = applyMemberList.findIndex(
@@ -710,8 +724,7 @@ const ApplyContainer = ({
           </Box>
         </StyledContainer>
       );
-    case 'search':
-      return <Box>검색</Box>;
+
     case 'bmGroup':
       // 그룹 & 그룹 멤버
       const groupResult = applyBmGroupList.filter(
