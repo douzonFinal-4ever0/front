@@ -77,7 +77,7 @@ const MrRezCalendar = ({
         resourceAreaWidth="15%"
         navLinks="true"
         locale={'ko'}
-        contentHeight={'400px'}
+        contentHeight={'520px'}
       />
       <RezDetailModal
         open={open}

@@ -147,31 +147,16 @@ const MrRezHistoryPage = () => {
   return (
     <>
       <SubHeader title="MY 회의실 예약" />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
         <MainContainer>
-          <Grid container spacing={2}>
-            {/* <Grid item container xs={12}>
-              <WrapContainer bgcolor={'#fff'}>
-                <Grid container sx={{ height: '140px' }}>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                </Grid>
-              </WrapContainer>
-            </Grid> */}
-
+          <Grid
+            container
+            spacing={2}
+            sx={{ height: '100%', maxHeight: '710px' }}
+          >
             <Grid item container spacing={2}>
               <Grid item xs={9}>
-                <WrapContainer bgcolor={'#fff'}>
+                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
                   <Typography variant="h6" sx={{ marginBottom: '30px' }}>
                     전체 예약 현황
                   </Typography>
@@ -186,11 +171,8 @@ const MrRezHistoryPage = () => {
               </Grid>
 
               {/* 오늘 회의실 예약 일정 */}
-              <Grid item xs={3} sx={{}}>
-                <WrapContainer
-                  bgcolor={'#fff'}
-                  sx={{ height: '100%', maxHeight: '564px' }}
-                >
+              <Grid item xs={3}>
+                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
                   <Typography variant="h6">오늘 예약 현황</Typography>
                   <Box
                     sx={{
