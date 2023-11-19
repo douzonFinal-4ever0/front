@@ -32,6 +32,7 @@ const DashboardPage = () => {
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
   const [notice, setNotice] = useState([]); // 공지사항 리스트
   const [isLoading, setIsLoading] = useState(false);
+  const [chartData, setChartData] = useState([]); // 실시간 회의실 예약 현황 차트 데이터
 
   // 리덕스 데이터
   const { name, position_name, mem_code, dept_name } = userData;
@@ -58,24 +59,14 @@ const DashboardPage = () => {
 
   // 전체 회의실 사용률 조회
   const getMrUsageApi = async () => {
-    const date = getToday(); // 년월일
-    const time = '16:00';
+    const date = getToday(); // 오늘 날짜 (년-월-일)
 
     const res = await axiosInstance.axiosInstance.get(
-      `/mr/statistics?date=${date}&time=${time}`
+      `/mr/statistics?date=${date}`
     );
 
     if (res.status !== 200) return;
-
-    const data = res.data;
-
-    if (Array.isArray(data)) {
-      // Handle the case when data is an array
-      calcRezRate(data.length !== 0 ? data : []);
-    } else {
-      // Handle the case when data is not an array
-      console.error('Data is not an array:', data);
-    }
+    setChartData(res.data);
   };
 
   // 사용자 회의실 예약 조회
@@ -246,11 +237,11 @@ const DashboardPage = () => {
             {/* 2단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <RezList todayRezList={todayRezList} />
                 </Grid>
-                <Grid item xs={6}>
-                  <Statistics />
+                <Grid item xs={8}>
+                  <Statistics data={chartData} />
                 </Grid>
               </Grid>
             </Box>
