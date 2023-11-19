@@ -329,6 +329,7 @@ const Register = () => {
     axiosInstance.axiosInstance
       .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)
       .then((res) => {
+        console.log(res.data);
         setCarDetail({
           id: res.data.carVO.car_code,
           car_name: res.data.carVO.car_name,

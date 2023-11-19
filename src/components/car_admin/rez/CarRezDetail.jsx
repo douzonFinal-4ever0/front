@@ -15,6 +15,7 @@ import RectangleBtn from '../../common/RectangleBtn';
 import { palette } from '../../../theme/palette';
 import CarDeleteModal from '../CarDeleteModal';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useSocket } from '../../../utils/SocketProvider';
 
 const setTitle = (data) => {
   // data 객체의 status 값에 따라 title을 설정
@@ -45,7 +46,7 @@ const style = {
 const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
   const [carRezData, setCarRezData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
+  const socket = useSocket();
   useEffect(() => {
     axiosInstance.axiosInstance
       .get('/manager/car/rezGetOne', { params: { car_rez_code: car_rez_code } })
