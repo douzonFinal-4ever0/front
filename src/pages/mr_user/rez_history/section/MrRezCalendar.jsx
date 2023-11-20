@@ -7,12 +7,19 @@ import TimeLineCalendar from '../../../../components/mr_admin/TimeLineCalendar';
 import axiosInstance from '../../../../utils/axios.js';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import multiMonthPlugin from '@fullcalendar/multimonth';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import listPlugin from '@fullcalendar/list';
 import RezDetailModal from '../modal/RezDetailModal';
 
-const MrRezCalendar = ({ events, data, getMrRezApi }) => {
+const MrRezCalendar = ({
+  events,
+  data, // 전체 예약 리스트
+  setRezList,
+  getMrRezApi,
+  setEvents
+}) => {
   const [currentView, setCurrentView] = useState('listWeek');
   const [rezDetail, steRezDetail] = useState([]);
   const [open, setOpen] = useState(false); // 모달창 오픈 여부
@@ -43,7 +50,7 @@ const MrRezCalendar = ({ events, data, getMrRezApi }) => {
   return (
     <>
       <FullCalendar
-        plugins={[listPlugin, dayGridPlugin]}
+        plugins={[listPlugin, dayGridPlugin, multiMonthPlugin]}
         initialView={currentView}
         nowIndicator={true}
         events={events}
@@ -63,22 +70,27 @@ const MrRezCalendar = ({ events, data, getMrRezApi }) => {
         }}
         res
         headerToolbar={{
-          left: 'prev,next,today',
+          left: 'prevYear,prev,next,nextYear,today',
           center: 'title',
           right: 'listWeek,dayGridMonth'
         }}
         resourceAreaWidth="15%"
         navLinks="true"
         locale={'ko'}
-        contentHeight={'400px'}
+        contentHeight={'520px'}
       />
       <RezDetailModal
         open={open}
         handleModal={handleModal}
         data={rezDetail}
+        steRezDetail={steRezDetail}
+        list={data}
+        setRezList={setRezList}
         isModify={isModify}
         handleModifyMode={handleModifyMode}
         getMrRezApi={getMrRezApi}
+        events={events}
+        setEvents={setEvents}
       />
     </>
   );

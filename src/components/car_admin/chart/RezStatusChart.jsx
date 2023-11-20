@@ -7,7 +7,7 @@ import Chart from 'react-apexcharts';
 import axiosInstance from '../../../utils/axios';
 import CalculateIcon from '@mui/icons-material/Calculate';
 
-const RezStatusChart = () => {
+const RezStatusChart = ({ searchData }) => {
   // const [rezData, setRezData] = useState([]);
   const labels = ['미처리', '취소', '운행 대기', '운행 중', '운행 완료'];
   const [series, setSeries] = useState([]);
@@ -20,16 +20,16 @@ const RezStatusChart = () => {
   // });
 
   useEffect(() => {
-    const edate = format(new Date(), 'yyyy-MM-dd');
-    const sdate = format(subDays(new Date(), 7), 'yyyy-MM-dd');
+    // const edate = format(new Date(), 'yyyy-MM-dd');
+    // const sdate = format(subDays(new Date(), 7), 'yyyy-MM-dd');
 
     axiosInstance.axiosInstance
       .post('/manager/car/rezListGetAll', {
         rez_status: 0,
         rez_start_at: null,
         rez_end_at: null,
-        oper_start_at: sdate,
-        oper_end_at: edate,
+        oper_start_at: searchData.sdate,
+        oper_end_at: searchData.edate,
         dept_name: '전체'
       })
       .then((res) => {
@@ -58,7 +58,7 @@ const RezStatusChart = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [searchData]);
 
   const state = {
     options: {

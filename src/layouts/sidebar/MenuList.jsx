@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // @mui -------------------------------------------
 import {
@@ -9,11 +9,13 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Stack
+  Stack,
+  menuItemClasses
 } from '@mui/material';
 // @icons -------------------------------------------
 import {
   CampaignOutlined,
+  Category,
   ContentPaste,
   DirectionsCarFilledOutlined,
   KeyboardArrowDownOutlined,
@@ -26,10 +28,12 @@ import { useLocation } from 'react-router-dom';
 const MenuList = (props) => {
   const {
     openMenu, // 대메뉴 오픈 여부 (boolean)
-    selectMenuItem, // 클릭한 소메뉴 인덱스 (number)
     handleMenuCollapseClick, // 대메뉴 클릭 이벤트
-    handleMenuItemClick, // 소메뉴 클릭 이벤트
-    isAdminMode // 관리자 여부
+    isAdminMode, // 관리자 여부
+    setIsAdminMode,
+    setOpenMenu,
+    selectedMenuIndex,
+    setSelectedMenuIndex
   } = props;
 
   // 현재 url 표시
@@ -92,6 +96,45 @@ const MenuList = (props) => {
       ]
     }
   ];
+
+  const findSelectedMenuIndex = (menu) => {
+    const foundMenu = menu.find((menuItem) =>
+      menuItem.categories.some((category) => category.url === currentPath)
+    );
+
+    if (foundMenu) {
+      setSelectedMenuIndex(foundMenu.index);
+      setOpenMenu(foundMenu.index);
+    }
+  };
+
+  useEffect(() => {
+    // currentPath가 userMenu에 있는지, AdminMenu에 있는지 확인하는 로직
+    // currentPath가 userMenu에 있는지 확인
+    const isUserMenu = userMenu.some((menuItem) =>
+      menuItem.categories.some((category) => category.url === currentPath)
+    );
+
+    // currentPath가 adminMenu에 있는지 확인
+    const isAdminMenu = adminMenu.some((menuItem) =>
+      menuItem.categories.some((category) => category.url === currentPath)
+    );
+
+    // isAdminMode를 변경
+    if (isUserMenu && !isAdminMode) {
+      setIsAdminMode(false);
+      findSelectedMenuIndex(userMenu);
+    } else if (isAdminMenu && !isAdminMode) {
+      setIsAdminMode(true);
+      findSelectedMenuIndex(adminMenu);
+    }
+  }, [
+    currentPath,
+    selectedMenuIndex,
+    setSelectedMenuIndex,
+    setOpenMenu,
+    setIsAdminMode
+  ]);
 
   let menu = isAdminMode ? adminMenu : userMenu;
 

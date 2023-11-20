@@ -33,6 +33,9 @@ const MiniRezForm = () => {
   const { m_name, m_type, rez_date, rez_start_time, rez_end_time, tot_pt_ctn } =
     rezData;
 
+  // 예약 종료 시간 리스트
+  const [endTimes, setEndTimes] = useState([]);
+
   // 회의 종류 셀렉트박스 이벤트
   const handleSelectBox = (e) => {
     const newRezData = { ...rezData, m_type: e.target.value };
@@ -50,8 +53,19 @@ const MiniRezForm = () => {
 
   // 예약 시작 시간 이벤트
   const handleSelectStartTime = (e) => {
-    const newRezData = { ...rezData, rez_start_time: e.target.value };
-    dispatch(setRezData({ data: newRezData }));
+    const findItem = times.filter((time) => time.value === e.target.value);
+    if (findItem.length !== 0) {
+      const index = findItem[0].index;
+      const res = times.filter((time) => time.index > index);
+      setEndTimes(res);
+
+      const newRezData = {
+        ...rezData,
+        rez_start_time: e.target.value,
+        rez_end_time: res[0].value
+      };
+      dispatch(setRezData({ data: newRezData }));
+    }
   };
 
   // 예약 종료 시간 이벤트
@@ -65,6 +79,8 @@ const MiniRezForm = () => {
     const newRezData = { ...rezData, tot_pt_ctn: e.target.value };
     dispatch(setRezData({ data: newRezData }));
   };
+
+  console.log(times);
 
   // 예약 버튼 이벤트
   const handleRezBtnSubmit = async (e) => {
@@ -172,7 +188,7 @@ const MiniRezForm = () => {
                 <Selectbox
                   value={rez_end_time}
                   handleSelectBox={handleSelectEndtTime}
-                  menuList={times}
+                  menuList={endTimes.length === 0 ? times : endTimes}
                 />
               </Stack>
             </Grid>

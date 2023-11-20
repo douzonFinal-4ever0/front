@@ -266,36 +266,39 @@ const BmMemModal = ({
     const list = [...applyList];
     let res = list.filter((item) => !tempApplyList.includes(item.mem_code));
     setApplyList(res);
-
-    // const lestMems = selectMems.filter((mem) => mem.name !== checkMemName);
-    // setSelectMems([...lestMems]);
   };
 
   // 확인 버튼 이벤트
   const handleConfirm = async () => {
-    const list = selectMems.map((item) => item.mem_code);
+    const result = [];
+
+    tempAddList.forEach((item) => {
+      const res = list.filter((mem) => mem.name === item);
+
+      result.push(res[0].mem_code);
+    });
 
     const data = {
       groupName: groupName,
       master: master,
-      members: list
+      members: result
     };
 
-    // try {
-    //   const res = await axiosInstance.axiosInstance.post('/mr/mem/bm', data);
-    //   if (res.status === 201) {
-    //     alert('즐겨찾기 등록 성공하였습니다.');
-    //     bmGroupMemApi(); // 즐겨찾기 리스트 조회
-    //     setSelectMems([]); // 적용 대상 리스트 초기화
-    //     setGroupName(''); // 그룹명 초기화
-    //     handleModal(); // 모달창 닫기
-    //   } else {
-    //     alert('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요 ');
-    //     handleModal();
-    //   }
-    // } catch (err) {
-    //   console.log('API 요청 오류 발생');
-    // }
+    try {
+      const res = await axiosInstance.axiosInstance.post('/mr/mem/bm', data);
+      if (res.status === 201) {
+        alert('즐겨찾기 등록 성공하였습니다.');
+        bmGroupMemApi(); // 즐겨찾기 리스트 조회
+        setApplyList([]); // 적용 대상 리스트 초기화
+        setGroupName(''); // 그룹명 초기화
+        handleModal(); // 모달창 닫기
+      } else {
+        alert('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요 ');
+        handleModal();
+      }
+    } catch (err) {
+      console.log('API 요청 오류 발생');
+    }
   };
 
   // 취소 버튼 이벤트

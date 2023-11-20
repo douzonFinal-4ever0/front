@@ -47,7 +47,7 @@ const CarInfo = ({
     {
       field: 'type',
       headerName: '종류',
-      width: 128,
+      width: 100,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -69,7 +69,7 @@ const CarInfo = ({
     {
       field: 'car_code',
       headerName: '차량 번호',
-      width: 128,
+      width: 100,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -180,7 +180,7 @@ const CarInfo = ({
       field: 'authority', // 추후 수정 필요
       headerName: '권한',
       sortable: false,
-      width: 128,
+      width: 100,
       headerAlign: 'center',
       headerClassName: 'super-app-theme--header',
       align: 'center',
@@ -194,6 +194,39 @@ const CarInfo = ({
           </Box>
         ) : (
           <Box display="flex">{params.value}</Box>
+        )
+    },
+    {
+      field: 'overMaintCount',
+      headerName: '초과 정비 개수',
+      width: 100,
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      align: 'center',
+      renderCell: (params) =>
+        params.value !== 0 && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icon-tabler icon-tabler-alert-circle"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#ff2825"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+              <path d="M12 8v4" />
+              <path d="M12 16h.01" />
+            </svg>
+            <Typography variant="button" color="#ff2825" marginLeft="5px">
+              {`${params.value}건`}
+            </Typography>
+          </Box>
         )
     }
   ];
