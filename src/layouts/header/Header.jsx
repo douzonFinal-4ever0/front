@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
@@ -11,6 +11,7 @@ import {
   Card,
   Chip,
   Paper,
+  Popover,
   Stack,
   Switch,
   Toolbar,
@@ -28,6 +29,8 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import UserProfile from '../../assets/images/user/user-round.svg';
 import { HEADER_HIEGHT } from '../../config';
 import { palette } from '../../theme/palette';
+import { SocketContext, useSocket } from '../../utils/SocketProvider';
+import { useEffect } from 'react';
 
 const Header = (props) => {
   const user = useSelector(setUserData).payload.user;
@@ -37,18 +40,75 @@ const Header = (props) => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
-
-  const handleClick = (newPlacement) => (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen((prev) => placement !== newPlacement || !prev);
-    setPlacement(newPlacement);
-  };
+  const [isAlarm, setIsAlarm] = useState(false);
+  const [alarmData, setAlarmData] = useState(null);
+  // 알림
+  const [open2, setOpen2] = useState(false);
+  // 읽지 않은 알림이 있다고 알려주는 알림
+  const [open3, setOpen3] = useState(false);
+  const dispatch = useDispatch();
+  const { name, position_name, mem_code, dept_name } = user;
+  // const handleClick = (newPlacement) => (event) => {
+  //   setAnchorEl(event.currentTarget);
+  //   setOpen((prev) => placement !== newPlacement || !prev);
+  //   setPlacement(newPlacement);
+  // };
   const navigate = useNavigate();
+  const socket = useSocket();
+  // const socket = useContext(SocketContext);
   const handleLogOut = () => {
     localStorage.removeItem('jwtToken');
+    dispatch(
+      setUserData({
+        data: {
+          mem_code: '', // 사번
+          name: '', // 성명
+          position_name: '', // 직급명
+          dept_name: '', // 부서명
+          role: '', // 역할
+          email: ''
+        }
+      })
+    );
+    socket.emit('disconnect_mem', mem_code);
+    socket.disconnect();
     navigate('/login');
   };
 
+  const handleClick = (event) => {
+    setIsAlarm(false);
+    setAnchorEl(event.currentTarget);
+    setOpen2(true);
+    setOpen3(false);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpen2(false);
+    setAlarmData(null);
+  };
+
+  useEffect(() => {
+    console.log('qweqwe');
+    console.log(isAlarm);
+    // if (socket !== null) {
+    //   socket.on('mrRezParticipant', (data) => {
+    //     console.log('123124');
+    //     setIsAlarm(true);
+    //     setOpen3(true);
+    //     console.log(data);
+    //     setAlarmData({ ...alarmData, mrRezParticipant: data });
+    //   });
+    // }
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 해제
+    return () => {
+      // socket.off('serverEvent');
+    };
+  }, [
+    // socket,
+    isAlarm
+  ]);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar isAdminMode={isAdminMode}>
@@ -117,15 +177,46 @@ const Header = (props) => {
                   </Box>
                 </Stack>
               </StyledBox>
+              {/* 알림이있으면 표시 */}
               <Badge
                 sx={{ flexGrow: 1, margin: '0px !important' }}
                 badgeContent=" "
                 color="error"
                 variant="dot"
+                invisible={!isAlarm}
               >
-                <StyledNotificationsIcon isAdminMode={isAdminMode} />
+                {/* 종모양 */}
+                <StyledNotificationsIcon
+                  isAdminMode={isAdminMode}
+                  onClick={handleClick}
+                />
               </Badge>
-
+              <Popover
+                open={open2}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+              >
+                <Typography sx={{ p: 2 }}>
+                  {alarmData ? alarmData.mrRezParticipant : '알림이 없습니다'}
+                </Typography>
+              </Popover>
+              <Popover
+                open={open3}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+              >
+                <Typography sx={{ p: 2 }}>
+                  읽지 않은 알림이 있습니다.
+                </Typography>
+              </Popover>
               {/* Popover 영역
               <Popper
                 open={open}
@@ -190,7 +281,9 @@ const Header = (props) => {
               </Popper> */}
             </Stack>
           </Box>
-          <Button onClick={handleLogOut}>로그아웃</Button>
+          <Button onClick={handleLogOut}>
+            {isAlarm ? 'qwe' : 'asd'}로그아웃
+          </Button>
         </StyledToolbar>
         <StyledSubToolbar direction="row">
           <StyledButton onClick={onMenuIconClick}>

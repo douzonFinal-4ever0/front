@@ -259,7 +259,6 @@ const MileageChart = () => {
             <Typography
               height="48px"
               display="flex"
-              color="#4ecb71"
               marginRight="8px"
               alignItems="center"
             >

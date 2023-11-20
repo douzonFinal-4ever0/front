@@ -10,11 +10,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Stack,
-  Tooltip,
-  Typography
+  Stack
 } from '@mui/material';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -33,8 +30,10 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
+import { useContext } from 'react';
+import { SocketContext, useSocket } from '../../../../utils/SocketProvider';
 
-const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
+const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const location = useLocation();
   const currentURL = location.pathname;
   const dispatch = useDispatch();
@@ -62,7 +61,9 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
   const [ptList, setPtList] = useState(mr_pt_list);
   // 회의명 태그 클릭한 데이터
   const [clickTagData, setClickTagData] = useState([]);
-
+  // const socket = useContext(SocketContext);
+  const socket = useSocket();
+  console.log(socket);
   useEffect(() => {
     if (
       m_name !== '' &&
@@ -92,7 +93,9 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
@@ -108,7 +111,6 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
       mr_code: selectMrCard.mr_code
     };
 
-    // 예약 정보 리덕스 저장 -> 예약 완료 페이지에서 사용하기 위함
     dispatch(setRezData({ data }));
     try {
       const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
@@ -117,10 +119,15 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
         navigation('/mr/rez/confirm');
+        //예약 완료하면 참석자들에게 알림
+        const mr_rez_code = res.data;
+        console.log(mr_rez_code);
+        const jwt = getJwtToken();
+        socket.emit('allParticipant', { ptList, mr_rez_code, jwt });
         return;
       } else if (res.status === 400) {
         // 서버에서 상태 코드 400이면 중복 예약
-        alert('조금 전 예약 완료된 회의실입니다 😧 ');
+        alert('이미 예약된 회의실입니다.');
         return;
       } else if (res.status === 405) {
         // 서버에서 상태 코드 405이면 Method Not Allowed
@@ -131,7 +138,7 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
         console.log('Unexpected status code:', res.status);
       }
     } catch (err) {
-      alert('조금 전 예약 완료된 회의실입니다 😧');
+      alert('이미 예약된 회의실입니다.');
       console.error(err);
     }
   };
@@ -158,20 +165,15 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
               >
-                <SectionTitle
-                  title="예약 정보 (필수)"
-                  sx={{ fontSize: '16px' }}
-                >
+                <SectionTitle title="예약 정보*" sx={{ fontSize: '16px' }}>
                   <AccessTimeRoundedIcon />
                 </SectionTitle>
               </AccordionSummary>
               <AccordionDetails>
                 <RezForm
-                  recentRez={recentRez}
+                  recentMNames={recentMNames}
                   isReadOnly={isReadOnly}
                   setClickTagData={setClickTagData}
-                  handleChange={handleChange}
-                  setExpanded={setExpanded}
                 />
               </AccordionDetails>
             </Accordion>
@@ -192,7 +194,6 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
                 expandIcon={<KeyboardArrowDownRoundedIcon />}
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
-                sx={{ display: 'flex', alignItems: 'center', height: '100%' }}
               >
                 <SectionTitle title="내부 참석자" sx={{ fontSize: '16px' }}>
                   <PersonRoundedIcon />
@@ -233,6 +234,32 @@ const RezSection = ({ selectMrCard, recentRez, isReadOnly }) => {
                 <OutterPtForm />
               </AccordionDetails>
             </Accordion> */}
+
+            {/* 추가 장비 */}
+            <Accordion
+              expanded={expanded === 'supplies'}
+              onChange={handleChange('supplies')}
+              sx={{
+                '&.MuiPaper-root': {
+                  border: `3px solid ${
+                    expanded === 'supplies' ? palette.grey['500'] : 'none'
+                  }`
+                }
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<KeyboardArrowDownRoundedIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+              >
+                <SectionTitle title="추가 장비" sx={{ fontSize: '16px' }}>
+                  <AddCircleOutlineOutlinedIcon />
+                </SectionTitle>
+              </AccordionSummary>
+              <AccordionDetails>
+                <SuppliesForm />
+              </AccordionDetails>
+            </Accordion>
           </Box>
           {currentURL === '/mr/rez/history' ? null : (
             <RectangleBtn
@@ -252,8 +279,4 @@ export default RezSection;
 
 const StyledForm = styled('form')(() => ({
   height: '100%'
-}));
-
-const StyledInfoIcon = styled(InfoRoundedIcon)(({ theme }) => ({
-  color: '#555'
 }));
