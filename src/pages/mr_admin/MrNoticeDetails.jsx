@@ -77,6 +77,10 @@ const MrNoticeDetails = () => {
         console.error('데이터 가져오기 오류:', error);
       });
   };
+  /**공지 수정 이벤트 */
+  const handleUpdateNotice = () => {
+    navigate(`../Notice?notice_code=${notice_code}`);
+  };
 
   return (
     <>
@@ -133,7 +137,7 @@ const MrNoticeDetails = () => {
                             sx={{
                               padding: '14px 12px'
                             }}
-                            handlebtn={handleMrList}
+                            handlebtn={handleUpdateNotice}
                           />
                         </Grid>
                         <Grid item xs={6}>

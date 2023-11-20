@@ -9,7 +9,7 @@ import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../common/RectangleBtn.jsx';
 
-const SuppliesList = () => {
+const SuppliesList = ({ onGetSelectedRowsData }) => {
   const [SpList, setSpList] = useState([]);
   const [spType, setSpType] = useState('');
   const [selectedSpList, setSelectedSpList] = useState([]);
@@ -28,8 +28,11 @@ const SuppliesList = () => {
     });
     return selectedRowsData;
   };
-  const selectedArray = getSelectedRowsData();
-  console.log(selectedArray);
+  useEffect(() => {
+    const selectedArray = getSelectedRowsData();
+    // console.log(selectedArray);
+    onGetSelectedRowsData(selectedArray);
+  }, [rowSelectionModel]);
   /*-------------------------------------------------------------------------------------- */
   useEffect(() => {
     axiosInstance.axiosInstance

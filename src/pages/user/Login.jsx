@@ -13,11 +13,8 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import JWTdecode from '../../components/common/JWTdecode';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
+import { useSocket } from '../../utils/SocketProvider';
 import axiosInstance from '../../utils/axios';
-import socketIOClient, { io } from 'socket.io-client';
-import { useContext } from 'react';
-import { SocketContext, useSocket } from '../../utils/SocketProvider';
-import { useEffect } from 'react';
 
 // import SocketContext from '../../utils/SocketContext';
 
@@ -46,6 +43,9 @@ const Login = () => {
       .post('/api/v1/user/login', FormToData)
       .then((res) => {
         setJwt('Bearer ' + res.data.token);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
     <JWTdecode />;
     // console.log(socket);

@@ -320,13 +320,13 @@ const MrStatistics = () => {
         // width={'auto'}
         width={'auto'}
         data={[
-          { value: mrRezRow.total - mrRezRow.rez_row_count, name: '사용 ' },
-          { value: mrRezRow.rez_row_count, name: '미사용 ' }
+          { value: mrRezRow.rez_row_count, name: '사용 ' },
+          { value: mrRezRow.total - mrRezRow.rez_row_count, name: '미사용 ' }
         ]}
       />
       <Typography variant="body1">
-        💡총 {mrRezRow.total}개의 회의실중{' '}
-        {mrRezRow.total - mrRezRow.rez_row_count}개 회의실이 운영되었습니다.
+        💡총 {mrRezRow.total}개의 회의실중 {mrRezRow.rez_row_count}개 회의실이
+        운영되었습니다.
       </Typography>
     </CardContent>
   );
@@ -407,7 +407,7 @@ const MrStatistics = () => {
   const cardContent6 = (
     <CardContent>
       <Typography gutterBottom variant="h4" component="div">
-        📈총 예약 건수
+        📈주간 예약 현황
       </Typography>
       <MrContrastChart
         width={'auto'}

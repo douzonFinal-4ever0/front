@@ -91,8 +91,8 @@ const MenuList = (props) => {
       icon: <StyledCampaignOutlinedIcon isAdminMode={isAdminMode} />,
       categories: [
         { index: 1, title: '공지사항 작성', url: '/mr/admin/Notice' },
-        { index: 2, title: '공지사항 조회', url: '/mr/admin/NoticeList' },
-        { index: 3, title: '테스트페이지', url: '/mr/admin/Test' }
+        { index: 2, title: '공지사항 조회', url: '/mr/admin/NoticeList' }
+        // { index: 3, title: '테스트페이지', url: '/mr/admin/Test' }
       ]
     }
   ];

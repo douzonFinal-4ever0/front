@@ -4,7 +4,6 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import {
   Box,
-  Container,
   Divider,
   Grid,
   List,
@@ -26,28 +25,28 @@ const QRPage = () => {
   const [mr_code, setMr_code] = useState();
   const [mr, setMr] = useState();
   const [status, setStatus] = useState(true);
+  console.log(mr_rez_code);
   useEffect(() => {
-    axiosInstance.axiosInstance
+    axiosInstance.axiosQR
       .get(`/mr/mrRez/${mr_rez_code}`)
       .then((res) => {
         setRezData(res.data);
         setMr_code(res.data.mr_code);
         // const mr_code = res.data.mr_code;
-        axiosInstance.axiosInstance
-          .get(`/mr/${res.data.mr_code}`)
-          .then((res) => {
-            setMr(res.data);
-            setStatus(res.data.is_used);
-          });
+        axiosInstance.axiosQR.get(`/mr/${res.data.mr_code}`).then((res) => {
+          setMr(res.data);
+          setStatus(res.data.is_used);
+        });
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
       });
   }, []);
-  //   console.log(mr_code);
+  console.log(mr_code);
   console.log(status);
+  console.log(rezData);
   const handleCheckIn = () => {
-    axiosInstance.axiosInstance
+    axiosInstance.axiosQR
       .patch(`/mr/mrCheckIn/${mr_code}`)
       .then((res) => {
         console.log(res.data);
@@ -58,7 +57,7 @@ const QRPage = () => {
       });
   };
   const handleCheckOut = () => {
-    axiosInstance.axiosInstance
+    axiosInstance.axiosQR
       .patch(`/mr/mrCheckOut/${mr_code}`)
       .then((res) => {
         console.log(res.data);
@@ -70,99 +69,97 @@ const QRPage = () => {
   };
 
   return (
-    <Container
+    <Paper
+      elevation={3}
       sx={{
+        padding: '15px',
+        height: 'auto',
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        margin: 'auto',
-        justifyItems: 'center',
         justifyContent: 'center',
         alignContent: 'center',
-        padding: '10px',
-        height: '100%',
-        width: '500px'
+        alignItems: 'center',
+        justifyItems: 'center',
+        margin: 'auto'
       }}
     >
-      <Paper elevation={3} sx={{ padding: '15px', height: 'auto' }}>
-        <Box sx={{ width: 600 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              {mr && <MrInfoSection data={mr} />}
-            </Grid>
-            <Grid item xs={6}>
-              <Typography sx={{ mt: 4, mb: 2 }} variant="h4" component="div">
-                예약 정보
-              </Typography>
-              <Divider />
-              <List>
-                <ListItem>
-                  <ListItemIcon sx={{ color: '#000000' }}>
-                    <DnsOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={rezData && rezData.m_name} />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonAddAltOutlinedIcon sx={{ color: '#000000' }} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      rezData &&
-                      rezData.name +
-                        ' ' +
-                        rezData.position_name +
-                        ' (' +
-                        rezData.dept_name +
-                        ')'
-                    }
-                  />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemIcon>
-                    <CalendarMonthOutlinedIcon sx={{ color: '#000000' }} />
-                  </ListItemIcon>
-                  <ListItemText primary={rezData && rezData.rez_date} />
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemIcon>
-                    <ScheduleOutlinedIcon sx={{ color: '#000000' }} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      rezData && rezData.start_time + ' ~ ' + rezData.end_time
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </List>
-            </Grid>
+      <Box sx={{ width: 'auto' }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            {mr && <MrInfoSection data={mr} />}
           </Grid>
-          {status ? (
-            <RectangleBtn
-              category={'register'}
-              text={'입실'}
-              sx={{
-                padding: '14px 12px'
-              }}
-              handlebtn={handleCheckIn}
-            />
-          ) : (
-            <RectangleBtn
-              category={'delete'}
-              text={'퇴실'}
-              sx={{
-                padding: '14px 12px'
-              }}
-              handlebtn={handleCheckOut}
-            />
-          )}
-        </Box>
-      </Paper>
-    </Container>
+          <Grid item xs={12}>
+            <Typography sx={{ mt: 1, mb: 2 }} variant="h4" component="div">
+              예약 정보
+            </Typography>
+            <Divider />
+            <List>
+              <ListItem>
+                <ListItemIcon sx={{ color: '#000000' }}>
+                  <DnsOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={rezData && rezData.m_name} />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemIcon>
+                  <PersonAddAltOutlinedIcon sx={{ color: '#000000' }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    rezData &&
+                    rezData.name +
+                      ' ' +
+                      rezData.position_name +
+                      ' (' +
+                      rezData.dept_name +
+                      ')'
+                  }
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemIcon>
+                  <CalendarMonthOutlinedIcon sx={{ color: '#000000' }} />
+                </ListItemIcon>
+                <ListItemText primary={rezData && rezData.rez_date} />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemIcon>
+                  <ScheduleOutlinedIcon sx={{ color: '#000000' }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    rezData && rezData.start_time + ' ~ ' + rezData.end_time
+                  }
+                />
+              </ListItem>
+              <Divider />
+            </List>
+          </Grid>
+        </Grid>
+        {status ? (
+          <RectangleBtn
+            category={'register'}
+            text={'입실'}
+            sx={{
+              padding: '14px 12px'
+            }}
+            handlebtn={handleCheckIn}
+          />
+        ) : (
+          <RectangleBtn
+            category={'delete'}
+            text={'퇴실'}
+            sx={{
+              padding: '14px 12px'
+            }}
+            handlebtn={handleCheckOut}
+          />
+        )}
+      </Box>
+    </Paper>
+    // </Container>
   );
 };
 
