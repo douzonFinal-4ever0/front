@@ -47,7 +47,6 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const [bmGroupList, setBmGroupList] = useState([]);
   // 즐겨찾기 멤버 토글 데이터
   const [isToggleBmMemList, setIsToggleBmMemList] = useState([]);
-  console.log(ptList);
 
   useEffect(() => {
     getMembersApi(); // 전체 사용자 리스트 조회
@@ -160,28 +159,13 @@ const PtCardList = ({
   // 참석자 카드 삭제 버튼 이벤트
   const handleCardDeleteBtn = (e) => {
     const deleteIndex = e.currentTarget.tabIndex;
-    console.log(ptList);
+
     let copyList = [...data];
     copyList.splice(deleteIndex, 1);
     const newRez = { ...rezData, mr_pt_list: copyList };
     dispatch(setRezData({ data: newRez }));
     setPtList(copyList);
-    // setApplyMemberList(copyList);
   };
-  // const [recoms, setRecoms] = useState(tagData);
-
-  // useEffect(() => {
-  //   // 예약자 제외 필터링
-  //   setRecoms(tagData && [...tagData]);
-
-  //   if (recoms) {
-  //     const res =
-  //       recoms && recoms.filter((item) => item.mem_code !== masterCode);
-  //     setRecoms(res);
-  //   }
-  // }, []);
-
-  console.log(tagData);
 
   const handleRecomIcon = (e) => {
     // recomList 에서 제거

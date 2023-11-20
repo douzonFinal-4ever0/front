@@ -210,7 +210,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
             </Accordion>
 
             {/* 외부 참석자 */}
-            <Accordion
+            {/* <Accordion
               expanded={expanded === 'outerPt'}
               onChange={handleChange('outerPt')}
               sx={{
@@ -233,7 +233,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
               <AccordionDetails>
                 <OutterPtForm />
               </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
 
             {/* 추가 장비 */}
             <Accordion
