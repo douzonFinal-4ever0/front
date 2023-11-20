@@ -217,12 +217,12 @@ const MrRegister = () => {
           title: '엑셀 등록',
           content: <ExcelImport />
         }
-      : '',
-    !isEditMode
-      ? {
-          title: <ExcelDownloadButton />
-        }
       : ''
+    // !isEditMode
+    //   ? {
+    //       title: <ExcelDownloadButton />
+    //     }
+    //   : ''
   ];
   /*---------------------------------------------------------------------------------------------------------*/
   /**데이터 그리드 더블 클릭이벤트 */
@@ -238,7 +238,9 @@ const MrRegister = () => {
   return (
     <>
       <Spinner isLoading={isLoading} />
-      <SubHeader title={'회의실'}></SubHeader>
+      <SubHeader title={'회의실'}>
+        <ExcelDownloadButton />
+      </SubHeader>
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar
           widthP={20}

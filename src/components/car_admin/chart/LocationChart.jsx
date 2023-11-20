@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import axiosInstance from '../../../utils/axios';
 
-const LocationChart = () => {
+const LocationChart = ({ searchData }) => {
   // Ref 생성
   const mapContainerRef = useRef(null);
 
@@ -15,7 +15,7 @@ const LocationChart = () => {
 
   const getLocation = () => {
     axiosInstance.axiosInstance
-      .get('/manager/car/getLocationStatistics')
+      .post('/manager/car/getLocationStatistics', searchData)
       .then((res) => {
         console.log(res.data);
         const newMakerData = res.data.map((item) => {
@@ -81,7 +81,7 @@ const LocationChart = () => {
 
   useEffect(() => {
     getLocation();
-  }, []); // 비어있는 의존성 배열을 전달하여 한 번만 실행되도록 설정
+  }, [searchData]); // 비어있는 의존성 배열을 전달하여 한 번만 실행되도록 설정
 
   useEffect(() => {
     if (markerData.length > 0) {

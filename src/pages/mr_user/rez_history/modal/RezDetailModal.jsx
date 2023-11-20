@@ -34,21 +34,21 @@ import { useSocket } from '../../../../utils/SocketProvider';
 const RezDetailModal = ({
   open,
   handleModal,
-  data,
+  data, // 해당 예약 객체
+  steRezDetail,
   isModify,
   handleModifyMode,
-  getMrRezApi
+  getMrRezApi,
+  list, // 전체 예약 리스트
+  setRezList,
+  events,
+  setEvents
 }) => {
-  console.log(data);
-
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
-
-  console.log('여기');
-  console.log(data);
 
   const detailInfo = {
     m_name: data && data.m_name,
@@ -78,6 +78,7 @@ const RezDetailModal = ({
         `/mr/rez?mr_rez_code=${data.mr_rez_code}`
       );
 
+
       if (res.status === 200) {
         console.log(data.mr_pt_list);
         var memList = [];
@@ -100,7 +101,15 @@ const RezDetailModal = ({
         // return;
       }
 
-      getMrRezApi(); // 페이지 재로드
+      if (res.status !== 200) return;
+      const reData = list.filter(
+        (item) => item.mr_rez_code !== data.mr_rez_code
+      );
+      setRezList(reData);
+
+
+      const reEvent = events.filter((e) => e.id !== data.mr_rez_code);
+      setEvents(reEvent);
 
       // 스낵바
       handleSetSnackbarContent('예약 삭제 되었습니다. ');
@@ -145,9 +154,10 @@ const RezDetailModal = ({
 
   // 수정 버튼 이벤트
   const handleModifyBtn = () => {
-    const ptList = [...data.mr_pt_list];
+    const ptList = JSON.parse(JSON.stringify(data.mr_pt_list));
     const list = { ...data, mr_pt_list: ptList };
-    if (list.length !== 0) {
+
+    if (list.mr_pt_list.length !== 0) {
       list.mr_pt_list.forEach((item) => {
         item.memVO.mem_code = item.mem_code;
       });
@@ -173,11 +183,10 @@ const RezDetailModal = ({
   const handleSaveBtn = () => {
     try {
       const updateRezApi = async () => {
-        const pts = [...rezData.mr_pt_list, userData];
+        const pts = [...rezData.mr_pt_list];
 
         const newData = {
           ...rezData,
-          mr_pt_list: pts,
           mem_code: userData.mem_code,
           mr_rez_code: data.mr_rez_code
         };
@@ -187,6 +196,37 @@ const RezDetailModal = ({
 
         if (res.status === 200) {
         }
+
+        // // 이벤트 업데이트
+        // const newEvent = events.filter((e) => e.id === newData.mr_rez_code);
+        // if (newEvent.length !== 0) {
+        //   newEvent[0].start = `${newData.rez_date} ${newData.rez_start_time}:00`;
+        //   newEvent[0].end = `${newData.rez_date} ${newData.rez_end_time}:00`;
+
+        //   const lestEvent = events.filter((e) => e.id !== newData.mr_rez_code);
+
+        //   const result = [...lestEvent, ...newEvent];
+        //   setEvents(result);
+        // }
+
+        // // 데이터 업데이트
+        // const findData = list.filter(
+        //   (item) => item.mr_rez_code === newData.mr_rez_code
+        // );
+        // if (findData.length !== 0) {
+        //   findData[0].m_name = newData.m_name;
+        //   findData[0].m_type = newData.m_type;
+        //   findData[0].rez_start_time = `${newData.rez_date} ${newData.rez_start_time}:00`;
+        //   findData[0].rez_end_time = `${newData.rez_date} ${newData.rez_end_time}:00`;
+        //   findData[0].mr_pt_list = newData.mr_pt_list;
+
+        //   const lestData = list.filter(
+        //     (item) => item.mr_rez_code !== newData.mr_rez_code
+        //   );
+        //   const resultData = [...lestData, ...findData];
+        //   steRezDetail(...findData);
+        //   setRezList(resultData);
+        // }
 
         // 리덕스 리셋
         const initialState = {
@@ -204,7 +244,7 @@ const RezDetailModal = ({
         dispatch(setRezData({ data: initialState }));
         getMrRezApi(); // 페이지 재로드
 
-        // 스낵바
+        //스낵바;
         handleSetSnackbarContent('예약 수정 완료되었습니다. ');
         handleOpenSnackbar();
         handleModifyMode();

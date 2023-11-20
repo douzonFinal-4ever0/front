@@ -33,7 +33,7 @@ const status = [
 
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
-const MileageChart = () => {
+const MileageChart = ({ searchData }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [totalOperDistance, setTotalOperDistance] = useState({});
   const [chartData, setChartData] = useState({
@@ -54,7 +54,7 @@ const MileageChart = () => {
 
   useEffect(() => {
     axiosInstace.axiosInstance
-      .get('/manager/car/weekOperationStatistics')
+      .post('/manager/car/weekOperationStatistics', searchData)
       .then((res) => {
         const daysOfWeek = [1, 2, 3, 4, 5]; // 1~5까지의 요일 값
 
@@ -88,7 +88,7 @@ const MileageChart = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [searchData]);
 
   useEffect(() => {
     setChartData((prevData) => {
