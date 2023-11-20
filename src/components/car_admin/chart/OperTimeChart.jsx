@@ -14,14 +14,15 @@ import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import { Circle } from '@mui/icons-material';
 
-const OperTimeChart = () => {
+const OperTimeChart = ({ searchData }) => {
   const labels = ['차량 운행 시간', '전체 근무 시간'];
   const [series, setSeries] = useState([]);
   const [totalOperTime, setTotalOperTime] = useState(0);
+  const [operTimeData, setOperTimeData] = useState({});
 
   useEffect(() => {
     axiosInstance.axiosInstance
-      .get('/manager/car/getOperTimeStatistics')
+      .post('/manager/car/getOperTimeStatistics', searchData)
       .then((res) => {
         console.log(res.data);
         setSeries([
@@ -33,7 +34,7 @@ const OperTimeChart = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [searchData]);
 
   const state = {
     options: {
@@ -116,7 +117,7 @@ const OperTimeChart = () => {
             </ListItemIcon>
             <ListItemText
               primary={item}
-              secondary={`${series[index]}건`}
+              secondary={`${parseInt(series[index]).toFixed(0)}%`}
               secondaryTypographyProps={{ marginLeft: '10px' }}
               primaryTypographyProps={{
                 fontSize: '13px',

@@ -26,6 +26,7 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
   const dispatch = useDispatch();
   const isSnackbarOpen = useSelector((state) => state.snackbar.open);
   const snackbarContent = useSelector((state) => state.snackbar.content);
+  const snackbarStatus = useSelector((state) => state.snackbar.status);
 
   const handleCloseSnackbar = () => {
     dispatch(closeSanckbar());
@@ -52,7 +53,7 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
           <Outlet />
         </StyledMain>
       </StyledRoot>
-      <Snackbar
+      <StyledSnackBar
         open={isSnackbarOpen}
         autoHideDuration={2000}
         onClose={handleCloseSnackbar}
@@ -60,12 +61,12 @@ const Layout = ({ isAdminMode, setIsAdminMode }) => {
       >
         <Alert
           onClose={handleCloseSnackbar}
-          severity="success"
+          severity={snackbarStatus}
           sx={{ width: '100%' }}
         >
           {snackbarContent}
         </Alert>
-      </Snackbar>
+      </StyledSnackBar>
     </>
   );
 };
@@ -95,4 +96,15 @@ const StyledMain = styled('div')(({ theme, isSidebarOpen }) => ({
   [theme.breakpoints.down('md')]: {
     width: '100%'
   }
+}));
+
+const StyledSnackBar = styled(Snackbar)(({ theme, sx }) => ({
+  ...sx,
+  '& .MuiPaper-rounded': {
+    backgroundColor: '#ffffff',
+    border: '0px',
+    borderRadius: '2px'
+  },
+  '& .MuiAlert-message': { color: '#000000' },
+  '& .MuiAlert-action': { color: '#000000' }
 }));
