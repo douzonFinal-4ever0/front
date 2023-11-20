@@ -54,13 +54,15 @@ io.on('connection', (socket) => {
       .then((res) => {
         // console.log('alarmInfo');
         console.log(res.data);
-        var filterData = res.data.filter((item) => {
-          return (
-            // item['contents'].includes('전체') ||
-            !item['mem_code'] || item['mem_code'].includes(memCode)
-          );
-        });
-        io.to(users.get(memCode)).emit('loadAlarm', filterData);
+        if (res.data !== null) {
+          var filterData = res.data.filter((item) => {
+            return (
+              // item['contents'].includes('전체') ||
+              !item['mem_code'] || item['mem_code'].includes(memCode)
+            );
+          });
+          io.to(users.get(memCode)).emit('loadAlarm', filterData);
+        }
       });
   });
 

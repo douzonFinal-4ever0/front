@@ -46,6 +46,7 @@ import {
   openSanckbar,
   setSnackbarContent
 } from '../../redux/reducer/SnackbarSlice';
+
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -344,7 +345,29 @@ const Register = () => {
       });
   };
 
-  const est_mileageCal = (locList) => {
+  const est_mileageCal = (locList, start_at) => {
+    console.log(start_at);
+    // 주어진 밀리초
+    const timestampInMilliseconds = start_at;
+
+    // 밀리초를 날짜로 변환
+    const date = new Date(timestampInMilliseconds);
+
+    // 원하는 날짜 형식으로 포맷팅
+    const formattedDateTime = date
+      .toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })
+      .replace(
+        /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/,
+        '$3$1$2$4$5$6'
+      );
+
     if (locList) {
       const destCoordinate =
         locList.dest_loc[0].toString() + ',' + locList.dest_loc[1].toString();
@@ -367,7 +390,8 @@ const Register = () => {
           startX: locList.receipt_loc[0],
           startY: locList.receipt_loc[1],
           //gps시간 예약시간으로
-          gpsTime: '20191125153000',
+          // gpsTime: '20191125153000',
+          gpsTime: formattedDateTime,
           speed: 10,
           uncetaintyP: 1,
           uncetaintyA: 1,
@@ -584,7 +608,8 @@ const Register = () => {
             setIsLoading(true);
             const locList = res.data;
             console.log(locList);
-            est_mileageCal(locList);
+            console.log(Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at));
           });
       }
     } else {
@@ -606,7 +631,8 @@ const Register = () => {
             setIsLoading(true);
             const locList = res.data;
             console.log(locList);
-            est_mileageCal(locList);
+            console.log(Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at));
           });
       }
     }
@@ -1154,10 +1180,13 @@ const Register = () => {
                         InputProps={{
                           inputProps: { min: 0 },
                           endAdornment: (
-                            <InputAdornment position="end">분</InputAdornment>
+                            <InputAdornment position="end">
+                              {Math.floor(est_time / 60 / 60)} 시간{' '}
+                              {Math.floor((est_time / 60) % 60)} 분
+                            </InputAdornment>
                           )
                         }}
-                        value={est_time / 60}
+                        value={(est_time / 60).toFixed(1)}
                         readOnly
                       />
                     </Grid>

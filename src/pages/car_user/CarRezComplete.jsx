@@ -77,96 +77,138 @@ const CarRezComplete = () => {
               <Typography variant="h3" color="text.secondary" align="left">
                 예약 정보
               </Typography>
-              {/* <Grid
-              container
-              // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              sx={{
-                mt: '2%',
-                '& .infoTitle': {
-                  backgroundColor: '#eeeeee'
-                },
-                '& .MuiListItem-gutters': {
-                  borderBottom: '1px solid #bdbdbd'
-                }
-              }}
-            >
               <Grid
-                item
-                sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
-                xs={12}
+                container
+                // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                sx={{
+                  mt: '2%',
+                  '& .infoTitle': {
+                    backgroundColor: '#eeeeee'
+                  },
+                  '& .MuiListItem-gutters': {
+                    borderBottom: '1px solid #bdbdbd'
+                  }
+                }}
               >
-                <ListItem className="infoTitle">
-                  <ListItemText primary="예약 번호" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
+                <Grid
+                  item
+                  sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                  xs={12}
+                >
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="예약 번호" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary={carRez.car_rez_code} />
+                  </ListItem>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="예약자 이름" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary={carRez.memDTO.name} />
+                  </ListItem>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="목적" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary={carRez.detail} />
+                  </ListItem>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="목적지" />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary={carRez.carLoc[2].address} />
+                  </ListItem>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="대여" />
+                  </ListItem>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary={'반납'} />
+                  </ListItem>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={6}>
+                  <Grid
+                    item
+                    sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                    xs={12}
+                  >
+                    <Grid item sx={{ display: 'flex' }} xs={4}>
+                      <ListItem className="infoTitle">
+                        <ListItemText primary="인수지" />
+                      </ListItem>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex' }} xs={8}>
+                      <ListItem>
+                        <ListItemText primary={carRez.carLoc[0].address} />
+                      </ListItem>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={6}>
+                  <Grid
+                    item
+                    sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                    xs={12}
+                  >
+                    <Grid item sx={{ display: 'flex' }} xs={4}>
+                      <ListItem className="infoTitle">
+                        <ListItemText primary="반납지" />
+                      </ListItem>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex' }} xs={8}>
+                      <ListItem>
+                        <ListItemText primary={carRez.carLoc[1].address} />
+                      </ListItem>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={6}>
+                  <Grid
+                    item
+                    sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                    xs={12}
+                  >
+                    <Grid item sx={{ display: 'flex' }} xs={4}>
+                      <ListItem className="infoTitle">
+                        <ListItemText primary="대여일자" />
+                      </ListItem>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex' }} xs={8}>
+                      <ListItem>
+                        <ListItemText primary={carRez.start_at} />
+                      </ListItem>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sx={{ display: 'flex' }} xs={6}>
+                  <Grid
+                    item
+                    sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                    xs={12}
+                  >
+                    <Grid item sx={{ display: 'flex' }} xs={4}>
+                      <ListItem className="infoTitle">
+                        <ListItemText primary="반납일자" />
+                      </ListItem>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex' }} xs={8}>
+                      <ListItem>
+                        <ListItemText primary={carRez.return_at} />
+                      </ListItem>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="예약 날짜" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="대여 날짜" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="반납 날짜" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="인수지" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="반납지" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="목적지" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="예상 주행 거리" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-              <Grid item sx={{ display: 'flex' }} xs={12}>
-                <ListItem className="infoTitle">
-                  <ListItemText primary="예약 상태" />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={'예약 상태'} />
-                </ListItem>
-              </Grid>
-            </Grid>
+
+              {/*
             <table>
               <tr>
                 <td>예약번호 : {carRez.car_rez_code}</td>
@@ -220,7 +262,21 @@ const CarRezComplete = () => {
           </StyledContainer>
         </Grid>
         <Grid item xs={6}>
-          <StyledContainer bgcolor={'#fff'} height={'500px'}></StyledContainer>
+          <StyledContainer bgcolor={'#fff'} height={'500px'}>
+            <KakaoMap3
+              locations={carRez.carLoc}
+              titles={[
+                carRez.carLoc[0].loc_type,
+                carRez.carLoc[1].loc_type,
+                carRez.carLoc[2].loc_type
+              ]}
+              contents={[
+                carRez.carLoc[0].address,
+                carRez.carLoc[1].address,
+                carRez.carLoc[2].address
+              ]}
+            />
+          </StyledContainer>
         </Grid>
       </Grid>
     </MainContainer>

@@ -362,9 +362,7 @@ const Header = (props) => {
               </Popper> */}
             </Stack>
           </Box>
-          <Button onClick={handleLogOut}>
-            {isAlarm ? 'qwe' : 'asd'}로그아웃
-          </Button>
+          <Button onClick={handleLogOut}>로그아웃</Button>
         </StyledToolbar>
         <StyledSubToolbar direction="row">
           <StyledButton onClick={onMenuIconClick}>

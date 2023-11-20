@@ -216,29 +216,28 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
           console.log(res.data);
           // 콘솔에 FormData 내용 출력
           console.log(selectedFiles);
-          const selectedFiles2 = Array.from(selectedFiles);
-          console.log(selectedFiles2);
-          var imgformData = new FormData();
-          selectedFiles2.forEach((file) => {
-            imgformData.append('images', file);
-          });
-
-          // for (var pair of imgformData.entries()) {
-          //   console.log(pair[0]);
-          //   console.log(pair[1]);
-          // }
-          axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
-            (res) => {
-              console.log(res.data);
-              setSelectedFile(null);
-              setSelectedFiles([]);
-              setExpList([]);
-              handleClose();
-              alert('운행 처리 완료');
-              handleOpenSnackbar();
-              handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
+          if (selectedFiles.length !== 0) {
+            const selectedFiles2 = Array.from(selectedFiles);
+            console.log(selectedFiles2);
+            var imgformData = new FormData();
+            selectedFiles2.forEach((file) => {
+              imgformData.append('images', file);
+            });
+            if (imgformData) {
+              axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
+                (res) => {
+                  console.log(res.data);
+                }
+              );
             }
-          );
+          }
+          setSelectedFile(null);
+          setSelectedFiles([]);
+          setExpList([]);
+          handleClose();
+          alert('운행 처리 완료');
+          handleOpenSnackbar();
+          handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
         });
     }
   };
