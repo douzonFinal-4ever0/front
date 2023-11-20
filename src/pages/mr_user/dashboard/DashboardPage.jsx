@@ -237,10 +237,10 @@ const DashboardPage = () => {
             {/* 2단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={4} sx={{ height: '600px' }}>
+                <Grid item xs={4.2} sx={{ height: '600px' }}>
                   <RezList todayRezList={todayRezList} />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={7.8}>
                   <Statistics data={chartData} />
                 </Grid>
               </Grid>
@@ -249,10 +249,10 @@ const DashboardPage = () => {
             {/* 3단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={4.2}>
                   <Notice data={notice} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={7.8}>
                   asd
                 </Grid>
               </Grid>
