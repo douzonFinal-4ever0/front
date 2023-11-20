@@ -124,6 +124,12 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
         console.log(mr_rez_code);
         const jwt = getJwtToken();
         socket.emit('allParticipant', { ptList, mr_rez_code, jwt });
+        var memList = [];
+        for (let mem of ptList) {
+          memList.push(mem.mem_code);
+        }
+
+        socket.emit('changeDB', { memList, jwt });
         return;
       } else if (res.status === 400) {
         // 서버에서 상태 코드 400이면 중복 예약

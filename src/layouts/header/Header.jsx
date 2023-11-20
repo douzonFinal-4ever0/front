@@ -10,6 +10,10 @@ import {
   Button,
   Card,
   Chip,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   Paper,
   Popover,
   Stack,
@@ -31,6 +35,9 @@ import { HEADER_HIEGHT } from '../../config';
 import { palette } from '../../theme/palette';
 import { SocketContext, useSocket } from '../../utils/SocketProvider';
 import { useEffect } from 'react';
+import axiosInstance from '../../utils/axios';
+import Tabs from '../../components/common/Tabs';
+import AlarmList from '../../components/car_user/AlarmList';
 
 const Header = (props) => {
   const user = useSelector(setUserData).payload.user;
@@ -41,11 +48,13 @@ const Header = (props) => {
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
   const [isAlarm, setIsAlarm] = useState(false);
-  const [alarmData, setAlarmData] = useState(null);
+  const [alarmDatas, setAlarmDatas] = useState(null);
+  const [announcement, setAnnouncement] = useState(null);
   // 알림
+  const socket = useSocket();
   const [open2, setOpen2] = useState(false);
   // 읽지 않은 알림이 있다고 알려주는 알림
-  const [open3, setOpen3] = useState(false);
+  const [newAlarm, setNewAlarm] = useState(0);
   const dispatch = useDispatch();
   const { name, position_name, mem_code, dept_name } = user;
   // const handleClick = (newPlacement) => (event) => {
@@ -54,7 +63,7 @@ const Header = (props) => {
   //   setPlacement(newPlacement);
   // };
   const navigate = useNavigate();
-  const socket = useSocket();
+
   // const socket = useContext(SocketContext);
   const handleLogOut = () => {
     localStorage.removeItem('jwtToken');
@@ -70,45 +79,119 @@ const Header = (props) => {
         }
       })
     );
+    setAlarmDatas(null);
     socket.emit('disconnect_mem', mem_code);
-    socket.disconnect();
+    // socket.disconnect();
     navigate('/login');
   };
 
   const handleClick = (event) => {
-    setIsAlarm(false);
+    // setIsAlarm(false);
     setAnchorEl(event.currentTarget);
-    setOpen2(true);
-    setOpen3(false);
+    setOpen2(!open2);
+    // setOpen3(false);
+    console.log(alarmDatas);
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const clickAlarm = (alert_code) => {
+    const jwt = getJwtToken();
+    axiosInstance.axiosInstance
+      .patch(`http://localhost:8081/car_rez/clickAlarm/${alert_code}`)
+      .then((res) => {
+        if (res.status === 200) {
+          // socket.emit('clickAlarm', { alert_code, jwt, mem_code });
+          const memList = [mem_code];
+          console.log(memList);
+          socket.emit('changeDB', { memList, jwt });
+          // console.log(alarmDatas);
+        }
+      });
+    // socket.emit('clickAlarm', { alert_code, jwt, mem_code });
+    // socket.on('loadAlarm', (data) => {
+    //   setAlarmDatas({ data });
+    // });
+  };
   const handleClose = () => {
     setAnchorEl(null);
     setOpen2(false);
-    setAlarmData(null);
+    // setAlarmDatas(null);
   };
-
+  //처음 로그인 했을때 알림 확인
   useEffect(() => {
-    console.log('qweqwe');
-    console.log(isAlarm);
-    // if (socket !== null) {
-    //   socket.on('mrRezParticipant', (data) => {
-    //     console.log('123124');
-    //     setIsAlarm(true);
-    //     setOpen3(true);
-    //     console.log(data);
-    //     setAlarmData({ ...alarmData, mrRezParticipant: data });
-    //   });
-    // }
+    console.log(socket);
+    if (socket !== null) {
+      socket.on('loadAlarm', (datas) => {
+        console.log(datas.length);
+        setAlarmDatas(datas);
+        for (let data of datas) {
+          if (data.is_read === 0) {
+            setIsAlarm(true);
+          }
+        }
+      });
+      let cnt = 0;
+      if (alarmDatas !== null) {
+        alarmDatas.map((item) => {
+          if (item.is_read === 0) {
+            cnt++;
+          }
+        });
+        setNewAlarm(cnt);
+      }
+    }
+  }, [socket, isAlarm, alarmDatas]);
+  // useEffect(() => {
+  //   console.log(socket);
+  //   if (socket !== null) {
+  //     socket.on('loadAlarm', (datas) => {
+  //       // console.log(datas);
+  //       setAlarmDatas(datas);
+  //       for (let data of datas) {
+  //         if (data.is_read == 0) {
+  //           setIsAlarm(true);
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   console.log('qweqwe');
+  //   console.log(isAlarm);
+  //   if (socket !== null) {
+  //     socket.on('mrRezParticipant', (data) => {
+  //       console.log('123124');
+  //       setIsAlarm(true);
+  //       setOpen3(true);
+  //       console.log(data);
+  //       setAlarmData({ ...alarmData, mrRezParticipant: data });
+  //     });
+  //   }
 
-    // 컴포넌트 언마운트 시 이벤트 리스너 해제
-    return () => {
-      // socket.off('serverEvent');
-    };
-  }, [
-    // socket,
-    isAlarm
-  ]);
+  //   // 컴포넌트 언마운트 시 이벤트 리스너 해제
+  //   return () => {
+  //     // socket.off('serverEvent');
+  //   };
+  // }, [
+  //   // socket,
+  //   isAlarm
+  // ]);
+  const tabData = [
+    {
+      title: '새로운 알림',
+      content: (
+        <AlarmList alarmDatas={alarmDatas} clickAlarm={clickAlarm} read={0} />
+      )
+    },
+    {
+      title: '알람 내역',
+      content: (
+        <AlarmList alarmDatas={alarmDatas} clickAlarm={clickAlarm} read={1} />
+      )
+    }
+  ];
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <StyledAppBar isAdminMode={isAdminMode}>
@@ -180,9 +263,9 @@ const Header = (props) => {
               {/* 알림이있으면 표시 */}
               <Badge
                 sx={{ flexGrow: 1, margin: '0px !important' }}
-                badgeContent=" "
+                badgeContent={alarmDatas && newAlarm}
                 color="error"
-                variant="dot"
+                // variant="dot"
                 invisible={!isAlarm}
               >
                 {/* 종모양 */}
@@ -200,11 +283,9 @@ const Header = (props) => {
                   horizontal: 'left'
                 }}
               >
-                <Typography sx={{ p: 2 }}>
-                  {alarmData ? alarmData.mrRezParticipant : '알림이 없습니다'}
-                </Typography>
+                <Tabs tabData={tabData} sx={0}></Tabs>
               </Popover>
-              <Popover
+              {/* <Popover
                 open={open3}
                 anchorEl={anchorEl}
                 onClose={handleClose}
@@ -216,7 +297,7 @@ const Header = (props) => {
                 <Typography sx={{ p: 2 }}>
                   읽지 않은 알림이 있습니다.
                 </Typography>
-              </Popover>
+              </Popover> */}
               {/* Popover 영역
               <Popper
                 open={open}

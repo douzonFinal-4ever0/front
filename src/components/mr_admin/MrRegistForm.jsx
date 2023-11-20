@@ -24,7 +24,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import dayjs from 'dayjs';
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TimeField from '../../components/common/TimeField';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
@@ -38,6 +38,7 @@ import Modal from '../common/Modal';
 import RectangleBtn from '../common/RectangleBtn';
 import MrTag from './MrTag';
 import SuppliesList from './SuppliesList';
+import { useSocket } from '../../utils/SocketProvider.js';
 
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
@@ -334,11 +335,37 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     }
   };
   /*--------------------------------회의실 CRUD----------------------------------------- */
+
+  const socket = useSocket();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
+  const currentUser = useSelector((state) => state.user);
+  const mem_code = currentUser.mem_code;
+  const memList = [mem_code];
+
+  const mrAlarm = (alertDTO) => {
+    axiosInstance.axiosInstance
+      .post(`http://localhost:8081/car_rez/announcementSave`, alertDTO)
+      .then((res2) => {
+        if (res2.status === 200) {
+          socket.emit('allUsers', jwt);
+        }
+      });
+  };
+
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
     axiosInstance.axiosInstance
       .post('/mr/mrRegister', FormToData)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData.mr_name}\n회의실이 등록되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
+
         handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
@@ -348,11 +375,17 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         console.error('데이터 가져오기 오류:', error);
       });
   };
+
   /**회의실 수정 버튼 클릭 이벤트 */
   const handleUpdate = () => {
     axiosInstance.axiosInstance
       .patch('/mr/mrUpdate', FormToData2)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData2.mr_name}\n회의실이 수정되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
         handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
@@ -368,6 +401,11 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     axiosInstance.axiosInstance
       .patch('/mr/mrDeactivate', FormToData3)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData3.mr_name}\n회의실이 비활성화 되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();

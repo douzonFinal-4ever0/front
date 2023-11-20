@@ -29,6 +29,7 @@ import RezSection from '../../rez/section/RezSection';
 import RezInfo from '../../rez_confirm/section/RezInfo';
 import DeleteModal from './DeleteModal';
 import Progress from '../../../../components/mr_user/Progress';
+import { useSocket } from '../../../../utils/SocketProvider';
 
 const RezDetailModal = ({
   open,
@@ -61,12 +62,15 @@ const RezDetailModal = ({
     pt_list: data && data.mr_pt_list,
     mr_rez_code: data && data.mr_rez_code
   };
-
+  const socket = useSocket();
   // 삭제 모달창 취소 이벤트
   const handleDeleteModalClose = () => {
     setDeleteModal(false);
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
   // 삭세 모달창 삭제 확인 이벤트
   const handleDeleteConfirm = async () => {
     try {
@@ -74,11 +78,35 @@ const RezDetailModal = ({
         `/mr/rez?mr_rez_code=${data.mr_rez_code}`
       );
 
+
+      if (res.status === 200) {
+        console.log(data.mr_pt_list);
+        var memList = [];
+        for (let mem of data.mr_pt_list) {
+          memList.push(mem.mem_code);
+        }
+        for (let mem of data.mr_pt_list) {
+          const alertDTO = {
+            mem_code: mem.mem_code,
+            contents: `예약 번호 : ${data.mr_rez_code}\n회의실 예약이 취소되었습니다.`
+          };
+          axiosInstance.axiosInstance
+            .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
+            .then((res2) => {
+              if (res2.status === 200) {
+                socket.emit('changeDB', { memList, jwt });
+              }
+            });
+        }
+        // return;
+      }
+
       if (res.status !== 200) return;
       const reData = list.filter(
         (item) => item.mr_rez_code !== data.mr_rez_code
       );
       setRezList(reData);
+
 
       const reEvent = events.filter((e) => e.id !== data.mr_rez_code);
       setEvents(reEvent);
@@ -164,7 +192,10 @@ const RezDetailModal = ({
         };
 
         const res = await axiosInstance.axiosInstance.put('/mr/rez', newData);
-        if (res.status !== 200) return;
+        //수정시 없어진 사람이랑 추가된 사람 어떻게 할건지 생각
+
+        if (res.status === 200) {
+        }
 
         // // 이벤트 업데이트
         // const newEvent = events.filter((e) => e.id === newData.mr_rez_code);
