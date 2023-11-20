@@ -18,13 +18,13 @@ import { useEffect } from 'react';
 import axiosInstance from '../../../utils/axios';
 import LinkIcon from '@mui/icons-material/Link';
 
-const MaintUrgentChart = () => {
+const MaintUrgentChart = ({ searchData }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [maintStatisticsData, setMaintStatisticsData] = useState([]);
 
   useEffect(() => {
     axiosInstance.axiosInstance
-      .get('/manager/car/getMaintStatistics')
+      .post('/manager/car/getMaintStatistics', searchData)
       .then((res) => {
         console.log(res.data);
         setMaintStatisticsData(res.data);
@@ -33,14 +33,14 @@ const MaintUrgentChart = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [searchData]);
 
   return (
     <>
       {!isLoading && (
         <>
           <Grid container height="80%">
-            <Grid item xs={5}>
+            <Grid item xs={3}>
               <StyledBox>
                 <Typography variant="h3" marginRight="3px">
                   🚨
@@ -74,8 +74,14 @@ const MaintUrgentChart = () => {
                 </Grid>
               </CardContent>
             </Grid>
-            <Grid item xs={7}>
-              <Box sx={{ margin: '20px 20px', width: '90%' }}>
+            <Grid item xs={4.5}>
+              <Box
+                sx={{
+                  width: '100%',
+                  margin: '20px 20px',
+                  alignItems: 'center'
+                }}
+              >
                 <List
                   sx={{
                     width: '100%',
@@ -84,7 +90,7 @@ const MaintUrgentChart = () => {
                     bgcolor: 'background.paper',
                     position: 'relative',
                     overflow: 'auto',
-                    maxHeight: 150,
+                    maxHeight: '300px',
                     '& ul': { padding: 0 },
                     '& li': { padding: 0 }
                   }}
@@ -125,12 +131,22 @@ const MaintUrgentChart = () => {
                             {item.car_code}
                           </Typography>
                         </ListItemText>
-                        <Chip label={item.count} />
+                        <Chip label={`${item.count}건`} />
                       </ListItem>
                     ))}
 
                   <Divider variant="inset" component="li" />
                 </List>
+              </Box>
+            </Grid>
+            <Grid item xs={4.5}>
+              <Box
+                sx={{
+                  width: '100%',
+                  margin: '20px 0px',
+                  alignItems: 'center'
+                }}
+              >
                 <List
                   sx={{
                     width: '100%',
@@ -139,7 +155,7 @@ const MaintUrgentChart = () => {
                     bgcolor: 'background.paper',
                     position: 'relative',
                     overflow: 'auto',
-                    maxHeight: 150,
+                    height: '300px',
                     '& ul': { padding: 0 },
                     '& li': { padding: 0 }
                   }}
@@ -180,7 +196,7 @@ const MaintUrgentChart = () => {
                             {item.car_code}
                           </Typography>
                         </ListItemText>
-                        <Chip label={item.count} />
+                        <Chip label={`${item.count}건`} />
                       </ListItem>
                     ))}
                   <Divider variant="inset" component="li" />

@@ -12,13 +12,55 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import RezStatusChart from '../../components/car_admin/chart/RezStatusChart';
 import MileageChart from '../../components/car_admin/chart/MileageChart';
-import BajajAreaChartCard from '../../components/car_admin/chart/MileagePatternChart';
 import OperationCarChart from '../../components/car_admin/chart/OperationCarChart';
 import MaintUrgentChart from '../../components/car_admin/chart/MaintUrgentChart';
 import LocationChart from '../../components/car_admin/chart/LocationChart';
 import OperTimeChart from '../../components/car_admin/chart/OperTimeChart';
+import ExpenditureChart from '../../components/car_admin/chart/ExpenditureChart';
+import ExpenditurePatternChart from '../../components/car_admin/chart/ExpenditurePatternChart';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import dayjs from 'dayjs';
 
 const CarDashboard = () => {
+  const [searchData, setSearchData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [week, setWeek] = useState(0);
+
+  const setPeriod = (weeksAgo) => {
+    const today = new Date();
+
+    // 이번 주의 월요일을 계산합니다.
+    const monday = new Date(today);
+    monday.setDate(
+      today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1)
+    );
+
+    // 서버로 보낼 요청 객체를 만듭니다.
+    setSearchData({
+      sdate: dayjs(monday)
+        .subtract(weeksAgo + 1, 'week')
+        .format('YYYY-MM-DD'),
+      edate: dayjs(monday)
+        .subtract(weeksAgo, 'week')
+        .subtract(1, 'day')
+        .format('YYYY-MM-DD')
+    });
+  };
+
+  useEffect(() => {
+    console.log(searchData);
+    setPeriod(week); // 이번 주의 일주일
+    setIsLoading(false);
+  }, [week]);
+
+  const handleSelectChange = (event) => {
+    setWeek(event.target.value);
+    // 여기에 더 많은 경우를 추가할 수 있습니다.
+
+    // 선택된 값을 사용하려면 필요에 따라 추가 로직을 작성하세요.
+  };
+
   return (
     <>
       <StyledAppBar position="static">
@@ -45,10 +87,16 @@ const CarDashboard = () => {
                   '& .MuiInputBase-root': { width: '270px', height: '30px' }
                 }}
               >
-                <Select id="demo-simple-select" value={''} onChange={(e) => {}}>
-                  <MenuItem value="">1</MenuItem>
-                  <MenuItem value="">2</MenuItem>
-                  <MenuItem value="">3</MenuItem>
+                <Select
+                  id="demo-simple-select"
+                  value={week} // 선택된 값을 표시하는 state가 필요하면 여기에 설정
+                  onChange={handleSelectChange}
+                >
+                  <MenuItem
+                    value={0}
+                  >{`${searchData.sdate} - ${searchData.edate}`}</MenuItem>
+                  <MenuItem value={1}>1주 전</MenuItem>
+                  <MenuItem value={2}>2주 전</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -58,7 +106,7 @@ const CarDashboard = () => {
       <Grid
         sx={{
           flexGrow: 1,
-          margin: '20px 0px',
+          margin: '20px 0px 50px 0px',
           '& .MuiPaper-root': { borderRadius: '2px' }
         }}
         container
@@ -82,12 +130,12 @@ const CarDashboard = () => {
           <Grid container justifyContent="center" spacing={3}>
             <Grid item xs={4}>
               <StyledPaper sx={{ height: 350 }}>
-                <OperationCarChart />
+                {!isLoading && <OperationCarChart searchData={searchData} />}
               </StyledPaper>
             </Grid>
             <Grid item xs={4}>
               <StyledPaper sx={{ height: 350 }}>
-                <RezStatusChart />
+                {!isLoading && <RezStatusChart searchData={searchData} />}
               </StyledPaper>
             </Grid>
             <Grid item xs={4}>
@@ -96,7 +144,7 @@ const CarDashboard = () => {
                   height: 350
                 }}
               >
-                <LocationChart />
+                {!isLoading && <LocationChart searchData={searchData} />}
               </StyledPaper>
             </Grid>
           </Grid>
@@ -109,7 +157,7 @@ const CarDashboard = () => {
                   height: 400
                 }}
               >
-                <MileageChart />
+                {!isLoading && <MileageChart searchData={searchData} />}
               </StyledPaper>
             </Grid>
             <Grid item xs={4}>
@@ -118,7 +166,7 @@ const CarDashboard = () => {
                   height: 400
                 }}
               >
-                <OperTimeChart />
+                {!isLoading && <OperTimeChart searchData={searchData} />}
               </StyledPaper>
             </Grid>
           </Grid>
@@ -139,28 +187,19 @@ const CarDashboard = () => {
         </Grid>
         <Grid xs={11} marginTop="20px">
           <Grid container justifyContent="center" spacing={3}>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
               <StyledPaper
                 sx={{
                   height: 350
                 }}
               >
-                <MaintUrgentChart />
-              </StyledPaper>
-            </Grid>
-            <Grid item xs={4}>
-              <StyledPaper
-                sx={{
-                  height: 350
-                }}
-              >
-                <BajajAreaChartCard />
+                <MaintUrgentChart searchData={searchData} />
               </StyledPaper>
             </Grid>
           </Grid>
         </Grid>
         {/* 지출 통계 */}
-        {/* <Grid xs={11}>
+        <Grid xs={11}>
           <Box
             marginTop="50px"
             width="90px"
@@ -175,39 +214,28 @@ const CarDashboard = () => {
         </Grid>
         <Grid xs={11} marginTop="20px">
           <Grid container justifyContent="center" spacing={3}>
-            <Grid item xs={4}>
-              <Paper
-                elevation={4}
+            <Grid item xs={8}>
+              <StyledPaper
                 sx={{
-                  height: 350,
-                  width: '100%'
+                  height: 350
                 }}
-              ></Paper>
+              >
+                {!isLoading && (
+                  <ExpenditurePatternChart searchData={searchData} />
+                )}
+              </StyledPaper>
             </Grid>
             <Grid item xs={4}>
-              <Paper
-                elevation={4}
+              <StyledPaper
                 sx={{
-                  height: 350,
-                  width: '100%',
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
+                  height: 350
                 }}
-              ></Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper
-                elevation={4}
-                sx={{
-                  height: 350,
-                  width: '100%',
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
-                }}
-              ></Paper>
+              >
+                {!isLoading && <ExpenditureChart searchData={searchData} />}
+              </StyledPaper>
             </Grid>
           </Grid>
-        </Grid> */}
+        </Grid>
       </Grid>
     </>
   );

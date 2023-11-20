@@ -24,7 +24,8 @@ const setColor = (value) => {
   }
 };
 
-const OperationCarChart = () => {
+const OperationCarChart = ({ searchData }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [operationCarData, setOperationCarData] = useState({
     totalCount: 0,
     operationCarCount: 0,
@@ -32,15 +33,17 @@ const OperationCarChart = () => {
   });
 
   useEffect(() => {
+    console.log(searchData);
     axiosInstance.axiosInstance
-      .get('/manager/car/operationStatis')
+      .post('/manager/car/operationStatis', searchData)
       .then((res) => {
+        console.log(res.data);
         setOperationCarData(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [searchData]);
 
   return (
     <>
