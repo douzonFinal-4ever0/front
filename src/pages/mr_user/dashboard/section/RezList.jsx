@@ -56,7 +56,7 @@ const RezList = ({ todayRezList }) => {
         </Stack>
         <Timeline
           sx={{
-            // maxHeight: '330px',
+            height: '100%',
             overflowY: 'auto',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar-thumb': {
