@@ -33,7 +33,7 @@ import {
 import { useContext } from 'react';
 import { SocketContext, useSocket } from '../../../../utils/SocketProvider';
 
-const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
+const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
   const location = useLocation();
   const currentURL = location.pathname;
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
   const [clickTagData, setClickTagData] = useState([]);
   // const socket = useContext(SocketContext);
   const socket = useSocket();
-  console.log(socket);
+
   useEffect(() => {
     if (
       m_name !== '' &&
@@ -177,9 +177,10 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
               </AccordionSummary>
               <AccordionDetails>
                 <RezForm
-                  recentMNames={recentMNames}
+                  recentRez={recentRez}
                   isReadOnly={isReadOnly}
                   setClickTagData={setClickTagData}
+                  setExpanded={setExpanded}
                 />
               </AccordionDetails>
             </Accordion>
@@ -242,7 +243,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
             </Accordion> */}
 
             {/* 추가 장비 */}
-            <Accordion
+            {/* <Accordion
               expanded={expanded === 'supplies'}
               onChange={handleChange('supplies')}
               sx={{
@@ -265,7 +266,7 @@ const RezSection = ({ selectMrCard, recentMNames, isReadOnly }) => {
               <AccordionDetails>
                 <SuppliesForm />
               </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
           </Box>
           {currentURL === '/mr/rez/history' ? null : (
             <RectangleBtn
