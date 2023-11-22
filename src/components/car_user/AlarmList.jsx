@@ -10,11 +10,12 @@ const AlarmList = ({ alarmDatas, clickAlarm, read }) => {
   let cnt = 0;
   return (
     <List dense component="div" role="list" sx={{ minWidth: '400px' }}>
-      {alarmDatas.map((alarmData) => {
-        if (alarmData.is_read === read) {
-          cnt++;
-        }
-      })}
+      {alarmDatas &&
+        alarmDatas.map((alarmData) => {
+          if (alarmData.is_read === read) {
+            cnt++;
+          }
+        })}
       {(alarmDatas !== null) & (cnt != 0) ? (
         // console.log(alarmDatas);
         alarmDatas.map((alarmData) => {

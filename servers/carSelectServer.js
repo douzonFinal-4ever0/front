@@ -27,7 +27,6 @@ io.on('connection', (socket) => {
   });
   socket.on('disconnect_with_info', (disConnectUser) => {
     users.delete(disConnectUser);
-    selectedUser.get(disConnectUser);
     cars.map((car) => {
       if (car.car_code === selectedUser.get(disConnectUser)) {
         car.car_status = '선택가능';
@@ -45,31 +44,35 @@ io.on('connection', (socket) => {
     ({ rows, mem_code, rezStart_at, rezReturn_at, Token, setRows }) => {
       console.log(mem_code);
       // GET 요청 보내기
-      axios
-        .get(
-          `http://localhost:8081/car_rez/availableCars/${mem_code}/${rezStart_at}/${rezReturn_at}`,
-          {
-            headers: {
-              Authorization: Token
+      if (cars.length === 0) {
+        axios
+          .get(
+            `http://localhost:8081/car_rez/availableCars/${mem_code}/${rezStart_at}/${rezReturn_at}`,
+            {
+              headers: {
+                Authorization: Token
+              }
             }
-          }
-        )
-        .then((res) => {
-          // 성공적인 응답 처리
-          // console.log('응답 데이터:', res.data);
-          // cars = res.data.map((car) => {
-          //   car.car_status = '선택가능';
-          // });
-          console.log(res.data);
-          cars = res.data;
-          cars.map((car) => (car.car_status = '사용가능'));
-          console.log(cars);
-          io.emit('cars', cars);
-        })
-        .catch((error) => {
-          // 오류 처리
-          console.error('오류 발생:', error);
-        });
+          )
+          .then((res) => {
+            // 성공적인 응답 처리
+            // console.log('응답 데이터:', res.data);
+            // cars = res.data.map((car) => {
+            //   car.car_status = '선택가능';
+            // });
+            console.log(res.data);
+            cars = res.data;
+            cars.map((car) => (car.car_status = '선택가능'));
+            console.log(cars);
+            io.emit('cars', cars);
+          })
+          .catch((error) => {
+            // 오류 처리
+            console.error('오류 발생:', error);
+          });
+      } else {
+        io.emit('cars', cars);
+      }
       // console.log(rows);
     }
   );
@@ -104,6 +107,19 @@ io.on('connection', (socket) => {
     // console.log(cars);
     io.emit('selected', jsonObject);
     io.emit('Upcars', cars);
+  });
+  socket.on('rezComplete', (disConnectUser) => {
+    users.delete(disConnectUser);
+    selectedUser.delete(disConnectUser);
+    cars.map((car) => {
+      if (car.car_code === selectedUser.get(disConnectUser)) {
+        cars = cars.filter((item) => item !== valueToRemove);
+      }
+    });
+    io.emit('users', users);
+    console.log(users.size);
+    io.emit('currentCnt', users.size);
+    io.emit('cars', cars);
   });
 });
 

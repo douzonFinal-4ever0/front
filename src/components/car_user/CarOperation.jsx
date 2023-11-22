@@ -36,7 +36,8 @@ import axiosInstance from '../../utils/axios';
 import { useDispatch } from 'react-redux';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import dayjs from 'dayjs';
 
@@ -84,6 +85,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
@@ -203,9 +207,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       // console.log(formData.distance);
       // console.log(formData.nomal_biz_mileage + formData.commute_mileage);
       //error snackbar
-      alert('총주행거리가 업무용 거리보다 작습니다.');
-      handleOpenSnackbar();
+      handleSetSnackbarStatus('error');
       handleSetSnackbarContent('총주행거리가 업무용 거리보다 작습니다.');
+      handleOpenSnackbar();
     } else {
       // console.log('asdasdasd');
       // console.log(expList2);
@@ -235,9 +239,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
           setSelectedFiles([]);
           setExpList([]);
           handleClose();
-          alert('운행 처리 완료');
-          handleOpenSnackbar();
+          handleSetSnackbarStatus('success');
           handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
+          handleOpenSnackbar();
         });
     }
   };

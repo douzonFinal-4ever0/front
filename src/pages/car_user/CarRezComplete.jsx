@@ -207,57 +207,6 @@ const CarRezComplete = () => {
                   </Grid>
                 </Grid>
               </Grid>
-
-              {/*
-            <table>
-              <tr>
-                <td>예약번호 : {carRez.car_rez_code}</td>
-              </tr>
-              <tr>
-                <td>예약자 이름 : {carRez.memDTO.name}</td>
-              </tr>
-              <tr>
-                <td>목적 : {carRez.detail}</td>
-              </tr>
-              <tr>
-                <td>목적지 : {carRez.carLoc[2].address}</td>
-              </tr>
-              <tr border>
-                <td style={{ borderTop: '1px solid #000' }}>
-                  대여
-                  <span style={{ display: 'block', textAlign: 'left' }}>
-                    {carRez.carLoc[0].address}
-                  </span>
-                  <span style={{ display: 'block', textAlign: 'left' }}>
-                    {carRez.start_at}
-                  </span>
-                </td>
-                <td style={{ borderTop: '1px solid #000' }}>
-                  <span style={{ display: 'block', textAlign: 'right' }}>
-                    반납
-                  </span>
-                  <span style={{ display: 'block', textAlign: 'right' }}>
-                    {carRez.carLoc[1].address}
-                  </span>
-                  <span style={{ display: 'block', textAlign: 'right' }}>
-                    {carRez.return_at}
-                  </span>
-                </td>
-              </tr>
-            </table>
-            <KakaoMap3
-              locations={carRez.carLoc}
-              titles={[
-                carRez.carLoc[0].loc_type,
-                carRez.carLoc[1].loc_type,
-                carRez.carLoc[2].loc_type
-              ]}
-              contents={[
-                carRez.carLoc[0].address,
-                carRez.carLoc[1].address,
-                carRez.carLoc[2].address
-              ]}
-            />*/}
             </Stack>
           </StyledContainer>
         </Grid>

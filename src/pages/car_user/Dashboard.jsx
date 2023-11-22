@@ -53,7 +53,8 @@ import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/car_user/LoadingModal';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 
 const Dashboard = () => {
@@ -87,6 +88,9 @@ const Dashboard = () => {
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
@@ -137,9 +141,10 @@ const Dashboard = () => {
           }
           if ((res.data = null)) {
             //error snackbar
-            alert('에러발생');
+
+            handleSetSnackbarStatus('error');
+            handleSetSnackbarContent('에러 발생.');
             handleOpenSnackbar();
-            handleSetSnackbarContent('에러 발생');
           }
         });
     },

@@ -16,27 +16,27 @@ io.on('connection', (socket) => {
   console.log('연결 성공... ');
 
   // //db값이 바뀌면 알림 전송 고민
-  // setInterval(() => {
-  //   if (jwtT) {
-  //     const memList = Array.from(users.keys());
-  //     axios
-  //       .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
-  //         headers: {
-  //           Authorization: jwtT
-  //         }
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data);
-  //         for (let memCode of Array.from(users.keys())) {
-  //           var filterData = res.data.filter((item) => {
-  //             return !item['mem_code'] || item['mem_code'].includes(memCode);
-  //           });
-  //           io.to(users.get(memCode)).emit('loadAlarm', filterData);
-  //         }
-  //         // io.emit('loadAnnouncement', res.data);
-  //       });
-  //   }
-  // }, 10000);
+  setInterval(() => {
+    if (jwtT) {
+      const memList = Array.from(users.keys());
+      axios
+        .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+          headers: {
+            Authorization: jwtT
+          }
+        })
+        .then((res) => {
+          console.log(res.data);
+          for (let memCode of Array.from(users.keys())) {
+            var filterData = res.data.filter((item) => {
+              return !item['mem_code'] || item['mem_code'].includes(memCode);
+            });
+            io.to(users.get(memCode)).emit('loadAlarm', filterData);
+          }
+          // io.emit('loadAnnouncement', res.data);
+        });
+    }
+  }, 60000);
   socket.on('loginSuccess', ({ memCode, jwt }) => {
     console.log('login');
     console.log(memCode);
