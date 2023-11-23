@@ -265,7 +265,7 @@ const Register = () => {
           let data = res.data;
           data.start_at = dateFormat(res.data.start_at);
           data.return_at = dateFormat(res.data.return_at);
-          handleOpenSnackbar('success');
+          handleSetSnackbarStatus('success');
           handleSetSnackbarContent('예약이 완료되었습니다.');
           handleOpenSnackbar();
           console.log('예약 완료 : ' + dateFormat(res.data.start_at));
@@ -276,7 +276,11 @@ const Register = () => {
   };
   const [socket, setSocket] = useState(null);
   //modal여는 함수
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
   const handleOpenModal = () => {
+    const Token = getJwtToken();
     console.log(rezStart_at);
     console.log('대여일:' + Date(rezStart_at));
     const date = new Date(rezStart_at);

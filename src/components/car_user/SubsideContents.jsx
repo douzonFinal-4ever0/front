@@ -74,16 +74,14 @@ const SubSideContents = ({
       // console.log(currentUsers);
     });
     socket.emit('init', {
-      rows,
       mem_code,
       rezStart_at,
       rezReturn_at,
-      Token,
-      setRows
+      Token
     });
-    socket.on('cars', (cars) => {
-      console.log(cars);
-      setRows(cars);
+    socket.on('cars', (filterCars) => {
+      console.log(filterCars);
+      setRows(filterCars);
     });
     socket.on('currentCnt', (cnt) => {
       setUserNum(cnt);
@@ -239,7 +237,12 @@ const SubSideContents = ({
                           )
                         }
                       >
-                        <ListItemButton disabled={car.car_status === '선택됨'}>
+                        <ListItemButton
+                          disabled={
+                            car.car_status === '선택된 차량' ||
+                            car.car_status === '이미 예약된 차량'
+                          }
+                        >
                           <Grid
                             item
                             sx={{

@@ -1,7 +1,6 @@
 const app = require('express')();
 const server = require('http').createServer(app);
 const cors = require('cors');
-const { forEach } = require('jszip');
 const io = require('socket.io')(server, {
   cors: {
     origin: '*',
@@ -26,7 +25,7 @@ io.on('connection', (socket) => {
           }
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           for (let memCode of Array.from(users.keys())) {
             var filterData = res.data.filter((item) => {
               return !item['mem_code'] || item['mem_code'].includes(memCode);
@@ -37,6 +36,7 @@ io.on('connection', (socket) => {
         });
     }
   }, 60000);
+
   socket.on('loginSuccess', ({ memCode, jwt }) => {
     console.log('login');
     console.log(memCode);
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
       })
       .then((res) => {
         // console.log('alarmInfo');
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data !== null) {
           var filterData = res.data.filter((item) => {
             return (
@@ -63,6 +63,9 @@ io.on('connection', (socket) => {
           });
           io.to(users.get(memCode)).emit('loadAlarm', filterData);
         }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   });
 
