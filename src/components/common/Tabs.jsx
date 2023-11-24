@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, sx, ...other } = props;
 
   // // children에 새로운 props인 toggleDrawer를 전달합니다.
   // const childrenWithProps = React.Children.map(children, child => {
@@ -21,7 +21,7 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={sx !== 0 ? { p: 3 } : { p: 0 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -35,7 +35,7 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired
 };
 
-const Tabs = ({ tabData }) => {
+const Tabs = ({ tabData, sx }) => {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -51,7 +51,7 @@ const Tabs = ({ tabData }) => {
         </MuiTabs>
       </Box>
       {tabData.map((tab, index) => (
-        <CustomTabPanel key={index} value={value} index={index}>
+        <CustomTabPanel key={index} value={value} index={index} sx={sx}>
           {tab.content}
         </CustomTabPanel>
       ))}

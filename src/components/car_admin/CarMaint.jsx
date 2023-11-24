@@ -30,7 +30,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CarMaint = ({ carCode, accum_mileage }) => {
+const CarMaint = ({ carCode, accum_mileage, status }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -238,81 +238,85 @@ const CarMaint = ({ carCode, accum_mileage }) => {
           >
             정비 내역
           </Typography>
-          <Grid
-            container
-            display="flex"
-            spacing={2}
-            width="60%"
-            marginLeft="40px"
-            alignItems="flex-end"
-          >
-            <Grid item xs={5}>
-              <Button
-                variant="outlined"
-                sx={{
-                  height: '30px',
-                  color: '#2e7d32',
-                  borderColor: '#2e7d32',
-                  borderRadius: '6px !important',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderColor: '#2e7d32'
-                  }
-                }}
-                onClick={handleCompleteBtn}
-              >
-                선택 완료
-              </Button>
+          {status !== '삭제됨' && (
+            <Grid
+              container
+              display="flex"
+              spacing={2}
+              width="60%"
+              marginLeft="40px"
+              alignItems="flex-end"
+            >
+              <Grid item xs={5}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    height: '30px',
+                    color: '#2e7d32',
+                    borderColor: '#2e7d32',
+                    borderRadius: '6px !important',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderColor: '#2e7d32'
+                    }
+                  }}
+                  onClick={handleCompleteBtn}
+                >
+                  선택 완료
+                </Button>
+              </Grid>
+              <Grid item xs={5}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    height: '30px',
+                    color: '#d32f2f',
+                    borderColor: '#d32f2f',
+                    borderRadius: '6px !important',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderColor: '#d32f2f'
+                    }
+                  }}
+                  onClick={handleDeleteBtn}
+                >
+                  선택 삭제
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={5}>
-              <Button
-                variant="outlined"
-                sx={{
-                  height: '30px',
-                  color: '#d32f2f',
-                  borderColor: '#d32f2f',
-                  borderRadius: '6px !important',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderColor: '#d32f2f'
-                  }
-                }}
-                onClick={handleDeleteBtn}
-              >
-                선택 삭제
-              </Button>
-            </Grid>
-          </Grid>
+          )}
         </Box>
-        <Box display="flex" justifyContent="space-between" width="260px">
-          <RectangleBtn
-            text={'정비 등록'}
-            sx={{ width: '120px', height: '40px' }}
-            category={'register'}
-            handlebtn={maintCtnClick}
-          />
-          <RectangleBtn
-            text={'정비 현황'}
-            sx={{ width: '120px', height: '40px' }}
-            category={'register'}
-            handlebtn={handleCurrentMaintClick}
-          />
-          <Popover
-            id={id}
-            open={currentMaintopen}
-            anchorEl={anchorEl}
-            onClose={handleCurrentMaintClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
-          >
-            <CarCurrentMaint
-              carCode={carCode}
-              handleMaintClick={handleMaintClick}
+        {status !== '삭제됨' && (
+          <Box display="flex" justifyContent="space-between" width="260px">
+            <RectangleBtn
+              text={'정비 등록'}
+              sx={{ width: '120px', height: '40px' }}
+              category={'register'}
+              handlebtn={maintCtnClick}
             />
-          </Popover>
-        </Box>
+            <RectangleBtn
+              text={'정비 현황'}
+              sx={{ width: '120px', height: '40px' }}
+              category={'register'}
+              handlebtn={handleCurrentMaintClick}
+            />
+            <Popover
+              id={id}
+              open={currentMaintopen}
+              anchorEl={anchorEl}
+              onClose={handleCurrentMaintClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+            >
+              <CarCurrentMaint
+                carCode={carCode}
+                handleMaintClick={handleMaintClick}
+              />
+            </Popover>
+          </Box>
+        )}
       </Box>
       <CarMaintTable
         maintData={maintData}

@@ -2,6 +2,7 @@ import { Box, Grid, Paper, styled } from '@mui/material';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import React, { useEffect, useState } from 'react';
+import Spinner from '../../components/common/Spinner.jsx';
 import SubHeader from '../../components/common/SubHeader';
 import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import TimeLineCalendar from '../../components/mr_admin/TimeLineCalendar';
@@ -9,7 +10,7 @@ import WrapContainer from '../../components/mr_user/WrapContainer';
 import axiosInstance from '../../utils/axios.js';
 const MrList = () => {
   const [value, setValue] = useState(dayjs().minute(0));
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axiosInstance.axiosInstance
@@ -21,9 +22,9 @@ const MrList = () => {
           start: rez.rez_start_time,
           end: rez.rez_end_time,
           resourceId: rez.mr[0].mr_code,
-          description: rez.m_name
+          description: rez.m_name + '     [' + rez.mr[0].mr_name + ']',
+          mr_rez_code: rez.mr_rez_code
         }));
-
         setEvents(newEvents);
       })
       .catch((error) => {
@@ -37,6 +38,7 @@ const MrList = () => {
           title: rez.mr_name
         }));
         setMrList(mrList);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -50,7 +52,8 @@ const MrList = () => {
       start: '',
       end: '',
       resourceId: '',
-      description: ''
+      description: '',
+      mr_rez_code: ''
     }
   ]);
   const [mrList, setMrList] = useState([
@@ -81,6 +84,7 @@ const MrList = () => {
   // console.log(value);
   return (
     <>
+      <Spinner isLoading={isLoading} />
       <SubHeader
         title={'회의실 예약 상황'}
         sx={{

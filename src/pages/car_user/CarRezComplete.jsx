@@ -1,5 +1,8 @@
 import {
   Button,
+  Grid,
+  ListItem,
+  ListItemText,
   Stack,
   Table,
   TableCell,
@@ -67,63 +70,159 @@ const CarRezComplete = () => {
           </Button>
         </Stack>
       </StyledContainer>
-
-      <StyledContainer bgcolor={'#fff'} height={'500px'}>
-        <Stack>
-          <Typography variant="h3" color="text.secondary" align="left">
-            예약 정보
-          </Typography>
-          <table>
-            <tr>
-              <td>예약번호 : {carRez.car_rez_code}</td>
-            </tr>
-            <tr>
-              <td>예약자 이름 : {carRez.memDTO.name}</td>
-            </tr>
-            <tr>
-              <td>목적 : {carRez.detail}</td>
-            </tr>
-            <tr>
-              <td>목적지 : {carRez.carLoc[2].address}</td>
-            </tr>
-            <tr border>
-              <td style={{ borderTop: '1px solid #000' }}>
-                대여
-                <span style={{ display: 'block', textAlign: 'left' }}>
-                  {carRez.carLoc[0].address}
-                </span>
-                <span style={{ display: 'block', textAlign: 'left' }}>
-                  {carRez.start_at}
-                </span>
-              </td>
-              <td style={{ borderTop: '1px solid #000' }}>
-                <span style={{ display: 'block', textAlign: 'right' }}>
-                  반납
-                </span>
-                <span style={{ display: 'block', textAlign: 'right' }}>
-                  {carRez.carLoc[1].address}
-                </span>
-                <span style={{ display: 'block', textAlign: 'right' }}>
-                  {carRez.return_at}
-                </span>
-              </td>
-            </tr>
-          </table>
-          <KakaoMap3
-            locations={carRez.carLoc}
-            titles={[
-              carRez.carLoc[0].loc_type,
-              carRez.carLoc[1].loc_type,
-              carRez.carLoc[2].loc_type
-            ]}
-            contents={[
-              carRez.carLoc[0].address,
-              carRez.carLoc[1].address,
-              carRez.carLoc[2].address
-            ]}
-          />
-        </Stack>
-      </StyledContainer>
+      <Grid item container xs={12} spacing={2}>
+        <Grid item xs={6}>
+          <StyledContainer bgcolor={'#fff'} height={'500px'}>
+            <Stack>
+              <Typography variant="h3" color="text.secondary" align="left">
+                예약 정보
+              </Typography>
+              {/* <Grid
+              container
+              // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+              sx={{
+                mt: '2%',
+                '& .infoTitle': {
+                  backgroundColor: '#eeeeee'
+                },
+                '& .MuiListItem-gutters': {
+                  borderBottom: '1px solid #bdbdbd'
+                }
+              }}
+            >
+              <Grid
+                item
+                sx={{ display: 'flex', borderTop: '1px solid #bdbdbd' }}
+                xs={12}
+              >
+                <ListItem className="infoTitle">
+                  <ListItemText primary="예약 번호" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="예약 날짜" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="대여 날짜" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="반납 날짜" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="인수지" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="반납지" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="목적지" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="예상 주행 거리" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+              <Grid item sx={{ display: 'flex' }} xs={12}>
+                <ListItem className="infoTitle">
+                  <ListItemText primary="예약 상태" />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={'예약 상태'} />
+                </ListItem>
+              </Grid>
+            </Grid>
+            <table>
+              <tr>
+                <td>예약번호 : {carRez.car_rez_code}</td>
+              </tr>
+              <tr>
+                <td>예약자 이름 : {carRez.memDTO.name}</td>
+              </tr>
+              <tr>
+                <td>목적 : {carRez.detail}</td>
+              </tr>
+              <tr>
+                <td>목적지 : {carRez.carLoc[2].address}</td>
+              </tr>
+              <tr border>
+                <td style={{ borderTop: '1px solid #000' }}>
+                  대여
+                  <span style={{ display: 'block', textAlign: 'left' }}>
+                    {carRez.carLoc[0].address}
+                  </span>
+                  <span style={{ display: 'block', textAlign: 'left' }}>
+                    {carRez.start_at}
+                  </span>
+                </td>
+                <td style={{ borderTop: '1px solid #000' }}>
+                  <span style={{ display: 'block', textAlign: 'right' }}>
+                    반납
+                  </span>
+                  <span style={{ display: 'block', textAlign: 'right' }}>
+                    {carRez.carLoc[1].address}
+                  </span>
+                  <span style={{ display: 'block', textAlign: 'right' }}>
+                    {carRez.return_at}
+                  </span>
+                </td>
+              </tr>
+            </table>
+            <KakaoMap3
+              locations={carRez.carLoc}
+              titles={[
+                carRez.carLoc[0].loc_type,
+                carRez.carLoc[1].loc_type,
+                carRez.carLoc[2].loc_type
+              ]}
+              contents={[
+                carRez.carLoc[0].address,
+                carRez.carLoc[1].address,
+                carRez.carLoc[2].address
+              ]}
+            />*/}
+            </Stack>
+          </StyledContainer>
+        </Grid>
+        <Grid item xs={6}>
+          <StyledContainer bgcolor={'#fff'} height={'500px'}></StyledContainer>
+        </Grid>
+      </Grid>
     </MainContainer>
   );
 };

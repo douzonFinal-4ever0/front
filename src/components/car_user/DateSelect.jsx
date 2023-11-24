@@ -19,7 +19,7 @@ import RectangleBtn from '../common/RectangleBtn';
 
 const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
   const [opnColl2, setOpnColl2] = useState(false);
-  const [startDate, setStarDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   // const [filter, setFilter] = useState({
   //   startDate: 0,
@@ -90,9 +90,10 @@ const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
         </ListItemButton>
         <Collapse in={opnColl2} sx={{ mt: 1 }}>
           <Stack sx={{ rowGap: '10px' }}>
-            <Grid item container xs={12} spacing={2}>
+            <Grid item container spacing={0} xs={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid item xs={5.5}>
+                <Grid item xs={1}></Grid>
+                <Grid item xs={9}>
                   <Box>
                     <DatePicker
                       sx={{
@@ -103,13 +104,12 @@ const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
                         '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
                       }}
                       format="YYYY-MM-DD"
+                      size="small"
                       onChange={(e) => {
-                        console.log(e.format('YYYY-MM-DD'));
-
-                        setStarDate(e.format('YYYY-MM-DD'));
+                        setStartDate(e.format('YYYY-MM-DD'));
                         // setFilter({
                         //   ...filter,
-                        //   startDate: e.format('YYYY-MM-DD')
+                        //   endDate: e.format('YYYY-MM-DD')
                         // });
                       }}
                     />
@@ -117,39 +117,14 @@ const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
                 </Grid>
                 <Grid
                   item
-                  xs={1}
+                  xs={2}
                   sx={{
                     display: 'flex',
-                    alignItems: 'center'
-                    // margin: '0px 10px'
+                    alignItems: 'center',
+                    pl: 1
                   }}
                 >
-                  <Box>
-                    <Typography variant="h6">-</Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={5.5}>
-                  <Box>
-                    <DatePicker
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          height: '40px',
-                          width: '100%'
-                        },
-                        '& .MuiInputBase-inputAdornedEnd': { fontSize: '15px' }
-                      }}
-                      format="YYYY-MM-DD"
-                      onChange={(e) => {
-                        console.log(e.format('YYYY-MM-DD'));
-
-                        setStarDate(e.format('YYYY-MM-DD'));
-                        // setFilter({
-                        //   ...filter,
-                        //   startDate: e.format('YYYY-MM-DD')
-                        // });
-                      }}
-                    />
-                  </Box>
+                  <Typography variant="body2">부터</Typography>
                 </Grid>
               </LocalizationProvider>
             </Grid>
@@ -163,7 +138,7 @@ const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
               <Typography variant="h6">-</Typography>
             </Box>
 
-            <Grid item container xs={12} spacing={3}>
+            <Grid item container xs={12} spacing={0}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={9}>
@@ -193,19 +168,25 @@ const DateSelect = ({ setDateRange, dateFilter, setDateFilter }) => {
                   xs={2}
                   sx={{
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    pl: 1
                   }}
                 >
                   <Typography variant="body2">까지</Typography>
                 </Grid>
               </LocalizationProvider>
             </Grid>
-            <RectangleBtn
-              text={'검색'}
-              category={'register'}
-              sx={{ padding: '14px 12px' }}
-              handlebtn={selectDate}
-            />
+            <Grid item container xs={12} spacing={3}>
+              <Grid item xs={8}></Grid>
+              <Grid item xs={3} sx={{ minWidth: '100px' }}>
+                <RectangleBtn
+                  text={'검색'}
+                  category={'register'}
+                  sx={{ padding: '14px 12px', width: '45%', height: '30px' }}
+                  handlebtn={selectDate}
+                />
+              </Grid>
+            </Grid>
           </Stack>
         </Collapse>
       </List>

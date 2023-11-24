@@ -1,6 +1,5 @@
+import { Backdrop, Box, CircularProgress } from '@mui/material';
 import * as React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 
 const Spinner = ({ isLoading }) => {
   /**isLoading 으로 추가 */
@@ -15,9 +14,14 @@ const Spinner = ({ isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <Box sx={{ display: 'flex' }}>
-          <CircularProgress />
-        </Box>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        </Backdrop>
       ) : (
         <></>
       )}

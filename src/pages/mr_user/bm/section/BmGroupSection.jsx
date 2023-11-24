@@ -84,7 +84,23 @@ const GroupItem = ({ isDisabled, index, data }) => {
 
 const BmGroupSection = ({ data }) => {
   return (
-    <Grid container sx={{ width: '100%', overflowY: 'auto' }}>
+    <Grid
+      container
+      sx={{
+        width: '100%',
+        overflowY: 'auto',
+        scrollbarWidth: 'none',
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: palette.grey['500'],
+          borderRadius: '10px'
+        },
+        '&::-webkit-scrollbar': {
+          width: '10px',
+          backgroundColor: '#eee',
+          borderRadius: '10px'
+        }
+      }}
+    >
       <List
         sx={{
           width: '100%',

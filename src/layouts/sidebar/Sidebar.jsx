@@ -52,10 +52,13 @@ const Sidebar = (props) => {
   // 소메뉴 클릭 이벤트
   const handleMenuItemClick = (index) => {
     setSelectMenuItem((prevIndex) => (prevIndex === index ? null : index));
+    setOpenMenu(index);
   };
 
   // 링크 이동 이벤트
   const navigate = useNavigate();
+
+  const [selectedMenuIndex, setSelectedMenuIndex] = useState(null);
 
   return (
     <StyledDrawer
@@ -68,10 +71,12 @@ const Sidebar = (props) => {
       <Box sx={{ pt: '110px', height: '100%' }}>
         <MenuList
           openMenu={openMenu}
-          selectMenuItem={selectMenuItem}
           handleMenuCollapseClick={handleMenuCollapseClick}
-          handleMenuItemClick={handleMenuItemClick}
           isAdminMode={isAdminMode}
+          setIsAdminMode={setIsAdminMode}
+          setOpenMenu={setOpenMenu}
+          selectedMenuIndex={selectedMenuIndex}
+          setSelectedMenuIndex={setSelectedMenuIndex}
         />
         {roleToAdmin && (
           <ButtonGroup

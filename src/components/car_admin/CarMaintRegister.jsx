@@ -185,7 +185,8 @@ const CarMaintRegister = ({
               res.data.memResponseVO.position_name
           ],
           memo: res.data.memo,
-          maint_code: res.data.maint_code
+          maint_code: res.data.maint_code,
+          url: res.data.url
         };
         // 등록후, 새롭게 저장된 maintRecord 정보를 리스트에 추가해주기
         setMaintData([...maintData, newData]);
@@ -199,6 +200,10 @@ const CarMaintRegister = ({
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleCloseBtn = () => {
+    handleModalClose();
   };
 
   return (
@@ -535,6 +540,7 @@ const CarMaintRegister = ({
             text={'취소'}
             category={'cancel'}
             sx={{ width: '64px' }}
+            handlebtn={handleCloseBtn}
           />
           <RectangleBtn
             item

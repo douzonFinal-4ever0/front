@@ -26,6 +26,7 @@ import WrapContainer from '../../../components/mr_user/WrapContainer';
 import SubHeader from '../../../components/common/SubHeader';
 import MrRezCalendar from './section/MrRezCalendar';
 import { palette } from '../../../theme/palette';
+import Progress from '../../../components/mr_user/Progress';
 
 const MrRezHistoryPage = () => {
   const userData = useSelector(setUserData).payload.user;
@@ -33,9 +34,12 @@ const MrRezHistoryPage = () => {
   const [rezList, setRezList] = useState([]); // 전체 예약 리스트
   const [events, setEvents] = useState([]); // 캘린더 이벤트
   const [master, setMaster] = useState([]); // 회의 예약자 정보
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     getMrRezApi();
+    setIsLoading(false);
   }, []);
 
   const getMrRezApi = async () => {
@@ -143,102 +147,106 @@ const MrRezHistoryPage = () => {
   return (
     <>
       <SubHeader title="MY 회의실 예약" />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
         <MainContainer>
-          <Grid container spacing={2}>
-            {/* <Grid item container xs={12}>
-              <WrapContainer bgcolor={'#fff'}>
-                <Grid container sx={{ height: '200px' }}>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                  <Grid item xs={3}>
-                    예약
-                  </Grid>
-                </Grid>
-              </WrapContainer>
-            </Grid> */}
-
+          <Grid
+            container
+            spacing={2}
+            sx={{ height: '100%', maxHeight: '710px' }}
+          >
             <Grid item container spacing={2}>
               <Grid item xs={9}>
-                <WrapContainer bgcolor={'#fff'}>
+                <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
                   <Typography variant="h6" sx={{ marginBottom: '30px' }}>
                     전체 예약 현황
                   </Typography>
                   <MrRezCalendar
                     events={events}
                     data={rezList}
+                    setRezList={setRezList}
                     getMrRezApi={getMrRezApi}
+                    setEvents={setEvents}
                   />
                 </WrapContainer>
               </Grid>
 
               {/* 오늘 회의실 예약 일정 */}
-              <Grid item xs={3} sx={{ minHeight: '564px' }}>
+              <Grid item xs={3}>
                 <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
                   <Typography variant="h6">오늘 예약 현황</Typography>
-                  <Timeline
+                  <Box
                     sx={{
-                      height: '100%',
-                      [`& .${timelineItemClasses.root}:before`]: {
-                        flex: 0,
-                        padding: 0
+                      overflow: 'auto',
+                      height: '95%',
+                      scrollbarWidth: 'none',
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: palette.grey['500'],
+                        borderRadius: '10px'
+                      },
+                      '&::-webkit-scrollbar': {
+                        width: '10px',
+                        backgroundColor: '#eee',
+                        borderRadius: '10px'
                       }
                     }}
                   >
-                    {todayRezList.length !== 0 ? (
-                      todayRezList.map((item, index) => (
-                        <TimelineItem key={index}>
-                          <TimelineSeparator>
-                            <TimelineDot />
-                            <TimelineConnector />
-                          </TimelineSeparator>
-                          <TimelineContent>
-                            <Typography
-                              variant="subtitle1"
-                              component="div"
-                              sx={{ color: palette.primary.main }}
-                            >
-                              {item.newTime}
-                            </Typography>
-                            <Typography variant="subtitle1" component="div">
-                              {item.m_name}
-                            </Typography>
-                            <Typography variant="body2">
-                              {item.mr && item.mr.mr_name}
-                            </Typography>
-                          </TimelineContent>
-                        </TimelineItem>
-                      ))
-                    ) : (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%'
-                        }}
-                      >
-                        <StyledNoCalendarIcon />
-                        <Typography variant="body2" sx={{ color: '#666' }}>
-                          오늘 일정이 없습니다
-                        </Typography>
-                      </Box>
-                    )}
-                  </Timeline>
+                    <Timeline
+                      sx={{
+                        [`& .${timelineItemClasses.root}:before`]: {
+                          flex: 0,
+                          padding: 0
+                        }
+                      }}
+                    >
+                      {todayRezList.length !== 0 ? (
+                        todayRezList.map((item, index) => (
+                          <TimelineItem key={index}>
+                            <TimelineSeparator>
+                              <TimelineDot />
+                              <TimelineConnector />
+                            </TimelineSeparator>
+                            <TimelineContent>
+                              <Typography
+                                variant="subtitle1"
+                                component="div"
+                                sx={{ color: palette.primary.main }}
+                              >
+                                {item.newTime}
+                              </Typography>
+                              <Typography variant="subtitle1" component="div">
+                                {item.m_name}
+                              </Typography>
+                              <Typography variant="body2">
+                                {item.mr && item.mr.mr_name}
+                              </Typography>
+                            </TimelineContent>
+                          </TimelineItem>
+                        ))
+                      ) : (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%'
+                          }}
+                        >
+                          <StyledNoCalendarIcon />
+                          <Typography variant="body2" sx={{ color: '#666' }}>
+                            오늘 일정이 없습니다
+                          </Typography>
+                        </Box>
+                      )}
+                    </Timeline>
+                  </Box>
                 </WrapContainer>
               </Grid>
             </Grid>
           </Grid>
         </MainContainer>
       </Box>
+      <Progress open={isLoading} />
     </>
   );
 };

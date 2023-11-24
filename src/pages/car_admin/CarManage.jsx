@@ -1146,7 +1146,9 @@ const CarManagePage = ({ isAdminMode, setIsAdminMode }) => {
       sdistance: 0,
       edistance: 150000
     };
+    setSearchValue('');
 
+    setSearchFilter(updatedSearchFilter);
     axiosInstance.axiosInstance
       .post('/manager/car/carList', updatedSearchFilter)
       .then((res) => {

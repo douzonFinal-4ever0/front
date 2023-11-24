@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
@@ -10,7 +10,12 @@ import {
   Button,
   Card,
   Chip,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   Paper,
+  Popover,
   Stack,
   Switch,
   Toolbar,
@@ -28,6 +33,11 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import UserProfile from '../../assets/images/user/user-round.svg';
 import { HEADER_HIEGHT } from '../../config';
 import { palette } from '../../theme/palette';
+import { SocketContext, useSocket } from '../../utils/SocketProvider';
+import { useEffect } from 'react';
+import axiosInstance from '../../utils/axios';
+import Tabs from '../../components/common/Tabs';
+import AlarmList from '../../components/car_user/AlarmList';
 
 const Header = (props) => {
   const user = useSelector(setUserData).payload.user;
@@ -37,17 +47,150 @@ const Header = (props) => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState();
-
-  const handleClick = (newPlacement) => (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen((prev) => placement !== newPlacement || !prev);
-    setPlacement(newPlacement);
-  };
+  const [isAlarm, setIsAlarm] = useState(false);
+  const [alarmDatas, setAlarmDatas] = useState(null);
+  const [announcement, setAnnouncement] = useState(null);
+  // 알림
+  const socket = useSocket();
+  const [open2, setOpen2] = useState(false);
+  // 읽지 않은 알림이 있다고 알려주는 알림
+  const [newAlarm, setNewAlarm] = useState(0);
+  const dispatch = useDispatch();
+  const { name, position_name, mem_code, dept_name } = user;
+  // const handleClick = (newPlacement) => (event) => {
+  //   setAnchorEl(event.currentTarget);
+  //   setOpen((prev) => placement !== newPlacement || !prev);
+  //   setPlacement(newPlacement);
+  // };
   const navigate = useNavigate();
+
+  // const socket = useContext(SocketContext);
   const handleLogOut = () => {
     localStorage.removeItem('jwtToken');
+    dispatch(
+      setUserData({
+        data: {
+          mem_code: '', // 사번
+          name: '', // 성명
+          position_name: '', // 직급명
+          dept_name: '', // 부서명
+          role: '', // 역할
+          email: ''
+        }
+      })
+    );
+    setAlarmDatas(null);
+    socket.emit('disconnect_mem', mem_code);
+    // socket.disconnect();
     navigate('/login');
   };
+
+  const handleClick = (event) => {
+    // setIsAlarm(false);
+    setAnchorEl(event.currentTarget);
+    setOpen2(!open2);
+    // setOpen3(false);
+    console.log(alarmDatas);
+  };
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const clickAlarm = (alert_code) => {
+    const jwt = getJwtToken();
+    axiosInstance.axiosInstance
+      .patch(`http://localhost:8081/car_rez/clickAlarm/${alert_code}`)
+      .then((res) => {
+        if (res.status === 200) {
+          // socket.emit('clickAlarm', { alert_code, jwt, mem_code });
+          const memList = [mem_code];
+          console.log(memList);
+          socket.emit('changeDB', { memList, jwt });
+          // console.log(alarmDatas);
+        }
+      });
+    // socket.emit('clickAlarm', { alert_code, jwt, mem_code });
+    // socket.on('loadAlarm', (data) => {
+    //   setAlarmDatas({ data });
+    // });
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setOpen2(false);
+    // setAlarmDatas(null);
+  };
+  //처음 로그인 했을때 알림 확인
+  useEffect(() => {
+    console.log(socket);
+    if (socket !== null) {
+      socket.on('loadAlarm', (datas) => {
+        console.log(datas.length);
+        setAlarmDatas(datas);
+        for (let data of datas) {
+          if (data.is_read === 0) {
+            setIsAlarm(true);
+          }
+        }
+      });
+      let cnt = 0;
+      if (alarmDatas !== null) {
+        alarmDatas.map((item) => {
+          if (item.is_read === 0) {
+            cnt++;
+          }
+        });
+        setNewAlarm(cnt);
+      }
+    }
+  }, [socket, isAlarm, alarmDatas]);
+  // useEffect(() => {
+  //   console.log(socket);
+  //   if (socket !== null) {
+  //     socket.on('loadAlarm', (datas) => {
+  //       // console.log(datas);
+  //       setAlarmDatas(datas);
+  //       for (let data of datas) {
+  //         if (data.is_read == 0) {
+  //           setIsAlarm(true);
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   console.log('qweqwe');
+  //   console.log(isAlarm);
+  //   if (socket !== null) {
+  //     socket.on('mrRezParticipant', (data) => {
+  //       console.log('123124');
+  //       setIsAlarm(true);
+  //       setOpen3(true);
+  //       console.log(data);
+  //       setAlarmData({ ...alarmData, mrRezParticipant: data });
+  //     });
+  //   }
+
+  //   // 컴포넌트 언마운트 시 이벤트 리스너 해제
+  //   return () => {
+  //     // socket.off('serverEvent');
+  //   };
+  // }, [
+  //   // socket,
+  //   isAlarm
+  // ]);
+  const tabData = [
+    {
+      title: '새로운 알림',
+      content: (
+        <AlarmList alarmDatas={alarmDatas} clickAlarm={clickAlarm} read={0} />
+      )
+    },
+    {
+      title: '알람 내역',
+      content: (
+        <AlarmList alarmDatas={alarmDatas} clickAlarm={clickAlarm} read={1} />
+      )
+    }
+  ];
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -117,15 +260,44 @@ const Header = (props) => {
                   </Box>
                 </Stack>
               </StyledBox>
+              {/* 알림이있으면 표시 */}
               <Badge
                 sx={{ flexGrow: 1, margin: '0px !important' }}
-                badgeContent=" "
+                badgeContent={alarmDatas && newAlarm}
                 color="error"
-                variant="dot"
+                // variant="dot"
+                invisible={!isAlarm}
               >
-                <StyledNotificationsIcon isAdminMode={isAdminMode} />
+                {/* 종모양 */}
+                <StyledNotificationsIcon
+                  isAdminMode={isAdminMode}
+                  onClick={handleClick}
+                />
               </Badge>
-
+              <Popover
+                open={open2}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+              >
+                <Tabs tabData={tabData} sx={0}></Tabs>
+              </Popover>
+              {/* <Popover
+                open={open3}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left'
+                }}
+              >
+                <Typography sx={{ p: 2 }}>
+                  읽지 않은 알림이 있습니다.
+                </Typography>
+              </Popover> */}
               {/* Popover 영역
               <Popper
                 open={open}
@@ -190,7 +362,9 @@ const Header = (props) => {
               </Popper> */}
             </Stack>
           </Box>
-          <Button onClick={handleLogOut}>로그아웃</Button>
+          <Button onClick={handleLogOut}>
+            {isAlarm ? 'qwe' : 'asd'}로그아웃
+          </Button>
         </StyledToolbar>
         <StyledSubToolbar direction="row">
           <StyledButton onClick={onMenuIconClick}>

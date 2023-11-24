@@ -9,6 +9,7 @@ import store from './redux/store';
 //실시간 처리?? 기원
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import JWTdecode from './components/common/JWTdecode';
+import SocketProvider from './utils/SocketProvider';
 
 const queryClient = new QueryClient();
 
@@ -20,9 +21,14 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <JWTdecode />
         <BrowserRouter>
-          <ThemeProvider>
-            <Router isAdminMode={isAdminMode} setIsAdminMode={setIsAdminMode} />
-          </ThemeProvider>
+          <SocketProvider>
+            <ThemeProvider>
+              <Router
+                isAdminMode={isAdminMode}
+                setIsAdminMode={setIsAdminMode}
+              />
+            </ThemeProvider>
+          </SocketProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

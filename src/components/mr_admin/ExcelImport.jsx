@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
+import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
   setSnackbarContent
@@ -30,13 +31,36 @@ function ExcelImport() {
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
+    dispatch(handleMrListUpdate());
   };
   /*----------------------------------------------------------------------------------------*/
+  const validateExcelData = (rowData) => {
+    const requiredFields = ['회의실명', '분류', '위치', '인원', '요일'];
+    const missingFields = [];
+
+    requiredFields.forEach((field) => {
+      if (!rowData[field]) {
+        missingFields.push(field);
+      }
+    });
+
+    return missingFields;
+  };
   /**엑셀 파일 업로드 */
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
 
     if (file) {
+      const validExtensions = ['.xlsx', '.xls'];
+      const fileExtension = file.name.slice(
+        ((file.name.lastIndexOf('.') - 1) >>> 0) + 2
+      );
+
+      if (!validExtensions.includes(`.${fileExtension}`)) {
+        handleSetSnackbarContent('엑셀 파일만 업로드 가능합니다.');
+        handleOpenSnackbar();
+        return;
+      }
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -46,17 +70,32 @@ function ExcelImport() {
         const sheetName = workbook.SheetNames[0]; // 첫 번째 시트를 선택
         const sheet = workbook.Sheets[sheetName];
 
-        // const sheetName2 = workbook.SheetNames[1]; // 이미지 시트를 선택
-        // const imgSheet = workbook.Sheets[sheetName2];
-
         /**시트 데이터를 배열로 변환 */
         const excelData = XLSX.utils.sheet_to_json(sheet);
 
+        // // ID를 추가하고 tableData에 할당
+        // const dataWithIds = excelData.map((row, index) => ({
+        //   id: index, // ID를 각 행의 인덱스로 생성
+        //   ...row // 기존 열 데이터 유지
+        // }));
+
         // ID를 추가하고 tableData에 할당
-        const dataWithIds = excelData.map((row, index) => ({
-          id: index, // ID를 각 행의 인덱스로 생성
-          ...row // 기존 열 데이터 유지
-        }));
+        const dataWithIds = excelData
+          .map((row, index) => {
+            const missingFields = validateExcelData(row);
+            if (missingFields.length > 0) {
+              handleSetSnackbarContent(
+                `행에 필수 필드가 누락되었습니다: ${missingFields.join(', ')}`
+              );
+              handleOpenSnackbar();
+              return null; // 유효하지 않은 데이터는 무시
+            }
+            return {
+              id: index, // ID를 각 행의 인덱스로 생성
+              ...row // 기존 열 데이터 유지
+            };
+          })
+          .filter(Boolean);
 
         // 테이블 데이터 설정
         setTableData(dataWithIds);

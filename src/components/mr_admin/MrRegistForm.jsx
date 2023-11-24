@@ -1,8 +1,10 @@
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
 import {
+  Box,
   Button,
   Checkbox,
+  Chip,
   Collapse,
   FormControl,
   FormControlLabel,
@@ -22,7 +24,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import dayjs from 'dayjs';
 import * as React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TimeField from '../../components/common/TimeField';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
@@ -36,6 +38,7 @@ import Modal from '../common/Modal';
 import RectangleBtn from '../common/RectangleBtn';
 import MrTag from './MrTag';
 import SuppliesList from './SuppliesList';
+import { useSocket } from '../../utils/SocketProvider.js';
 
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
@@ -44,6 +47,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
+    dispatch(handleMrListUpdate());
   };
   /*-------------------------------------알림-----------------------------------------------*/
   const dispatch = useDispatch();
@@ -55,12 +59,15 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
-  const updateBoard = () => {
-    // handleMrListUpdate 함수 디스패치
-    dispatch(handleMrListUpdate());
-  };
+  // const updateBoard = () => {
+  //   // handleMrListUpdate 함수 디스패치
+  //   dispatch(handleMrListUpdate());
+  // };
 
   /*------------------------------------수정시 데이터--------------------------------------------*/
+  const initialMrSupplies = selectedRowData
+    ? selectedRowData.mr_supplies
+    : null;
   const initialMrName = selectedRowData ? selectedRowData.mr_name : '';
   const initialLocation = selectedRowData ? selectedRowData.location : '';
   const initialMaximumCapacity = selectedRowData
@@ -209,22 +216,36 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         console.error('데이터 가져오기 오류:', error);
       });
   };
-  /*----------------------------모달------------------------------------*/
+  /*----------------------------장비------------------------------------*/
+  let all_mr_supplies = '';
+  const [mr_supplies, setMr_supplies] = useState([]);
   // 모달창 열림 여부 값*/
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
-
+  const handleSelectedArray = (selectedArray) => {
+    all_mr_supplies = selectedArray;
+    console.log(all_mr_supplies);
+  };
   const ModalActionBtns = () => {
     const handleSaveBtn = () => {
+      setMr_supplies(
+        all_mr_supplies
+          ? all_mr_supplies.map((supply) => ({
+              supplies_code: supply.supplies_code,
+              supplies_name: supply.supplies_name
+            }))
+          : []
+      );
       handleModal();
       console.log('save 누름');
     };
+
     const handleCancelBtn = () => {
       handleModal();
       console.log('cancel 누름');
     };
-
+    console.log(mr_supplies);
     return (
       <Grid
         container
@@ -245,7 +266,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           }}
           onClick={handleSaveBtn}
         >
-          수정
+          확인
         </Button>
         <Button
           variant="outlined"
@@ -266,7 +287,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     );
   };
   const ModalContentExample = () => {
-    return <SuppliesList />;
+    return <SuppliesList onGetSelectedRowsData={handleSelectedArray} />;
   };
   /*-------------------------요일 컨트롤--------------------------------------- */
   /**요일 매핑 */
@@ -314,32 +335,62 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     }
   };
   /*--------------------------------회의실 CRUD----------------------------------------- */
+
+  const socket = useSocket();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
+  const currentUser = useSelector((state) => state.user);
+  const mem_code = currentUser.mem_code;
+  const memList = [mem_code];
+
+  const mrAlarm = (alertDTO) => {
+    axiosInstance.axiosInstance
+      .post(`http://localhost:8081/car_rez/announcementSave`, alertDTO)
+      .then((res2) => {
+        if (res2.status === 200) {
+          socket.emit('allUsers', jwt);
+        }
+      });
+  };
+
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
     axiosInstance.axiosInstance
       .post('/mr/mrRegister', FormToData)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData.mr_name}\n회의실이 등록되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
+
         handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
         handleImgUpload();
-        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
       });
   };
+
   /**회의실 수정 버튼 클릭 이벤트 */
   const handleUpdate = () => {
     axiosInstance.axiosInstance
       .patch('/mr/mrUpdate', FormToData2)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData2.mr_name}\n회의실이 수정되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
         handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
         deletedImgCodes.forEach((imgCode) => deleteImage(imgCode));
         handleImgUpload();
-        updateBoard();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -350,10 +401,27 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     axiosInstance.axiosInstance
       .patch('/mr/mrDeactivate', FormToData3)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData3.mr_name}\n회의실이 비활성화 되었습니다.`
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
-        updateBoard();
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+  };
+  /**회의실 재활성화 버튼 클릭 이벤트 */
+  const handleReactive = () => {
+    axiosInstance.axiosInstance
+      .patch('/mr/mrDeactivate', FormToData4)
+      .then((res) => {
+        handleSetSnackbarContent('회의실 재활성화 처리가 완료되었습니다.');
+        handleOpenSnackbar();
+        handleCloseDrawer();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -366,6 +434,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     mr_name,
     maximum_capacity,
     location,
+    mr_supplies,
     mr_type: mrType,
     mr_keyword: selectedTags,
     mr_op_day: selectedDays // 변환된 요일 배열 사용
@@ -394,6 +463,18 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       location,
       mr_type: mrType,
       is_opened: 1
+    };
+  }
+  /**재활성시 필요한 데이터 */
+  let FormToData4 = {};
+  if (selectedRowData && selectedRowData.mr_code) {
+    FormToData4 = {
+      mr_code: selectedRowData.mr_code,
+      mr_name,
+      maximum_capacity,
+      location,
+      mr_type: mrType,
+      is_opened: 0
     };
   }
 
@@ -549,15 +630,40 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
           <Label htmlFor={'supplies'} text={'기본 비품'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
-          <IconButton
-            component="label"
-            variant="contained"
-            color="secondary"
-            size="large"
-            onClick={handleModal}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '4px',
+              alignItems: 'center',
+              width: '410px',
+              flexWrap: 'wrap'
+            }}
           >
-            <ControlPointOutlinedIcon />
-          </IconButton>
+            <IconButton
+              component="label"
+              variant="contained"
+              color="secondary"
+              size="large"
+              onClick={handleModal}
+            >
+              <ControlPointOutlinedIcon />
+            </IconButton>
+
+            {initialMrSupplies &&
+              initialMrSupplies.map(
+                (supplies, index) =>
+                  supplies.supplies.supplies_name !== null && (
+                    <Chip key={index} label={supplies.supplies.supplies_name} />
+                  )
+              )}
+            {mr_supplies &&
+              mr_supplies.map(
+                (supplies, index) =>
+                  supplies.supplies_name !== null && (
+                    <Chip key={index} label={supplies.supplies_name} />
+                  )
+              )}
+          </Box>
           <Modal
             open={open}
             modalTitle={'비품 항목'}
@@ -654,18 +760,39 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                 handlebtn={handleUpdate}
               />
             </Grid>
-            <Grid item xs={6}>
-              <RectangleBtn
-                category={'delete'}
-                text={'회의실 비활성화'}
-                sx={{
-                  padding: '14px 12px',
-                  margin: '1px',
-                  width: '100%'
-                }}
-                handlebtn={handleDeactive}
-              />
-            </Grid>
+
+            {selectedRowData.is_opened === '활성' ? ( // "활성"일 때
+              <Grid item xs={6}>
+                <RectangleBtn
+                  category={'delete'}
+                  text={'회의실 비활성화'}
+                  sx={{
+                    padding: '14px 12px',
+                    margin: '1px',
+                    width: '100%'
+                  }}
+                  handlebtn={handleDeactive}
+                />
+              </Grid>
+            ) : (
+              // "비활성"일 때
+              <Grid item xs={6}>
+                <RectangleBtn
+                  category={'reactivate'}
+                  text={'회의실 재활성화'}
+                  sx={{
+                    padding: '14px 12px',
+                    margin: '1px',
+                    width: '100%',
+                    backgroundColor: '#8bc34a', // 원하는 색상으로 변경
+                    '&:hover': {
+                      backgroundColor: '#689f38' // 마우스 호버 시의 색상 변경
+                    }
+                  }}
+                  handlebtn={handleReactive}
+                />
+              </Grid>
+            )}
           </Grid>
         ) : (
           <Grid item container xs={12}>

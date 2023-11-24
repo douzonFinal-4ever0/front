@@ -15,6 +15,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloseIcon from '@mui/icons-material/Close';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { formatNumber } from '../../utils/formatNumber';
 
 const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
   const [openImg, setOpenImg] = useState(false);
@@ -107,7 +108,12 @@ const CarMaintTable = ({ maintData, setMaintData, carCode, setCheckedRow }) => {
       width: 100,
       align: 'center',
       headerAlign: 'center',
-      headerClassName: 'super-app-theme--header'
+      headerClassName: 'super-app-theme--header',
+      renderCell: (params) => (
+        <Typography variant="body2">
+          {formatNumber(parseInt(params.value))}원
+        </Typography>
+      )
     },
     {
       field: 'pay_method',

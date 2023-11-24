@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
   Box,
   Dialog,
@@ -12,36 +13,43 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
-import { getFormattedDate } from '../../../../utils/formatDate';
-import { setRezData } from '../../../../redux/reducer/mrUserSlice';
-import { setUserData } from '../../../../redux/reducer/userSlice';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
-import MrInfoSection from '../../rez/section/MrInfoSection';
-import RezSection from '../../rez/section/RezSection';
-import RezInfo from '../../rez_confirm/section/RezInfo';
-import axiosInstance from '../../../../utils/axios';
-import { palette } from '../../../../theme/palette';
 import {
   openSanckbar,
   setSnackbarContent
 } from '../../../../redux/reducer/SnackbarSlice';
+import { setRezData } from '../../../../redux/reducer/mrUserSlice';
+import { setUserData } from '../../../../redux/reducer/userSlice';
+import { palette } from '../../../../theme/palette';
+import axiosInstance from '../../../../utils/axios';
+import { getFormattedDate } from '../../../../utils/formatDate';
+import MrInfoSection from '../../rez/section/MrInfoSection';
+import RezSection from '../../rez/section/RezSection';
+import RezInfo from '../../rez_confirm/section/RezInfo';
 import DeleteModal from './DeleteModal';
+import Progress from '../../../../components/mr_user/Progress';
+import { useSocket } from '../../../../utils/SocketProvider';
 
 const RezDetailModal = ({
   open,
   handleModal,
-  data,
+  data, // 해당 예약 객체
+  steRezDetail,
   isModify,
   handleModifyMode,
-  getMrRezApi
+  getMrRezApi,
+  list, // 전체 예약 리스트
+  setRezList,
+  events,
+  setEvents
 }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
+
   const detailInfo = {
     m_name: data && data.m_name,
     mr_name: data.mr && data.mr.mr_name,
@@ -51,14 +59,18 @@ const RezDetailModal = ({
     rez_end_time: data && data.rez_end_time,
     master: data && data.master,
     created_at: data && data.created_at,
-    pt_list: data && data.mr_pt_list
+    pt_list: data && data.mr_pt_list,
+    mr_rez_code: data && data.mr_rez_code
   };
-
+  const socket = useSocket();
   // 삭제 모달창 취소 이벤트
   const handleDeleteModalClose = () => {
     setDeleteModal(false);
   };
-
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
   // 삭세 모달창 삭제 확인 이벤트
   const handleDeleteConfirm = async () => {
     try {
@@ -66,15 +78,43 @@ const RezDetailModal = ({
         `/mr/rez?mr_rez_code=${data.mr_rez_code}`
       );
 
-      if (res.status !== 200) return;
 
-      getMrRezApi(); // 페이지 재로드
+      if (res.status === 200) {
+        console.log(data.mr_pt_list);
+        var memList = [];
+        for (let mem of data.mr_pt_list) {
+          memList.push(mem.mem_code);
+        }
+        for (let mem of data.mr_pt_list) {
+          const alertDTO = {
+            mem_code: mem.mem_code,
+            contents: `예약 번호 : ${data.mr_rez_code}\n회의실 예약이 취소되었습니다.`
+          };
+          axiosInstance.axiosInstance
+            .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
+            .then((res2) => {
+              if (res2.status === 200) {
+                socket.emit('changeDB', { memList, jwt });
+              }
+            });
+        }
+        // return;
+      }
+
+      if (res.status !== 200) return;
+      const reData = list.filter(
+        (item) => item.mr_rez_code !== data.mr_rez_code
+      );
+      setRezList(reData);
+
+
+      const reEvent = events.filter((e) => e.id !== data.mr_rez_code);
+      setEvents(reEvent);
 
       // 스낵바
       handleSetSnackbarContent('예약 삭제 되었습니다. ');
       handleOpenSnackbar();
 
-      handleModifyMode();
       handleDeleteModalClose();
       handleModal();
     } catch (err) {
@@ -114,8 +154,10 @@ const RezDetailModal = ({
 
   // 수정 버튼 이벤트
   const handleModifyBtn = () => {
-    const list = { ...data };
-    if (list.length !== 0) {
+    const ptList = JSON.parse(JSON.stringify(data.mr_pt_list));
+    const list = { ...data, mr_pt_list: ptList };
+
+    if (list.mr_pt_list.length !== 0) {
       list.mr_pt_list.forEach((item) => {
         item.memVO.mem_code = item.mem_code;
       });
@@ -141,17 +183,50 @@ const RezDetailModal = ({
   const handleSaveBtn = () => {
     try {
       const updateRezApi = async () => {
-        const pts = [...rezData.mr_pt_list, userData];
+        const pts = [...rezData.mr_pt_list];
 
         const newData = {
           ...rezData,
-          mr_pt_list: pts,
           mem_code: userData.mem_code,
           mr_rez_code: data.mr_rez_code
         };
 
         const res = await axiosInstance.axiosInstance.put('/mr/rez', newData);
-        if (res.status !== 200) return;
+        //수정시 없어진 사람이랑 추가된 사람 어떻게 할건지 생각
+
+        if (res.status === 200) {
+        }
+
+        // // 이벤트 업데이트
+        // const newEvent = events.filter((e) => e.id === newData.mr_rez_code);
+        // if (newEvent.length !== 0) {
+        //   newEvent[0].start = `${newData.rez_date} ${newData.rez_start_time}:00`;
+        //   newEvent[0].end = `${newData.rez_date} ${newData.rez_end_time}:00`;
+
+        //   const lestEvent = events.filter((e) => e.id !== newData.mr_rez_code);
+
+        //   const result = [...lestEvent, ...newEvent];
+        //   setEvents(result);
+        // }
+
+        // // 데이터 업데이트
+        // const findData = list.filter(
+        //   (item) => item.mr_rez_code === newData.mr_rez_code
+        // );
+        // if (findData.length !== 0) {
+        //   findData[0].m_name = newData.m_name;
+        //   findData[0].m_type = newData.m_type;
+        //   findData[0].rez_start_time = `${newData.rez_date} ${newData.rez_start_time}:00`;
+        //   findData[0].rez_end_time = `${newData.rez_date} ${newData.rez_end_time}:00`;
+        //   findData[0].mr_pt_list = newData.mr_pt_list;
+
+        //   const lestData = list.filter(
+        //     (item) => item.mr_rez_code !== newData.mr_rez_code
+        //   );
+        //   const resultData = [...lestData, ...findData];
+        //   steRezDetail(...findData);
+        //   setRezList(resultData);
+        // }
 
         // 리덕스 리셋
         const initialState = {
@@ -169,10 +244,9 @@ const RezDetailModal = ({
         dispatch(setRezData({ data: initialState }));
         getMrRezApi(); // 페이지 재로드
 
-        // 스낵바
+        //스낵바;
         handleSetSnackbarContent('예약 수정 완료되었습니다. ');
         handleOpenSnackbar();
-
         handleModifyMode();
         handleModal();
       };
@@ -211,7 +285,7 @@ const RezDetailModal = ({
 
         <DialogContent
           sx={{
-            maxHeight: '561px',
+            maxHeight: '690px',
             overflowY: 'auto',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar-thumb': {
@@ -252,22 +326,26 @@ const RezDetailModal = ({
               <RectangleBtn
                 type={'button'}
                 text={
-                  data.role === '예약자' ? (isModify ? '취소' : '삭제') : '확인'
+                  data && data.role === '예약자'
+                    ? isModify
+                      ? '취소'
+                      : '예약 취소'
+                    : '확인'
                 }
                 category={'cancel'}
                 sx={{ padding: '10px 8px' }}
                 handlebtn={
-                  data.role === '예약자'
+                  data && data.role === '예약자'
                     ? isModify
                       ? handleCancelBtn
                       : handleDeletBtn
                     : handleCancelBtn
                 }
               />
-              {data.role === '예약자' ? (
+              {data && data.role === '예약자' ? (
                 <RectangleBtn
                   type={'button'}
-                  text={isModify ? '완료' : '수정'}
+                  text={isModify ? '완료' : '예약 수정'}
                   category={'register'}
                   sx={{ padding: '10px 8px' }}
                   handlebtn={isModify ? handleSaveBtn : handleModifyBtn}

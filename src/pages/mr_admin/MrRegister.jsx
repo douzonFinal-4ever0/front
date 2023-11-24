@@ -17,8 +17,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import DataGrid from '../../components/common/DataGrid';
 import Drawer from '../../components/common/Drawer';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import Spinner from '../../components/common/Spinner.jsx';
 import SubHeader from '../../components/common/SubHeader';
 import SubSidebar from '../../components/common/SubSidebar';
+import ExcelDownloadButton from '../../components/mr_admin/ExcelDownloadButton.jsx';
 import ExcelImport from '../../components/mr_admin/ExcelImport.jsx';
 import MrRegistForm from '../../components/mr_admin/MrRegistForm';
 import MainContainer from '../../components/mr_user/MainContainer';
@@ -29,6 +31,7 @@ import axiosInstance from '../../utils/axios.js';
 const MrRegister = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   // const meetingRooms = useSelector((state) => state.mrList.meetingRooms);
@@ -185,6 +188,7 @@ const MrRegister = () => {
         }));
         setMrList(processedData);
         setFilteredMrList(processedData);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -214,6 +218,11 @@ const MrRegister = () => {
           content: <ExcelImport />
         }
       : ''
+    // !isEditMode
+    //   ? {
+    //       title: <ExcelDownloadButton />
+    //     }
+    //   : ''
   ];
   /*---------------------------------------------------------------------------------------------------------*/
   /**데이터 그리드 더블 클릭이벤트 */
@@ -228,7 +237,10 @@ const MrRegister = () => {
   };
   return (
     <>
-      <SubHeader title={'회의실'} />
+      <Spinner isLoading={isLoading} />
+      <SubHeader title={'회의실'}>
+        <ExcelDownloadButton />
+      </SubHeader>
       <Box sx={{ display: 'flex', height: '95%' }}>
         <SubSidebar
           widthP={20}

@@ -13,7 +13,10 @@ import LogoImage from '../../assets/images/logo/logo.png';
 import JWTdecode from '../../components/common/JWTdecode';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
+import { useSocket } from '../../utils/SocketProvider';
 import axiosInstance from '../../utils/axios';
+
+// import SocketContext from '../../utils/SocketContext';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,14 +29,29 @@ const Login = () => {
     email,
     password
   };
+  // const socket = useContext(SocketContext);
+  const socket = useSocket();
+  // const socket = useSelector(setSocket).payload.socket;
+  const user = useSelector(setUserData).payload.user;
+  const { name, position_name, mem_code, dept_name } = user;
+  // useEffect(() => {
+
+  // }, [dispatch]);
   /**로그인 할때 쓰는 핸들러 */
   const handleLogin = () => {
     axiosInstance.axiosInstance
       .post('/api/v1/user/login', FormToData)
       .then((res) => {
         setJwt('Bearer ' + res.data.token);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
     <JWTdecode />;
+    // console.log(socket);
+    // socket.on('connect', () => {
+    //   socket.emit('loadRez', jwt);
+    // });
   };
   // 엔터 키가 눌렸을 때 실행되는 함수
   const handleKeyPress = (event) => {
@@ -41,14 +59,35 @@ const Login = () => {
       handleLogin();
     }
   };
+
   // JWT 토큰을 localStorage에 저장
   localStorage.setItem('jwtToken', jwt);
   if (jwt != '') {
     if (jwt != 'Bearer undefined') {
+      // console.log(socket);
+      // socket.emit('login');
+      // socket.emit('loginSuccess', mem_code);
+      // console.log(socket);
+      console.log(user.mem_code);
+
       navigate('/mr/dashboard');
     }
   }
+  // useEffect(() => {
+  //   console.log(user);
+  //   if (user.mem_code !== '') {
+  //     console.log(user);
+  //     const memInfo = {
+  //       mem_code: mem_code,
+  //       name: name
+  //     };
 
+  //     const newSocket = io('http://localhost:4001', { query: memInfo });
+  //     dispatch(setSocket(newSocket));
+  //     console.log(socket);
+  //     // socket.emit('loadRez', jwt);
+  //   }
+  // }, [user]);
   return (
     <Container
       sx={{

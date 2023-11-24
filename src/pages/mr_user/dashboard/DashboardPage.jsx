@@ -17,6 +17,12 @@ import WrapContainer from '../../../components/mr_user/WrapContainer';
 import MiniRezForm from './section/MiniRezForm';
 import RezList from './section/RezList';
 import Statistics from './section/Statistics';
+import calcRezRate from '../../../utils/calcRezRate';
+import Notice from './section/Notice';
+import Notices from './section/Notices';
+import { setRezData } from '../../../redux/reducer/mrUserSlice';
+import { getFormattedDate } from '../../../utils/formatDate';
+import Progress from '../../../components/mr_user/Progress';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -24,16 +30,46 @@ const DashboardPage = () => {
   const userData = useSelector(setUserData).payload.user;
   const bmData = useSelector(setBmData).payload.bm;
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
-  const [rezList, setRezList] = useState([]); // 전체 예약 리스트
+  const [notice, setNotice] = useState([]); // 공지사항 리스트
+  const [isLoading, setIsLoading] = useState(false);
+  const [chartData, setChartData] = useState([]); // 실시간 회의실 예약 현황 차트 데이터
 
   // 리덕스 데이터
   const { name, position_name, mem_code, dept_name } = userData;
   const { mr_list } = bmData;
 
   useEffect(() => {
+    setIsLoading(true);
     getMrRezApi();
+    getMrUsageApi();
+    getNotice();
+    bmMrApi();
+    setIsLoading(false);
   }, []);
 
+  // 즐겨찾기 회의실 API
+  const bmMrApi = async () => {
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/bm?mem_code=${mem_code}`
+    );
+    if (res.status !== 200) return;
+    // 즐겨찾기 회의실 리덕스 저장
+    dispatch(setBmData({ data: res && res.data }));
+  };
+
+  // 전체 회의실 사용률 조회
+  const getMrUsageApi = async () => {
+    const date = getToday(); // 오늘 날짜 (년-월-일)
+
+    const res = await axiosInstance.axiosInstance.get(
+      `/mr/statistics?date=${date}`
+    );
+
+    if (res.status !== 200) return;
+    setChartData(res.data);
+  };
+
+  // 사용자 회의실 예약 조회
   const getMrRezApi = async () => {
     try {
       // 참석자로 지정된 회의 예약 조회
@@ -60,9 +96,10 @@ const DashboardPage = () => {
       lestPtList.forEach((rez) => {
         rez.role = '참석자';
       });
-      res.data.forEach((rez) => {
-        rez.role = '예약자';
-      });
+      res.data &&
+        res.data.forEach((rez) => {
+          rez.role = '예약자';
+        });
 
       // 전체 회의 예약 (참석자 + 예약자)
       const data = [...lestPtList, ...res.data];
@@ -70,15 +107,16 @@ const DashboardPage = () => {
       let list = [];
       // 오늘 예약 현황 추출
       const today = getToday();
-      data.forEach((rez) => {
-        if (rez.rez_start_time.includes(today)) {
-          const startTime = getTime(rez.rez_start_time);
-          const endTime = getTime(rez.rez_end_time);
-          const time = `${startTime} - ${endTime}`;
-          const newRez = [{ ...rez, newTime: time }];
-          list.push(...newRez);
-        }
-      });
+      data &&
+        data.forEach((rez) => {
+          if (rez.rez_start_time.includes(today)) {
+            const startTime = getTime(rez.rez_start_time);
+            const endTime = getTime(rez.rez_end_time);
+            const time = `${startTime} - ${endTime}`;
+            const newRez = [{ ...rez, newTime: time }];
+            list.push(...newRez);
+          }
+        });
 
       // 이름 시간 순으로 정렬
       list.sort(
@@ -90,6 +128,26 @@ const DashboardPage = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // 공지사항 조회
+  const getNotice = async () => {
+    const res = await axiosInstance.axiosInstance.get('/mr/notice');
+    if (res.status !== 200) return;
+
+    let processedData = [];
+
+    if (Array.isArray(res.data)) {
+      processedData = res.data.map((item) => ({
+        ...item,
+        id: item.notice_code
+      }));
+    } else {
+      // 데이터가 배열이 아닌 경우에 대한 처리
+      console.error('Data is not an array:', res.data);
+    }
+
+    setNotice(processedData);
   };
 
   // 현재 날짜 구하기
@@ -173,22 +231,36 @@ const DashboardPage = () => {
         </Box>
         <MainContainer>
           <Stack spacing={3}>
-            {/* 예약 폼 */}
+            {/* 1단락 */}
             <MiniRezForm />
 
+            {/* 2단락 */}
             <Box>
               <Grid container spacing={3}>
-                <Grid item xs={5.5}>
+                <Grid item xs={4.2} sx={{ height: '600px' }}>
                   <RezList todayRezList={todayRezList} />
                 </Grid>
-                <Grid item xs={6.5}>
-                  <Statistics />
+                <Grid item xs={7.8}>
+                  <Statistics data={chartData} />
+                </Grid>
+              </Grid>
+            </Box>
+
+            {/* 3단락 */}
+            <Box>
+              <Grid container spacing={3}>
+                <Grid item xs={4.2}>
+                  <Notice data={notice} />
+                </Grid>
+                <Grid item xs={7.8}>
+                  asd
                 </Grid>
               </Grid>
             </Box>
           </Stack>
         </MainContainer>
       </Box>
+      <Progress open={isLoading} />
     </>
   );
 };

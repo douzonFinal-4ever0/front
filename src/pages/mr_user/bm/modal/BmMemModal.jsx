@@ -1,9 +1,11 @@
 import { TreeItem, TreeView } from '@mui/x-tree-view';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useSpring, animated } from '@react-spring/web';
+import { alpha, styled } from '@mui/material/styles';
 import {
   Badge,
   Box,
@@ -20,13 +22,135 @@ import {
   Typography
 } from '@mui/material';
 import Toggle from '../../../../components/common/Toggle';
-import styled from '@emotion/styled';
 import RectangleBtn from '../../../../components/common/RectangleBtn';
 import Label from '../../../../components/common/Label';
+import Collapse from '@mui/material/Collapse';
+import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
 import { palette } from '../../../../theme/palette';
 import axiosInstance from '../../../../utils/axios';
 import { useEffect } from 'react';
+
+// 좌측 선택 영역 (조직도)
+const ContentByToggle = ({
+  selectBtn,
+  uniqueDeptNamesArray,
+  tempAddList,
+  selectTab,
+  setTempAddList,
+  result,
+  InitLabel
+}) => {
+  switch (selectBtn) {
+    case 'all':
+      // 멤버 클릭 시 이벤트
+      const handleItemClick = (e, nodeId) => {
+        // nodeId : 이름
+        // 부서명 클릭 시 오류 선택 불가 처리
+        if (uniqueDeptNamesArray.includes(nodeId)) return;
+
+        // 기존 임시 리스트 중복 체크
+        const res = tempAddList.filter((item) => item === nodeId);
+        if (res.length !== 0) return;
+
+        // 임시 리스트에 추가
+        setTempAddList([...tempAddList, nodeId]);
+      };
+      return (
+        <TreeView
+          aria-label="file system navigator"
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+          onNodeSelect={handleItemClick}
+        >
+          {result &&
+            result.map((item, index) => (
+              <TreeItem nodeId={item.dept} label={item.dept} key={index}>
+                {item.members.map((item, index) => (
+                  <TreeItem
+                    nodeId={item.name}
+                    label={
+                      <Stack direction={'row'} gap={1}>
+                        <Typography
+                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
+                        >
+                          {item.name}
+                        </Typography>
+                        <Typography sx={{ fontSize: '13px' }}>
+                          ({item.email})
+                        </Typography>
+                        {selectTab === 0 ? (
+                          <InitLabel code={item.mem_code} />
+                        ) : null}
+                      </Stack>
+                    }
+                    sx={{
+                      margin: '4px 0'
+                    }}
+                  />
+                ))}
+              </TreeItem>
+            ))}
+        </TreeView>
+      );
+    case 'search':
+      return <Box>서치</Box>;
+    case 'bookmark':
+      return <Box>즐겨찾기</Box>;
+    default:
+      return;
+  }
+};
+
+// 우측 적용 영역 (적용 대상)
+const ApplyTrees = ({
+  selectMems,
+  setTemApplyList,
+  tempApplyList,
+  applyList,
+  list
+}) => {
+  // 선택된 참석자 아이템 클릭 이벤트
+  const handlePtItem = (event, nodeId) => {
+    // 중복 제거
+    const res = tempApplyList.filter((item) => item === nodeId);
+    if (res.length !== 0) return;
+    // 중복 제거한 데이터 업데이트
+    setTemApplyList([...tempApplyList, nodeId]);
+  };
+
+  return (
+    <TreeView
+      aria-label="file system navigator"
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
+      onNodeSelect={handlePtItem}
+    >
+      {applyList &&
+        applyList.map((item, index) => (
+          <TreeItem
+            nodeId={item.mem_code}
+            label={
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  margin: '2px 0px'
+                }}
+              >
+                <Stack direction={'row'} gap={'4px'}>
+                  <StyledUserName>{item.name}</StyledUserName>
+                  <StyledUserEmail>{item.position_name}</StyledUserEmail>
+                  <StyledUserEmail>| {item.deptVO.dept_name}</StyledUserEmail>
+                </Stack>
+              </Box>
+            }
+            key={index}
+          />
+        ))}
+    </TreeView>
+  );
+};
 
 const BmMemModal = ({
   selectTab, // 멤버, 그룹, 회의실
@@ -39,10 +163,18 @@ const BmMemModal = ({
   master,
   bmGroupMemApi
 }) => {
-  // (우측창) 적용 대상 리스트에서 선택된 멤버
-  const [checkMemName, setCheckMemName] = useState(null);
   // (좌측창) 전체 리스트에서 선택된 멤버 리스트
   const [addMemName, setAddMemName] = useState([]);
+  // 좌측창 임시 리스트
+  const [tempAddList, setTempAddList] = useState([]);
+  // 좌측창 선택 여부 tf 리스트
+  const [leftGroup, setLeftGroup] = useState([]);
+
+  // 우측창 적용 대상 리스트
+  const [applyList, setApplyList] = useState([]);
+  // (우측창) 적용 대상 리스트에서 선택된 멤버
+  const [tempApplyList, setTemApplyList] = useState([]);
+
   // 모달창 그룹명
   const [groupName, setGroupName] = useState('');
   // 선택된 토글 버튼 값
@@ -98,11 +230,6 @@ const BmMemModal = ({
     }
   };
 
-  // 선택된 참석자 아이템 클릭 이벤트
-  const handlePtItem = (event, nodeId) => {
-    setCheckMemName(nodeId);
-  };
-
   // 그룹명 인풋 이벤트
   const handleGroupNameInput = (e) => {
     setGroupName(e.target.value);
@@ -110,37 +237,51 @@ const BmMemModal = ({
 
   // 추가 버튼 이벤트
   const handleAddBtn = () => {
-    console.log(333);
-    const addMem = list.filter((mem) => mem.mem_code === addMemName);
+    const res = [];
 
-    // 이미 등록된 사용자일 경우 경고창
-    const res = initList.filter((item) => item.mem_code === addMemName);
-    if (res.length !== 0 && selectTab === 0) {
-      alert('이미 등록된 사용자입니다.');
-      return;
-    }
+    tempAddList.forEach((item) => {
+      const addMem = list.filter((mem) => mem.name === item);
+      res.push(...addMem);
+    });
 
-    const isExist = selectMems.find(
-      (item) => item.mem_code === addMem[0].mem_code
-    );
-    if (isExist) return;
-    setSelectMems([...selectMems, ...addMem]);
+    setApplyList(res);
+
+    // // 이미 등록된 사용자일 경우 경고창
+    // const res = initList.filter((item) => item.mem_code === addMemName);
+    // if (res.length !== 0 && selectTab === 0) {
+    //   alert('이미 등록된 사용자입니다.');
+    //   return;
+    // }
+
+    // const isExist = selectMems.find(
+    //   (item) => item.mem_code === addMem[0].mem_code
+    // );
+    // if (isExist) return;
+    // setSelectMems([...selectMems, ...addMem]);
   };
 
   // 제외 버튼 이벤트
   const handleDeleteBtn = () => {
-    const lestMems = selectMems.filter((mem) => mem.name !== checkMemName);
-    setSelectMems([...lestMems]);
+    // 적용 대상 리스트 업데이트
+    const list = [...applyList];
+    let res = list.filter((item) => !tempApplyList.includes(item.mem_code));
+    setApplyList(res);
   };
 
   // 확인 버튼 이벤트
   const handleConfirm = async () => {
-    const list = selectMems.map((item) => item.mem_code);
+    const result = [];
+
+    tempAddList.forEach((item) => {
+      const res = list.filter((mem) => mem.name === item);
+
+      result.push(res[0].mem_code);
+    });
 
     const data = {
       groupName: groupName,
       master: master,
-      members: list
+      members: result
     };
 
     try {
@@ -148,7 +289,7 @@ const BmMemModal = ({
       if (res.status === 201) {
         alert('즐겨찾기 등록 성공하였습니다.');
         bmGroupMemApi(); // 즐겨찾기 리스트 조회
-        setSelectMems([]); // 적용 대상 리스트 초기화
+        setApplyList([]); // 적용 대상 리스트 초기화
         setGroupName(''); // 그룹명 초기화
         handleModal(); // 모달창 닫기
       } else {
@@ -190,54 +331,6 @@ const BmMemModal = ({
     return null;
   };
 
-  const ContentByToggle = () => {
-    switch (selectBtn) {
-      case 'all':
-        return (
-          <TreeView
-            aria-label="file system navigator"
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-            onNodeSelect={handleSelect}
-          >
-            {result.map((item, index) => (
-              <TreeItem nodeId={item.dept} label={item.dept} key={index}>
-                {item.members.map((item, index) => (
-                  <TreeItem
-                    nodeId={item.name}
-                    label={
-                      <Stack direction={'row'} gap={1}>
-                        <Typography
-                          sx={{ fontSize: '14px', fontWeight: 'bold' }}
-                        >
-                          {item.name}
-                        </Typography>
-                        <Typography sx={{ fontSize: '13px' }}>
-                          ({item.email})
-                        </Typography>
-                        {selectTab === 0 ? (
-                          <InitLabel code={item.mem_code} />
-                        ) : null}
-                      </Stack>
-                    }
-                    sx={{
-                      margin: '4px 0'
-                    }}
-                  />
-                ))}
-              </TreeItem>
-            ))}
-          </TreeView>
-        );
-      case 'search':
-        return <Box>서치</Box>;
-      case 'bookmark':
-        return <Box>즐겨찾기</Box>;
-      default:
-        return;
-    }
-  };
-
   return (
     <Dialog
       open={open}
@@ -248,14 +341,14 @@ const BmMemModal = ({
       maxWidth={'md'}
       PaperProps={{
         sx: {
-          height: '550px'
+          // height: '600px'
         }
       }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h5">
-            {selectTab == 0 ? '즐겨찾기 멤버 등록' : '즐겨찾기 그룹 등록'}
+            {selectTab === 0 ? '즐겨찾기 그룹 등록' : '즐겨찾기 멤버 등록'}
           </Typography>
         </DialogTitle>
         <IconButton
@@ -268,7 +361,7 @@ const BmMemModal = ({
       </Stack>
 
       <DialogContent>
-        {selectTab == 1 ? (
+        {selectTab == 0 ? (
           <Grid
             item
             container
@@ -313,7 +406,15 @@ const BmMemModal = ({
                   overflowY: 'scroll'
                 }}
               >
-                {ContentByToggle()}
+                <ContentByToggle
+                  selectBtn={selectBtn}
+                  uniqueDeptNamesArray={uniqueDeptNamesArray}
+                  tempAddList={tempAddList}
+                  setTempAddList={setTempAddList}
+                  result={result}
+                  selectTab={selectTab}
+                  InitLabel={InitLabel}
+                />
               </Box>
             </Stack>
           </Grid>
@@ -349,21 +450,13 @@ const BmMemModal = ({
                 overflowY: 'scroll'
               }}
             >
-              <TreeView
-                aria-label="file system navigator"
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                onNodeSelect={handlePtItem}
-              >
-                {selectMems &&
-                  selectMems.map((item, index) => (
-                    <TreeItem
-                      nodeId={item.name}
-                      label={item.name}
-                      key={index}
-                    />
-                  ))}
-              </TreeView>
+              <ApplyTrees
+                tempApplyList={tempApplyList}
+                setTemApplyList={setTemApplyList}
+                selectMems={selectMems}
+                applyList={applyList}
+                list={list}
+              />
             </Box>
           </Grid>
         </Grid>
@@ -402,6 +495,61 @@ const BmMemModal = ({
 
 export default BmMemModal;
 
+const TransitionComponent = (props) => {
+  const style = useSpring({
+    to: {
+      opacity: props.in ? 1 : 0,
+      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`
+    }
+  });
+
+  return (
+    <animated.div style={style}>
+      <Collapse {...props} />
+    </animated.div>
+  );
+};
+
+const CustomTreeItem = React.forwardRef((props, ref) => (
+  <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+));
+
 const StyledArrowBtn = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.grey['100']
 }));
+
+const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.iconContainer}`]: {
+    '& .close': {
+      opacity: 0.3
+    }
+  },
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: 15,
+    paddingLeft: 10,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`
+  }
+}));
+
+const StyledUserName = styled(Typography)(({ theme, isSelect, isConfirm }) => ({
+  fontSize: '15px',
+  fontWeight: 'bold',
+  color: isConfirm
+    ? theme.palette.grey['400']
+    : isSelect
+    ? theme.palette.primary.main
+    : theme.palette.grey['900']
+}));
+
+const StyledUserEmail = styled(Typography)(
+  ({ theme, isSelect, isConfirm }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '13px',
+    color: isConfirm
+      ? theme.palette.grey['400']
+      : isSelect
+      ? theme.palette.primary.main
+      : theme.palette.grey['900']
+  })
+);
