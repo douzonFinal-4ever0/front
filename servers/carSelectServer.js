@@ -56,24 +56,30 @@ io.on('connection', (socket) => {
     console.log(users.size);
     io.emit('currentCnt', users.size);
     users2.delete(disConnectUser);
-    if (users2.size() !== 0) {
-      for (let user of Array.from(users2).keys()) {
-        console.log('adasd');
-        console.log(user);
-        var filterCars = cars.filter((car) => {
-          users2.get(user).carFilter.includes(car.car_code);
-        });
+
+    if (users2.size !== 0) {
+      // for (let user of Array.from(users2).keys()) {
+      //   console.log('adasd');
+      //   console.log(user);
+      //   var filterCars = cars.filter((car) => {
+      //     users2.get(user).carFilter.includes(car.car_code);
+      //   });
+      //   io.to(users2.get(user).socketID).emit('cars', filterCars);
+      // }
+      for (let user of Array.from(users2.keys())) {
+        var filterCars;
+        if (users2.get(user)) {
+          if (users2.get(user).carFilter.length === 0) {
+            filterCars = cars;
+          } else {
+            filterCars = cars.filter((car) => {
+              users2.get(user).carFilter.includes(car.car_code);
+            });
+          }
+        }
         io.to(users2.get(user).socketID).emit('cars', filterCars);
       }
     }
-
-    // users2.map((user) => {
-    //   var filterCars = cars.filter((car) => {
-    //     return car['car_code'].includes(users2.get(currentName).carFillter);
-    //   });
-    //   io.to(user.socketID).emit('cars', filterCars);
-    // });
-    // io.emit('cars', cars);
   });
 
   socket.on(
@@ -81,34 +87,6 @@ io.on('connection', (socket) => {
     ({ mem_code, rezStart_at, rezReturn_at, Token }) => {
       console.log(mem_code);
       console.log(socket.id);
-      // GET 요청 보내기
-      // if (cars.length === 0) {
-      // axios
-      //   .get(
-      //     `http://localhost:8081/car_rez/availableCars/${mem_code}/${rezStart_at}/${rezReturn_at}`,
-      //     {
-      //       headers: {
-      //         Authorization: Token
-      //       }
-      //     }
-      //   )
-      //   .then((res) => {
-      //     // 성공적인 응답 처리
-      //     // console.log('응답 데이터:', res.data);
-      //     // cars = res.data.map((car) => {
-      //     //   car.car_status = '선택가능';
-      //     // });
-      //     console.log(res.data);
-      //     cars = res.data;
-      //     cars.map((car) => (car.car_status = '선택가능'));
-      //     console.log(cars);
-      //     io.emit('cars', cars);
-      //   })
-      //   .catch((error) => {
-      //     // 오류 처리
-      //     console.error('오류 발생:', error);
-      //   });
-      // } else {
       if (cars.length === 0) {
         axios
           .get(`http://localhost:8081/car_rez/availableCars2`, {
@@ -131,35 +109,34 @@ io.on('connection', (socket) => {
                 const rezInfos = res.data;
                 var avaiableCars = [];
                 var filterCars;
-                rezInfos.map((rezInfo) => {
-                  const returnAt = new Date(rezReturn_at).getTime();
-                  const startAt = new Date(rezStart_at).getTime();
-                  if (
-                    startAt > rezInfo.return_at ||
-                    returnAt < rezInfo.start_at
-                  ) {
-                    // console.log(rezInfo.car_code);
-                    avaiableCars.push(rezInfo.car_code);
-                  }
-                });
-                filterCars = cars.filter((car) =>
-                  avaiableCars.includes(car.car_code)
-                );
-                // filterCars = cars.filter((car) => {
-                //   avaiableCars.includes(car.car_code);
-                //   // car.car_code=avaiableCars
-                //   // avaiableCars.includes(car.car_code);
-                //   // return car['car_code'].includes(avaiableCars);
-                // });
-                console.log(filterCars);
+                console.log('예약 정보');
+                console.log(rezInfos);
+                if (rezInfos && rezInfos.length !== 0) {
+                  rezInfos.map((rezInfo) => {
+                    const returnAt = new Date(rezReturn_at).getTime();
+                    const startAt = new Date(rezStart_at).getTime();
+                    if (
+                      startAt > rezInfo.return_at ||
+                      returnAt < rezInfo.start_at
+                    ) {
+                      // console.log(rezInfo.car_code);
+                      avaiableCars.push(rezInfo.car_code);
+                    }
+                  });
+                  filterCars = cars.filter((car) =>
+                    avaiableCars.includes(car.car_code)
+                  );
+                  console.log(filterCars);
+                } else {
+                  filterCars = cars;
+                }
+
                 const userInfo = {
                   socketID: socket.id,
                   carFilter: avaiableCars
                 };
                 users2.set(mem_code, userInfo);
-                console.log('유저 정보');
-                console.log(users2.get(mem_code).socketID);
-                console.log(filterCars);
+
                 io.to(users2.get(mem_code).socketID).emit('cars', filterCars);
               });
           });
@@ -174,24 +151,33 @@ io.on('connection', (socket) => {
             const rezInfos = res.data;
             var avaiableCars = [];
             var filterCars;
-            rezInfos.map((rezInfo) => {
-              const returnAt = new Date(rezReturn_at).getTime();
-              const startAt = new Date(rezStart_at).getTime();
-              if (startAt > rezInfo.return_at || returnAt < rezInfo.start_at) {
-                // console.log(rezInfo.car_code);
-                avaiableCars.push(rezInfo.car_code);
-              }
-            });
-            filterCars = cars.filter((car) =>
-              avaiableCars.includes(car.car_code)
-            );
-            // filterCars = cars.filter((car) => {
-            //   avaiableCars.includes(car.car_code);
-            //   // car.car_code=avaiableCars
-            //   // avaiableCars.includes(car.car_code);
-            //   // return car['car_code'].includes(avaiableCars);
-            // });
-            console.log(filterCars);
+            if (rezInfos && rezInfos.length !== 0) {
+              rezInfos.map((rezInfo) => {
+                const returnAt = new Date(rezReturn_at).getTime();
+                const startAt = new Date(rezStart_at).getTime();
+                if (
+                  startAt > rezInfo.return_at ||
+                  returnAt < rezInfo.start_at
+                ) {
+                  // console.log(rezInfo.car_code);
+                  avaiableCars.push(rezInfo.car_code);
+                }
+              });
+              filterCars = cars.filter((car) =>
+                avaiableCars.includes(car.car_code)
+              );
+              // console.log(filterCars2);
+
+              // filterCars = cars.filter((car) => {
+              //   avaiableCars.includes(car.car_code);
+              //   // car.car_code=avaiableCars
+              //   // avaiableCars.includes(car.car_code);
+              //   // return car['car_code'].includes(avaiableCars);
+              // });
+              console.log(filterCars);
+            } else {
+              filterCars = cars;
+            }
             const userInfo = {
               socketID: socket.id,
               carFilter: avaiableCars
@@ -209,6 +195,7 @@ io.on('connection', (socket) => {
     // console.log(rows);
     // }
   );
+
   socket.on('selected', ({ car_code, currentName }) => {
     console.log('selected');
     if (selectedUser.get(currentName)) {
@@ -250,14 +237,19 @@ io.on('connection', (socket) => {
     //   });
     //   io.to(user.socketID).emit('cars', filterCars);
     // });
-    for (let user of Array.from(users2).keys()) {
-      var filterCars = cars.filter((car) => {
-        // return car['car_code'].includes(users2.get(user).carFilter);
-        // avaiableCars.includes(car.car_code);
-        users2.carFilter.map((avaiableCar) => {
-          return (car.car_code = avaiableCar);
-        });
-      });
+    console.log(users2);
+
+    for (let user of Array.from(users2.keys())) {
+      var filterCars;
+      if (users2.get(user)) {
+        if (users2.get(user).carFilter.length === 0) {
+          filterCars = cars;
+        } else {
+          filterCars = cars.filter((car) => {
+            users2.get(user).carFilter.includes(car.car_code);
+          });
+        }
+      }
       io.to(users2.get(user).socketID).emit('cars', filterCars);
     }
   });
@@ -277,14 +269,27 @@ io.on('connection', (socket) => {
     //   });
     //   io.to(user.socketID).emit('cars', filterCars);
     // });
-    for (let user of Array.from(users2).keys()) {
-      var filterCars = cars.filter((car) => {
-        // return car['car_code'].includes(users2.get(user).carFilter);
-        // avaiableCars.includes(car.car_code);
-        users2.carFilter.map((avaiableCar) => {
-          return (car.car_code = avaiableCar);
-        });
-      });
+    // for (let user of Array.from(users2).keys()) {
+    //   var filterCars = cars.filter((car) => {
+    //     // return car['car_code'].includes(users2.get(user).carFilter);
+    //     // avaiableCars.includes(car.car_code);
+    //     users2.carFilter.map((avaiableCar) => {
+    //       return (car.car_code = avaiableCar);
+    //     });
+    //   });
+    //   io.to(users2.get(user).socketID).emit('cars', filterCars);
+    // }
+    for (let user of Array.from(users2.keys())) {
+      var filterCars;
+      if (users2.get(user)) {
+        if (users2.get(user).carFilter.length === 0) {
+          filterCars = cars;
+        } else {
+          filterCars = cars.filter((car) => {
+            users2.get(user).carFilter.includes(car.car_code);
+          });
+        }
+      }
       io.to(users2.get(user).socketID).emit('cars', filterCars);
     }
     io.emit('users', users);

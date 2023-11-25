@@ -139,15 +139,23 @@ const SubSideContents = ({
   const groupedCarData = [
     {
       groupName: '지정 차량',
-      items: rows.filter((item) => item['authority'].includes('지정'))
+      items: rows.filter(
+        (item) => item.mem_code !== null && item['mem_code'].includes(mem_code)
+      )
     },
     {
       groupName: '승용차',
-      items: rows.filter((item) => item['type'].includes('승용차'))
+      items: rows.filter(
+        (item) =>
+          item['type'].includes('승용차') && item['authority'].includes('모두')
+      )
     },
     {
       groupName: '화물차',
-      items: rows.filter((item) => item['type'].includes('화물차'))
+      items: rows.filter(
+        (item) =>
+          item['type'].includes('화물차') && item['authority'].includes('모두')
+      )
     }
   ];
 
@@ -240,7 +248,8 @@ const SubSideContents = ({
                         <ListItemButton
                           disabled={
                             car.car_status === '선택된 차량' ||
-                            car.car_status === '이미 예약된 차량'
+                            car.car_status === '이미 예약된 차량' ||
+                            car.car_status === '내가 선택한 차량'
                           }
                         >
                           <Grid
