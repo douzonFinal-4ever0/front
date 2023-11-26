@@ -237,25 +237,28 @@ const Register = () => {
     e.preventDefault();
     console.log(formData);
     var flag = 0;
+    if (formData.detail === '') {
+      flag++;
+    }
     if (formData.carDTO.car_code === '') {
       //error snackbar
-      handleSetSnackbarStatus('error');
-      handleSetSnackbarContent('차량을 선택하세요.');
-      handleOpenSnackbar();
+      // handleSetSnackbarStatus('error');
+      // handleSetSnackbarContent('차량을 선택하세요.');
+      // handleOpenSnackbar();
       flag++;
     }
     if (formData.start_at === '' || formData.return_at === '') {
       //error snackbar
-      handleSetSnackbarContent('날짜를 선택하세요.');
-      handleSetSnackbarStatus('error');
-      handleOpenSnackbar();
+      // handleSetSnackbarContent('날짜를 선택하세요.');
+      // handleSetSnackbarStatus('error');
+      // handleOpenSnackbar();
       flag++;
     }
     if (formData.return_loc === '' || formData.dest_loc === '') {
       //error snackbar
-      handleSetSnackbarStatus('error');
-      handleSetSnackbarContent('장소를 선택하세요.');
-      handleOpenSnackbar();
+      // handleSetSnackbarStatus('error');
+      // handleSetSnackbarContent('장소를 선택하세요.');
+      // handleOpenSnackbar();
       flag++;
     }
     if (flag === 0) {
@@ -272,6 +275,10 @@ const Register = () => {
           socket.emit('rezComplete', currentName);
           navigate('../carRezComplete', { state: data });
         });
+    } else {
+      handleSetSnackbarStatus('error');
+      handleSetSnackbarContent('입력하지 않은 항목이 있습니다.');
+      handleOpenSnackbar();
     }
   };
   const [socket, setSocket] = useState(null);

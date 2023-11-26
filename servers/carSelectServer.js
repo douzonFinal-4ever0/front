@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
             filterCars = cars;
           } else {
             filterCars = cars.filter((car) => {
-              users2.get(user).carFilter.includes(car.car_code);
+              !users2.get(user).carFilter.includes(car.car_code);
             });
           }
         }
@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
               })
               .then((res) => {
                 const rezInfos = res.data;
-                var avaiableCars = [];
+                var NotavaiableCars = [];
                 var filterCars;
                 console.log('예약 정보');
                 console.log(rezInfos);
@@ -116,15 +116,17 @@ io.on('connection', (socket) => {
                     const returnAt = new Date(rezReturn_at).getTime();
                     const startAt = new Date(rezStart_at).getTime();
                     if (
-                      startAt > rezInfo.return_at ||
-                      returnAt < rezInfo.start_at
+                      !(
+                        startAt > rezInfo.return_at ||
+                        returnAt < rezInfo.start_at
+                      )
                     ) {
                       // console.log(rezInfo.car_code);
-                      avaiableCars.push(rezInfo.car_code);
+                      NotavaiableCars.push(rezInfo.car_code);
                     }
                   });
-                  filterCars = cars.filter((car) =>
-                    avaiableCars.includes(car.car_code)
+                  filterCars = cars.filter(
+                    (car) => !NotavaiableCars.includes(car.car_code)
                   );
                   console.log(filterCars);
                 } else {
@@ -133,7 +135,7 @@ io.on('connection', (socket) => {
 
                 const userInfo = {
                   socketID: socket.id,
-                  carFilter: avaiableCars
+                  carFilter: NotavaiableCars
                 };
                 users2.set(mem_code, userInfo);
 
@@ -149,22 +151,21 @@ io.on('connection', (socket) => {
           })
           .then((res) => {
             const rezInfos = res.data;
-            var avaiableCars = [];
+            var NotavaiableCars = [];
             var filterCars;
             if (rezInfos && rezInfos.length !== 0) {
               rezInfos.map((rezInfo) => {
                 const returnAt = new Date(rezReturn_at).getTime();
                 const startAt = new Date(rezStart_at).getTime();
                 if (
-                  startAt > rezInfo.return_at ||
-                  returnAt < rezInfo.start_at
+                  !(startAt > rezInfo.return_at || returnAt < rezInfo.start_at)
                 ) {
                   // console.log(rezInfo.car_code);
-                  avaiableCars.push(rezInfo.car_code);
+                  NotavaiableCars.push(rezInfo.car_code);
                 }
               });
-              filterCars = cars.filter((car) =>
-                avaiableCars.includes(car.car_code)
+              filterCars = cars.filter(
+                (car) => !NotavaiableCars.includes(car.car_code)
               );
               // console.log(filterCars2);
 
@@ -180,7 +181,7 @@ io.on('connection', (socket) => {
             }
             const userInfo = {
               socketID: socket.id,
-              carFilter: avaiableCars
+              carFilter: NotavaiableCars
             };
             users2.set(mem_code, userInfo);
             console.log('유저 정보');
@@ -246,7 +247,7 @@ io.on('connection', (socket) => {
           filterCars = cars;
         } else {
           filterCars = cars.filter((car) => {
-            users2.get(user).carFilter.includes(car.car_code);
+            !users2.get(user).carFilter.includes(car.car_code);
           });
         }
       }
@@ -286,7 +287,7 @@ io.on('connection', (socket) => {
           filterCars = cars;
         } else {
           filterCars = cars.filter((car) => {
-            users2.get(user).carFilter.includes(car.car_code);
+            !users2.get(user).carFilter.includes(car.car_code);
           });
         }
       }

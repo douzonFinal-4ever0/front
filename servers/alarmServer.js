@@ -54,8 +54,8 @@ io.on('connection', (socket) => {
         }
       })
       .then((res) => {
-        // console.log('alarmInfo');
-        // console.log(res.data);
+        console.log('alarmInfo');
+        console.log(res.data);
         if (res.data !== null) {
           var filterData = res.data.filter((item) => {
             return (
