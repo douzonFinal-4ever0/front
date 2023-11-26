@@ -114,7 +114,7 @@ const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
     dispatch(setRezData({ data }));
     try {
       const res = await axiosInstance.axiosInstance.post('/mr/rez', data);
-
+      console.log(res);
       if (res.status === 201) {
         handleSetSnackbarContent('회의실 예약되었습니다. ');
         handleOpenSnackbar();
