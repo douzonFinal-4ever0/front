@@ -56,7 +56,7 @@ const Header = (props) => {
   // 읽지 않은 알림이 있다고 알려주는 알림
   const [newAlarm, setNewAlarm] = useState(0);
   const dispatch = useDispatch();
-  const { name, position_name, mem_code, dept_name } = user;
+  const { name, position_name, mem_code, dept_name, profile_image_url } = user;
   // const handleClick = (newPlacement) => (event) => {
   //   setAnchorEl(event.currentTarget);
   //   setOpen((prev) => placement !== newPlacement || !prev);
@@ -230,7 +230,11 @@ const Header = (props) => {
                 isAdminMode={isAdminMode}
               >
                 <StyledAvatar
-                  src={UserProfile}
+                  src={
+                    user.profile_image_url === null
+                      ? UserProfile
+                      : user.profile_image_url
+                  }
                   ref={anchorRef}
                   aria-controls={open ? 'menu-list-grow' : undefined}
                   aria-haspopup="true"

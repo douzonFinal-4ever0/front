@@ -6,7 +6,8 @@ const initialState = {
   position_name: '', // 직급명
   dept_name: '', // 부서명
   role: '', // 역할
-  email: ''
+  email: '',
+  profile_image_url: ''
 };
 
 const userSlice = createSlice({
