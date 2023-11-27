@@ -44,8 +44,10 @@ import MultiTimePicker from '../../components/common/MultiTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
+
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -118,7 +120,9 @@ const Register = () => {
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
   };
-
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
@@ -226,31 +230,35 @@ const Register = () => {
     if (name === 'return_at') {
       setRezReturn_at(e.$d);
     }
+    setOpnColl(false);
   };
   //submit하는 함수
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
     var flag = 0;
+    if (formData.detail === '') {
+      flag++;
+    }
     if (formData.carDTO.car_code === '') {
       //error snackbar
-      alert('차량을 선택하세요');
-      handleOpenSnackbar();
-      handleSetSnackbarContent('차량을 선택하세요.');
+      // handleSetSnackbarStatus('error');
+      // handleSetSnackbarContent('차량을 선택하세요.');
+      // handleOpenSnackbar();
       flag++;
     }
     if (formData.start_at === '' || formData.return_at === '') {
       //error snackbar
-      alert('날짜를 선택하세요');
-      handleOpenSnackbar();
-      handleSetSnackbarContent('날짜를 선택하세요.');
+      // handleSetSnackbarContent('날짜를 선택하세요.');
+      // handleSetSnackbarStatus('error');
+      // handleOpenSnackbar();
       flag++;
     }
     if (formData.return_loc === '' || formData.dest_loc === '') {
       //error snackbar
-      alert('장소를 선택하세요');
-      handleOpenSnackbar();
-      handleSetSnackbarContent('장소를 선택하세요.');
+      // handleSetSnackbarStatus('error');
+      // handleSetSnackbarContent('장소를 선택하세요.');
+      // handleOpenSnackbar();
       flag++;
     }
     if (flag === 0) {
@@ -260,24 +268,35 @@ const Register = () => {
           let data = res.data;
           data.start_at = dateFormat(res.data.start_at);
           data.return_at = dateFormat(res.data.return_at);
-          handleOpenSnackbar();
+          handleSetSnackbarStatus('success');
           handleSetSnackbarContent('예약이 완료되었습니다.');
+          handleOpenSnackbar();
           console.log('예약 완료 : ' + dateFormat(res.data.start_at));
-          socket.emit('disconnect_with_info', currentName);
+          socket.emit('rezComplete', currentName);
           navigate('../carRezComplete', { state: data });
         });
+    } else {
+      handleSetSnackbarStatus('error');
+      handleSetSnackbarContent('입력하지 않은 항목이 있습니다.');
+      handleOpenSnackbar();
     }
   };
   const [socket, setSocket] = useState(null);
   //modal여는 함수
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
   const handleOpenModal = () => {
+    const Token = getJwtToken();
     console.log(rezStart_at);
     console.log('대여일:' + Date(rezStart_at));
     const date = new Date(rezStart_at);
     console.log(typeof date);
     console.log(typeof rezStart_at);
     if (rezStart_at === null || rezReturn_at === null) {
-      alert('날짜를 입력해주세요');
+      handleOpenSnackbar('error');
+      handleSetSnackbarContent('날짜를 입력해주세요.');
+      handleOpenSnackbar();
     } else {
       console.log('대여일:' + Date.parse(rezStart_at));
       console.log('반납일: ' + Date.parse(rezReturn_at));
@@ -285,7 +304,9 @@ const Register = () => {
         Date.parse(rezStart_at) > Date.parse(rezReturn_at) ||
         Date(rezStart_at) > Date(rezReturn_at) //수정할때
       ) {
-        alert('대여일이 반납일보다 늦습니다');
+        handleOpenSnackbar('error');
+        handleSetSnackbarContent('대여일이 반납일보다 늦습니다.');
+        handleOpenSnackbar();
       } else {
         const newSocket = socketIOClient('http://localhost:4000'); // 서버 주소로 변경
         setSocket(newSocket);
@@ -323,7 +344,9 @@ const Register = () => {
       setOpen(false);
       setOpnColl(true);
     } else {
-      alert('차량을 선택해주세요');
+      handleOpenSnackbar('error');
+      handleSetSnackbarContent('차량을 선택해주세요.');
+      handleOpenSnackbar();
     }
 
     axiosInstance.axiosInstance
@@ -337,14 +360,45 @@ const Register = () => {
           authority: res.data.carVO.authority,
           fuel_type: res.data.carVO.fuel_type,
           fuel_effciency: res.data.fuel_effciency,
-          car_address: res.data.car_address
+          car_address: res.data.car_address,
+          type: res.data.carVO.type
         });
+        car_type = res.data.carVO.type;
         //차량 위치 저장
         setReceipt_loc(selectedRows.car_address);
       });
   };
+  var car_type;
+  const est_mileageCal = (locList, start_at, car_type) => {
+    console.log(car_type);
+    var type;
+    if (car_type === '승용차') {
+      type = 1;
+    } else if (car_type === '화물차') {
+      type = 4;
+    }
+    console.log(start_at);
+    // 주어진 밀리초
+    const timestampInMilliseconds = start_at;
 
-  const est_mileageCal = (locList) => {
+    // 밀리초를 날짜로 변환
+    const date = new Date(timestampInMilliseconds);
+
+    // 원하는 날짜 형식으로 포맷팅
+    const formattedDateTime = date
+      .toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })
+      .replace(
+        /(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/,
+        '$3$1$2$4$5$6'
+      );
+
     if (locList) {
       const destCoordinate =
         locList.dest_loc[0].toString() + ',' + locList.dest_loc[1].toString();
@@ -367,13 +421,14 @@ const Register = () => {
           startX: locList.receipt_loc[0],
           startY: locList.receipt_loc[1],
           //gps시간 예약시간으로
-          gpsTime: '20191125153000',
+          // gpsTime: '20191125153000',
+          gpsTime: formattedDateTime,
           speed: 10,
           uncetaintyP: 1,
           uncetaintyA: 1,
           uncetaintyAP: 1,
           //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
-          carType: 0,
+          carType: type,
           // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
           // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
           passList: destCoordinate,
@@ -400,8 +455,8 @@ const Register = () => {
           setEst_mileage(
             (response.features[0].properties.totalDistance / 1000).toFixed(1)
           );
-          setEst_time(response.features[0].properties.totalTime);
-          setEst_cost(response.features[0].properties.totalFare);
+          setEst_time(response.features[0].properties.totalTime.toFixed(1));
+          setEst_cost(response.features[0].properties.totalFare.toFixed(1));
           setIsLoading(false);
         })
         .catch((err) => console.error(err));
@@ -517,7 +572,9 @@ const Register = () => {
         data.start_at = dateFormat(res.data.start_at);
         data.return_at = dateFormat(res.data.return_at);
         console.log(data.start_at);
-        alert('수정완료.');
+        handleOpenSnackbar('success');
+        handleSetSnackbarContent('차량 예약 수정 완료.');
+        handleOpenSnackbar();
         // window.location.href = '/carRez/dashboard';
         navigate('../carRezComplete', { state: data });
       });
@@ -584,7 +641,8 @@ const Register = () => {
             setIsLoading(true);
             const locList = res.data;
             console.log(locList);
-            est_mileageCal(locList);
+            console.log(Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at));
           });
       }
     } else {
@@ -606,7 +664,8 @@ const Register = () => {
             setIsLoading(true);
             const locList = res.data;
             console.log(locList);
-            est_mileageCal(locList);
+            console.log(Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at));
           });
       }
     }
@@ -882,11 +941,13 @@ const Register = () => {
                         content={
                           <SubSideContents
                             setSelectedRows={setSelectedRows}
+                            selectedRows={selectedRows}
                             rezStart_at={rezStart_at}
                             rezReturn_at={rezReturn_at}
                             carSelect={carSelect}
                             setOpen={setOpen}
                             socket={socket}
+                            open={open}
                           />
                         }
                       />
@@ -1154,10 +1215,13 @@ const Register = () => {
                         InputProps={{
                           inputProps: { min: 0 },
                           endAdornment: (
-                            <InputAdornment position="end">분</InputAdornment>
+                            <InputAdornment position="end">
+                              {Math.floor(est_time / 60 / 60)} 시간{' '}
+                              {Math.floor((est_time / 60) % 60)} 분
+                            </InputAdornment>
                           )
                         }}
-                        value={est_time / 60}
+                        value={(est_time / 60).toFixed(1)}
                         readOnly
                       />
                     </Grid>

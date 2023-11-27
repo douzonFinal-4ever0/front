@@ -36,7 +36,8 @@ import axiosInstance from '../../utils/axios';
 import { useDispatch } from 'react-redux';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import dayjs from 'dayjs';
 
@@ -84,6 +85,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
@@ -203,9 +207,9 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
       // console.log(formData.distance);
       // console.log(formData.nomal_biz_mileage + formData.commute_mileage);
       //error snackbar
-      alert('총주행거리가 업무용 거리보다 작습니다.');
-      handleOpenSnackbar();
+      handleSetSnackbarStatus('error');
       handleSetSnackbarContent('총주행거리가 업무용 거리보다 작습니다.');
+      handleOpenSnackbar();
     } else {
       // console.log('asdasdasd');
       // console.log(expList2);
@@ -216,29 +220,30 @@ const CarOperation = ({ rezCode, open, handleClose }) => {
           console.log(res.data);
           // 콘솔에 FormData 내용 출력
           console.log(selectedFiles);
-          const selectedFiles2 = Array.from(selectedFiles);
-          console.log(selectedFiles2);
-          var imgformData = new FormData();
-          selectedFiles2.forEach((file) => {
-            imgformData.append('images', file);
-          });
-
-          // for (var pair of imgformData.entries()) {
-          //   console.log(pair[0]);
-          //   console.log(pair[1]);
-          // }
-          axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
-            (res) => {
-              console.log(res.data);
-              setSelectedFile(null);
-              setSelectedFiles([]);
-              setExpList([]);
-              handleClose();
-              alert('운행 처리 완료');
-              handleOpenSnackbar();
-              handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
+          if (selectedFiles.length !== 0) {
+            const selectedFiles2 = Array.from(selectedFiles);
+            console.log(selectedFiles2);
+            var imgformData = new FormData();
+            var cnt = 0;
+            selectedFiles2.forEach((file) => {
+              imgformData.append('images', file);
+              cnt++;
+            });
+            if (cnt > 0) {
+              axiosInstance.Img.post('car_rez/receiptImg', imgformData).then(
+                (res) => {
+                  console.log(res.data);
+                }
+              );
             }
-          );
+          }
+          setSelectedFile(null);
+          setSelectedFiles([]);
+          setExpList([]);
+          handleClose();
+          handleSetSnackbarStatus('success');
+          handleSetSnackbarContent('운행 완료 처리가 완료되었습니다.');
+          handleOpenSnackbar();
         });
     }
   };

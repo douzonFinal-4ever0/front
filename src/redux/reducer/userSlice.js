@@ -16,9 +16,13 @@ const userSlice = createSlice({
     setUserData(state, action) {
       const { data } = action.payload;
       return { ...state, ...data };
+    },
+    resetUserData(state) {
+      // 초기 상태로 리셋
+      return initialState;
     }
   }
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, resetUserData } = userSlice.actions;
 export default userSlice.reducer;

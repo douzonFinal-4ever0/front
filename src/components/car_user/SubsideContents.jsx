@@ -38,11 +38,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // 서브 사이드바 콘텐츠
 const SubSideContents = ({
   setSelectedRows,
+  selectedRows,
   rezStart_at,
   rezReturn_at,
   carSelect,
   setOpen,
-  socket
+  socket,
+  open
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -55,7 +57,7 @@ const SubSideContents = ({
   const currentName = currentUser.name;
   const mem_code = currentUser.mem_code;
   const [userNum, setUserNum] = useState(0);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(null);
   const [openGroup, setOpenGroup] = useState('');
   const getJwtToken = () => {
     return localStorage.getItem('jwtToken');
@@ -72,44 +74,20 @@ const SubSideContents = ({
       // console.log(currentUsers);
     });
     socket.emit('init', {
-      rows,
       mem_code,
       rezStart_at,
       rezReturn_at,
-      Token,
-      setRows
+      Token
     });
-    socket.on('cars', (cars) => {
-      console.log(cars);
-      setRows(
-        // cars.map((car) => ({
-        //   id: car.car_code,
-        //   car_name: car.car_name,
-        //   car_address: car.car_address,
-        //   car_status: car.car_status,
-        //   car_type: car.type
-        // }))
-        cars
-      );
+    socket.on('cars', (filterCars) => {
+      console.log(filterCars);
+      setRows(filterCars);
     });
     socket.on('currentCnt', (cnt) => {
-      // console.log(cnt);
       setUserNum(cnt);
     });
     socket.on('Upcars', (cars) => {
-      // console.log('up');
-      // console.log(cars);
-
-      setRows(
-        // cars.map((car) => ({
-        //   id: car.car_code,
-        //   car_name: car.car_name,
-        //   car_address: car.car_address,
-        //   car_status: car.car_status,
-        //   car_type: car.type
-        // }))
-        cars
-      );
+      setRows(cars);
     });
     socket.on('selected', (jsonObject) => {
       console.log(jsonObject);
@@ -128,6 +106,7 @@ const SubSideContents = ({
       // 특정 버튼을 클릭한 경우의 처리
       console.log('사용자가 버튼을 클릭하여 모달이 닫힘');
     }
+    setSelected(null);
     socket.emit('disconnect_with_info', currentName);
     setOpen(false);
   };
@@ -160,15 +139,23 @@ const SubSideContents = ({
   const groupedCarData = [
     {
       groupName: '지정 차량',
-      items: rows.filter((item) => item['authority'].includes('지정'))
+      items: rows.filter(
+        (item) => item.mem_code !== null && item['mem_code'].includes(mem_code)
+      )
     },
     {
       groupName: '승용차',
-      items: rows.filter((item) => item['type'].includes('승용차'))
+      items: rows.filter(
+        (item) =>
+          item['type'].includes('승용차') && item['authority'].includes('모두')
+      )
     },
     {
       groupName: '화물차',
-      items: rows.filter((item) => item['type'].includes('화물차'))
+      items: rows.filter(
+        (item) =>
+          item['type'].includes('화물차') && item['authority'].includes('모두')
+      )
     }
   ];
 
@@ -181,17 +168,6 @@ const SubSideContents = ({
     //다른 차량 선택시 선택됨 해제 필요
   };
 
-  // const groupSelect = () => {
-  //   // openGroup 상태가 변경될 때 실행되는 효과
-  //   // 다른 그룹은 모두 닫히도록 상태를 업데이트
-  //   const newOpenGroup = groupedCarData.find(
-  //     (group) => group.groupName === openGroup
-  //   );
-  //   if (!newOpenGroup) {
-  //     // openGroup이 유효하지 않은 경우, 모든 그룹을 닫습니다.
-  //     setOpenGroup('');
-  //   }
-  // };
   useEffect(() => {
     // openGroup 상태가 변경될 때 실행되는 효과
     // 다른 그룹은 모두 닫히도록 상태를 업데이트
@@ -203,6 +179,16 @@ const SubSideContents = ({
       setOpenGroup('');
     }
   }, [openGroup, groupedCarData]);
+  useEffect(() => {
+    if (open === false) {
+      if (selectedRows === null) {
+        console.log(selectedRows);
+        setSelected(null);
+        setRows([]);
+        socket.emit('disconnect_with_info', currentName);
+      }
+    }
+  }, [open]);
   const toggleGroup = (groupName) => {
     if (openGroup === groupName) {
       setOpenGroup(''); // 이미 열려 있는 그룹을 클릭하면 닫습니다.
@@ -234,6 +220,20 @@ const SubSideContents = ({
                   </div>
                   <Collapse in={isGroupOpen}>
                     {group.items.map((car, index) => (
+                      // <Grid
+                      //   container
+                      //   // columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      //   sx={{
+                      //     mt: '2%',
+                      //     '& .infoTitle': {
+                      //       backgroundColor: '#eeeeee'
+                      //     },
+                      //     '& .MuiListItem-gutters': {
+                      //       borderBottom: '1px solid #bdbdbd'
+                      //     }
+                      //   }}
+                      // >
+
                       <ListItem
                         key={index}
                         onClick={(e) =>
@@ -245,17 +245,48 @@ const SubSideContents = ({
                           )
                         }
                       >
-                        <ListItemButton disabled={car.car_status === '선택됨'}>
-                          <ListItemText
-                            primary={`${car.car_code}`}
-                            secondary={`${car.car_name}`}
-                          />
-                          <ListItemText
-                            primary={`${car.car_address}`}
-                            secondary={`${car.car_status}`}
-                          />
+                        <ListItemButton
+                          disabled={
+                            car.car_status === '선택된 차량' ||
+                            car.car_status === '이미 예약된 차량' ||
+                            car.car_status === '내가 선택한 차량'
+                          }
+                        >
+                          <Grid
+                            item
+                            sx={{
+                              display: 'flex'
+                              // border: '1px solid #bdbdbd'
+                            }}
+                            xs={12}
+                          >
+                            <Grid
+                              item
+                              sx={{
+                                display: 'flex'
+                                // borderRight: '1px solid #bdbdbd'
+                              }}
+                              xs={6}
+                            >
+                              <ListItemText
+                                primary={`${car.car_code}`}
+                                secondary={`${car.car_name}`}
+                              />
+                            </Grid>
+                            <Grid item sx={{ display: 'flex', ml: 1 }} xs={6}>
+                              <ListItemText
+                                primary={`${car.car_address}`}
+                                secondary={
+                                  selected === car.car_code
+                                    ? '내가 선택한 차량'
+                                    : `${car.car_status}`
+                                }
+                              />
+                            </Grid>
+                          </Grid>
                         </ListItemButton>
                       </ListItem>
+                      // </Grid>
                     ))}
                   </Collapse>
                 </div>

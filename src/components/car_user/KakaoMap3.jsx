@@ -10,7 +10,7 @@ const KakaoMap3 = ({ locations, titles, contents }) => {
     const mapContainer = document.getElementById('map');
     const mapOption = {
       center: new window.kakao.maps.LatLng(33.5563, 126.79581),
-      level: 10
+      level: 7
     };
     map = new window.kakao.maps.Map(mapContainer, mapOption);
 
@@ -109,7 +109,7 @@ const KakaoMap3 = ({ locations, titles, contents }) => {
   };
 
   return (
-    <div id="map" style={{ width: '50%', height: '200px' }}>
+    <div id="map" style={{ width: '100%', height: '100%' }}>
       {/* Kakao 지도가 표시될 div */}
     </div>
   );

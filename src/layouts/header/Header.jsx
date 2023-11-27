@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { setUserData } from '../../redux/reducer/userSlice';
+import { resetUserData, setUserData } from '../../redux/reducer/userSlice';
 // @mui ------------------------------------------------------
 import {
   AppBar,
@@ -67,18 +67,21 @@ const Header = (props) => {
   // const socket = useContext(SocketContext);
   const handleLogOut = () => {
     localStorage.removeItem('jwtToken');
-    dispatch(
-      setUserData({
-        data: {
-          mem_code: '', // 사번
-          name: '', // 성명
-          position_name: '', // 직급명
-          dept_name: '', // 부서명
-          role: '', // 역할
-          email: ''
-        }
-      })
-    );
+
+    dispatch(resetUserData());
+
+    // dispatch(
+    //   setUserData({
+    //     data: {
+    //       mem_code: '', // 사번
+    //       name: '', // 성명
+    //       position_name: '', // 직급명
+    //       dept_name: '', // 부서명
+    //       role: '', // 역할
+    //       email: ''
+    //     }
+    //   })
+    // );
     setAlarmDatas(null);
     socket.emit('disconnect_mem', mem_code);
     // socket.disconnect();
@@ -120,10 +123,10 @@ const Header = (props) => {
   };
   //처음 로그인 했을때 알림 확인
   useEffect(() => {
-    console.log(socket);
+    // console.log(socket);
     if (socket !== null) {
       socket.on('loadAlarm', (datas) => {
-        console.log(datas.length);
+        // console.log(datas.length);
         setAlarmDatas(datas);
         for (let data of datas) {
           if (data.is_read === 0) {
@@ -362,9 +365,7 @@ const Header = (props) => {
               </Popper> */}
             </Stack>
           </Box>
-          <Button onClick={handleLogOut}>
-            {isAlarm ? 'qwe' : 'asd'}로그아웃
-          </Button>
+          <Button onClick={handleLogOut}>로그아웃</Button>
         </StyledToolbar>
         <StyledSubToolbar direction="row">
           <StyledButton onClick={onMenuIconClick}>

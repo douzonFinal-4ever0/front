@@ -15,73 +15,15 @@ const SocketProvider = ({ children }) => {
   const newSocket = useRef(null);
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(false);
-  // var memInfo = {
-  //   mem_code: '',
-  //   name: ''
-  // };
   var memCode = '';
-  // var newSocket;
+
   if (userData) {
     console.log(mem_code);
-    // memInfo = {
-    //   mem_code: mem_code,
-    //   name: name
-    // };
-    // };
     memCode = mem_code;
   }
-  //   if (memInfo.mem_code !== '')
-  //     newSocket.current = io('http://localhost:4001', { query: memInfo }); // 서버 주소에 맞게 변경
-  // }
-  // newSocket = io('http://localhost:4001');
 
   useEffect(() => {
-    // if (userData) {
-    //   console.log(mem_code);
-    //   const memInfo = {
-    //     mem_code: mem_code,
-    //     name: name
-    //   };
-    //   if (memInfo.mem_code !== '')
-    //     newSocket.current = io('http://localhost:4001', { query: memInfo }); // 서버 주소에 맞게 변경
-    // }
-    // newSocket.current.on('connect', () => {
-    //   setIsConnected(true);
-    // });
-    //   // 소켓 연결 설정
-    //   if (!socket) {
     newSocket.current = io('http://localhost:4001'); // 서버 주소에 맞게 변경
-    //     console.log(newSocket);
-    //     setSocket({
-    //       ...newSocket,
-    //       navigate
-    //     });
-    //   }
-    // console.log(newSocket);
-    // 여기에서 소켓에 대한 이벤트 핸들러 등록 등 소켓 사용 로직 추가
-    // 페이지 이동을 위한 navigate 함수를 소켓과 함께 제공
-    // setSocket({
-    //   ...newSocket,
-    //   navigate
-    // });
-    // dispatch(
-    //   setUserData({
-    //     data: {
-    //       mem_code: '', // 사번
-    //       name: '', // 성명
-    //       position_name: '', // 직급명
-    //       dept_name: '', // 부서명
-    //       role: '', // 역할
-    //       email: ''
-    //     }
-    //   })
-    // );
-    // // 컴포넌트가 언마운트될 때 소켓 연결 해제
-    // return () => {
-    //   if (newSocket.current && newSocket.current.connected) {
-    //     newSocket.current.disconnect();
-    //   }
-    // };
   }, []); // 빈 배열을 넣어 한 번만 실행되도록 설정
 
   useEffect(() => {
@@ -111,8 +53,6 @@ const SocketProvider = ({ children }) => {
       </SocketContext.Provider>
     </>
   );
-
-  //   );
 };
 
 export default SocketProvider;

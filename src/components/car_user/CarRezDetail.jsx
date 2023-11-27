@@ -20,6 +20,11 @@ import { useDispatch } from 'react-redux';
 import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import axiosInstance from '../../utils/axios';
 import RectangleBtn from '../common/RectangleBtn';
+import {
+  openSanckbar,
+  setSnackbarContent,
+  setSnackbarStatus
+} from '../../redux/reducer/SnackbarSlice';
 
 const CarRezDetail = ({ rezCode }) => {
   const navigate = useNavigate();
@@ -29,6 +34,16 @@ const CarRezDetail = ({ rezCode }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(null);
 
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
   const [addressObj, setAddressObj] = useState({
     areaAddress: '',
     townAddress: ''
@@ -71,17 +86,22 @@ const CarRezDetail = ({ rezCode }) => {
       .then((res) => {
         if (res.status === 204) {
           //삭제 성공
-          alert('취소 성공.');
-
+          handleSetSnackbarStatus('success');
+          handleSetSnackbarContent('차량 예약 취소 성공.');
+          handleOpenSnackbar();
           // setData(1);
         } else {
-          alert('취소 실패.');
           //삭제 실패
+          handleSetSnackbarStatus('error');
+          handleSetSnackbarContent('차량 예약 취소 실패.');
+          handleOpenSnackbar();
         }
       })
       .catch((e) => {
         //오류
-        alert('오류발생', e);
+        handleSetSnackbarStatus('error');
+        handleSetSnackbarContent('오류발생 ' + { e });
+        handleOpenSnackbar();
       })
       .finally(() => {
         dispatch(closeDrawer());
@@ -107,7 +127,9 @@ const CarRezDetail = ({ rezCode }) => {
       .patch('http://localhost:8081/car_rez/carRezDetail', formData)
       .then((res) => {
         console.log('수정완료', res.data);
-        alert('수정완료.');
+        handleSetSnackbarStatus('success');
+        handleSetSnackbarContent('차량 예약 수정 성공.');
+        handleOpenSnackbar();
         window.location.href = '/carRez/dashboard';
       });
   };
