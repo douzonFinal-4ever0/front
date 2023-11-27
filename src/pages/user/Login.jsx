@@ -14,7 +14,6 @@ import JWTdecode from '../../components/common/JWTdecode';
 import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
 import axiosInstance from '../../utils/axios';
-
 // import SocketContext from '../../utils/SocketContext';
 
 const Login = () => {
@@ -38,6 +37,7 @@ const Login = () => {
       .post('/api/v1/user/login', FormToData)
       .then((res) => {
         setJwt('Bearer ' + res.data.token);
+        JWTdecode();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -56,8 +56,7 @@ const Login = () => {
   if (jwt != '') {
     if (jwt != 'Bearer undefined') {
       console.log(user.mem_code);
-
-      navigate('/mr/dashboard');
+      window.location.replace('/mr/dashboard');
     }
   }
 

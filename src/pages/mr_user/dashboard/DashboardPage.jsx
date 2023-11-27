@@ -85,46 +85,56 @@ const DashboardPage = () => {
       if (res.status !== 200) return;
 
       // only 참석자 리스트
-      const lestPtList = resByPt.data.filter(
-        (itemPt) =>
-          !res.data.some(
-            (itemMaster) => itemMaster.mr_rez_code === itemPt.mr_rez_code
-          )
-      );
+      let lestPtList = [];
 
-      // 참석자 & 예약자 role 속성 추가
-      lestPtList.forEach((rez) => {
-        rez.role = '참석자';
-      });
-      res.data &&
-        res.data.forEach((rez) => {
-          rez.role = '예약자';
+      if (Array.isArray(resByPt.data)) {
+        lestPtList =
+          resByPt.data.length !== 0 &&
+          resByPt.data.filter(
+            (itemPt) =>
+              !res.data.some(
+                (itemMaster) => itemMaster.mr_rez_code === itemPt.mr_rez_code
+              )
+          );
+
+        // 참석자 & 예약자 role 속성 추가
+        lestPtList.forEach((rez) => {
+          rez.role = '참석자';
         });
+        res.data &&
+          res.data.forEach((rez) => {
+            rez.role = '예약자';
+          });
+      }
 
       // 전체 회의 예약 (참석자 + 예약자)
-      const data = [...lestPtList, ...res.data];
 
-      let list = [];
-      // 오늘 예약 현황 추출
-      const today = getToday();
-      data &&
-        data.forEach((rez) => {
-          if (rez.rez_start_time.includes(today)) {
-            const startTime = getTime(rez.rez_start_time);
-            const endTime = getTime(rez.rez_end_time);
-            const time = `${startTime} - ${endTime}`;
-            const newRez = [{ ...rez, newTime: time }];
-            list.push(...newRez);
-          }
-        });
+      let data = [];
+      if (Array.isArray(res.data)) {
+        data = [...lestPtList, ...res.data];
 
-      // 이름 시간 순으로 정렬
-      list.sort(
-        (a, b) => new Date(a.rez_start_time) - new Date(b.rez_start_time)
-      );
+        let list = [];
+        // 오늘 예약 현황 추출
+        const today = getToday();
+        data &&
+          data.forEach((rez) => {
+            if (rez.rez_start_time.includes(today)) {
+              const startTime = getTime(rez.rez_start_time);
+              const endTime = getTime(rez.rez_end_time);
+              const time = `${startTime} - ${endTime}`;
+              const newRez = [{ ...rez, newTime: time }];
+              list.push(...newRez);
+            }
+          });
 
-      // 오늘 예약 현황 업데이트
-      setTodayRezList(list);
+        // 이름 시간 순으로 정렬
+        list.sort(
+          (a, b) => new Date(a.rez_start_time) - new Date(b.rez_start_time)
+        );
+
+        // 오늘 예약 현황 업데이트
+        setTodayRezList(list);
+      }
     } catch (err) {
       console.log(err);
     }

@@ -10,7 +10,9 @@ const bmSlice = createSlice({
   reducers: {
     setBmData(state, action) {
       const { data } = action.payload;
-      return { ...state, mr_list: [...data] };
+      if (Array.isArray(data)) {
+        return { ...state, mr_list: [...data] };
+      }
     }
   }
 });

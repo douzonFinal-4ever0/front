@@ -8,7 +8,8 @@ import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios.js';
@@ -27,6 +28,9 @@ function ExcelImport() {
   /**스낵바 컨텐츠 설정 */
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
   /**오프캔버스 닫기 */
   const handleCloseDrawer = () => {
@@ -57,10 +61,12 @@ function ExcelImport() {
       );
 
       if (!validExtensions.includes(`.${fileExtension}`)) {
+        handleSetSnackbarStatus('error');
         handleSetSnackbarContent('엑셀 파일만 업로드 가능합니다.');
         handleOpenSnackbar();
         return;
       }
+      handleSetSnackbarStatus('success');
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -87,6 +93,7 @@ function ExcelImport() {
               handleSetSnackbarContent(
                 `행에 필수 필드가 누락되었습니다: ${missingFields.join(', ')}`
               );
+              handleSetSnackbarStatus('error');
               handleOpenSnackbar();
               return null; // 유효하지 않은 데이터는 무시
             }
@@ -200,6 +207,7 @@ function ExcelImport() {
       axiosInstance.axiosInstance
         .post('/mr/mrRegister', FormToData)
         .then((res) => {
+          handleSetSnackbarStatus('success');
           handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
           handleOpenSnackbar();
           handleCloseDrawer();
