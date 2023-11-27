@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  TextField,
   Typography
 } from '@mui/material';
 import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
@@ -91,6 +92,8 @@ const MrRezConfirmPage = () => {
     }
   };
 
+  console.log(ptMems);
+
   return (
     <>
       <SubHeader title="회의실 예약" />
@@ -154,8 +157,8 @@ const MrRezConfirmPage = () => {
                             marginTop: '4px'
                           }}
                         >
-                          다음에 동일한 회의 예약 시 자동으로 참석자 그룹이
-                          지정됩니다.
+                          다음에 동일한 회의 예약 시 간편하게 참석자 그룹을
+                          지정할 수 있습니다.
                         </Typography>
                       </Box>
                       <Box
@@ -167,6 +170,7 @@ const MrRezConfirmPage = () => {
                         }}
                       >
                         <Box sx={{ flexGrow: 1, display: 'flex', gap: '20px' }}>
+                          {/* <TextField value={rezData.m_name} /> */}
                           <Typography
                             variant="subtitle1"
                             sx={{ display: 'flex', alignItems: 'center' }}
@@ -193,7 +197,7 @@ const MrRezConfirmPage = () => {
                             }}
                           >
                             {ptMems.map((mem, index) => (
-                              <Avatar key={index} />
+                              <Avatar key={index} src={mem.profile_img_url} />
                             ))}
                           </AvatarGroup>
                         </Box>

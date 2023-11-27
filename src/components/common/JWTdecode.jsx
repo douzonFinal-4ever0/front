@@ -34,7 +34,7 @@ const JWTdecode = () => {
             dept_name: userInfo.userDeptNm,
             role: userInfo.userRole,
             email: userInfo.userEmail,
-            profile_image_url: userInfo.profile_image_url
+            profile_img_url: userInfo.profile_image_url
           }
         })
       );
