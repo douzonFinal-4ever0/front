@@ -227,7 +227,7 @@ const DashboardPage = () => {
             </Box>
 
             {/* 3단락 */}
-            <Box>
+            {/* <Box>
               <Grid container spacing={3}>
                 <Grid item xs={4.2}>
                   <Notice data={notice} />
@@ -236,7 +236,7 @@ const DashboardPage = () => {
                   asd
                 </Grid>
               </Grid>
-            </Box>
+            </Box> */}
           </Stack>
         </MainContainer>
       </Box>
