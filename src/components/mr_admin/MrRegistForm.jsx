@@ -30,15 +30,16 @@ import { closeDrawer } from '../../redux/reducer/DrawerSlice';
 import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
+import { useSocket } from '../../utils/SocketProvider.js';
 import axiosInstance from '../../utils/axios.js';
 import Label from '../common/Label';
 import Modal from '../common/Modal';
 import RectangleBtn from '../common/RectangleBtn';
 import MrTag from './MrTag';
 import SuppliesList from './SuppliesList';
-import { useSocket } from '../../utils/SocketProvider.js';
 
 const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   /*--------------------------------------오프캔버스------------------------------------------ */
@@ -54,6 +55,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
+  };
+
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
 
   const handleSetSnackbarContent = (content) => {
@@ -150,6 +155,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       // 중복 파일 여부를 확인합니다.
       if (uploadFiles.some((uploadedFile) => uploadedFile.name === file.name)) {
         // 중복 파일인 경우 알림을 표시하거나 다른 조치를 취할 수 있습니다.
+        handleSetSnackbarStatus('error');
         handleSetSnackbarContent('이미 선택된 파일입니다.');
         handleOpenSnackbar();
         setDuplicateFiles((prevDuplicates) => [...prevDuplicates, true]);
@@ -365,7 +371,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         };
         console.log(alertDTO);
         mrAlarm(alertDTO);
-
+        handleSetSnackbarStatus('success');
         handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
@@ -386,6 +392,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         };
         console.log(alertDTO);
         mrAlarm(alertDTO);
+        handleSetSnackbarStatus('success');
         handleSetSnackbarContent('회의실 수정이 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
@@ -406,6 +413,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         };
         console.log(alertDTO);
         mrAlarm(alertDTO);
+        handleSetSnackbarStatus('warning');
         handleSetSnackbarContent('회의실 비활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();
@@ -419,6 +427,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     axiosInstance.axiosInstance
       .patch('/mr/mrDeactivate', FormToData4)
       .then((res) => {
+        handleSetSnackbarStatus('success');
         handleSetSnackbarContent('회의실 재활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
         handleCloseDrawer();

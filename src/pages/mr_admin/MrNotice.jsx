@@ -12,7 +12,8 @@ import OnOffSwitch from '../../components/mr_admin/OnOffSwitch';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import axiosInstance from '../../utils/axios.js';
 const MrNotice = () => {
@@ -56,6 +57,9 @@ const MrNotice = () => {
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
   /**공개 비공개 여부 체크 */
   const handleSwitchChange = (event) => {
     setIsPublic(event.target.checked);
@@ -80,6 +84,7 @@ const MrNotice = () => {
     axiosInstance.axiosInstance
       .post('/mr/notice', FormToData)
       .then(() => {
+        handleSetSnackbarStatus('success');
         handleOpenSnackbar();
         handleSetSnackbarContent('공지사항이 등록되었습니다.');
         navigate('../NoticeList');
@@ -95,6 +100,7 @@ const MrNotice = () => {
     axiosInstance.axiosInstance
       .patch('/mr/notice/update', FormToData2)
       .then(() => {
+        handleSetSnackbarStatus('success');
         handleOpenSnackbar();
         handleSetSnackbarContent('공지사항이 수정되었습니다.');
         console.log(FormToData2);

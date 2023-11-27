@@ -15,7 +15,6 @@ import RectangleBtn from '../../components/common/RectangleBtn';
 import { setUserData } from '../../redux/reducer/userSlice';
 import { useSocket } from '../../utils/SocketProvider';
 import axiosInstance from '../../utils/axios';
-
 // import SocketContext from '../../utils/SocketContext';
 
 const Login = () => {
@@ -43,6 +42,7 @@ const Login = () => {
       .post('/api/v1/user/login', FormToData)
       .then((res) => {
         setJwt('Bearer ' + res.data.token);
+        JWTdecode();
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -70,8 +70,6 @@ const Login = () => {
       // console.log(socket);
       console.log(user.mem_code);
       window.location.replace('/mr/dashboard');
-
-      // navigate('/mr/admin/MrRegister');
     }
   }
   // useEffect(() => {
