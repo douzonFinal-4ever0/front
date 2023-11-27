@@ -29,7 +29,7 @@ const RezInfo = ({ data }) => {
     pt_list,
     mr_rez_code //예약 코드
   } = data;
-  console.log(mr_rez_code); // 예약코드가 undefined가 나옴
+  console.log(pt_list); // 예약코드가 undefined가 나옴
   return (
     <Box
       component={'section'}
@@ -333,7 +333,7 @@ const RezInfo = ({ data }) => {
                   <ListItemText sx={{ padding: '10px ' }}>
                     {pt_list.map((mem, index) => (
                       <Stack direction={'row'} sx={{ marginBottom: '10px' }}>
-                        <Avatar />
+                        <Avatar src={mem.memVO.profile_img_url} />
                         <Typography
                           key={index}
                           variant="subtitle1"
