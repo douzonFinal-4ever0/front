@@ -69,7 +69,6 @@ const Login = () => {
       // socket.emit('loginSuccess', mem_code);
       // console.log(socket);
       console.log(user.mem_code);
-
       window.location.replace('/mr/dashboard');
     }
   }

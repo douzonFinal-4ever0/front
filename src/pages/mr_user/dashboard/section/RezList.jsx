@@ -41,10 +41,13 @@ const RezList = ({ todayRezList }) => {
 
   return (
     <>
-      <WrapContainer bgcolor={'#fff'} sx={{ height: '100%' }}>
+      <WrapContainer bgcolor={'#fff'} sx={{}}>
         <Stack
           direction={'row'}
-          sx={{ justifyContent: 'space-between', marginBottom: '10px' }}
+          sx={{
+            justifyContent: 'space-between',
+            marginBottom: '10px'
+          }}
         >
           <Typography variant="h6">오늘 예약 현황</Typography>
           <StyledLink to={'/mr/rez/history'}>
@@ -56,7 +59,7 @@ const RezList = ({ todayRezList }) => {
         </Stack>
         <Timeline
           sx={{
-            // maxHeight: '330px',
+            height: '500px',
             overflowY: 'auto',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar-thumb': {
@@ -76,107 +79,114 @@ const RezList = ({ todayRezList }) => {
         >
           {todayRezList.length !== 0 ? (
             todayRezList.map((item, index) => (
-              <TimelineItem
-                key={index}
-                sx={{ display: 'flex', height: '100%', minHeight: 'auto' }}
-              >
-                <TimelineSeparator>
-                  <TimelineDot />
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent sx={{ width: '100%', height: '100%' }}>
-                  <Button
-                    name={item.mr_rez_code}
-                    onClick={handleCardClick}
-                    sx={{
-                      margin: '6px 0 10px 20px',
-                      padding: '20px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'flex-start',
-                      rowGap: '6px',
-                      width: '100%',
-                      border: `1px solid ${palette.grey['400']}`,
-                      borderRadius: '4px'
-                      //backgroundColor: palette.grey['100']
-                    }}
-                  >
-                    <Stack
-                      direction={'row'}
-                      sx={{ justifyContent: 'space-between', width: '100%' }}
+              <Box>
+                <TimelineItem
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    height: 'auto',
+                    width: '100%',
+                    flexWrap: 'wrap'
+                  }}
+                >
+                  <TimelineSeparator>
+                    <TimelineDot />
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <Button
+                      name={item.mr_rez_code}
+                      onClick={handleCardClick}
+                      sx={{
+                        margin: '6px 0 10px 20px',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+                        rowGap: '6px',
+                        width: '100%',
+                        border: `1px solid ${palette.grey['400']}`,
+                        borderRadius: '4px'
+                        //backgroundColor: palette.grey['100']
+                      }}
                     >
+                      <Stack
+                        direction={'row'}
+                        sx={{ justifyContent: 'space-between', width: '100%' }}
+                      >
+                        <Typography
+                          component="div"
+                          sx={{
+                            color: palette.primary.main,
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            marginRight: '14px'
+                          }}
+                        >
+                          {item.newTime}
+                        </Typography>
+                        {item.role === '예약자' ? (
+                          <Typography
+                            sx={{
+                              padding: '2px 4px',
+                              backgroundColor: palette.grey['300'],
+                              borderRadius: '2px',
+                              fontSize: '13px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            MY 예약
+                          </Typography>
+                        ) : null}
+                      </Stack>
                       <Typography
                         component="div"
                         sx={{
-                          color: palette.primary.main,
+                          color: palette.grey['900'],
                           fontSize: '18px',
                           fontWeight: 'bold',
-                          marginRight: '14px'
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'flex-start'
                         }}
                       >
-                        {item.newTime}
+                        {item.m_name}
                       </Typography>
-                      {item.role === '예약자' ? (
-                        <Typography
+                      <Stack
+                        direction={'row'}
+                        sx={{
+                          justifyContent: 'space-between',
+                          alignItems: 'flex-end',
+                          width: '100%'
+                        }}
+                      >
+                        <Typography variant="subtitle1" sx={{ color: '#555' }}>
+                          {item.mr && item.mr.mr_name}
+                        </Typography>
+                        <AvatarGroup
+                          renderSurplus={(surplus) => (
+                            <span>+{surplus.toString()[0]}k</span>
+                          )}
+                          total={item.mr_pt_list.length}
                           sx={{
-                            padding: '2px 4px',
-                            backgroundColor: palette.grey['300'],
-                            borderRadius: '2px',
-                            fontSize: '13px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 'bold'
+                            '& .MuiAvatar-root': {
+                              width: 30,
+                              height: 30,
+                              fontSize: 15
+                            }
                           }}
                         >
-                          MY 예약
-                        </Typography>
-                      ) : null}
-                    </Stack>
-                    <Typography
-                      component="div"
-                      sx={{
-                        color: palette.grey['900'],
-                        fontSize: '18px',
-                        fontWeight: 'bold',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'flex-start'
-                      }}
-                    >
-                      {item.m_name}
-                    </Typography>
-                    <Stack
-                      direction={'row'}
-                      sx={{
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
-                        width: '100%'
-                      }}
-                    >
-                      <Typography variant="subtitle1" sx={{ color: '#555' }}>
-                        {item.mr && item.mr.mr_name}
-                      </Typography>
-                      <AvatarGroup
-                        renderSurplus={(surplus) => (
-                          <span>+{surplus.toString()[0]}k</span>
-                        )}
-                        total={item.mr_pt_list.length}
-                        sx={{
-                          '& .MuiAvatar-root': {
-                            width: 30,
-                            height: 30,
-                            fontSize: 15
-                          }
-                        }}
-                      >
-                        {item.mr_pt_list.map((mem, index) => (
-                          <Avatar alt="Remy Sharp" src={''} key={index} />
-                        ))}
-                      </AvatarGroup>
-                    </Stack>
-                  </Button>
-                </TimelineContent>
-              </TimelineItem>
+                          {item.mr_pt_list.map((mem, index) => (
+                            <Avatar alt="Remy Sharp" src={''} key={index} />
+                          ))}
+                        </AvatarGroup>
+                      </Stack>
+                    </Button>
+                  </TimelineContent>
+                </TimelineItem>
+              </Box>
             ))
           ) : (
             <Box

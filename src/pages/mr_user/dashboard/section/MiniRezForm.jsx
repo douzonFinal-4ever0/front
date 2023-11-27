@@ -138,7 +138,7 @@ const MiniRezForm = () => {
           {/* 회의 종류 */}
           <Grid item container xs={3} spacing={1}>
             <StyledLabelGrid item xs={3}>
-              <Label htmlFor={'m_type'} text={'회의 종류'} />
+              <Label htmlFor={'m_type'} text={'회의 목적'} />
             </StyledLabelGrid>
             <Grid item xs={9}>
               <Selectbox

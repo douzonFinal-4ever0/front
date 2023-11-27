@@ -48,7 +48,7 @@ const MrCard = ({ data, selectMrCard, handleCardClick }) => {
     }
 
     if (itemCounts.item1 == 1) {
-      tags.push({ tag: '주제적합' });
+      tags.push({ tag: '목적적합' });
     }
 
     return tags;

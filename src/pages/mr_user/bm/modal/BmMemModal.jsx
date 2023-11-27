@@ -93,10 +93,6 @@ const ContentByToggle = ({
             ))}
         </TreeView>
       );
-    case 'search':
-      return <Box>서치</Box>;
-    case 'bookmark':
-      return <Box>즐겨찾기</Box>;
     default:
       return;
   }
@@ -186,11 +182,6 @@ const BmMemModal = ({
       index: 0,
       value: 'all',
       name: '전체'
-    },
-    {
-      index: 1,
-      value: 'search',
-      name: '검색'
     }
   ];
 
