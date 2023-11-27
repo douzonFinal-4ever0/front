@@ -650,6 +650,7 @@ const CarDetail = ({ carCode, carListInfo, setCarListInfo }) => {
         <CarDeleteModal
           style={style}
           handleDeleteModalClose={handleDeleteModalClose}
+          buttonText={'삭제'}
           handleDeleteBtn={carDeleteBtn}
           title={'차량 삭제'}
         >
