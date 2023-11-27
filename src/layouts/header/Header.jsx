@@ -188,7 +188,7 @@ const Header = (props) => {
       )
     },
     {
-      title: '알람 내역',
+      title: '알림 내역',
       content: (
         <AlarmList alarmDatas={alarmDatas} clickAlarm={clickAlarm} read={1} />
       )

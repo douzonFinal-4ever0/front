@@ -78,10 +78,11 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
       .put(`/manager/car/rezCancel/${car_rez_code}`)
       .then((res) => {
         const alertDTO = {
-          mem_code: carRezData.carRezResponseVO.carRezResponseVO.mem_code,
+          mem_code: carRezData.carRezResponseVO.memResponseVO.mem_code,
           contents: `차량 예약 번호 : ${carRezData.carRezResponseVO.car_rez_code}\n차량 예약이 취소되었습니다.`
         };
         const memList = [alertDTO.mem_code];
+        console.log(memList);
         axiosInstance.axiosInstance
           .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
           .then((res2) => {
@@ -100,6 +101,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
           return data;
         });
         setRezData(updatedRezData);
+        handleDeleteModalClose();
       })
       .catch((error) => {
         console.log(error);
@@ -157,6 +159,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
                   <CarDeleteModal
                     style={style}
                     handleDeleteModalClose={handleDeleteModalClose}
+                    buttonText={'예약 취소'}
                     handleDeleteBtn={handleRezCancelBtn}
                     title={'예약 취소'}
                   >

@@ -7,6 +7,7 @@ const CarDeleteModal = ({
   style,
   handleDeleteModalClose,
   handleDeleteBtn,
+  buttonText,
   title,
   children
 }) => {
@@ -41,7 +42,7 @@ const CarDeleteModal = ({
             height="36px"
           >
             <RectangleBtn
-              text={'삭제'}
+              text={buttonText}
               category={'delete'}
               sx={{ width: '64px' }}
               handlebtn={handleDeleteBtn}
