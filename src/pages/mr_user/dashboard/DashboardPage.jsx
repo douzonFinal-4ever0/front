@@ -179,36 +179,6 @@ const DashboardPage = () => {
     }
   };
 
-  const getBmMrApi = async () => {
-    try {
-      // 토큰 디코딩
-      const token = localStorage.getItem('jwtToken');
-
-      // JWT 디코딩
-      let payload = token.substring(
-        token.indexOf('.') + 1,
-        token.lastIndexOf('.')
-      );
-      //base64  디코딩
-      const bytes = base64.decode(payload);
-      //한글 디코딩
-      const text = utf8.decode(bytes);
-      const userInfo = JSON.parse(text);
-      const mem_code = userInfo.userCode;
-
-      // 즐겨찾기 데이터 API 요청 (*추후 대시보드에서 즐겨찾기 회의실 리스트 보여줄 예정이라 일단 추가함)
-      const res = await axiosInstance.axiosInstance.get(
-        `/mr/bm?mem_code=${mem_code}`
-      );
-      if (res.status !== 200) return;
-      const { data } = res;
-
-      dispatch(setBmData({ data: data }));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <>
       <Box
