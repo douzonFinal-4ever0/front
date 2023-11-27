@@ -53,13 +53,15 @@ import { useNavigate } from 'react-router-dom';
 import LoadingModal from '../../components/car_user/LoadingModal';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [carRez, setCarRez] = useState([]);
   const [range, setRange] = useState('0');
+  const [dateInfo, setDateInfo] = useState('0');
   const navigate = useNavigate();
   const [dateFilter, setDateFilter] = useState({
     startDate: 0,
@@ -88,10 +90,15 @@ const Dashboard = () => {
   const handleOpenSnackbar = () => {
     dispatch(openSanckbar());
   };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
-
+  // const handleDateInfo =() =>{
+  //   set
+  // }
   const { rezData, error } = useQuery(
     ['rezList', mem_code, range, dateRange, dateFilter],
     () => {
@@ -110,7 +117,7 @@ const Dashboard = () => {
       setIsLoading(true);
       axiosInstance.axiosInstance
         .get(
-          `http://localhost:8081/car_rez/rezList/${mem_code}/${range}/${dateRange}/${startAt}/${endAt}`
+          `http://localhost:8081/car_rez/rezList/${mem_code}/${range}/${dateRange}/${startAt}/${endAt}/${dateInfo}`
         )
         .then((res) => {
           console.log(res.data);
@@ -137,9 +144,10 @@ const Dashboard = () => {
           }
           if ((res.data = null)) {
             //error snackbar
-            alert('에러발생');
+
+            handleSetSnackbarStatus('error');
+            handleSetSnackbarContent('에러 발생.');
             handleOpenSnackbar();
-            handleSetSnackbarContent('에러 발생');
           }
         });
     },
@@ -278,20 +286,23 @@ const Dashboard = () => {
           labelId="demo-simple-select-filled-label"
           id="demo-simple-select-filled"
           displayEmpty
-          value={range}
+          value={dateInfo}
           inputProps={{ 'aria-label': 'Without label' }}
-          onChange={handleRange}
+          onChange={(e) => {
+            setDateInfo(e.target.value);
+          }}
           sx={{ width: '100%', mt: 1 }}
         >
-          <MenuItem value={'0'}>
+          {/* <MenuItem value={'0'}>
             <em>전체</em>
+          </MenuItem> */}
+          <MenuItem value={'0'}>
+            <em>대여일</em>
           </MenuItem>
-          <MenuItem value={'1'}>예약일</MenuItem>
-          <MenuItem value={'2'}>대여일</MenuItem>
-          <MenuItem value={'3'}>반납일</MenuItem>
+          <MenuItem value={'1'}>반납일</MenuItem>
+          <MenuItem value={'2'}>예약일</MenuItem>
         </Select>
         <Paper className="MuiPaper-rounded2" width={'100%'}>
-          {/* <CarList rows={filterCarData} /> */}
           <DateSelect
             setDateRange={setDateRange}
             dateFilter={dateFilter}

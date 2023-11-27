@@ -198,7 +198,12 @@ const PtModal = ({
     }
 
     if (applyBmGroupList.length !== 0) {
-      setPtList(applyBmGroupList);
+      setPtList([...applyBmGroupList, master]);
+      dispatch(
+        setRezData({
+          data: { ...rezData, mr_pt_list: [...applyBmGroupList, master] }
+        })
+      );
     }
 
     handleModal();

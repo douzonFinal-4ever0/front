@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
 import base64 from 'base-64';
-import utf8 from 'utf8';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import utf8 from 'utf8';
 import { setUserData } from '../../redux/reducer/userSlice';
-import { useState } from 'react';
 
 const JWTdecode = () => {
   const dispatch = useDispatch();

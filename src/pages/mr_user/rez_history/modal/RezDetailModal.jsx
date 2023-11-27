@@ -49,7 +49,7 @@ const RezDetailModal = ({
   const userData = useSelector(setUserData).payload.user;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(true);
-
+  const beforeList = data && data.mr_pt_list;
   const detailInfo = {
     m_name: data && data.m_name,
     mr_name: data.mr && data.mr.mr_name,
@@ -78,7 +78,6 @@ const RezDetailModal = ({
         `/mr/rez?mr_rez_code=${data.mr_rez_code}`
       );
 
-
       if (res.status === 200) {
         console.log(data.mr_pt_list);
         var memList = [];
@@ -94,10 +93,11 @@ const RezDetailModal = ({
             .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
             .then((res2) => {
               if (res2.status === 200) {
-                socket.emit('changeDB', { memList, jwt });
+                // socket.emit('changeDB', { memList, jwt });
               }
             });
         }
+        socket.emit('changeDB', { memList, jwt });
         // return;
       }
 
@@ -106,7 +106,6 @@ const RezDetailModal = ({
         (item) => item.mr_rez_code !== data.mr_rez_code
       );
       setRezList(reData);
-
 
       const reEvent = events.filter((e) => e.id !== data.mr_rez_code);
       setEvents(reEvent);
@@ -195,6 +194,31 @@ const RezDetailModal = ({
         //수정시 없어진 사람이랑 추가된 사람 어떻게 할건지 생각
 
         if (res.status === 200) {
+        }
+
+        if (res.status === 200) {
+          let resultArray = Array.from(new Set([...pts, ...beforeList]));
+          var memList = [];
+          for (let mem of resultArray) {
+            if (!memList.includes(mem.mem_code)) {
+              memList.push(mem.mem_code);
+            }
+          }
+          for (let mem of resultArray) {
+            const alertDTO = {
+              mem_code: mem.mem_code,
+              contents: `예약 번호 : ${data.mr_rez_code}\n회의실 예약이 수정되었습니다.`
+            };
+            axiosInstance.axiosInstance
+              .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
+              .then((res2) => {
+                if (res2.status === 200) {
+                  // socket.emit('changeDB', { memList, jwt });
+                }
+              });
+          }
+          console.log(memList);
+          socket.emit('changeDB', { memList, jwt });
         }
 
         // // 이벤트 업데이트

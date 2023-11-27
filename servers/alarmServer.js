@@ -1,7 +1,6 @@
 const app = require('express')();
 const server = require('http').createServer(app);
 const cors = require('cors');
-const { forEach } = require('jszip');
 const io = require('socket.io')(server, {
   cors: {
     origin: '*',
@@ -11,32 +10,35 @@ const io = require('socket.io')(server, {
 const axios = require('axios');
 
 const users = new Map();
-var jwtT;
+var jwtT = null;
 io.on('connection', (socket) => {
   console.log('연결 성공... ');
 
   // //db값이 바뀌면 알림 전송 고민
-  // setInterval(() => {
-  //   if (jwtT) {
-  //     const memList = Array.from(users.keys());
-  //     axios
-  //       .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
-  //         headers: {
-  //           Authorization: jwtT
-  //         }
-  //       })
-  //       .then((res) => {
-  //         console.log(res.data);
-  //         for (let memCode of Array.from(users.keys())) {
-  //           var filterData = res.data.filter((item) => {
-  //             return !item['mem_code'] || item['mem_code'].includes(memCode);
-  //           });
-  //           io.to(users.get(memCode)).emit('loadAlarm', filterData);
-  //         }
-  //         // io.emit('loadAnnouncement', res.data);
-  //       });
-  //   }
-  // }, 10000);
+  if (jwtT !== null) {
+    setInterval(() => {
+      if (jwtT) {
+        const memList = Array.from(users.keys());
+        axios
+          .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+            headers: {
+              Authorization: jwtT
+            }
+          })
+          .then((res) => {
+            // console.log(res.data);
+            for (let memCode of Array.from(users.keys())) {
+              var filterData = res.data.filter((item) => {
+                return !item['mem_code'] || item['mem_code'].includes(memCode);
+              });
+              io.to(users.get(memCode)).emit('loadAlarm', filterData);
+            }
+            // io.emit('loadAnnouncement', res.data);
+          });
+      }
+    }, 60000);
+  }
+
   socket.on('loginSuccess', ({ memCode, jwt }) => {
     console.log('login');
     console.log(memCode);
@@ -52,15 +54,20 @@ io.on('connection', (socket) => {
         }
       })
       .then((res) => {
-        // console.log('alarmInfo');
+        console.log('alarmInfo');
         console.log(res.data);
-        var filterData = res.data.filter((item) => {
-          return (
-            // item['contents'].includes('전체') ||
-            !item['mem_code'] || item['mem_code'].includes(memCode)
-          );
-        });
-        io.to(users.get(memCode)).emit('loadAlarm', filterData);
+        if (res.data !== null) {
+          var filterData = res.data.filter((item) => {
+            return (
+              // item['contents'].includes('전체') ||
+              !item['mem_code'] || item['mem_code'].includes(memCode)
+            );
+          });
+          io.to(users.get(memCode)).emit('loadAlarm', filterData);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   });
 

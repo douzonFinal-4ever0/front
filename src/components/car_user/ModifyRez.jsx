@@ -10,6 +10,12 @@ import Modal from '../common/Modal';
 import SubSideContents from './SubsideContents';
 import axios from 'axios';
 import Selectbox from '../common/Selectbox';
+import {
+  openSanckbar,
+  setSnackbarContent,
+  setSnackbarStatus
+} from '../../redux/reducer/SnackbarSlice';
+import { useDispatch } from 'react-redux';
 
 const ModifyRez = ({
   rezData,
@@ -27,6 +33,17 @@ const ModifyRez = ({
   const [open, setOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [carName, setCarName] = useState(rezData.car_name);
+  const dispatch = useDispatch();
+  // snackbar 상태 관리 함수
+  const handleOpenSnackbar = () => {
+    dispatch(openSanckbar());
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
+  const handleSetSnackbarContent = (content) => {
+    dispatch(setSnackbarContent(content));
+  };
   useEffect(() => {
     setFormData({
       car_rez_code: rezData.car_rez_code,
@@ -100,7 +117,9 @@ const ModifyRez = ({
       //   });
       setOpen(false);
     } else {
-      alert('차량을 선택해주세요');
+      handleSetSnackbarStatus('error');
+      handleSetSnackbarContent('차량을 선택해주세요.');
+      handleOpenSnackbar();
     }
     // axios
     //   .get(`http://localhost:8081/car_rez/carDetail/${selectedRows.car_code}`)

@@ -19,7 +19,7 @@ const Statistics = ({ data }) => {
   const groupedObject = {};
 
   // 객체를 그룹에 따라 분배
-  data &&
+  data.length !== 0 &&
     data.forEach((obj) => {
       const groupValue = obj[groupByProperty];
 

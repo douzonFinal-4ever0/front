@@ -24,7 +24,8 @@ import { useDispatch } from 'react-redux';
 import MrInfoSection from '../../pages/mr_user/rez/section/MrInfoSection.jsx';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import axiosInstance from '../../utils/axios.js';
 import Modal from '../common/Modal.jsx';
@@ -39,6 +40,10 @@ const TimeLineCalendar = ({ events, resources }) => {
     dispatch(openSanckbar());
   };
 
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
+  };
+
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
   };
@@ -47,6 +52,7 @@ const TimeLineCalendar = ({ events, resources }) => {
   // console.log(events[0].title);
   const handleEventClick = (info) => {
     // console.log(info.event.title);
+    handleSetSnackbarStatus('info');
     handleOpenSnackbar();
     handleSetSnackbarContent(info.event.title);
     // dayGridPlugin 페이지로 전환
@@ -78,6 +84,9 @@ const TimeLineCalendar = ({ events, resources }) => {
       .then((res) => {
         console.log(res.data);
         setRezPt(res.data);
+      })
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
       });
     info.view.calendar.gotoDate(eventDate);
     handleModal();
