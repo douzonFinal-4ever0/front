@@ -72,9 +72,9 @@ io.on('connection', (socket) => {
           if (users2.get(user).carFilter.length === 0) {
             filterCars = cars;
           } else {
-            filterCars = cars.filter((car) => {
-              !users2.get(user).carFilter.includes(car.car_code);
-            });
+            filterCars = cars.filter(
+              (car) => !users2.get(user).carFilter.includes(car.car_code)
+            );
           }
         }
         io.to(users2.get(user).socketID).emit('cars', filterCars);
@@ -226,7 +226,7 @@ io.on('connection', (socket) => {
     });
     const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
     // console.log(cars);
-    io.emit('selected', jsonObject);
+
     // var filterCars = cars.fillter((car) => {
     //   return car['car_code'].includes(users2.get(currentName).carFillter);
     // });
@@ -242,17 +242,22 @@ io.on('connection', (socket) => {
 
     for (let user of Array.from(users2.keys())) {
       var filterCars;
+      console.log(users2.get(user).carFilter);
+      console.log(cars.length);
       if (users2.get(user)) {
         if (users2.get(user).carFilter.length === 0) {
           filterCars = cars;
         } else {
-          filterCars = cars.filter((car) => {
-            !users2.get(user).carFilter.includes(car.car_code);
-          });
+          console.log('필터처리');
+          filterCars = cars.filter(
+            (car) => !users2.get(user).carFilter.includes(car.car_code)
+          );
         }
       }
+      console.log(filterCars);
       io.to(users2.get(user).socketID).emit('cars', filterCars);
     }
+    io.emit('selected', jsonObject);
   });
 
   socket.on('rezComplete', (disConnectUser) => {
@@ -286,9 +291,9 @@ io.on('connection', (socket) => {
         if (users2.get(user).carFilter.length === 0) {
           filterCars = cars;
         } else {
-          filterCars = cars.filter((car) => {
-            !users2.get(user).carFilter.includes(car.car_code);
-          });
+          filterCars = cars.filter(
+            (car) => !users2.get(user).carFilter.includes(car.car_code)
+          );
         }
       }
       io.to(users2.get(user).socketID).emit('cars', filterCars);
