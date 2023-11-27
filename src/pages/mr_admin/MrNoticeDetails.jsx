@@ -10,7 +10,8 @@ import MainContainer2 from '../../components/mr_admin/MainContainer2';
 import WrapContainer from '../../components/mr_user/WrapContainer';
 import {
   openSanckbar,
-  setSnackbarContent
+  setSnackbarContent,
+  setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
 import axiosInstance from '../../utils/axios';
 
@@ -24,6 +25,9 @@ const MrNoticeDetails = () => {
 
   const handleSetSnackbarContent = (content) => {
     dispatch(setSnackbarContent(content));
+  };
+  const handleSetSnackbarStatus = (status) => {
+    dispatch(setSnackbarStatus(status));
   };
 
   /*------------------------제목 번호 가져오기-------------------------------- */
@@ -69,6 +73,7 @@ const MrNoticeDetails = () => {
       .delete(`mr/notice/delete/${notice_code}`)
       .then((res) => {
         handleOpenSnackbar();
+        handleSetSnackbarStatus('error');
         handleSetSnackbarContent('삭제가 완료되었습니다.');
         setIsLoading(false);
         navigate('../NoticeList');
