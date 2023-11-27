@@ -333,7 +333,13 @@ const RezInfo = ({ data }) => {
                   <ListItemText sx={{ padding: '10px ' }}>
                     {pt_list.map((mem, index) => (
                       <Stack direction={'row'} sx={{ marginBottom: '10px' }}>
-                        <Avatar src={mem.memVO.profile_img_url} />
+                        <Avatar
+                          src={
+                            mem.memVO.profile_img_url
+                              ? mem.memVO.profile_img_url
+                              : ''
+                          }
+                        />
                         <Typography
                           key={index}
                           variant="subtitle1"
