@@ -3,7 +3,6 @@ import {
   Chip,
   Divider,
   Grid,
-  Link,
   List,
   ListItem,
   ListItemText,
@@ -17,6 +16,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import axiosInstance from '../../../utils/axios';
 import LinkIcon from '@mui/icons-material/Link';
+import { Link } from 'react-router-dom';
 
 const MaintUrgentChart = ({ searchData }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -205,10 +205,8 @@ const MaintUrgentChart = ({ searchData }) => {
             </Grid>
           </Grid>
           <StyledSubBox>
-            <LinkIcon />
-            <Link marginLeft="10px" href="/car/admin/carManage">
-              정비 등록 바로가기
-            </Link>
+            <LinkIcon marginRight="10px" />
+            <Link to="/car/admin/carManage">정비 등록 바로가기</Link>
           </StyledSubBox>
         </>
       )}
