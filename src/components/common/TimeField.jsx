@@ -26,7 +26,6 @@ const TimeField = ({ withMonth, label, onChange, name, timeValue }) => {
       const minute = value.minute();
       return minute % 30;
     }
-    return false;
   };
   /*-----------------------------------------------------------------------*/
 
