@@ -686,7 +686,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             >
               <ControlPointOutlinedIcon />
             </IconButton>
-
             {initialMrSupplies &&
               initialMrSupplies.map(
                 (supplies, index) =>
@@ -694,8 +693,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                     <Chip key={index} label={supplies.supplies.supplies_name} />
                   )
               )}
-            {!isEditMode &&
-              mr_supplies &&
+            {mr_supplies[0].supplies_name &&
               mr_supplies.map(
                 (supplies, index) =>
                   supplies.supplies_name !== null && (
