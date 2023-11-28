@@ -294,7 +294,7 @@ const Register = () => {
     console.log(typeof date);
     console.log(typeof rezStart_at);
     if (rezStart_at === null || rezReturn_at === null) {
-      handleOpenSnackbar('error');
+      handleSetSnackbarStatus('error');
       handleSetSnackbarContent('날짜를 입력해주세요.');
       handleOpenSnackbar();
     } else {
@@ -304,7 +304,7 @@ const Register = () => {
         Date.parse(rezStart_at) > Date.parse(rezReturn_at) ||
         Date(rezStart_at) > Date(rezReturn_at) //수정할때
       ) {
-        handleOpenSnackbar('error');
+        handleSetSnackbarStatus('error');
         handleSetSnackbarContent('대여일이 반납일보다 늦습니다.');
         handleOpenSnackbar();
       } else {
