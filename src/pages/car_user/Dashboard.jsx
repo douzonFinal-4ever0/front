@@ -100,7 +100,7 @@ const Dashboard = () => {
   //   set
   // }
   const { rezData, error } = useQuery(
-    ['rezList', mem_code, range, dateRange, dateFilter],
+    ['rezList', mem_code, range, dateRange, dateFilter, dateInfo],
     () => {
       let startAt = 0;
       let endAt = 0;
@@ -120,9 +120,6 @@ const Dashboard = () => {
           `http://localhost:8081/car_rez/rezList/${mem_code}/${range}/${dateRange}/${startAt}/${endAt}/${dateInfo}`
         )
         .then((res) => {
-          console.log(res.data);
-          console.log(range);
-          console.log(dateRange);
           const data = res.data;
           if (data) {
             const rezData = data.map((item) => ({
@@ -143,8 +140,6 @@ const Dashboard = () => {
             console.log(data);
           }
           if ((res.data = null)) {
-            //error snackbar
-
             handleSetSnackbarStatus('error');
             handleSetSnackbarContent('에러 발생.');
             handleOpenSnackbar();
@@ -177,26 +172,51 @@ const Dashboard = () => {
   //       setCarRez(rezData);
   //     });
   // }, []);
-  // useEffect(() => {
-  //   axiosInstance.axiosInstance
-  //     .get(`http://localhost:8081/car_rez/rezList/${mem_code}/${range}`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       const rezData = res.data.map((item) => ({
-  //         ...item,
-  //         id: item.car_rez_code,
-  //         start_at: dateFormat(item.start_at),
-  //         return_at: dateFormat(item.return_at),
-  //         // during: dateFormat(item.start_at) + '\n' + dateFormat(item.return_at)
-  //         during: {
-  //           start_at: dateFormat(item.start_at),
-  //           return_at: dateFormat(item.return_at)
-  //         }
-  //       }));
-  //       console.log(rezData);
-  //       setCarRez(rezData);
-  //     });
-  // }, [range]);
+  useEffect(() => {
+    let startAt = 0;
+    let endAt = 0;
+    //상세설정 보기가 아닐경우 초기화
+    if (dateRange !== 4) {
+      startAt = 0;
+      endAt = 0;
+    }
+    if (dateFilter.startDate !== 0 && dateFilter.endDate !== 0) {
+      startAt = dateFilter.startDate;
+      endAt = dateFilter.endDate;
+      setDateRange(4);
+    }
+    setIsLoading(true);
+    axiosInstance.axiosInstance
+      .get(
+        `http://localhost:8081/car_rez/rezList/${mem_code}/${range}/${dateRange}/${startAt}/${endAt}/${dateInfo}`
+      )
+      .then((res) => {
+        const data = res.data;
+        if (data) {
+          const rezData = data.map((item) => ({
+            ...item,
+            id: item.car_rez_code,
+            start_at: dateFormat(item.start_at),
+            return_at: dateFormat(item.return_at),
+            during: {
+              start_at: dateFormat(item.start_at),
+              return_at: dateFormat(item.return_at)
+            }
+          }));
+          console.log(rezData);
+          setCarRez(rezData);
+          setIsLoading(false);
+          return rezData;
+        } else {
+          console.log(data);
+        }
+        if ((res.data = null)) {
+          handleSetSnackbarStatus('error');
+          handleSetSnackbarContent('에러 발생.');
+          handleOpenSnackbar();
+        }
+      });
+  }, [open]);
 
   // const createChip = (params) => {
   //   if (params.row.rez_status === '1') {
