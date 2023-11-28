@@ -17,12 +17,14 @@ const JWTdecode = () => {
         token.indexOf('.') + 1,
         token.lastIndexOf('.')
       );
+      payload = payload.replace(/-/g, '+');
       //base64  디코딩
       const bytes = base64.decode(payload);
       //한글 디코딩
       const text = utf8.decode(bytes);
 
       const userInfo = JSON.parse(text);
+      console.log('userInfo: ', userInfo);
       //   console.log(userInfo);
 
       dispatch(
