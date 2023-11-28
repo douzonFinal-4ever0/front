@@ -333,7 +333,13 @@ const RezInfo = ({ data }) => {
                   <ListItemText sx={{ padding: '10px ' }}>
                     {pt_list.map((mem, index) => (
                       <Stack direction={'row'} sx={{ marginBottom: '10px' }}>
-                        <Avatar src={mem.memVO.profile_img_url} />
+                        <Avatar
+                          src={
+                            mem.memVO
+                              ? mem.memVO.profile_img_url
+                              : mem.profile_img_url
+                          }
+                        />
                         <Typography
                           key={index}
                           variant="subtitle1"
@@ -365,50 +371,48 @@ const RezInfo = ({ data }) => {
         </Box>
 
         {/* QR 코드 */}
-        {detailModal ? (
+        <Box>
+          <Typography variant="subtitle1" sx={{ margin: '16px 0 8px' }}>
+            QR 코드 정보
+          </Typography>
           <Box>
-            <Typography variant="subtitle1" sx={{ margin: '16px 0 8px' }}>
-              QR 코드 정보
-            </Typography>
-            <Box>
-              <Grid
-                item
-                xs={12}
-                sx={{
-                  '& .infoTitle': {
-                    backgroundColor: palette.grey['100']
-                  },
-                  '& .MuiListItem-gutters': {
-                    borderBottom: `1px solid ${palette.grey['400']}`,
-                    borderTop: `1px solid ${palette.grey['400']}`
-                  }
-                }}
-              >
-                <Stack direction={'row'}>
-                  <Grid item xs={12}>
-                    <ListItem className="infoTitle">
-                      <ListItemText primary="QR 코드" />
-                    </ListItem>
-                    <ListItemText
-                      sx={{
-                        padding: '10px ',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      {/* <QRcode srcValue={'http://www.naver.com'} /> */}
-                      <QRcode
-                        // QR코드 생성 및 주소
-                        srcValue={`http://192.168.0.177:3000/mr/rez/${mr_rez_code}`}
-                      />
-                    </ListItemText>
-                  </Grid>
-                </Stack>
-              </Grid>
-            </Box>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                '& .infoTitle': {
+                  backgroundColor: palette.grey['100']
+                },
+                '& .MuiListItem-gutters': {
+                  borderBottom: `1px solid ${palette.grey['400']}`,
+                  borderTop: `1px solid ${palette.grey['400']}`
+                }
+              }}
+            >
+              <Stack direction={'row'}>
+                <Grid item xs={12}>
+                  <ListItem className="infoTitle">
+                    <ListItemText primary="QR 코드" />
+                  </ListItem>
+                  <ListItemText
+                    sx={{
+                      padding: '10px ',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {/* <QRcode srcValue={'http://www.naver.com'} /> */}
+                    <QRcode
+                      // QR코드 생성 및 주소
+                      srcValue={`http://192.168.0.177:3000/mr/rez/${mr_rez_code}`}
+                    />
+                  </ListItemText>
+                </Grid>
+              </Stack>
+            </Grid>
           </Box>
-        ) : null}
+        </Box>
       </Box>
     </Box>
   );
