@@ -23,6 +23,7 @@ import Notices from './section/Notices';
 import { setRezData } from '../../../redux/reducer/mrUserSlice';
 import { getFormattedDate } from '../../../utils/formatDate';
 import Progress from '../../../components/mr_user/Progress';
+import Spinner from '../../../components/common/Spinner';
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const DashboardPage = () => {
   const [todayRezList, setTodayRezList] = useState([]); // 오늘 예약 리스트
   const [notice, setNotice] = useState([]); // 공지사항 리스트
   const [isLoading, setIsLoading] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(true);
   const [chartData, setChartData] = useState([]); // 실시간 회의실 예약 현황 차트 데이터
 
   // 리덕스 데이터
@@ -39,12 +41,24 @@ const DashboardPage = () => {
   const { mr_list } = bmData;
 
   useEffect(() => {
-    setIsLoading(true);
+    const initialState = {
+      mr_code: '', // 회의실 번호
+      m_name: '', // 회의명
+      m_type: '프로젝트회의', // 회의 종류,
+      rez_date: getFormattedDate(), // 예약 날짜(Default: 현재 날짜)
+      rez_start_time: '09:00', // 예약 시작 시간
+      rez_end_time: '09:30', // 예약 종료 시간
+      tot_pt_ctn: '2', // 총 인원수,
+      rez_type: '0', // 예약 구분 (0:일반/1:정기)
+      mr_pt_list: [] // 회의 참석자 리스트
+    };
+
+    dispatch(setRezData({ data: initialState }));
+
     getMrRezApi();
     getMrUsageApi();
     getNotice();
     bmMrApi();
-    setIsLoading(false);
   }, []);
 
   // 즐겨찾기 회의실 API
@@ -55,6 +69,7 @@ const DashboardPage = () => {
     if (res.status !== 200) return;
     // 즐겨찾기 회의실 리덕스 저장
     dispatch(setBmData({ data: res && res.data }));
+    setIsSpinning(false);
   };
 
   // 전체 회의실 사용률 조회
@@ -72,6 +87,7 @@ const DashboardPage = () => {
   // 사용자 회의실 예약 조회
   const getMrRezApi = async () => {
     try {
+      setIsSpinning(true);
       // 참석자로 지정된 회의 예약 조회
       const resByPt = await axiosInstance.axiosInstance.get(
         `/mr/rez/pt?mem_code=${userData.mem_code}`
@@ -181,6 +197,7 @@ const DashboardPage = () => {
 
   return (
     <>
+      <Spinner isLoading={isSpinning} />
       <Box
         sx={{
           display: 'flex',
@@ -240,7 +257,6 @@ const DashboardPage = () => {
           </Stack>
         </MainContainer>
       </Box>
-      <Progress open={isLoading} />
     </>
   );
 };

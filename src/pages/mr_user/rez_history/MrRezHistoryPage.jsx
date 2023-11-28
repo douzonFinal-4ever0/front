@@ -34,16 +34,15 @@ const MrRezHistoryPage = () => {
   const [rezList, setRezList] = useState([]); // 전체 예약 리스트
   const [events, setEvents] = useState([]); // 캘린더 이벤트
   const [master, setMaster] = useState([]); // 회의 예약자 정보
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     getMrRezApi();
-    setIsLoading(false);
   }, []);
 
   const getMrRezApi = async () => {
     try {
+      setIsLoading(true);
       // 참석자로 지정된 회의 예약 조회
       const resByPt = await axiosInstance.axiosInstance.get(
         `/mr/rez/pt?mem_code=${userData.mem_code}`
@@ -120,6 +119,7 @@ const MrRezHistoryPage = () => {
       }));
 
       setEvents(newEvents);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -146,6 +146,7 @@ const MrRezHistoryPage = () => {
 
   return (
     <>
+      <Progress open={isLoading} />
       <SubHeader title="MY 회의실 예약" />
       <Box sx={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
         <MainContainer>
@@ -246,7 +247,6 @@ const MrRezHistoryPage = () => {
           </Grid>
         </MainContainer>
       </Box>
-      <Progress open={isLoading} />
     </>
   );
 };

@@ -13,8 +13,10 @@ import WrapContainer from '../../../components/mr_user/WrapContainer';
 import RectangleBtn from '../../../components/common/RectangleBtn';
 import BmMemModal from './modal/BmMemModal';
 import BmMrSection from './section/BmMrSection';
+import Progress from '../../../components/mr_user/Progress';
 
 const BmPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const bmData = useSelector(setBmData).payload.bm;
   // 사용자 정보
@@ -54,6 +56,7 @@ const BmPage = () => {
 
   // 즐겨찾기 회의실 API
   const bmMRApi = async () => {
+    setIsLoading(true);
     const res = await axiosInstance.axiosInstance.get(
       `/mr/bm?mem_code=${mem_code}`
     );
@@ -103,6 +106,8 @@ const BmPage = () => {
       setMemList([...memResult]);
       setGroupList([...groupedData]);
     }
+
+    setIsLoading(false);
   };
 
   // 페이지 탭 버튼 이벤트
@@ -155,6 +160,7 @@ const BmPage = () => {
 
   return (
     <>
+      <Progress open={isLoading} />
       <SubHeader title={'즐겨찾기'} />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <MainContainer>
