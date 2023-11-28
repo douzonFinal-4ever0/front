@@ -24,8 +24,9 @@ import Label from '../../../../components/common/Label';
 import { palette } from '../../../../theme/palette';
 import { times, meetingTypes } from '../../../../config';
 import Selectbox from '../../../../components/common/Selectbox';
+import videoRezData from '../../../../videoRez.json';
 
-const RezForm = ({ recentRez, setClickTagData, setExpanded }) => {
+const RezForm = ({ mType, recentRez, setClickTagData, setExpanded }) => {
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const {
@@ -120,14 +121,24 @@ const RezForm = ({ recentRez, setClickTagData, setExpanded }) => {
               gap: '4px'
             }}
           >
-            {recentRez &&
-              recentRez.map((item) => (
-                <StyledChip
-                  label={item.m_name}
-                  size="small"
-                  onClick={handleMNameChip}
-                />
-              ))}
+            {mType === '화상회의'
+              ? videoRezData &&
+                videoRezData.map((item, index) => (
+                  <StyledChip
+                    label={item.rez_name}
+                    size="small"
+                    key={index}
+                    onClick={handleMNameChip}
+                  />
+                ))
+              : recentRez &&
+                recentRez.map((item) => (
+                  <StyledChip
+                    label={item.m_name}
+                    size="small"
+                    onClick={handleMNameChip}
+                  />
+                ))}
           </Stack>
         </Grid>
       </Grid>

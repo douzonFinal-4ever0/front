@@ -29,7 +29,7 @@ const MemberListItem = ({
     dept_name,
     email,
     tel,
-    profile_url
+    profile_img_url
   } = data;
 
   // 즐겨찾기 여부
@@ -50,7 +50,7 @@ const MemberListItem = ({
   return (
     <StyledMemItem>
       <ListItemAvatar sx={{ marginRight: '20px' }}>
-        <Avatar src={UserProfile} />
+        <Avatar src={profile_img_url} />
       </ListItemAvatar>
       <Grid container>
         <Grid item xs={1.5}>

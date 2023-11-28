@@ -179,7 +179,14 @@ const RezList = ({ todayRezList }) => {
                           }}
                         >
                           {item.mr_pt_list.map((mem, index) => (
-                            <Avatar alt="Remy Sharp" src={''} key={index} />
+                            <Avatar
+                              src={
+                                mem.memVO.profile_img_url
+                                  ? mem.memVO.profile_img_url
+                                  : ''
+                              }
+                              key={index}
+                            />
                           ))}
                         </AvatarGroup>
                       </Stack>

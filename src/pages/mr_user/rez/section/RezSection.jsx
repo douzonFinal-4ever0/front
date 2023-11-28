@@ -177,6 +177,7 @@ const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
               </AccordionSummary>
               <AccordionDetails>
                 <RezForm
+                  mType={m_type}
                   recentRez={recentRez}
                   isReadOnly={isReadOnly}
                   setClickTagData={setClickTagData}

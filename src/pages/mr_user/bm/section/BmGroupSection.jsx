@@ -24,6 +24,7 @@ import MemberListItem from '../list/MemberListItem';
 const GroupItem = ({ isDisabled, index, data }) => {
   const { bm_group_name, mem_list } = data;
 
+  console.log(data);
   return (
     <Accordion
       sx={{
@@ -60,7 +61,11 @@ const GroupItem = ({ isDisabled, index, data }) => {
               total={mem_list.length}
             >
               {mem_list.map((mem, index) => (
-                <Avatar alt="Remy Sharp" src={UserProfile} key={index} />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={mem.profile_img_url}
+                  key={index}
+                />
               ))}
             </AvatarGroup>
           </Grid>
