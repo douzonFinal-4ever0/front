@@ -1,14 +1,104 @@
 [
   {
     "video_rez_code": "V001",
-    "rez_name": "AWS 사업회의"
+    "rez_name": "AWS 사업회의",
+    "mr_pt_list": [
+      {
+        "dept_name": "디자인1팀",
+        "mem_code": "MEM032",
+        "name": "최보윤",
+        "position_name": "팀장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/최보윤.png"
+      },
+      {
+        "dept_name": "개발2팀",
+        "mem_code": "MEM026",
+        "name": "정슬기",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/정슬기.jpg"
+      },
+      {
+        "dept_name": "기획1팀",
+        "mem_code": "MEM036",
+        "name": "강현구",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/강현구.jpg"
+      },
+      {
+        "dept_name": "개발1팀",
+        "mem_code": "MEM023",
+        "name": "전에스더",
+        "position_name": "사원",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/전에스더.jpg"
+      }
+    ]
   },
   {
     "video_rez_code": "V002",
-    "rez_name": "메디트릭스 사업회의"
+    "rez_name": "메디트릭스 사업회의",
+    "mr_pt_list": [
+      {
+        "dept_name": "디자인1팀",
+        "mem_code": "MEM032",
+        "name": "최보윤",
+        "position_name": "팀장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/최보윤.png"
+      },
+      {
+        "dept_name": "개발2팀",
+        "mem_code": "MEM026",
+        "name": "정슬기",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/정슬기.jpg"
+      },
+      {
+        "dept_name": "기획1팀",
+        "mem_code": "MEM036",
+        "name": "강현구",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/강현구.jpg"
+      },
+      {
+        "dept_name": "개발1팀",
+        "mem_code": "MEM023",
+        "name": "전에스더",
+        "position_name": "사원",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/전에스더.jpg"
+      }
+    ]
   },
   {
     "video_rez_code": "V003",
-    "rez_name": "한국통계정보원 사업회의"
+    "rez_name": "한국통계정보원 사업회의",
+    "mr_pt_list": [
+      {
+        "dept_name": "디자인1팀",
+        "mem_code": "MEM032",
+        "name": "최보윤",
+        "position_name": "팀장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/최보윤.png"
+      },
+      {
+        "dept_name": "개발2팀",
+        "mem_code": "MEM026",
+        "name": "정슬기",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/정슬기.jpg"
+      },
+      {
+        "dept_name": "기획1팀",
+        "mem_code": "MEM036",
+        "name": "강현구",
+        "position_name": "과장",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/강현구.jpg"
+      },
+      {
+        "dept_name": "개발1팀",
+        "mem_code": "MEM023",
+        "name": "전에스더",
+        "position_name": "사원",
+        "profile_img_url": "https://heejinawsbucket1.s3.ap-northeast-2.amazonaws.com/전에스더.jpg"
+      }
+    ]
   }
 ]
