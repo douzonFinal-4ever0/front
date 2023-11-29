@@ -61,6 +61,7 @@ const TimeLineCalendar = ({ events, resources }) => {
     const eventDate = info.event.start;
     const mr_code = info.event._def.resourceIds[0];
     const mr_rez_code = info.event._def.extendedProps.mr_rez_code;
+    console.log(mr_rez_code);
     axiosInstance.axiosInstance
       .get(`/mr/${mr_code}`)
       .then((res) => {

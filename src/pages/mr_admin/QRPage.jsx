@@ -14,18 +14,22 @@ import {
   Typography
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import RectangleBtn from '../../components/common/RectangleBtn';
+import { handleMrListUpdate } from '../../redux/reducer/MrListSlice.js';
 import axiosInstance from '../../utils/axios';
 import MrInfoSection from '../mr_user/rez/section/MrInfoSection';
 
 const QRPage = () => {
+  const dispatch = useDispatch();
   const { mr_rez_code } = useParams();
   const [rezData, setRezData] = useState();
   const [mr_code, setMr_code] = useState();
   const [mr, setMr] = useState();
   const [status, setStatus] = useState(true);
   console.log(mr_rez_code);
+
   useEffect(() => {
     axiosInstance.axiosQR
       .get(`/mr/mrRez/${mr_rez_code}`)
@@ -51,6 +55,7 @@ const QRPage = () => {
       .then((res) => {
         console.log(res.data);
         setStatus(false);
+        dispatch(handleMrListUpdate());
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
@@ -62,6 +67,7 @@ const QRPage = () => {
       .then((res) => {
         console.log(res.data);
         setStatus(true);
+        dispatch(handleMrListUpdate());
       })
       .catch((error) => {
         console.error('데이터 가져오기 오류:', error);
