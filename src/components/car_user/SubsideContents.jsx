@@ -161,6 +161,8 @@ const SubSideContents = ({
 
   const handleItem = (e, car_code, car_address, car_name) => {
     //setCarCode(car_code);
+
+    console.log(e.target);
     setSelectedRows({ car_code, car_address, car_name });
     //선택된 차량 비활성화
     socket.emit('selected', { car_code, currentName });
@@ -248,7 +250,6 @@ const SubSideContents = ({
                         <ListItemButton
                           disabled={
                             car.car_status === '선택된 차량' ||
-                            car.car_status === '이미 예약된 차량' ||
                             car.car_status === '내가 선택한 차량'
                           }
                         >
