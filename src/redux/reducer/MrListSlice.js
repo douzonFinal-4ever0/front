@@ -22,7 +22,6 @@ const mrListSlice = createSlice({
     }
   }
 });
-export const updateMrList = createAction('mrList/updateMrList');
 export const { setMrList, setFilteredMrList } = mrListSlice.actions;
 export default mrListSlice.reducer;
 
@@ -40,7 +39,6 @@ export const handleMrListUpdate = () => (dispatch) => {
       // 액션 디스패치
       dispatch(setMrList(processedData));
       dispatch(setFilteredMrList(processedData));
-      dispatch(updateMrList(processedData));
     })
     .catch((error) => {
       console.error('데이터 가져오기 오류:', error);
