@@ -23,11 +23,12 @@ import {
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+import videoRezData from '../../../../videoRez.json';
 
 const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
   const { pathname } = useLocation();
   const isDetailModal = pathname === '/mr/rez/history' ? true : false;
-
+  const rezData = useSelector(setRezData).payload.mrUser;
   const userData = useSelector(setUserData).payload.user;
   const { mem_code } = userData;
   // 모달창 오픈
@@ -100,7 +101,17 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
 
   return (
     <>
-      {ptList && (
+      {rezData.m_type === '화상회의' ? (
+        <List sx={{ width: '100%' }}>
+          <PtCardList
+            mem_code={mem_code}
+            data={videoRezData[0].mr_pt_list}
+            setPtList={setPtList}
+            clickTagData={clickTagData}
+            setClickTagData={setClickTagData}
+          />
+        </List>
+      ) : (
         <List sx={{ width: '100%' }}>
           <PtCardList
             mem_code={mem_code}
@@ -111,6 +122,7 @@ const InnerPtForm = ({ ptList, setPtList, clickTagData, setClickTagData }) => {
           />
         </List>
       )}
+
       <RectangleBtn
         type={'button'}
         text={'참석자 추가'}
@@ -155,6 +167,8 @@ const PtCardList = ({
   const dispatch = useDispatch();
   const rezData = useSelector(setRezData).payload.mrUser;
   const masterCode = mem_code;
+
+  console.log(data);
 
   // 참석자 카드 삭제 버튼 이벤트
   const handleCardDeleteBtn = (e) => {

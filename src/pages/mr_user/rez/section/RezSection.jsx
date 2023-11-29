@@ -32,6 +32,7 @@ import {
 } from '../../../../redux/reducer/SnackbarSlice';
 import { useContext } from 'react';
 import { SocketContext, useSocket } from '../../../../utils/SocketProvider';
+import videoRezData from '../../../../videoRez.json';
 
 const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
   const location = useLocation();
@@ -100,8 +101,6 @@ const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
     dispatch(setSnackbarContent(content));
   };
 
-  console.log(rezData);
-
   // 예약 버튼 이벤트
   const handleBtnSubmit = async (e) => {
     e.preventDefault();
@@ -109,7 +108,8 @@ const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
     const data = {
       ...rezData,
       mem_code,
-      mr_pt_list: ptList,
+      mr_pt_list:
+        rezData.m_type === '화상회의' ? videoRezData[0].mr_pt_list : ptList,
       mr_code: selectMrCard.mr_code
     };
 

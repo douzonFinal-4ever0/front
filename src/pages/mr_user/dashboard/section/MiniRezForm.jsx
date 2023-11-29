@@ -81,8 +81,6 @@ const MiniRezForm = () => {
     dispatch(setRezData({ data: newRezData }));
   };
 
-  console.log(times);
-
   // 예약 버튼 이벤트
   const handleRezBtnSubmit = async (e) => {
     e.preventDefault();
