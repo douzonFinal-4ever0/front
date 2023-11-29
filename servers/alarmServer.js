@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
       if (jwtT) {
         const memList = Array.from(users.keys());
         axios
-          .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+          .get(`http://192.168.0.17:8081/car_rez/loadAlarm/${memList}`, {
             headers: {
               Authorization: jwtT
             }
@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
     jwtT = jwt;
     //로그인시 alarm정보 가져오기
     axios
-      .get(`http://localhost:8081/car_rez/loadAlarm/${memCodes}`, {
+      .get(`http://192.168.0.17:8081/car_rez/loadAlarm/${memCodes}`, {
         headers: {
           Authorization: jwt
         }
@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
         contents: `예약 번호 : ${mr_rez_code}\n회의실 예약 참석자로 지정되었습니다.`
       };
       axios
-        .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO, {
+        .post(`http://192.168.0.17:8081/car_rez/alarmSave`, alertDTO, {
           headers: {
             Authorization: jwt
           }
@@ -141,7 +141,7 @@ io.on('connection', (socket) => {
 
     //변화된 사람 알람만 가져오기
     axios
-      .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+      .get(`http://192.168.0.17:8081/car_rez/loadAlarm/${memList}`, {
         headers: {
           Authorization: jwt
         }
@@ -165,7 +165,7 @@ io.on('connection', (socket) => {
   socket.on('allUsers', (jwt) => {
     const memList = Array.from(users.keys());
     axios
-      .get(`http://localhost:8081/car_rez/loadAlarm/${memList}`, {
+      .get(`http://192.168.0.17:8081/car_rez/loadAlarm/${memList}`, {
         headers: {
           Authorization: jwt
         }

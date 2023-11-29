@@ -15,6 +15,7 @@ import {
   setSnackbarContent,
   setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
+import { useSocket } from '../../utils/SocketProvider.js';
 import axiosInstance from '../../utils/axios.js';
 const MrNotice = () => {
   const navigate = useNavigate();
@@ -79,11 +80,29 @@ const MrNotice = () => {
     notice_title,
     mem_code
   };
-
+  const socket = useSocket();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
+  const mrAlarm = (alertDTO) => {
+    axiosInstance.axiosInstance
+      .post(`http://localhost:8081/car_rez/announcementSave`, alertDTO)
+      .then((res2) => {
+        if (res2.status === 200) {
+          socket.emit('allUsers', jwt);
+        }
+      });
+  };
   const handleCreate = () => {
     axiosInstance.axiosInstance
       .post('/mr/notice', FormToData)
       .then(() => {
+        const alertDTO = {
+          contents: '전체 공지 사항이 등록되었습니다.'
+        };
+        console.log(alertDTO);
+        mrAlarm(alertDTO);
         handleSetSnackbarStatus('success');
         handleOpenSnackbar();
         handleSetSnackbarContent('공지사항이 등록되었습니다.');

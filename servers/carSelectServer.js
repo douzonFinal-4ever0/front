@@ -201,37 +201,35 @@ io.on('connection', (socket) => {
 
   socket.on('selected', ({ car_code, currentName }) => {
     console.log('selected');
-    if (selectedUser.values().includes(car_code)) {
-      console.log(car_code);
-    } else {
-      if (selectedUser.get(currentName)) {
-        //선택한게 있을때
-        //전에 선택한 차량
-        console.log(selectedUser.get(currentName));
-        cars.map((car) => {
-          if (car.car_code === selectedUser.get(currentName)) {
-            car.car_status = '선택가능';
-            // console.log(car);
-          }
-        });
-        // console.log(cars);
-        selectedUser.delete(currentName);
-        selectedUser.set(currentName, car_code);
-      } else {
-        selectedUser.set(currentName, car_code);
-      }
-      console.log(selectedUser);
-      console.log(car_code);
+
+    if (selectedUser.get(currentName)) {
+      //선택한게 있을때
+      //전에 선택한 차량
+      console.log(selectedUser.get(currentName));
       cars.map((car) => {
-        // console.log(car);
-        if (car_code === car.car_code) {
-          car.car_status = '선택된 차량';
-          console.log(car);
+        if (car.car_code === selectedUser.get(currentName)) {
+          car.car_status = '선택가능';
+          // console.log(car);
         }
       });
-      const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
-      io.emit('selected', jsonObject);
+      // console.log(cars);
+      selectedUser.delete(currentName);
+      selectedUser.set(currentName, car_code);
+    } else {
+      selectedUser.set(currentName, car_code);
     }
+    console.log(selectedUser);
+    console.log(car_code);
+    cars.map((car) => {
+      // console.log(car);
+      if (car_code === car.car_code) {
+        car.car_status = '선택된 차량';
+        console.log(car);
+      }
+    });
+    const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
+    io.emit('selected', jsonObject);
+
     console.log(users2);
 
     for (let user of Array.from(users2.keys())) {
