@@ -1,7 +1,6 @@
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Collapse,
@@ -13,24 +12,11 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
-  TextField,
   Typography
 } from '@mui/material';
-import axios from 'axios';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import Searchbar from '../common/Searchbar';
-import NoRow from './NoRow';
-import RectangleBtn from '../common/RectangleBtn';
-import { palette } from '../../theme/palette';
-import RectangleIcon from '@mui/icons-material/Rectangle';
-import axiosInstance from '../../utils/axios';
-import { useQuery } from 'react-query';
-import io from 'socket.io-client';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import LoadingModal from './LoadingModal';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import NoRow from './NoRow';
 
 //통신
 // const socket = io.connect('http://localhost:4000');
