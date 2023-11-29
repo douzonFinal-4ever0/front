@@ -26,8 +26,12 @@ const OperTimeChart = ({ searchData }) => {
       .then((res) => {
         console.log(res.data);
         setSeries([
-          res.data.percent.toFixed(3) * 100,
-          (1 - res.data.percent.toFixed(3)) * 100
+          res.data.percent.toFixed(3) * 100 > 100
+            ? 100
+            : res.data.percent.toFixed(3) * 100,
+          (1 - res.data.percent.toFixed(3)) * 100 < 0
+            ? 0
+            : 1 - res.data.percent.toFixed(3)
         ]);
         setTotalOperTime(res.data.totalOperTime);
       })
