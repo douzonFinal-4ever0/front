@@ -6,7 +6,8 @@ import {
   FormControl,
   Select,
   Toolbar,
-  Typography
+  Typography,
+  Button
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
@@ -21,6 +22,9 @@ import ExpenditurePatternChart from '../../components/car_admin/chart/Expenditur
 import { useState } from 'react';
 import { useEffect } from 'react';
 import dayjs from 'dayjs';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const CarDashboard = () => {
   const [searchData, setSearchData] = useState({});
@@ -36,16 +40,17 @@ const CarDashboard = () => {
       today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1)
     );
 
+    console.log(monday);
+
     // 서버로 보낼 요청 객체를 만듭니다.
     setSearchData({
-      sdate: dayjs(monday)
-        .subtract(weeksAgo + 1, 'week')
-        .format('YYYY-MM-DD'),
+      sdate: dayjs(monday).subtract(weeksAgo, 'week').format('YYYY-MM-DD'),
       edate: dayjs(monday)
-        .subtract(weeksAgo, 'week')
+        .subtract(weeksAgo - 1, 'week')
         .subtract(1, 'day')
         .format('YYYY-MM-DD')
     });
+    console.log(searchData);
   };
 
   useEffect(() => {
@@ -53,13 +58,6 @@ const CarDashboard = () => {
     setPeriod(week); // 이번 주의 일주일
     setIsLoading(false);
   }, [week]);
-
-  const handleSelectChange = (event) => {
-    setWeek(event.target.value);
-    // 여기에 더 많은 경우를 추가할 수 있습니다.
-
-    // 선택된 값을 사용하려면 필요에 따라 추가 로직을 작성하세요.
-  };
 
   return (
     <>
@@ -78,28 +76,32 @@ const CarDashboard = () => {
             한 주간의 리포트
           </Typography>
           <Box display="flex" alignItems="center">
-            <Typography color="#111111" variant="subtitle2" marginRight="20px">
-              기간
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setWeek(week + 1);
+              }}
+            >
+              <ArrowBackIosIcon sx={{ width: '10px' }} />
+            </Button>
+            <Typography
+              color="#111111"
+              size="large"
+              variant="subtitle2"
+              margin=" 0px 20px"
+            >
+              {`${searchData.sdate} - ${searchData.edate}`}
             </Typography>
-            <Box sx={{ minWidth: 110, width: '270px' }}>
-              <FormControl
-                sx={{
-                  '& .MuiInputBase-root': { width: '270px', height: '30px' }
-                }}
-              >
-                <Select
-                  id="demo-simple-select"
-                  value={week} // 선택된 값을 표시하는 state가 필요하면 여기에 설정
-                  onChange={handleSelectChange}
-                >
-                  <MenuItem
-                    value={0}
-                  >{`${searchData.sdate} - ${searchData.edate}`}</MenuItem>
-                  <MenuItem value={1}>1주 전</MenuItem>
-                  <MenuItem value={2}>2주 전</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setWeek(week - 1);
+              }}
+            >
+              <ArrowForwardIosIcon sx={{ width: '10px' }} />
+            </Button>
           </Box>
         </Toolbar>
       </StyledAppBar>
