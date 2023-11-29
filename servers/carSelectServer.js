@@ -79,6 +79,8 @@ io.on('connection', (socket) => {
         }
         io.to(users2.get(user).socketID).emit('cars', filterCars);
       }
+    } else {
+      cars = [];
     }
   });
 
@@ -199,45 +201,37 @@ io.on('connection', (socket) => {
 
   socket.on('selected', ({ car_code, currentName }) => {
     console.log('selected');
-    if (selectedUser.get(currentName)) {
-      //선택한게 있을때
-      //전에 선택한 차량
-      console.log(selectedUser.get(currentName));
+    if (selectedUser.values().includes(car_code)) {
+      console.log(car_code);
+    } else {
+      if (selectedUser.get(currentName)) {
+        //선택한게 있을때
+        //전에 선택한 차량
+        console.log(selectedUser.get(currentName));
+        cars.map((car) => {
+          if (car.car_code === selectedUser.get(currentName)) {
+            car.car_status = '선택가능';
+            // console.log(car);
+          }
+        });
+        // console.log(cars);
+        selectedUser.delete(currentName);
+        selectedUser.set(currentName, car_code);
+      } else {
+        selectedUser.set(currentName, car_code);
+      }
+      console.log(selectedUser);
+      console.log(car_code);
       cars.map((car) => {
-        if (car.car_code === selectedUser.get(currentName)) {
-          car.car_status = '선택가능';
-          // console.log(car);
+        // console.log(car);
+        if (car_code === car.car_code) {
+          car.car_status = '선택된 차량';
+          console.log(car);
         }
       });
-      // console.log(cars);
-      selectedUser.delete(currentName);
-      selectedUser.set(currentName, car_code);
-    } else {
-      selectedUser.set(currentName, car_code);
+      const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
+      io.emit('selected', jsonObject);
     }
-    console.log(selectedUser);
-    console.log(car_code);
-    cars.map((car) => {
-      // console.log(car);
-      if (car_code === car.car_code) {
-        car.car_status = '선택된 차량';
-        console.log(car);
-      }
-    });
-    const jsonObject = JSON.stringify(Object.fromEntries(selectedUser));
-    // console.log(cars);
-
-    // var filterCars = cars.fillter((car) => {
-    //   return car['car_code'].includes(users2.get(currentName).carFillter);
-    // });
-
-    // io.to(users2.get(currentName).socketID).emit('Upcars', filterCars);
-    // users2.map((user) => {
-    //   var filterCars = cars.filter((car) => {
-    //     return car['car_code'].includes(users2.get(currentName).carFillter);
-    //   });
-    //   io.to(user.socketID).emit('cars', filterCars);
-    // });
     console.log(users2);
 
     for (let user of Array.from(users2.keys())) {
@@ -257,34 +251,20 @@ io.on('connection', (socket) => {
       console.log(filterCars);
       io.to(users2.get(user).socketID).emit('cars', filterCars);
     }
-    io.emit('selected', jsonObject);
   });
 
-  socket.on('rezComplete', (disConnectUser) => {
-    users.delete(disConnectUser);
-    selectedUser.delete(disConnectUser);
+  socket.on('rezComplete', (currentName) => {
+    console.log(currentName);
+
     cars.map((car) => {
-      if (car.car_code === selectedUser.get(disConnectUser)) {
-        car.car_status = '이미 예약된 차량';
+      if (car.car_code === selectedUser.get(currentName)) {
+        console.log(car.car_code);
+        car.car_status = '선택가능';
         // cars = cars.filter((item) => item !== valueToRemove);
       }
     });
-    // users2.map((user) => {
-    //   var filterCars = cars.filter((car) => {
-    //     return car['car_code'].includes(users2.get(currentName).carFillter);
-    //   });
-    //   io.to(user.socketID).emit('cars', filterCars);
-    // });
-    // for (let user of Array.from(users2).keys()) {
-    //   var filterCars = cars.filter((car) => {
-    //     // return car['car_code'].includes(users2.get(user).carFilter);
-    //     // avaiableCars.includes(car.car_code);
-    //     users2.carFilter.map((avaiableCar) => {
-    //       return (car.car_code = avaiableCar);
-    //     });
-    //   });
-    //   io.to(users2.get(user).socketID).emit('cars', filterCars);
-    // }
+    selectedUser.delete(currentName);
+    users.delete(currentName);
     for (let user of Array.from(users2.keys())) {
       var filterCars;
       if (users2.get(user)) {
@@ -301,6 +281,9 @@ io.on('connection', (socket) => {
     io.emit('users', users);
     console.log(users.size);
     io.emit('currentCnt', users.size);
+    if (users.size === 0) {
+      cars = [];
+    }
     // io.emit('cars', cars);
   });
 });

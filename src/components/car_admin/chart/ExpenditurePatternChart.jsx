@@ -70,12 +70,16 @@ const ExpenditurePatternChart = ({ searchData }) => {
       const fuelCost =
         day.expenditureDTOS.find((item) => item.ac_detail === '유류비')?.cost ||
         0;
+      const maintCost =
+        day.expenditureDTOS.find((item) => item.ac_detail === '정비')?.cost ||
+        0;
 
       return {
         day_of_week: day.day_of_week,
         parkingCost: parkingCost,
         tollCost: tollCost,
-        fuelCost: fuelCost
+        fuelCost: fuelCost,
+        maintCost: maintCost
       };
     });
     setChartData({
@@ -93,6 +97,11 @@ const ExpenditurePatternChart = ({ searchData }) => {
         .sort((a, b) => a.day_of_week - b.day_of_week)
         .map((item) => {
           return item.tollCost;
+        }),
+      maintCost: result
+        .sort((a, b) => a.day_of_week - b.day_of_week)
+        .map((item) => {
+          return item.maintCost;
         })
     });
     setIsLoading(false);
@@ -135,6 +144,10 @@ const ExpenditurePatternChart = ({ searchData }) => {
       {
         name: '유류비',
         data: chartData.fuelCost
+      },
+      {
+        name: '정비',
+        data: chartData.maintCost
       }
     ]
   };
@@ -186,7 +199,7 @@ const ExpenditurePatternChart = ({ searchData }) => {
         <Typography variant="subtitle2">
           {diff > 0
             ? `지난주 총 지출 금액보다 ${formatNumber(diff)}원 더 사용했습니다.`
-            : `지난주 총 지출 금액보다 ${-formatNumber(
+            : `지난주 총 지출 금액보다 ${formatNumber(
                 diff
               )}원 적게 사용했습니다.`}
         </Typography>

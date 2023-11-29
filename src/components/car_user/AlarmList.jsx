@@ -9,7 +9,12 @@ import {
 const AlarmList = ({ alarmDatas, clickAlarm, read }) => {
   let cnt = 0;
   return (
-    <List dense component="div" role="list" sx={{ minWidth: '400px' }}>
+    <List
+      dense
+      component="div"
+      role="list"
+      sx={{ minWidth: '400px', maxHeight: '700px' }}
+    >
       {alarmDatas &&
         alarmDatas.map((alarmData) => {
           if (alarmData.is_read === read) {

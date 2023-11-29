@@ -455,6 +455,10 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
     axiosInstance.axiosInstance
       .patch('/mr/mrDeactivate', FormToData4)
       .then((res) => {
+        const alertDTO = {
+          contents: `전체 공지 회의실 이름 : ${FormToData4.mr_name}\n회의실이 재활성화 되었습니다.`
+        };
+        mrAlarm(alertDTO);
         handleSetSnackbarStatus('success');
         handleSetSnackbarContent('회의실 재활성화 처리가 완료되었습니다.');
         handleOpenSnackbar();
