@@ -56,7 +56,7 @@ const Header = (props) => {
   // 읽지 않은 알림이 있다고 알려주는 알림
   const [newAlarm, setNewAlarm] = useState(0);
   const dispatch = useDispatch();
-  const { name, position_name, mem_code, dept_name, profile_image_url } = user;
+  const { name, position_name, mem_code, dept_name, profile_img_url } = user;
   // const handleClick = (newPlacement) => (event) => {
   //   setAnchorEl(event.currentTarget);
   //   setOpen((prev) => placement !== newPlacement || !prev);
@@ -231,9 +231,9 @@ const Header = (props) => {
               >
                 <StyledAvatar
                   src={
-                    user.profile_image_url === null
+                    user.profile_img_url === null
                       ? UserProfile
-                      : user.profile_image_url
+                      : user.profile_img_url
                   }
                   ref={anchorRef}
                   aria-controls={open ? 'menu-list-grow' : undefined}

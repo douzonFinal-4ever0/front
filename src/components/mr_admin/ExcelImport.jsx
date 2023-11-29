@@ -14,6 +14,7 @@ import {
 import { palette } from '../../theme/palette';
 import axiosInstance from '../../utils/axios.js';
 import RectangleBtn from '../common/RectangleBtn';
+import { useSocket } from '../../utils/SocketProvider.js';
 
 function ExcelImport() {
   const [tableData, setTableData] = useState([]); //엑셀 데이터
@@ -138,7 +139,21 @@ function ExcelImport() {
   };
   const selectedArray = getSelectedRowsData();
   /*--------------------------------------------------------------------------------*/
-
+  //알람 전송
+  const socket = useSocket();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
+  const mrAlarm = (alertDTO) => {
+    axiosInstance.axiosInstance
+      .post(`http://localhost:8081/car_rez/announcementSave`, alertDTO)
+      .then((res2) => {
+        if (res2.status === 200) {
+          socket.emit('allUsers', jwt);
+        }
+      });
+  };
   /**회의실 등록 버튼 클릭 이벤트 */
   const handleSubmit = () => {
     selectedArray.forEach((selectedItem) => {
@@ -207,6 +222,11 @@ function ExcelImport() {
       axiosInstance.axiosInstance
         .post('/mr/mrRegister', FormToData)
         .then((res) => {
+          const alertDTO = {
+            contents: `전체 공지 회의실 이름 : ${FormToData.mr_name}\n회의실이 등록되었습니다.`
+          };
+
+          mrAlarm(alertDTO);
           handleSetSnackbarStatus('success');
           handleSetSnackbarContent('회의실 등록이 완료되었습니다.');
           handleOpenSnackbar();
