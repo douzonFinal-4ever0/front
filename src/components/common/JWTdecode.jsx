@@ -17,6 +17,8 @@ const JWTdecode = () => {
         token.indexOf('.') + 1,
         token.lastIndexOf('.')
       );
+      payload = payload.replace(/-/g, '+');
+      payload = payload.replace(/_/g, '/');
       //base64  디코딩
       const bytes = base64.decode(payload);
       //한글 디코딩

@@ -224,11 +224,28 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   };
   /*----------------------------장비------------------------------------*/
   let all_mr_supplies = '';
-  const [mr_supplies, setMr_supplies] = useState([]);
+  const [mr_supplies, setMr_supplies] = useState(initialMrSupplies);
+  const [addmr_supplies, setAddMr_Supplies] = useState([]);
   // 모달창 열림 여부 값*/
   const [open, setOpen] = useState(false);
   /** 모달창 열림닫힘 이벤트*/
   const handleModal = () => setOpen(!open);
+  const deleteKeyWord = () => {
+    axiosInstance.axiosInstance
+      .delete(`/mr/mrKeyWord/${selectedRowData.mr_code}`)
+      .then((res) => {})
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+  };
+  const deleteSupplies = () => {
+    axiosInstance.axiosInstance
+      .delete(`/mr/supplies/${selectedRowData.mr_code}`)
+      .then((res) => {})
+      .catch((error) => {
+        console.error('데이터 가져오기 오류:', error);
+      });
+  };
   const handleSelectedArray = (selectedArray) => {
     all_mr_supplies = selectedArray;
     console.log(all_mr_supplies);
@@ -236,6 +253,14 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
   const ModalActionBtns = () => {
     const handleSaveBtn = () => {
       setMr_supplies(
+        all_mr_supplies
+          ? all_mr_supplies.map((supply) => ({
+              supplies_code: supply.supplies_code,
+              supplies_name: supply.supplies_name
+            }))
+          : []
+      );
+      setAddMr_Supplies(
         all_mr_supplies
           ? all_mr_supplies.map((supply) => ({
               supplies_code: supply.supplies_code,
@@ -384,6 +409,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
 
   /**회의실 수정 버튼 클릭 이벤트 */
   const handleUpdate = () => {
+    deleteKeyWord(selectedRowData.mr_code);
+    deleteSupplies(selectedRowData.mr_code);
     axiosInstance.axiosInstance
       .patch('/mr/mrUpdate', FormToData2)
       .then((res) => {
@@ -397,6 +424,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
         handleOpenSnackbar();
         handleCloseDrawer();
         deletedImgCodes.forEach((imgCode) => deleteImage(imgCode));
+
         handleImgUpload();
       })
       .catch((error) => {
@@ -463,7 +491,8 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
       mr_type: mrType,
       mr_keyword: selectedTags,
       mr_op_day: selectedDays,
-      is_opened: 0
+      is_opened: 0,
+      mr_supplies
     };
   }
   /**비활성시 필요한 데이터 */
@@ -661,7 +690,6 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
             >
               <ControlPointOutlinedIcon />
             </IconButton>
-
             {initialMrSupplies &&
               initialMrSupplies.map(
                 (supplies, index) =>
@@ -670,6 +698,7 @@ const MrRegistForm = ({ selectedRowData, isEditMode }) => {
                   )
               )}
             {mr_supplies &&
+              mr_supplies[0].supplies_name &&
               mr_supplies.map(
                 (supplies, index) =>
                   supplies.supplies_name !== null && (

@@ -20,7 +20,7 @@ const MrNotice = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const notice_code = new URLSearchParams(location.search).get('notice_code');
-  const [editorData, setEditorData] = useState('<p>테스트</p>');
+  const [editorData, setEditorData] = useState('<p></p>');
   const [isPublic, setIsPublic] = useState(true); // OnOff 스위치의 상태를 관리
   const [notice_title, setNotice_title] = useState('');
   const [template, setTemplate] = useState([]);
