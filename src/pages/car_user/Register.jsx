@@ -47,6 +47,7 @@ import {
   setSnackbarContent,
   setSnackbarStatus
 } from '../../redux/reducer/SnackbarSlice';
+import { useSocket } from '../../utils/SocketProvider';
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +115,11 @@ const Register = () => {
   const [est_cost, setEst_cost] = useState(null);
   const [rezStart_at, setRezStart_at] = useState(null);
   const [rezReturn_at, setRezReturn_at] = useState(null);
-
+  const socket2 = useSocket();
+  const getJwtToken = () => {
+    return localStorage.getItem('jwtToken');
+  };
+  const jwt = getJwtToken();
   const dispatch = useDispatch();
   // snackbar 상태 관리 함수
   const handleOpenSnackbar = () => {
@@ -232,6 +237,7 @@ const Register = () => {
     }
     setOpnColl(false);
   };
+
   //submit하는 함수
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -272,7 +278,23 @@ const Register = () => {
           handleSetSnackbarContent('예약이 완료되었습니다.');
           handleOpenSnackbar();
           console.log('예약 완료 : ' + dateFormat(res.data.start_at));
-          socket.emit('rezComplete', currentName);
+          if (socket) {
+            socket.emit('rezComplete', currentName);
+          }
+
+          const alertDTO = {
+            mem_code: mem_code,
+            contents: `차량 예약 번호 : ${formData.carDTO.car_code}\n차량 예약이 완료되었습니다.`
+          };
+          const memList = [mem_code];
+          console.log(memList);
+          axiosInstance.axiosInstance
+            .post(`http://localhost:8081/car_rez/alarmSave`, alertDTO)
+            .then((res2) => {
+              if (res2.status === 200) {
+                socket2.emit('changeDB', { memList, jwt });
+              }
+            });
           navigate('../carRezComplete', { state: data });
         });
     } else {
@@ -283,9 +305,7 @@ const Register = () => {
   };
   const [socket, setSocket] = useState(null);
   //modal여는 함수
-  const getJwtToken = () => {
-    return localStorage.getItem('jwtToken');
-  };
+
   const handleOpenModal = () => {
     const Token = getJwtToken();
     console.log(rezStart_at);
@@ -344,7 +364,7 @@ const Register = () => {
       setOpen(false);
       setOpnColl(true);
     } else {
-      handleOpenSnackbar('error');
+      handleSetSnackbarStatus('error');
       handleSetSnackbarContent('차량을 선택해주세요.');
       handleOpenSnackbar();
     }
@@ -370,6 +390,7 @@ const Register = () => {
   };
   var car_type;
   const est_mileageCal = (locList, start_at, car_type) => {
+    console.log(locList);
     console.log(car_type);
     var type;
     if (car_type === '승용차') {
@@ -402,43 +423,120 @@ const Register = () => {
     if (locList) {
       const destCoordinate =
         locList.dest_loc[0].toString() + ',' + locList.dest_loc[1].toString();
+      var options;
+      if (
+        locList.dest_loc[0] === locList.return_loc[0] &&
+        locList.dest_loc[1] === locList.return_loc[1]
+      ) {
+        options = {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
+          },
+          body: JSON.stringify({
+            tollgateFareOption: 16,
+            roadType: 32,
+            directionOption: 1,
+            endX: locList.return_loc[0],
+            endY: locList.return_loc[1],
+            endRpFlag: 'G',
+            reqCoordType: 'WGS84GEO',
+            startX: locList.receipt_loc[0],
+            startY: locList.receipt_loc[1],
+            //gps시간 예약시간으로
+            // gpsTime: '20191125153000',
+            gpsTime: formattedDateTime,
+            speed: 10,
+            uncetaintyP: 1,
+            uncetaintyA: 1,
+            uncetaintyAP: 1,
+            //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
+            carType: type,
+            // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
+            // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
 
-      const options = {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-          'content-type': 'application/json',
-          appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
-        },
-        body: JSON.stringify({
-          tollgateFareOption: 16,
-          roadType: 32,
-          directionOption: 1,
-          endX: locList.return_loc[0],
-          endY: locList.return_loc[1],
-          endRpFlag: 'G',
-          reqCoordType: 'WGS84GEO',
-          startX: locList.receipt_loc[0],
-          startY: locList.receipt_loc[1],
-          //gps시간 예약시간으로
-          // gpsTime: '20191125153000',
-          gpsTime: formattedDateTime,
-          speed: 10,
-          uncetaintyP: 1,
-          uncetaintyA: 1,
-          uncetaintyAP: 1,
-          //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
-          carType: type,
-          // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
-          // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
-          passList: destCoordinate,
-          gpsInfoList:
-            '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
-          detailPosFlag: '2',
-          resCoordType: 'WGS84GEO',
-          sort: 'index'
-        })
-      };
+            gpsInfoList:
+              '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
+            detailPosFlag: '2',
+            resCoordType: 'WGS84GEO',
+            sort: 'index'
+          })
+        };
+      } else {
+        options = {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
+          },
+          body: JSON.stringify({
+            tollgateFareOption: 16,
+            roadType: 32,
+            directionOption: 1,
+            endX: locList.return_loc[0],
+            endY: locList.return_loc[1],
+            endRpFlag: 'G',
+            reqCoordType: 'WGS84GEO',
+            startX: locList.receipt_loc[0],
+            startY: locList.receipt_loc[1],
+            //gps시간 예약시간으로
+            // gpsTime: '20191125153000',
+            gpsTime: formattedDateTime,
+            speed: 10,
+            uncetaintyP: 1,
+            uncetaintyA: 1,
+            uncetaintyAP: 1,
+            //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
+            carType: type,
+            // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
+            // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
+            passList: destCoordinate,
+            gpsInfoList:
+              '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
+            detailPosFlag: '2',
+            resCoordType: 'WGS84GEO',
+            sort: 'index'
+          })
+        };
+        // const options = {
+        //   method: 'POST',
+        //   headers: {
+        //     accept: 'application/json',
+        //     'content-type': 'application/json',
+        //     appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
+        //   },
+        //   body: JSON.stringify({
+        //     tollgateFareOption: 16,
+        //     roadType: 32,
+        //     directionOption: 1,
+        //     endX: locList.return_loc[0],
+        //     endY: locList.return_loc[1],
+        //     endRpFlag: 'G',
+        //     reqCoordType: 'WGS84GEO',
+        //     startX: locList.receipt_loc[0],
+        //     startY: locList.receipt_loc[1],
+        //     //gps시간 예약시간으로
+        //     // gpsTime: '20191125153000',
+        //     gpsTime: formattedDateTime,
+        //     speed: 10,
+        //     uncetaintyP: 1,
+        //     uncetaintyA: 1,
+        //     uncetaintyAP: 1,
+        //     //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
+        //     carType: type,
+        //     // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
+        //     // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
+        //     passList: destCoordinate,
+        //     gpsInfoList:
+        //       '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
+        //     detailPosFlag: '2',
+        //     resCoordType: 'WGS84GEO',
+        //     sort: 'index'
+        //   })
+      }
       fetch(
         'https://apis.openapi.sk.com/tmap/routes?version=1&callback=function',
         options
@@ -572,7 +670,7 @@ const Register = () => {
         data.start_at = dateFormat(res.data.start_at);
         data.return_at = dateFormat(res.data.return_at);
         console.log(data.start_at);
-        handleOpenSnackbar('success');
+        handleSetSnackbarStatus('success');
         handleSetSnackbarContent('차량 예약 수정 완료.');
         handleOpenSnackbar();
         // window.location.href = '/carRez/dashboard';
@@ -642,7 +740,7 @@ const Register = () => {
             const locList = res.data;
             console.log(locList);
             console.log(Date.parse(rezStart_at));
-            est_mileageCal(locList, Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at), car_type);
           });
       }
     } else {
@@ -665,7 +763,7 @@ const Register = () => {
             const locList = res.data;
             console.log(locList);
             console.log(Date.parse(rezStart_at));
-            est_mileageCal(locList, Date.parse(rezStart_at));
+            est_mileageCal(locList, Date.parse(rezStart_at), car_type);
           });
       }
     }

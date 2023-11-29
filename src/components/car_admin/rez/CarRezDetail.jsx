@@ -58,6 +58,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
       .catch((error) => {
         console.log(error);
       });
+    socket.on('loadAlarm');
   }, []);
 
   // 삭제 모달 관련 변수 및 함수
@@ -79,7 +80,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
       .then((res) => {
         const alertDTO = {
           mem_code: carRezData.carRezResponseVO.memResponseVO.mem_code,
-          contents: `차량 예약 번호 : ${carRezData.carRezResponseVO.car_rez_code}\n차량 예약이 취소되었습니다.`
+          contents: `차량 예약 번호 : ${carRezData.carRezResponseVO.carDetailResponseVO.carVO.car_code}\n차량 예약이 취소되었습니다.`
         };
         const memList = [alertDTO.mem_code];
         console.log(memList);
