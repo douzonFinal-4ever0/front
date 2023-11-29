@@ -193,6 +193,7 @@ const PtCardList = ({
     // data 에 추가
   };
 
+  console.log(data);
   return (
     <>
       {/* 추가된 참석자 리스트  */}
@@ -224,9 +225,7 @@ const PtCardList = ({
           }
         >
           <ListItemAvatar>
-            <Avatar>
-              <ImageIcon />
-            </Avatar>
+            <Avatar src={mem.profile_img_url} />
           </ListItemAvatar>
           <ListItemText
             primary={

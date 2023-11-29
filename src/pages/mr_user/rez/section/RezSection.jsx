@@ -100,6 +100,8 @@ const RezSection = ({ recentRez, selectMrCard, recentMNames, isReadOnly }) => {
     dispatch(setSnackbarContent(content));
   };
 
+  console.log(rezData);
+
   // 예약 버튼 이벤트
   const handleBtnSubmit = async (e) => {
     e.preventDefault();
