@@ -466,7 +466,8 @@ const CarRegisterFrom = ({ carInfo, setCarInfo }) => {
             mem_code: registerData.carUser.mem_code,
             position_name: res.data.position_name,
             name: res.data.name,
-            dept_name: res.data.dept_name
+            dept_name: res.data.dept_name,
+            overMaintCount: 0
           };
           const updatedItems = [...carInfo];
           // 새로운 객체를 배열의 앞에 추가

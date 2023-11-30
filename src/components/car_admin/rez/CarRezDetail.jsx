@@ -43,7 +43,13 @@ const style = {
   boxShadow: 24
 };
 
-const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
+const CarRezDetail = ({
+  car_rez_code,
+  rezData,
+  listData,
+  setRezData,
+  setListData
+}) => {
   const [carRezData, setCarRezData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const socket = useSocket();
@@ -58,7 +64,7 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
       .catch((error) => {
         console.log(error);
       });
-    socket.on('loadAlarm');
+    // socket.on('loadAlarm'); // 알림 오류
   }, []);
 
   // 삭제 모달 관련 변수 및 함수
@@ -102,6 +108,13 @@ const CarRezDetail = ({ car_rez_code, rezData, setRezData }) => {
           return data;
         });
         setRezData(updatedRezData);
+        const updatedListData = listData.map((data) => {
+          if (data.car_rez_code === car_rez_code) {
+            return { ...data, rez_status: '2' };
+          }
+          return data;
+        });
+        setListData(updatedListData);
         handleDeleteModalClose();
       })
       .catch((error) => {
