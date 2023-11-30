@@ -204,7 +204,7 @@ const CarInfo = ({
       headerClassName: 'super-app-theme--header',
       align: 'center',
       renderCell: (params) =>
-        params.value !== 0 && (
+        params.value > 0 && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

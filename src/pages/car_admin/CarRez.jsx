@@ -612,6 +612,8 @@ const CarRezPage = () => {
             car_rez_code={car_rez_code}
             rezData={rezData}
             setRezData={setRezData}
+            listData={listData}
+            setListData={setListData}
           />
         )
       }
