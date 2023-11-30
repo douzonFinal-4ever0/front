@@ -15,10 +15,13 @@ const mrListSlice = createSlice({
     },
     setFilteredMrList: (state, action) => {
       state.filteredMrList = action.payload;
+    },
+    updateMrList: (state, action) => {
+      state.mrList = action.payload;
+      state.filteredMrList = action.payload;
     }
   }
 });
-
 export const { setMrList, setFilteredMrList } = mrListSlice.actions;
 export default mrListSlice.reducer;
 

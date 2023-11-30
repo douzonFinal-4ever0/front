@@ -45,7 +45,14 @@ const MrRegister = () => {
       const filteredList = mrList.filter((item) => item.mr_type === type);
       setFilteredMrList(filteredList);
     };
-
+    const handleActiveClick = (type) => {
+      const filteredList = mrList.filter((item) => item.is_used === type);
+      setFilteredMrList(filteredList);
+    };
+    const handleDeactiveClick = (type) => {
+      const filteredList = mrList.filter((item) => item.is_opened === type);
+      setFilteredMrList(filteredList);
+    };
     const handleClick = () => {
       setFilteredMrList(mrList);
       console.log('전체 회의실');
@@ -160,6 +167,45 @@ const MrRegister = () => {
                     primaryTypographyProps={{ fontSize: '13px' }}
                   />
                 </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleActiveClick('사용중');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle
+                      sx={{ width: '15px !important', color: '#76ff03' }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`사용중 (${
+                      mrList.filter((obj) => obj.is_used === '사용중').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+                <Divider />
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={() => {
+                    handleDeactiveClick('비활성');
+                  }}
+                >
+                  <ListItemIcon>
+                    <Circle
+                      sx={{ width: '15px !important', color: '#ff1744' }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`비활성 (${
+                      mrList.filter((obj) => obj.is_opened === '비활성').length
+                    })`}
+                    primaryTypographyProps={{ fontSize: '13px' }}
+                  />
+                </ListItemButton>
+                <Divider />
               </List>
             </Collapse>
           </List>

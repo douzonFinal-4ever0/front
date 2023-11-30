@@ -146,7 +146,7 @@ const RezForm = ({ mType, recentRez, setClickTagData, setExpanded }) => {
       {/* 회의 종류 */}
       <Grid item container spacing={2}>
         <StyledLabelGrid item xs={3}>
-          <Label htmlFor={'m_type'} text={'회의 종류'} />
+          <Label htmlFor={'m_type'} text={'회의 목적'} />
         </StyledLabelGrid>
         <Grid item xs={9}>
           <Selectbox
