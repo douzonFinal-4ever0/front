@@ -23,22 +23,6 @@ function mapToJSON(map) {
 
 io.on('connection', (socket) => {
   console.log('연결성공');
-
-  // if (cars.length === 0) {
-  //   axios
-  //     .get(`http://localhost:8081/car_rez/availableCars2`, {
-  //       headers: {
-  //         Authorization: token
-  //       }
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       cars = res.data;
-  //     });
-  //   cars.map((car) => (car.car_status = '선택가능'));
-  //   console.log(cars);
-  //   console.log(Array.isArray(cars));
-  // }
   socket.on('user', (currentName) => {
     users.add(currentName);
     io.emit('users', users);
@@ -58,14 +42,6 @@ io.on('connection', (socket) => {
     users2.delete(disConnectUser);
 
     if (users2.size !== 0) {
-      // for (let user of Array.from(users2).keys()) {
-      //   console.log('adasd');
-      //   console.log(user);
-      //   var filterCars = cars.filter((car) => {
-      //     users2.get(user).carFilter.includes(car.car_code);
-      //   });
-      //   io.to(users2.get(user).socketID).emit('cars', filterCars);
-      // }
       for (let user of Array.from(users2.keys())) {
         var filterCars;
         if (users2.get(user)) {
@@ -169,14 +145,6 @@ io.on('connection', (socket) => {
               filterCars = cars.filter(
                 (car) => !NotavaiableCars.includes(car.car_code)
               );
-              // console.log(filterCars2);
-
-              // filterCars = cars.filter((car) => {
-              //   avaiableCars.includes(car.car_code);
-              //   // car.car_code=avaiableCars
-              //   // avaiableCars.includes(car.car_code);
-              //   // return car['car_code'].includes(avaiableCars);
-              // });
               console.log(filterCars);
             } else {
               filterCars = cars;
@@ -192,11 +160,8 @@ io.on('connection', (socket) => {
             io.to(users2.get(mem_code).socketID).emit('cars', filterCars);
           });
       }
-
-      // io.emit('cars', cars);
     }
-    // console.log(rows);
-    // }
+
   );
 
   socket.on('selected', ({ car_code, currentName }) => {

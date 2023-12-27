@@ -501,41 +501,6 @@ const Register = () => {
             sort: 'index'
           })
         };
-        // const options = {
-        //   method: 'POST',
-        //   headers: {
-        //     accept: 'application/json',
-        //     'content-type': 'application/json',
-        //     appKey: 'e8wHh2tya84M88aReEpXCa5XTQf3xgo01aZG39k5'
-        //   },
-        //   body: JSON.stringify({
-        //     tollgateFareOption: 16,
-        //     roadType: 32,
-        //     directionOption: 1,
-        //     endX: locList.return_loc[0],
-        //     endY: locList.return_loc[1],
-        //     endRpFlag: 'G',
-        //     reqCoordType: 'WGS84GEO',
-        //     startX: locList.receipt_loc[0],
-        //     startY: locList.receipt_loc[1],
-        //     //gps시간 예약시간으로
-        //     // gpsTime: '20191125153000',
-        //     gpsTime: formattedDateTime,
-        //     speed: 10,
-        //     uncetaintyP: 1,
-        //     uncetaintyA: 1,
-        //     uncetaintyAP: 1,
-        //     //톨비를 위한 차종 0(기본값):미선택,1:승용차,2:중형승합차,3:대형승합차,4:대형화물차,5:특수화물차,6:경차,7:이륜차
-        //     carType: type,
-        //     // startName: '%EC%9D%84%EC%A7%80%EB%A1%9C%20%EC%9E%85%EA%B5%AC%EC%97%AD',
-        //     // endName: '%ED%97%A4%EC%9D%B4%EB%A6%AC',
-        //     passList: destCoordinate,
-        //     gpsInfoList:
-        //       '126.939376564495,37.470947057194365,120430,20,50,5,2,12,1_126.939376564495,37.470947057194365,120430,20,50,5,2,12,1',
-        //     detailPosFlag: '2',
-        //     resCoordType: 'WGS84GEO',
-        //     sort: 'index'
-        //   })
       }
       fetch(
         'https://apis.openapi.sk.com/tmap/routes?version=1&callback=function',

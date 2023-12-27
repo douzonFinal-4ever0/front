@@ -71,21 +71,6 @@ io.on('connection', (socket) => {
       });
   });
 
-  // socket.on('clickAlarm', ({ alert_code, jwt, mem_code }) => {
-  //   console.log(alert_code);
-  //   console.log(jwt);
-  //   axios
-  //     .get(`http://localhost:8081/car_rez/loadAlarm/${mem_code}`, {
-  //       headers: {
-  //         Authorization: jwt
-  //       }
-  //     })
-  //     .then((res) => {
-  //       console.log('alarmInfo');
-  //       console.log(res.data);
-  //       io.to(users.get(mem_code)).emit('loadAlarm2', res.data);
-  //     });
-  // });
 
   socket.on('allParticipant', ({ ptList, mr_rez_code, jwt }) => {
     for (let mem of ptList) {
@@ -103,27 +88,6 @@ io.on('connection', (socket) => {
           // console.log(res.data);
           // mrRezDatas = res.data;
         });
-      // for (let memCode of Array.from(users.keys())) {
-      //   if (mem.mem_code === memCode) {
-      //     console.log(memCode + ' 참석자 입니다. 소켓 : ' + users.get(memCode));
-      //     axios
-      //       .get(`http://localhost:8081/car_rez/loadAlarm/${memCode}`, {
-      //         headers: {
-      //           Authorization: jwt
-      //         }
-      //       })
-      //       .then((res) => {
-      //         console.log('alarmInfo');
-      //         console.log(res.data);
-      //         io.to(users.get(memCode)).emit('loadAlarm', res.data);
-      //         // mrRezDatas = res.data;
-      //       });
-      //     // io.to(users.get(memCode)).emit(
-      //     //   'mrRezParticipant',
-      //     //   '회의실 예약 참석자로 지정되었습니다.'
-      //     // );
-      //   }
-      // }
     }
   });
 
